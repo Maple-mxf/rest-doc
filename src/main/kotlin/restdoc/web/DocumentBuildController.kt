@@ -124,23 +124,8 @@ class DocumentBuildController(
     fun flattenToArrayNode(fields: List<BodyFieldDescriptor>): ArrayNode {
         val arrayNode = mapper.createArrayNode()
 
-        val map = fields.map {
-            it.path = it.path.replaceFirst("[]", "")
-            it.path to it.value
-        }.toMap()
-
-
-        var flag: Boolean = true
-
-        while (flag) {
-
-            map.keys.filter { it.contains(".") }
-
-            flag = false;
-        }
-
-
-
+        val firstLevelNodes = fields.filter { it.path.matches(Regex("[\\[\\]]+[a-zA-Z]+[0,9]+$")) }
+        
         return arrayNode
     }
 

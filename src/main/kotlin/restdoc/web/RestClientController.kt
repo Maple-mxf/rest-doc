@@ -38,20 +38,20 @@ class RestClientController(
     @RequestMapping("/execute")
     fun execute(@RequestBody jsonDescriptor: RequestProcessorDescriptor): Any {
 
-        val header: Map<String, List<String>> = jsonDescriptor.header.map { it.field to it.value }.toMap()
-        val body: Map<String, Any>? = jsonDescriptor.body?.map { f -> f.path to f.value }?.toMap()
-        val uriVar = jsonDescriptor.uriVariables?.map { it.field to String.format("%s", it.value) }?.toMap()
-        val typeReference = ParameterizedTypeReference.forType<JsonNode>(JsonNode::class.java)
-
-        val requestProcess = RequestProcess(
-                jsonDescriptor.url,
-                header,
-                body,
-                jsonDescriptor.method,
-                uriVar,
-                typeReference)
-
-        client.process(requestProcess)
+//        val header: Map<String, List<String>> = jsonDescriptor.header.map { it.field to it.value }.toMap()
+//        val body: Map<String, Any>? = jsonDescriptor.body?.map { f -> f.path to f.value }?.toMap()
+//        val uriVar = jsonDescriptor.uriVariables?.map { it.field to String.format("%s", it.value) }?.toMap()
+//        val typeReference = ParameterizedTypeReference.forType<JsonNode>(JsonNode::class.java)
+//
+//        val requestProcess = RequestProcess(
+//                jsonDescriptor.url,
+//                header,
+//                body,
+//                jsonDescriptor.method,
+//                uriVar,
+//                typeReference)
+//
+//        client.process(requestProcess)
 
         return mapOf("code" to "success")
     }
