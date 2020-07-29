@@ -21,7 +21,7 @@ data class ParameterFieldDescriptor(
 )
 
 data class BodyFieldDescriptor(
-        val path: String,
+        var path: String,
         val value: Any,
         val description: String?,
         val type: FieldType = FieldType.OBJECT,

@@ -30,12 +30,11 @@ fun <R> responseType(method: HttpMethod): ParameterizedTypeReference<R> {
 /**
  * @sample ParameterizedTypeReference.forType
  */
-@Deprecated(message = "It is error")
 @restdoc.core.Since(Version.V1)
 data class RequestProcess<R>(
         val url: String,
         var header: Map<String, List<String>>,
-        var body: Map<String, Any>?,
+        var body: JsonNode?,
         val method: HttpMethod = HttpMethod.GET,
         val uriVariables: Map<String, String>?,
         val parameterizedTypeReference: ParameterizedTypeReference<R>
@@ -46,7 +45,7 @@ data class RequestProcess<R>(
  */
 @restdoc.core.Since(Version.V1)
 enum class FieldType {
-    STRING, NUMBER, OBJECT, ARRAY
+    STRING, NUMBER, OBJECT, ARRAY, BOOLEAN
 }
 
 

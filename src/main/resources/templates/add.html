@@ -2,7 +2,10 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>First page</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     <!--Import materialize.css-->
     <link type="text/css" rel="stylesheet" th:href="@{/materialize/css/materialize.min.css}" media="screen,projection"/>
@@ -18,40 +21,14 @@
 
     <div class="row">
         <form class="col s12">
-            <div class="row">
-                <div class="input-field col s3">
-                    <input placeholder="参数路径" id="field_name" type="text" class="validate">
-                    <label for="field_name">参数路径</label>
-                </div>
-                <div class="input-field col s2">
-                    <select>
-                        <option value="" disabled selected>参数类型</option>
-                        <option value="1">Option 1</option>
-                        <option value="2">Option 2</option>
-                        <option value="3">Option 3</option>
-                    </select>
-                    <label>参数类型</label>
-                </div>
 
-                <div class="input-field col s2">
-                    <input placeholder="参数描述" id="field_desc" type="text" class="validate">
-                    <label for="field_name">参数描述</label>
-                </div>
-                <div class="input-field col s2">
-                    <input placeholder="默认值" id="defaultValue" type="text" class="validate">
-                    <label for="field_name">默认值</label>
-                </div>
-                <div class="input-field col s2">
-                    <select>
-                        <option value="" disabled selected>是否可选</option>
-                        <option value="1">是</option>
-                        <option value="2">否</option>
-                    </select>
-                    <label>参数类型</label>
-                </div>
-
-            </div>
         </form>
+
+        <div class="row">
+            <button class="btn waves-effect waves-light" type="submit" name="action">Execute
+                <i class="material-icons right">play_arrow</i>
+            </button>
+        </div>
     </div>
 
 
@@ -60,11 +37,60 @@
 <script type="text/javascript" th:src="@{/materialize/js/materialize.min.js}"></script>
 <script type="text/javascript" th:src="@{/materialize/js/jquery.js}"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         var elems = document.querySelectorAll('select');
         var instances = M.FormSelect.init(elems);
     });
 
+
+    var row = "            <div class=\"row\">\n" +
+        "                <div class=\"input-field col s2\">\n" +
+        "                    <input placeholder=\"参数路径\" id=\"field_name\" type=\"text\" class=\"validate\">\n" +
+        "                    <label for=\"field_name\">参数路径</label>\n" +
+        "                </div>\n" +
+        "                <div class=\"input-field col s2\">\n" +
+        "                    <select>\n" +
+        "                        <option value=\"OBJECT\">Object</option>\n" +
+        "                        <option value=\"STRING\">String</option>\n" +
+        "                        <option value=\"BOOLEAN\">Boolean</option>\n" +
+        "                        <option value=\"NUMBER\">Number</option>\n" +
+        "                    </select>\n" +
+        "                    <label>参数类型</label>\n" +
+        "                </div>\n" +
+        "\n" +
+        "                <div class=\"input-field col s2\">\n" +
+        "                    <input placeholder=\"参数描述\" id=\"field_desc\" type=\"text\" class=\"validate\">\n" +
+        "                    <label for=\"field_name\">参数描述</label>\n" +
+        "                </div>\n" +
+        "                <div class=\"input-field col s2\">\n" +
+        "                    <input placeholder=\"默认值\" id=\"defaultValue\" type=\"text\" class=\"validate\">\n" +
+        "                    <label for=\"field_name\">默认值</label>\n" +
+        "                </div>\n" +
+        "                <div class=\"input-field col s2\">\n" +
+        "                    <select>\n" +
+        "                        <option value=\"\" disabled selected>是否可选</option>\n" +
+        "                        <option value=\"true\">是</option>\n" +
+        "                        <option value=\"false\">否</option>\n" +
+        "                    </select>\n" +
+        "                    <label>参数类型</label>\n" +
+        "                </div>\n" +
+        "\n" +
+        "                <div class=\"input-field col s2\">\n" +
+        "                    <a onclick='append()' class=\"btn-floating btn-small waves-effect waves-light blue\" class=\"add_param\"><i\n" +
+        "                            class=\"material-icons\">add</i></a>\n" +
+        "                </div>\n" +
+        "            </div>"
+    $('form').append(row);
+
+
+    function append(event) {
+        console.info("append")
+        $('form').append(row)
+    }
+
+
 </script>
 </body>
 </html>
+
+

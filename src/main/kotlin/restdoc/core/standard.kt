@@ -4,9 +4,9 @@ import java.lang.RuntimeException
 
 /**
  */
-enum class HttpStatus(val status: String,
-                      val code: String,
-                      val message: String?) {
+enum class Status(val status: String,
+                  val code: String,
+                  val message: String?) {
 
     /**
      * Process Success
@@ -51,8 +51,8 @@ enum class HttpStatus(val status: String,
 }
 
 data class Result(
-        val status: String = HttpStatus.OK.status,
-        val code: String = HttpStatus.OK.code,
+        val status: String = Status.OK.status,
+        val code: String = Status.OK.code,
         val message: String? = null,
         val data: Any? = null
 )
@@ -60,19 +60,19 @@ data class Result(
 /**
  *
  */
-class BizServiceException(override val message: String?, val status: HttpStatus) : RuntimeException(message) {
-    constructor(status: HttpStatus) : this(message = status.message, status = status)
+class BizServiceException(override val message: String?, val status: Status) : RuntimeException(message) {
+    constructor(status: Status) : this(message = status.message, status = status)
 }
 
 /**
  *
  */
-fun ofBizError(status: HttpStatus, message: String): BizServiceException = throw BizServiceException(message, status)
+fun ofBizError(status: Status, message: String): BizServiceException = throw BizServiceException(message, status)
 
 /**
  *
  */
-fun ofBizError(status: HttpStatus): BizServiceException = throw BizServiceException(status)
+fun ofBizError(status: Status): BizServiceException = throw BizServiceException(status)
 
 /**
  *
@@ -87,4 +87,4 @@ fun ok(data: Any): Result = Result(data = data)
 /**
  *
  */
-fun error(status: HttpStatus): Result = Result(status = status.status, code = status.code, message = status.message)
+fun failure(status: Status): Result = Result(status = status.status, code = status.code, message = status.message)

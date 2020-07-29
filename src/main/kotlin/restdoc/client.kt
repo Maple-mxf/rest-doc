@@ -1,5 +1,6 @@
 package restdoc
 
+import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
@@ -16,12 +17,11 @@ class Client(
         @Autowired val mapper: ObjectMapper,
         @Autowired val restClient: RestTemplate) {
 
-    @Deprecated(message = "")
     fun <R> process(rp: RequestProcess<R>): ResponseEntity<R>? {
 
-        rp.body.ifNull { rp.body = mapOf() }
+        rp.body.ifNull { rp.body = mapper.createObjectNode() }
 
-        val entity: RequestEntity<Map<String, Any>> =
+        val entity: RequestEntity<JsonNode> =
                 constructPostEntity(rp.url, rp.uriVariables, rp.header, rp.body!!)
 
         println(mapper.writeValueAsString(entity))
@@ -38,15 +38,15 @@ class Client(
             url: String,
             uriVariables: Map<String, Any>?,
             headers: Map<String, List<String>>?,
-            body: Map<String, Any>
+            body: JsonNode
 
-    ): RequestEntity<Map<String, Any>> {
+    ): RequestEntity<JsonNode> {
 
         val uri: URI = restClient.uriTemplateHandler.expand(url, uriVariables)
 
         val mt = MediaType.APPLICATION_JSON.toString()
 
-        val request: RequestEntity<Map<String, Any>> = RequestEntity
+        val request: RequestEntity<JsonNode> = RequestEntity
                 .post(uri)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.parseMediaType(mt))

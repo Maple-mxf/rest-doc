@@ -34,11 +34,6 @@ class RestClientController(
         return mapOf("code" to "success")
     }
 
-    @PostMapping("")
-    fun save(@RequestBody apiDocument: ApiDocument): Any {
-        mongoTemplate.save(apiDocument);
-        return mapOf("code" to "success")
-    }
 
     @RequestMapping("/execute")
     fun execute(@RequestBody jsonDescriptor: RequestProcessorDescriptor): Any {
