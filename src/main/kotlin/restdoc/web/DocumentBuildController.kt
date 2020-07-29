@@ -50,6 +50,10 @@ class DocumentBuildController(
      */
     @GetMapping("/add_view")
     fun addView(model: Model): String = "add"
+    @GetMapping("/add_view1")
+    fun addView1(model: Model): String = "add1"
+    @GetMapping("/test")
+    fun testView(model: Model): String = "test"
 
     /**
      * Save api field info and record http response result
@@ -125,7 +129,7 @@ class DocumentBuildController(
         val arrayNode = mapper.createArrayNode()
 
         val firstLevelNodes = fields.filter { it.path.matches(Regex("[\\[\\]]+[a-zA-Z]+[0,9]+$")) }
-        
+
         return arrayNode
     }
 

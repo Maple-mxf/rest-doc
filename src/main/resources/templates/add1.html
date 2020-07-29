@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>First page</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!--Import materialize.css-->
+    <link type="text/css" rel="stylesheet" th:href="@{/layui/css/layui.css}" media="screen,projection"/>
+
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewportcontent=" width=device-width, initial-scale=1.0"/>
+
+    <meta http-equiv="Content-Type" content="text/html" charset=utf-8"/>
+</head>
+
+<body>
+
+<script type="text/javascript" th:src="@{/layui/layui.js}"></script>
+<script type="text/javascript" th:src="@{/materialize/js/jquery.js}"></script>
+
+<script>
+    $(function() {	//页面加载时执行
+        $.ajax({	//获取属性List<Map>数据
+            type:"get",
+            url:getURL("properties"),
+            dataType : "json",
+            success:function(data) {
+                //遍历List
+                for(var i = 0 ; i  < data.length ; i++){
+                    //根据属性List拼接LayUI风格的input代码
+                    str =   "<div class='layui-form-item'><label class='layui-form-label'>"
+                        +data[i].propertyShow
+                        +"</label><div class='layui-input-block'><input type='text' id='"
+                        +data[i].propertyName
+                        +"' name='"
+                        + data[i].propertyName
+                        +"' placeholder='"
+                        +data[i].propertyTips
+                        +"' class='layui-input'></div></div>"
+
+                    //追加到界面，property是后面div的id<div class="user_left" id="property">
+                    var html = document.getElementById("property").innerHTML;
+                    document.getElementById("property").innerHTML= html + str;
+                }
+            }
+        });
+    })
+</script>
+</body>
+
+
+
+
+
+
+</html>
