@@ -1,0 +1,15 @@
+{
+  "prefix": "",
+  "url": "/api/echo",
+  "uriVar": {
+    "componentId": ""
+  },
+  "headers": {
+    "set-cookie": "set",
+    "content-type": "application/json"
+  },
+  "body": {
+    "file": {
+    }
+  }
+}

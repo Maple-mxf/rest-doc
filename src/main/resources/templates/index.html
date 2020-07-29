@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>First page</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    <!--Import materialize.css-->
+    <link type="text/css" rel="stylesheet" th:href="@{/materialize/css/materialize.min.css}" media="screen,projection"/>
+
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+</head>
+<body>
+<div class="container">
+    <table style="font-size: 17px;" class="striped grey lighten-5">
+        <thead>
+        <tr>
+            <th>参数名称</th>
+            <th>参数类型</th>
+            <th>示例值</th>
+            <th>是否可选</th>
+            <th>说明</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr>
+            <td>Path</td>
+            <td>Type</td>
+            <td>SampleValue</td>
+            <td>true</td>
+            <td>This is Require</td>
+        </tr>
+        <tr>
+            <td>Alan</td>
+            <td>Jellybean</td>
+            <td>$3.76</td>
+            <td>true</td>
+            <td>This is Require</td>
+        </tr>
+        <tr>
+            <td>Jonathan</td>
+            <td>Lollipop</td>
+            <td>$7.00</td>
+            <td>true</td>
+            <td>This is Require</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

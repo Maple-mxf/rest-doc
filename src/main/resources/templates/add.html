@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>First page</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    <!--Import materialize.css-->
+    <link type="text/css" rel="stylesheet" th:href="@{/materialize/css/materialize.min.css}" media="screen,projection"/>
+
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+</head>
+<body>
+<div class="container">
+
+    <div class="row">
+        <form class="col s12">
+            <div class="row">
+                <div class="input-field col s3">
+                    <input placeholder="参数路径" id="field_name" type="text" class="validate">
+                    <label for="field_name">参数路径</label>
+                </div>
+                <div class="input-field col s2">
+                    <select>
+                        <option value="" disabled selected>参数类型</option>
+                        <option value="1">Option 1</option>
+                        <option value="2">Option 2</option>
+                        <option value="3">Option 3</option>
+                    </select>
+                    <label>参数类型</label>
+                </div>
+
+                <div class="input-field col s2">
+                    <input placeholder="参数描述" id="field_desc" type="text" class="validate">
+                    <label for="field_name">参数描述</label>
+                </div>
+                <div class="input-field col s2">
+                    <input placeholder="默认值" id="defaultValue" type="text" class="validate">
+                    <label for="field_name">默认值</label>
+                </div>
+                <div class="input-field col s2">
+                    <select>
+                        <option value="" disabled selected>是否可选</option>
+                        <option value="1">是</option>
+                        <option value="2">否</option>
+                    </select>
+                    <label>参数类型</label>
+                </div>
+
+            </div>
+        </form>
+    </div>
+
+
+</div>
+<!--JavaScript at end of body for optimized loading-->
+<script type="text/javascript" th:src="@{/materialize/js/materialize.min.js}"></script>
+<script type="text/javascript" th:src="@{/materialize/js/jquery.js}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var elems = document.querySelectorAll('select');
+        var instances = M.FormSelect.init(elems);
+    });
+
+</script>
+</body>
+</html>

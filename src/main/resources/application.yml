@@ -1,0 +1,23 @@
+server:
+  servlet:
+    context-path: /restdoc
+  port: 8080
+
+spring:
+
+  thymeleaf:
+    encoding: utf-8
+    prefix: classpath:/templates/
+    servlet:
+      content-type: text/html
+    suffix: .html
+
+  data:
+    mongodb:
+      uri: mongodb://front_biz:qmbxfrontbizStorage@114.67.246.62:37001/non_standard
+      authenticationDatabase: non_standard
+      database: non_standard
+
+restdoc:
+  workDirOfClasspath: adoc
+  metaDirClasspath: meta
