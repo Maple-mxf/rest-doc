@@ -28,7 +28,7 @@ import restdoc.model.BodyFieldDescriptor
 import restdoc.model.RequestProcess
 
 @Controller
-@RequestMapping("/docs")
+@RequestMapping("/docsBuilder")
 class DocumentBuildController(
         @Autowired val mongoTemplate: MongoTemplate,
         @Autowired val client: Client,
