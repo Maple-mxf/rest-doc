@@ -46,3 +46,13 @@ data class ApiDocument(
         val expectResponseBody: JsonNode,
         val requestBody: Any?,
         var responseBody: Any?)
+
+
+data class Menu(val id: Int,
+                val title: String,
+                val type: Int,
+                val openType: String? = "_iframe",
+                val icon: String,
+                val href: String = "",
+                val children: MutableList<Menu>? = null
+)

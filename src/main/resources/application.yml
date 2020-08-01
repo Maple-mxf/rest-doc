@@ -4,13 +4,14 @@ server:
   port: 8080
 
 spring:
-
   thymeleaf:
     encoding: utf-8
     prefix: classpath:/templates/
     servlet:
       content-type: text/html
     suffix: .html
+    cache: false
+
 
   data:
     mongodb:
