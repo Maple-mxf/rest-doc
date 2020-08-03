@@ -29,7 +29,7 @@ data class ApiGroup(
         val createTime: Long
 )
 
-@Document(collation = "restdoc_api_doc")
+//@Document(collation = "restdoc_api_doc")
 data class ApiDocument(
         @Id var id: String?,
         var projectId: String?,
@@ -42,17 +42,18 @@ data class ApiDocument(
         var requestBodyDescriptor: List<BodyFieldDescriptor>?,
         val method: HttpMethod = HttpMethod.GET,
         val uriVariables: List<URIVarDescriptor>?,
-        val expectResponseHeaders: Any,
-        val expectResponseBody: JsonNode,
-        val requestBody: Any?,
-        var responseBody: Any?)
+        val expectResponseHeaders: Any?,
+        val expectResponseBody: JsonNode?
+)
 
 
-data class Menu(val id: Int,
-                val title: String,
-                val type: Int,
-                val openType: String? = "_iframe",
-                val icon: String,
-                val href: String = "",
-                val children: MutableList<Menu>? = null
+data class Menu(
+
+        val id: Int,
+        val title: String,
+        val type: Int,
+        val openType: String? = "_iframe",
+        val icon: String,
+        val href: String = "",
+        val children: MutableList<Menu>? = null
 )

@@ -263,7 +263,7 @@
 
 <script th:src="@{/layui/layui.js}"></script>
 <script th:src="@{/admin/js/jquery.js}"></script>
-<script>
+<script type="text/javascript" th:inline="javascript">
 
     var msg;
 
@@ -305,7 +305,19 @@
 
         form.on('submit(*)', function (data) {
 
-            getFormData(data.field)
+           var map =  getFormData(data.field)
+
+            $.ajax({
+                type: 'POST',
+                dataType: 'JSON',
+                contentType:'application/json;charset=utf-8',
+                url:  'docs/build',
+                data: JSON.stringify(map),
+                async: false,
+                success:function (data) {
+                    console.info(data)
+                }
+            })
 
             return false;
         });
@@ -370,8 +382,7 @@
         map['requestBody'] = requestBody
         map['responseBody'] = responseBody
 
-
-        console.info(JSON.stringify(map))
+        return map;
     }
 
 

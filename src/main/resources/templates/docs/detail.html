@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--Import materialize.css-->
+    <link type="text/css" rel="stylesheet" th:href="@{/admin/css/materialize.min.css}" media="screen,projection"/>
+
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <style type="text/css">
+
+        @font-face {
+            font-family: "JetBrains Mono";
+            src: url('/restdoc/font/JetBrainsMono-Regular.woff');
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <table class="highlight" style="font-family: 'JetBrains Mono';font-size: 20px">
+        <thead>
+        <tr>
+            <th>请求头参数</th>
+            <th>示例值</th>
+            <th>是否可选</th>
+            <th>参数说明</th>
+        </tr>
+        </thead>
+
+        <tbody>
+
+        <th:foreach th:each="item :${requestHeaderDescriptor}">
+            <tr>
+                <td th:text="${item.field}"></td>
+                <td th:text="${item.value}"></td>
+                <td th:text="${item.optional}"></td>
+                <td th:text="${item.description}"></td>
+            </tr>
+        </th:foreach>
+
+        </tbody>
+    </table>
+</div>
+
+<!--JavaScript at end of body for optimized loading-->
+<script type="text/javascript" th:src="@{/admin/js/materialize.min.js}"></script>
+</body>
+</html>

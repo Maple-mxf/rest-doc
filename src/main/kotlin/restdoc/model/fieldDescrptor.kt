@@ -6,9 +6,7 @@ data class HeaderFieldDescriptor(
         val field: String,
         val value: List<String>,
         val description: String?,
-        val type: FieldType = FieldType.OBJECT,
-        val optional: Boolean = false,
-        val defaultValue: Any?
+        val optional: Boolean = false
 )
 
 data class ParameterFieldDescriptor(
@@ -33,9 +31,7 @@ data class URIVarDescriptor(
         val field: String,
         val value: Any,
         val description: String?,
-        val type: FieldType = FieldType.OBJECT,
-        val optional: Boolean = false,
-        val defaultValue: Any?
+        val type: FieldType = FieldType.OBJECT
 )
 
 
