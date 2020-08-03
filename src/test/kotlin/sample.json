@@ -1,0 +1,90 @@
+{
+  "_id": "737917309695299584",
+  "lambdaName": "证书查询",
+  "groupFields": [
+    {
+      "code": "G298B46A0",
+      "name": "基本信息",
+      "rank": NumberInt("1")
+    },
+    {
+      "code": "G36BD686A",
+      "name": "其他信息",
+      "rank": NumberInt("2")
+    }
+  ],
+  "matrixFields": [
+    {
+      "name": "头像",
+      "code": "G36BD686AFB1E1B",
+      "type": "IMAGE",
+      "group": "G298B46A0",
+      "constraints": true,
+      "rank": NumberInt("0")
+    },
+    {
+      "name": "序号",
+      "code": "G298B46A0FBC748",
+      "type": "INPUT",
+      "group": "G298B46A0",
+      "constraints": true,
+      "rank": NumberInt("0")
+    },
+    {
+      "name": "姓名",
+      "code": "G298B46A0FB349A",
+      "type": "INPUT",
+      "group": "G298B46A0",
+      "constraints": true,
+      "rank": NumberInt("1")
+    },
+    {
+      "name": "性别",
+      "code": "G298B46A0FBF6E4",
+      "type": "INPUT",
+      "group": "G298B46A0",
+      "constraints": true,
+      "rank": NumberInt("2")
+    },
+    {
+      "name": "职业名称",
+      "code": "G298B46A0F3B81E351",
+      "type": "INPUT",
+      "group": "G36BD686A",
+      "constraints": true,
+      "rank": NumberInt("3")
+    }
+  ],
+  "searchFieldCodes": [
+    "G36BD686AFB1E1B",
+    "G298B46A0FBC748",
+    "G298B46A0FB349A",
+    "G298B46A0FBF6E4",
+    "G298B46A0F3B81E351"
+  ],
+  "componentName": "自定义功能",
+  "componentCode": "LambdaComponent",
+  "orgId": "20971",
+  "createTime": NumberLong("1596003596473"),
+  "websiteId": "732200850369286144",
+  "rank": NumberInt("1"),
+  "createMember": {
+    "_id": "707434548568264704",
+    "name": "王毅",
+    "orgId": "20971"
+  },
+  "lastUpdateTime": NumberLong("1596004255707"),
+  "lastUpdateMember": {
+    "_id": "707434548568264704",
+    "name": "王毅",
+    "orgId": "20971"
+  },
+  "display": true,
+  "deleted": false,
+  "options": { },
+  "additional": {
+    "type": "CertQueryLambda"
+  },
+  "showName": false,
+  "_class": "com.onepushing.cloud.website.entity.component.LambdaComponent"
+}

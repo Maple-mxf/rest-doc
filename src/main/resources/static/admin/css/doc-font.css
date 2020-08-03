@@ -1,0 +1,10 @@
+@font-face {
+    font-family: "JetBrains Mono";
+    src: url('../../font/JetBrainsMono-Regular.woff');
+}
+
+
+body{
+    background-color: #fafafa;
+    font-family: "JetBrains Mono";
+}

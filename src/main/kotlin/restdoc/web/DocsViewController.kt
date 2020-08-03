@@ -27,7 +27,7 @@ class DocsViewController {
     @GetMapping("/document")
     fun detail(model: Model): String {
         val apiDocument: ApiDocument? = mongoTemplate.findOne(Query(), ApiDocument::class.java)
-        model.addAttribute("requestHeaderDescriptor", apiDocument?.requestHeaderDescriptor)
+        model.addAttribute("apiDocument", apiDocument)
         model.addAttribute("word", "Hello")
         return "docs/detail";
     }

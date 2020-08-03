@@ -48,7 +48,6 @@ data class ApiDocument(
 
 
 data class Menu(
-
         val id: Int,
         val title: String,
         val type: Int,
