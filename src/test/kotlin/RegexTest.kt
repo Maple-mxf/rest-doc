@@ -32,7 +32,7 @@ class RegexTest {
         }
 
         // ["users[]/setting/name","users[]/setting","users[]"]
-        println(mapper.writeValueAsString(nodes))
+//        println(mapper.writeValueAsString(nodes))
 
         // Build The Tree
 
@@ -42,29 +42,36 @@ class RegexTest {
         for (pn in pns) {
             buildTree(pn, nodes)
         }
-        println(mapper.writeValueAsString(map))
     }
 
-    fun buildTree(pnName: String, nodes: List<String>) {
+    fun buildTree(pnName: String, nodesName: List<String>) {
 
-//        val children = nodes
-//                .map { it.replace("[]", "") }
-//                .filter { nd ->
-//                }
-//
-//        // Empty
-//        if (children.isEmpty()) {
-//            map[pnName] = "null"
-//            return
-//        } else {
-//            map[pnName] = children
-//            // Build Tree
-//            for (child in children) {
-//                buildTree(child, nodes)
-//            }
-//        }
-//    }
+        println(nodesName)
 
-        // 马维祥 201706100100002
+        for (nodeName in nodesName) {
+
+            val start = pnName.replace("[", "").replace("]", "")
+
+            // ^users(\[\])+[/][a-zA-Z]+[0-9]+(\[\])?$
+            val regex = "^${start}(\\[\\])+[/][a-zA-Z]+[0-9]?(\\[\\])?$"
+
+            if (nodeName.matches(Regex(regex))) {
+                println(nodeName)
+            }
+        }
+    }
+
+    /**
+     * [users\[\]/setting/name][\[\]]+[/][a-zA-Z]+[0-9]+[\[\]]+$
+     * [users\[\]/setting][\[\]]+[/][a-zA-Z]+[0-9]+[\[\]]+$
+     * [users\[\]][\[\]]+[/][a-zA-Z]+[0-9]+[\[\]]+$
+     */
+    @Test
+    fun testMatches() {
+        // [users[]/setting/name, users[]/setting, users[]]
+        val field = "users[]/s1"
+        val matches = field.matches(Regex("^users(\\[\\])+[/][a-zA-Z]+[0-9]+(\\[\\])?$"))
+
+        println(matches)
     }
 }

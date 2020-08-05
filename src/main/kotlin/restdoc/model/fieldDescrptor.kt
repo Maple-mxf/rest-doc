@@ -20,7 +20,7 @@ data class ParameterFieldDescriptor(
 
 data class BodyFieldDescriptor(
         var path: String,
-        val value: Any,
+        val value: Any?,
         val description: String?,
         val type: FieldType = FieldType.OBJECT,
         val optional: Boolean = false,

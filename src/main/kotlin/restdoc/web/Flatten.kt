@@ -3,18 +3,19 @@ package restdoc.web
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.node.ArrayNode
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import restdoc.model.BodyFieldDescriptor
+import restdoc.model.JSONFieldNode
 
-
+/**
+ * @since 1.0
+ */
 @Component
 class Flatten {
 
-    @Autowired
-    lateinit var mapper: ObjectMapper
+    private val mapper: ObjectMapper = ObjectMapper()
 
-    fun flattenToTree(fields: List<BodyFieldDescriptor>): JsonNode {
+    fun flattenNodeToTree(fields: List<BodyFieldDescriptor>): JsonNode {
         val isArray = fields.any {
             it.path.startsWith("[]")
         }
@@ -24,38 +25,49 @@ class Flatten {
         return flattenToJsonNode(fields)
     }
 
+
     /**
-     *a.b.c
      *
-     * a/b/c
-     * a/b
-     * c
      */
     fun flattenToArrayNode(fields: List<BodyFieldDescriptor>): ArrayNode {
-
         val arrayNode = mapper.createArrayNode()
 
-        fields.map { it.path }.flatMap { path ->
+        val fieldsPath: List<String> = fields
+                .map { it.path }
+                .flatMap { path ->
+                    val els: List<String> = path.split(".")
+                    path.split(".").mapIndexed { index, _ -> els.subList(index, els.size).joinToString("/") }
+                }
 
-            val els = path.split("\\.")
+        val outNodes: List<JSONFieldNode> = fields
+                .filter { it.path.matches(Regex("^(\\[\\])+[a-zA-Z]+[0-9](\\[\\])?+$")) }
+                .map { JSONFieldNode(path = it.path, children = null) }
+                .map {
+                    it.children = getNodeValue(it, fieldsPath)
+                    it
+                }
 
-            els.map { el ->
-                val index = els.indexOf(el)
-
-                els.subList(index, els.size - 1).joinToString { "/" }
-            }
-        }
-
-        val outNodes = fields.filter { it.path.matches(Regex("[\\[\\]]+[a-zA-Z]+[0,9]+$")) }
-
+        println(mapper.writeValueAsString(outNodes))
 
         return arrayNode
     }
 
-    fun getNodeValue(path: String, fields: List<BodyFieldDescriptor>) {
+    /**
+     *
+     */
+    fun getNodeValue(jsonField: JSONFieldNode, fields: List<String>): List<JSONFieldNode> {
+        val childrenNodes = fields.filter {
+            val start = jsonField.path.replace("[", "").replace("]", "")
+            val regex = "^${start}(\\[\\])+[/][a-zA-Z]+[0-9]?(\\[\\])?$"
+            it.matches(Regex(regex))
+        }.map { JSONFieldNode(path = it, children = null) }
 
+        for (child: JSONFieldNode in childrenNodes) {
+            jsonField.children = getNodeValue(child, fields)
+        }
+
+        return childrenNodes
     }
-
 
     fun flattenToJsonNode(fields: List<BodyFieldDescriptor>): JsonNode {
         val objectNode = mapper.createObjectNode()

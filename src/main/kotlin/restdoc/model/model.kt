@@ -56,3 +56,5 @@ data class Menu(
         val href: String = "",
         val children: MutableList<Menu>? = null
 )
+
+data class JSONFieldNode(val path: String, var children: List<JSONFieldNode>?)
