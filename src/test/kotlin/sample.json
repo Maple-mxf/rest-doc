@@ -1,5 +1,14 @@
 [
-  "users[]/setting/name",
-  "users[]/setting",
-  "users[]"
+  {
+    "path": "users/settings",
+    "children": []
+  },
+  {
+    "path": "users",
+    "children": []
+  },
+  {
+    "path": "users/settings/name",
+    "children": []
+  }
 ]

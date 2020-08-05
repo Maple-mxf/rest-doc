@@ -12,8 +12,6 @@ class RegexTest {
         println(matches)
     }
 
-    val map: MutableMap<String, Any> = mutableMapOf()
-
     val mapper: ObjectMapper = ObjectMapper()
 
     @Test
@@ -32,16 +30,19 @@ class RegexTest {
         }
 
         // ["users[]/setting/name","users[]/setting","users[]"]
+        println(mapper.writeValueAsString(nodes))
+
+        // ["users[]/setting/name","users[]/setting","users[]"]
 //        println(mapper.writeValueAsString(nodes))
 
         // Build The Tree
 
         // 1 find all parent node
-        val pns = nodes.filter { nd -> !nd.contains("/") }
-
-        for (pn in pns) {
-            buildTree(pn, nodes)
-        }
+//        val pns = nodes.filter { nd -> !nd.contains("/") }
+//
+//        for (pn in pns) {
+//            buildTree(pn, nodes)
+//        }
     }
 
     fun buildTree(pnName: String, nodesName: List<String>) {

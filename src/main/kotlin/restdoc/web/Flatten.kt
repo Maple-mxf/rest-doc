@@ -32,20 +32,31 @@ class Flatten {
     fun flattenToArrayNode(fields: List<BodyFieldDescriptor>): ArrayNode {
         val arrayNode = mapper.createArrayNode()
 
-        val fieldsPath: List<String> = fields
-                .map { it.path }
-                .flatMap { path ->
-                    val els: List<String> = path.split(".")
-                    path.split(".").mapIndexed { index, _ -> els.subList(index, els.size).joinToString("/") }
-                }
+        val fieldsPath: Set<String> = fields.flatMap {
+            val els = it.path.split(".").reversed()
+            els.mapIndexed { index, _ ->
+                els.subList(index, els.size).reversed().joinToString("/")
+            }
+        }.toSet()
 
-        val outNodes: List<JSONFieldNode> = fields
-                .filter { it.path.matches(Regex("^(\\[\\])+[a-zA-Z]+[0-9](\\[\\])?+$")) }
-                .map { JSONFieldNode(path = it.path, children = null) }
+        val paths = fieldsPath.toList()
+
+        val outNodes: List<JSONFieldNode> = fieldsPath
+                .map { it.replace("[]", "") }
+                .filter { it.matches(Regex(String.format("^%s$", it))) }
+                .map { JSONFieldNode(path = it, children = null) }
                 .map {
-                    it.children = getNodeValue(it, fieldsPath)
+                    getNodeValue(it, paths)
                     it
                 }
+
+//        val outNodes: List<JSONFieldNode> = fields
+//                .filter { it.path.matches(Regex("^${it.path}(\\[\\])+[a-zA-Z]+[0-9](\\[\\])?+$")) }
+//                .map { JSONFieldNode(path = it.path, children = null) }
+//                .map {
+//                    getNodeValue(it, fieldsPath.toList())
+//                    it
+//                }
 
         println(mapper.writeValueAsString(outNodes))
 
@@ -55,18 +66,19 @@ class Flatten {
     /**
      *
      */
-    fun getNodeValue(jsonField: JSONFieldNode, fields: List<String>): List<JSONFieldNode> {
+    fun getNodeValue(jsonField: JSONFieldNode, fields: List<String>) {
         val childrenNodes = fields.filter {
             val start = jsonField.path.replace("[", "").replace("]", "")
             val regex = "^${start}(\\[\\])+[/][a-zA-Z]+[0-9]?(\\[\\])?$"
             it.matches(Regex(regex))
         }.map { JSONFieldNode(path = it, children = null) }
 
-        for (child: JSONFieldNode in childrenNodes) {
-            jsonField.children = getNodeValue(child, fields)
-        }
+        jsonField.children = childrenNodes
+        if (childrenNodes.isEmpty()) return
 
-        return childrenNodes
+        for (child: JSONFieldNode in childrenNodes) {
+            getNodeValue(child, fields)
+        }
     }
 
     fun flattenToJsonNode(fields: List<BodyFieldDescriptor>): JsonNode {

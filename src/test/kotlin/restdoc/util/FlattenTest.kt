@@ -21,6 +21,10 @@ class FlattenTest {
         )
 
         val flattenNodeToTree = flatten.flattenNodeToTree(fields)
+
+        // "^(\\[\\])+[a-zA-Z]+[0-9](\\[\\])?+$"
+
+
     }
 
 }
