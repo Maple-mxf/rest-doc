@@ -25,7 +25,6 @@ class Flatten {
         return flattenToJsonNode(fields)
     }
 
-
     /**
      *
      */
@@ -49,14 +48,6 @@ class Flatten {
                     getNodeValue(it, paths)
                     it
                 }
-
-//        val outNodes: List<JSONFieldNode> = fields
-//                .filter { it.path.matches(Regex("^${it.path}(\\[\\])+[a-zA-Z]+[0-9](\\[\\])?+$")) }
-//                .map { JSONFieldNode(path = it.path, children = null) }
-//                .map {
-//                    getNodeValue(it, fieldsPath.toList())
-//                    it
-//                }
 
         println(mapper.writeValueAsString(outNodes))
 

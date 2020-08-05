@@ -41,7 +41,7 @@ data class RequestProcess<R>(
 )
 
 /**
- * @sample JSONF
+ * @sample JSON
  */
 @restdoc.core.Since(Version.V1)
 enum class FieldType {
