@@ -21,9 +21,8 @@
     <form class="layui-form layui-form-pane" action="">
 
         <div class="layui-form-item layui-form-text">
-            <label class="layui-form-label">文本域</label>
             <div class="layui-input-block" style="font-family: 'JetBrains Mono',serif;font-size: 16px">
-                <textarea name="desc" placeholder="请输入内容" class="layui-textarea"></textarea>
+                <textarea name="desc" placeholder="请输入JSON" class="layui-textarea"></textarea>
             </div>
         </div>
 
@@ -40,8 +39,10 @@
 
 <script type="text/javascript" th:inline="javascript">
     layui.use(['layer', 'form', 'element', 'jquery'], function () {
-
-        });
+        var form = layui.form;
+        var $ = layui.jquery;
+        var layer = layui.layer;
+    });
 </script>
 
 </body>
