@@ -60,6 +60,10 @@ class Bump(private val jsonString: String) {
                 } else {
                     if (field.value.isObject) {
                         bumpTree("${path}.${field.key}", field.value)
+                    } else if (field.value.isArray) {
+                        bumpTree("${path}.${field.key}[]", field.value)
+                    } else {
+                        this.fieldDescriptor.add(transformValue(path, treeNode))
                     }
                 }
             }
