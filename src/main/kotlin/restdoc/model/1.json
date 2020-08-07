@@ -1,31 +1,16 @@
-{
-  "url": "12312312",
-  "method": "GET",
-  "executeStrategy": "RequestOnly",
-  "headers": [
-    {
-      "headerKey": "Content-Type",
-      "headerValue": "application/json;utf-8",
-      "headerDescription": "",
-      "headerConstraint": true
-    }
-  ],
-  "requestBody": [
-    {
-      "requestFieldPath": "12312",
-      "requestFieldValue": "321",
-      "requestFieldType": "3123",
-      "requestFieldDescription": "12312",
-      "requestFieldConstraint": true
-    }
-  ],
-  "responseBody": [
-    {
-      "responseFieldPath": "123",
-      "responseFieldValue": "1321",
-      "responseFieldType": "2132",
-      "responseFieldDescription": "1321",
-      "responseFieldConstraint": true
-    }
-  ]
-}
+[
+  {
+    "path": "users",
+    "children": [
+      {
+        "path": "[]users[]/settings",
+        "children": [
+          {
+            "path": "[]users[]/settings/name",
+            "children": []
+          }
+        ]
+      }
+    ]
+  }
+]

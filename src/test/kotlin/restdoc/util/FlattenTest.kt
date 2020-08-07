@@ -24,7 +24,14 @@ class FlattenTest {
 
         // "^(\\[\\])+[a-zA-Z]+[0-9](\\[\\])?+$"
 
+        println(flattenNodeToTree)
+    }
 
+    @Test
+    fun regex(){
+//        Regex("^[a-zA-Z]+[0-9]+$")
+
+        println("users".matches(Regex("[a-z]+[0-9]?")))
     }
 
 }

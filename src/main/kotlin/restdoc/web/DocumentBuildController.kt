@@ -17,15 +17,15 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
-import restdoc.util.Client
-import restdoc.core.Status
 import restdoc.core.Result
+import restdoc.core.Status
 import restdoc.core.failure
 import restdoc.core.ok
 import restdoc.model.ApiDocument
 import restdoc.model.ApiProjectConfig
 import restdoc.model.BodyFieldDescriptor
 import restdoc.model.RequestProcess
+import restdoc.util.Client
 
 @Controller
 @RequestMapping("/docsBuilder")
@@ -122,7 +122,7 @@ class DocumentBuildController(
         }
         if (isArray)
             return flattenToArrayNode(fields)
-        
+
         return flattenToJsonNode(fields)
     }
 

@@ -33,16 +33,14 @@ class Flatten {
 
         val fieldsPath: Set<String> = fields.flatMap {
             val els = it.path.split(".").reversed()
-            els.mapIndexed { index, _ ->
-                els.subList(index, els.size).reversed().joinToString("/")
-            }
+            els.mapIndexed { index, _ -> els.subList(index, els.size).reversed().joinToString("/") }
         }.toSet()
 
         val paths = fieldsPath.toList()
 
         val outNodes: List<JSONFieldNode> = fieldsPath
                 .map { it.replace("[]", "") }
-                .filter { it.matches(Regex(String.format("^%s$", it))) }
+                .filter { it.matches(Regex("^[a-zA-Z]+[0-9]?$")) }
                 .map { JSONFieldNode(path = it, children = null) }
                 .map {
                     getNodeValue(it, paths)
@@ -58,10 +56,13 @@ class Flatten {
      *
      */
     fun getNodeValue(jsonField: JSONFieldNode, fields: List<String>) {
+        val start = jsonField.path.replace("[", "").replace("]", "")
+
         val childrenNodes = fields.filter {
-            val start = jsonField.path.replace("[", "").replace("]", "")
-            val regex = "^${start}(\\[\\])+[/][a-zA-Z]+[0-9]?(\\[\\])?$"
-            it.matches(Regex(regex))
+            val tmp = it.replace("[", "").replace("]", "")
+            val regex = "^${start}(\\[\\])?[/][a-zA-Z]+[0-9]?(\\[\\])?$"
+            val matches = tmp.matches(Regex(regex))
+            matches
         }.map { JSONFieldNode(path = it, children = null) }
 
         jsonField.children = childrenNodes
@@ -74,8 +75,6 @@ class Flatten {
 
     fun flattenToJsonNode(fields: List<BodyFieldDescriptor>): JsonNode {
         val objectNode = mapper.createObjectNode()
-
-
         return objectNode
     }
 
