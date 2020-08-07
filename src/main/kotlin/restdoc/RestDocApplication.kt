@@ -1,9 +1,7 @@
 package restdoc
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.runApplication
-import restdoc.core.config.RestDocProperties
 
 /**
  *
@@ -12,9 +10,11 @@ import restdoc.core.config.RestDocProperties
  * @since 1.0
  */
 @SpringBootApplication
-@EnableConfigurationProperties(value = [RestDocProperties::class])
-class RestDocApplication
+open class RestDocApplication
 
+/**
+ * Bootstrap main fun
+ */
 fun main(args: Array<String>) {
     runApplication<RestDocApplication>(*args)
 }

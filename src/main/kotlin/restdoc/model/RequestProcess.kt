@@ -3,7 +3,6 @@ package restdoc.model
 import com.fasterxml.jackson.databind.JsonNode
 import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.HttpMethod
-import restdoc.core.Version
 
 @Suppress("unchecked")
 fun <R> responseType(method: HttpMethod): ParameterizedTypeReference<R> {
@@ -29,8 +28,8 @@ fun <R> responseType(method: HttpMethod): ParameterizedTypeReference<R> {
 
 /**
  * @sample ParameterizedTypeReference.forType
+ * @since 1.0
  */
-@restdoc.core.Since(Version.V1)
 data class RequestProcess<R>(
         val url: String,
         var header: Map<String, List<String>>,
@@ -42,17 +41,17 @@ data class RequestProcess<R>(
 
 /**
  * @sample JSON
+ * @since 1.0
  */
-@restdoc.core.Since(Version.V1)
 enum class FieldType {
-    STRING, NUMBER, OBJECT, ARRAY, BOOLEAN,MISSING
+    STRING, NUMBER, OBJECT, ARRAY, BOOLEAN, MISSING
 }
 
 
 /**
  * @constructor
+ * @since 1.0
  */
-@restdoc.core.Since(Version.V1)
 data class ParameterDescriptor(
         val path: String,
         val type: FieldType = FieldType.OBJECT,

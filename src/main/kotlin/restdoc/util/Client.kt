@@ -12,6 +12,10 @@ import restdoc.model.RequestProcess
 import java.net.URI
 import java.nio.charset.StandardCharsets
 
+
+/**
+ * The Client class provided request process function
+ */
 @Component
 class Client(
         @Autowired val mapper: ObjectMapper,
@@ -19,7 +23,7 @@ class Client(
 
     fun <R> process(rp: RequestProcess<R>): ResponseEntity<R>? {
 
-        rp.body.ifNull { rp.body = mapper.createObjectNode() }
+        rp.body.ifNull { rp.body = mapper.createObjectNode() as JsonNode? }
 
         val entity: RequestEntity<JsonNode> =
                 constructPostEntity(rp.url, rp.uriVariables, rp.header, rp.body!!)

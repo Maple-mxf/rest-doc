@@ -1,7 +1,8 @@
 package restdoc.core.cg
 
-import restdoc.core.Version
-
+/**
+ * Source code version
+ */
 class SourceVersion(val version: String, val rank: Int) : Comparable<SourceVersion> {
     override fun compareTo(other: SourceVersion): Int {
         return this.rank - other.rank
@@ -12,9 +13,19 @@ class SourceVersion(val version: String, val rank: Int) : Comparable<SourceVersi
  * @sample SourceVersion
  */
 enum class ProgrammingType {
+
+    /**
+     * Java
+     */
     JAVA,
+
+    /**
+     * Go
+     */
     GO,
     PYTHON,
+
+
     JAVASCRIPT,
     KOTLIN,
     RUST,
@@ -27,8 +38,8 @@ enum class ProgrammingType {
 
 /**
  * @sample kotlin.stackTrace
+ * @since 1.0
  */
-@restdoc.core.Since(Version.V1)
 interface Translator {
     /**
      *
@@ -57,7 +68,11 @@ interface Translator {
     fun explain(): String
 }
 
-@restdoc.core.Since(Version.V1)
+
+/**
+ * Translator json to source code
+ * @since 1.0
+ */
 class JavaTranslator : Translator {
 
     override fun sourceTemplate(): String {

@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component
 
 /**
  * @sample AsciidoctorTemplateResource
+ * @since 1.0
  */
-@Since(Version.V1)
 interface TemplateResource {
 
     fun apiName(): Resource

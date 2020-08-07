@@ -18,7 +18,7 @@
     <properties>
         <java.version>1.8</java.version>
         <kotlin.version>1.3.72</kotlin.version>
-        <dokka.version>0.10.0</dokka.version>
+        <dokka.version>0.10.1</dokka.version>
     </properties>
 
 
@@ -76,27 +76,31 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+
             <plugin>
-                <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-maven-plugin</artifactId>
-                <configuration>
-                    <args>
-                        <arg>-Xjsr305=strict</arg>
-                    </args>
-                    <compilerPlugins>
-                        <plugin>spring</plugin>
-                    </compilerPlugins>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.jetbrains.kotlin</groupId>
-                        <artifactId>kotlin-maven-allopen</artifactId>
-                        <version>${kotlin.version}</version>
-                    </dependency>
-                </dependencies>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <version>${kotlin.version}</version>
+
+                <executions>
+                    <execution>
+                        <id>compile</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+
+                    <execution>
+                        <id>test-compile</id>
+                        <phase>test-compile</phase>
+                        <goals>
+                            <goal>test-compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
 
-            <!--Kotlin code doc tool-->
             <plugin>
                 <groupId>org.jetbrains.dokka</groupId>
                 <artifactId>dokka-maven-plugin</artifactId>
@@ -112,6 +116,9 @@
                 </executions>
                 <configuration>
                     <outputFormat>html</outputFormat>
+                    <includes>
+                        <include>C:\Users\mxf\IdeaProjects\rest-doc\src\main\resources\Module.md</include>
+                    </includes>
                 </configuration>
             </plugin>
         </plugins>
@@ -129,11 +136,6 @@
     </repositories>
 
     <pluginRepositories>
-<!--        <pluginRepository>-->
-<!--            <id>spring-releases</id>-->
-<!--            <url>https://repo.spring.io/libs-release</url>-->
-<!--        </pluginRepository>-->
-
         <pluginRepository>
             <id>jcenter</id>
             <name>JCenter</name>

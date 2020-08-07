@@ -1,8 +1,10 @@
 package restdoc.core
 
-import java.lang.RuntimeException
-
 /**
+ *
+ * The Status class provided standard http response code and status
+ *
+ * @since 1.0
  */
 enum class Status(val status: String,
                   val code: String,
@@ -50,6 +52,11 @@ enum class Status(val status: String,
     THIRD_SERVICE_ERROR("ThirdServiceError", "T500", "第三方服务错误")
 }
 
+/**
+ * The Result class for http response entity payload
+ *
+ * @since 1.0
+ */
 data class Result(
         val status: String = Status.OK.status,
         val code: String = Status.OK.code,
@@ -58,33 +65,33 @@ data class Result(
 )
 
 /**
- *
+ *@since 1.0
  */
 class BizServiceException(override val message: String?, val status: Status) : RuntimeException(message) {
     constructor(status: Status) : this(message = status.message, status = status)
 }
 
 /**
- *
+ * @since 1.0
  */
 fun ofBizError(status: Status, message: String): BizServiceException = throw BizServiceException(message, status)
 
 /**
- *
+ *@since 1.0
  */
 fun ofBizError(status: Status): BizServiceException = throw BizServiceException(status)
 
 /**
- *
+ *@since 1.0
  */
 fun ok(): Result = Result()
 
 /**
- *
+ *@since 1.0
  */
 fun ok(data: Any): Result = Result(data = data)
 
 /**
- *
+ *@since 1.0
  */
 fun failure(status: Status): Result = Result(status = status.status, code = status.code, message = status.message)
