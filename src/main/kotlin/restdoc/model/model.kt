@@ -57,4 +57,5 @@ data class Menu(
         val children: MutableList<Menu>? = null
 )
 
-data class JSONFieldNode(val path: String, var children: List<JSONFieldNode>?)
+enum class JSONFieldType { JSON, ARRAY }
+data class JSONFieldNode(val path: String, var children: List<JSONFieldNode>?, var type: JSONFieldType?)

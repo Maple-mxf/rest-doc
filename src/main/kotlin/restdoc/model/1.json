@@ -7,10 +7,30 @@
         "children": [
           {
             "path": "[]users[]/settings/name",
-            "children": []
+            "children": [],
+            "type": "JSON"
           }
-        ]
+        ],
+        "type": "JSON"
       }
-    ]
+    ],
+    "type": "ARRAY"
+  },
+  {
+    "path": "personal",
+    "children": [
+      {
+        "path": "[]personal/settings",
+        "children": [
+          {
+            "path": "[]personal/settings/name",
+            "children": [],
+            "type": "JSON"
+          }
+        ],
+        "type": "JSON"
+      }
+    ],
+    "type": "JSON"
   }
 ]

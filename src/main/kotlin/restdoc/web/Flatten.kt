@@ -2,10 +2,10 @@ package restdoc.web
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.node.ArrayNode
 import org.springframework.stereotype.Component
 import restdoc.model.BodyFieldDescriptor
 import restdoc.model.JSONFieldNode
+import restdoc.model.JSONFieldType
 
 /**
  * @since 1.0
@@ -15,20 +15,22 @@ class Flatten {
 
     private val mapper: ObjectMapper = ObjectMapper()
 
-    fun flattenNodeToTree(fields: List<BodyFieldDescriptor>): JsonNode {
+    fun flattenNodeToTree(fields: List<BodyFieldDescriptor>): Any {
         val isArray = fields.any {
             it.path.startsWith("[]")
         }
         if (isArray)
+//
+        {
             return flattenToArrayNode(fields)
-
+        }
         return flattenToJsonNode(fields)
     }
 
     /**
      *
      */
-    fun flattenToArrayNode(fields: List<BodyFieldDescriptor>): ArrayNode {
+    fun flattenToArrayNode(fields: List<BodyFieldDescriptor>): List<JSONFieldNode> {
         val arrayNode = mapper.createArrayNode()
 
         val fieldsPath: Set<String> = fields.flatMap {
@@ -41,16 +43,20 @@ class Flatten {
         val outNodes: List<JSONFieldNode> = fieldsPath
                 .map { it.replace("[]", "") }
                 .filter { it.matches(Regex("^[a-zA-Z]+[0-9]?$")) }
-                .map { JSONFieldNode(path = it, children = null) }
+                .map { JSONFieldNode(path = it, children = null, type = null) }
                 .map {
                     getNodeValue(it, paths)
                     it
                 }
 
-        println(mapper.writeValueAsString(outNodes))
 
-        return arrayNode
+        /*for (outNode in outNodes) {
+
+        }*/
+
+        return outNodes
     }
+
 
     /**
      *
@@ -63,9 +69,18 @@ class Flatten {
             val regex = "^${start}(\\[\\])?[/][a-zA-Z]+[0-9]?(\\[\\])?$"
             val matches = tmp.matches(Regex(regex))
             matches
-        }.map { JSONFieldNode(path = it, children = null) }
+        }.map { JSONFieldNode(path = it, children = null, type = null) }
 
         jsonField.children = childrenNodes
+
+        jsonField.type = childrenNodes.any { it.path.matches(Regex("^(\\[\\])?${start}(\\[\\])+.*$")) }
+                .let {
+                    if (it)
+                        JSONFieldType.ARRAY
+                    else
+                        JSONFieldType.JSON
+                }
+
         if (childrenNodes.isEmpty()) return
 
         for (child: JSONFieldNode in childrenNodes) {
