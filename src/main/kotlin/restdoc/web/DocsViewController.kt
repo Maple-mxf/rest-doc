@@ -24,6 +24,9 @@ class DocsViewController {
     @GetMapping("")
     fun index(): String = "docs/add"
 
+    @GetMapping("/json/convert")
+    fun convertJSONView(): String = "docs/convert_json"
+
     @GetMapping("/document")
     fun detail(model: Model): String {
         val apiDocument: ApiDocument? = mongoTemplate.findOne(Query(), ApiDocument::class.java)

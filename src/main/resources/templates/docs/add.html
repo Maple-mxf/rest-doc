@@ -12,13 +12,6 @@
             margin: 10px;
             background-color: whitesmoke;
         }
-
-        @font-face {
-            font-family: "JetBrains Mono";
-            src: th: url("@{/font/JetBrainsMono-Regular.woff}");
-        }
-
-
     </style>
 </head>
 <body>
@@ -118,6 +111,10 @@
                 <div class="layui-inline">
                     <button type="button" class="layui-btn" id="add_request_body_field">
                         <i class="layui-icon layui-icon-addition" style="font-size: 30px; color: white;"></i>
+                    </button>
+
+                    <button type="button" class="layui-btn" id="convert_json_to_fields">
+                        JSON转换
                     </button>
                 </div>
             </div>
@@ -274,7 +271,18 @@
 
         var form = layui.form;
         var $ = layui.jquery;
-        msg = layui.layer
+        msg = layui.layer;
+        var layer = layui.layer;
+
+        $('#convert_json_to_fields').click(function (event) {
+            layer.open({
+                title: 'JSON快速转换',
+                area: ['900px', '600px'],
+                scrollbar: false,
+                type: 2,
+                content: '/restdoc/docs/json/convert'
+            });
+        });
 
         $("#add_request_header_field").click(function (event) {
 
@@ -305,16 +313,16 @@
 
         form.on('submit(*)', function (data) {
 
-           var map =  getFormData(data.field)
+            var map = getFormData(data.field)
 
             $.ajax({
                 type: 'POST',
                 dataType: 'JSON',
-                contentType:'application/json;charset=utf-8',
-                url:  'docs/build',
+                contentType: 'application/json;charset=utf-8',
+                url: 'docs/build',
                 data: JSON.stringify(map),
                 async: false,
-                success:function (data) {
+                success: function (data) {
                     console.info(data)
                 }
             })
