@@ -1,49 +1,49 @@
 [
   {
     "path": "path",
-    "value": null,
-    "description": "123123213",
-    "type": "MISSING",
+    "value": "name",
+    "description": "",
+    "type": "STRING",
     "optional": false,
     "defaultValue": "无可选值"
   },
   {
     "path": "value",
-    "value": null,
+    "value": "Jack",
     "description": "",
-    "type": "MISSING",
+    "type": "STRING",
     "optional": false,
     "defaultValue": "无可选值"
   },
   {
     "path": "description",
-    "value": null,
+    "value": "用户姓名",
     "description": "",
-    "type": "MISSING",
+    "type": "STRING",
     "optional": false,
     "defaultValue": "无可选值"
   },
   {
     "path": "type",
-    "value": null,
+    "value": "STRING",
     "description": "",
-    "type": "MISSING",
+    "type": "STRING",
     "optional": false,
     "defaultValue": "无可选值"
   },
   {
     "path": "users[].name",
-    "value": null,
+    "value": "jack",
     "description": "",
-    "type": "MISSING",
+    "type": "STRING",
     "optional": false,
     "defaultValue": "无可选值"
   },
   {
     "path": "users[].age",
-    "value": null,
+    "value": 20,
     "description": "",
-    "type": "MISSING",
+    "type": "NUMBER",
     "optional": false,
     "defaultValue": "无可选值"
   }

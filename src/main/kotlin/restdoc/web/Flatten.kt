@@ -9,6 +9,10 @@ import restdoc.model.JSONFieldType
 
 /**
  * @since 1.0
+ *
+ * The Flatten class provided flatten list to json tree
+ *
+ * @see Bump bump the json tree to flatten array
  */
 @Component
 class Flatten {
@@ -19,9 +23,7 @@ class Flatten {
         val isArray = fields.any {
             it.path.startsWith("[]")
         }
-        if (isArray)
-//
-        {
+        if (isArray) {
             return flattenToArrayNode(fields)
         }
         return flattenToJsonNode(fields)
@@ -48,11 +50,6 @@ class Flatten {
                     getNodeValue(it, paths)
                     it
                 }
-
-
-        /*for (outNode in outNodes) {
-
-        }*/
 
         return outNodes
     }
