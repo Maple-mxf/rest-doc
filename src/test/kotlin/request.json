@@ -1,31 +1,12 @@
 {
-  "name": "Echo Api",
-  "url": "http://127.0.0.1:8080/echo",
-  "method": "POST",
-  "header": [
+  "path": "name",
+  "value": "Jack",
+  "description": "用户姓名",
+  "type": "STRING",
+  "users": [
     {
-      "field": "Content-Type",
-      "value": [
-        "application/json"
-      ],
-      "description": "请求体标识",
-      "type": "STRING"
-    }
-  ],
-  "body": [
-    {
-      "path": "name",
-      "value": "Jack",
-      "description": "用户姓名",
-      "type": "STRING"
-    }
-  ],
-  "response": [
-    {
-      "path": "name",
-      "value": "Jack",
-      "description": "用户姓名",
-      "type": "STRING"
+      "name": "jack",
+      "age": 20
     }
   ]
 }

@@ -11,7 +11,7 @@ class BumpTest {
 
     @Test
     fun testBumpJson() {
-        val bump = Bump(File("C:\\Users\\mxf\\IdeaProjects\\rest-doc\\src\\test\\kotlin\\sample.json").readText())
+        val bump = Bump(File("C:\\Users\\mxf\\IdeaProjects\\rest-doc\\src\\test\\kotlin\\request.json").readText())
 
         println(mapper.writeValueAsString(bump.bump()))
     }

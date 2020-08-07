@@ -7,7 +7,7 @@ import restdoc.core.config.RestDocProperties
 
 /**
  *
- * # RestDoc
+ * RestDoc Springboot Application
  *
  * @since 1.0
  */
@@ -15,9 +15,6 @@ import restdoc.core.config.RestDocProperties
 @EnableConfigurationProperties(value = [RestDocProperties::class])
 class RestDocApplication
 
-/**
- * @since 1.0
- */
 fun main(args: Array<String>) {
     runApplication<RestDocApplication>(*args)
 }

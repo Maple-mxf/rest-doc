@@ -23,20 +23,14 @@ class Bump(private val jsonString: String) {
 
     private val mapper: ObjectMapper = ObjectMapper()
 
-    private var tree: JsonNode
-
     private val fieldDescriptor: MutableList<BodyFieldDescriptor> = mutableListOf()
-
-    init {
-        tree = mapper.readTree(this.jsonString)
-    }
 
     /**
      * @see restdoc.model.BodyFieldDescriptor
      * @return multi field descriptor
      */
     fun bump(): List<BodyFieldDescriptor> {
-        bumpTree("", this.tree)
+        bumpTree("", mapper.readTree(this.jsonString))
         return this.fieldDescriptor
     }
 
@@ -46,28 +40,38 @@ class Bump(private val jsonString: String) {
      * @param path field current location path of json tree
      */
     private fun bumpTree(path: String, treeNode: JsonNode) {
-        if (treeNode.isNull) {
-            this.fieldDescriptor.add(transformValue(path, treeNode))
-        } else if (treeNode.isArray) {
-            val array = treeNode as ArrayNode
-            for (subNode in array) {
-                bumpTree("$path[]", subNode)
+        when {
+            treeNode.isNull -> {
+                this.fieldDescriptor.add(transformValue(path, treeNode))
             }
-        } else {
-            for (field: MutableMap.MutableEntry<String, JsonNode> in treeNode.fields()) {
-                if (field.value.isNull) {
-                    this.fieldDescriptor.add(transformValue("${path}.${field.key}", field.value))
-                } else {
-                    if (field.value.isObject) {
-                        bumpTree("${path}.${field.key}", field.value)
-                    } else if (field.value.isArray) {
-                        bumpTree("${path}.${field.key}[]", field.value)
-                    } else {
-                        this.fieldDescriptor.add(transformValue(path, treeNode))
+            treeNode.isArray -> {
+                val array = treeNode as ArrayNode
+                for (subNode in array) {
+                    bumpTree(path, subNode)
+                }
+            }
+            treeNode.isObject -> {
+                for (field: MutableMap.MutableEntry<String, JsonNode> in treeNode.fields()) {
+                    when {
+                        field.value.isNull ->
+                            this.fieldDescriptor.add(transformValue(joinTreePath(path, field.key), field.value))
+                        field.value.isObject ->
+                            bumpTree(joinTreePath(path, field.key), field.value)
+                        field.value.isArray ->
+                            bumpTree(joinTreePath(path, "${field.key}[]"), field.value)
+                        else -> {
+                            this.fieldDescriptor.add(transformValue(joinTreePath(path, field.key), treeNode))
+                        }
                     }
                 }
             }
+            else -> this.fieldDescriptor.add(transformValue(path, treeNode))
         }
+    }
+
+    private fun joinTreePath(prefix: String, suffix: String): String {
+        if (prefix == "") return suffix
+        return "${prefix}.${suffix}"
     }
 
     /**
@@ -78,21 +82,33 @@ class Bump(private val jsonString: String) {
             node: JsonNode
     ): BodyFieldDescriptor {
 
-        val fieldType = when (node.nodeType) {
-            JsonNodeType.ARRAY -> FieldType.ARRAY
-            JsonNodeType.BINARY -> FieldType.OBJECT
-            JsonNodeType.OBJECT -> FieldType.OBJECT
-            JsonNodeType.NUMBER -> FieldType.NUMBER
-            JsonNodeType.NULL -> FieldType.MISSING
-            JsonNodeType.POJO -> FieldType.OBJECT
-            JsonNodeType.STRING -> FieldType.STRING
-            JsonNodeType.BOOLEAN -> FieldType.BOOLEAN
-            else -> FieldType.MISSING
-        }
+        val value: Any?
 
+        val fieldType = when (node.nodeType) {
+            JsonNodeType.NUMBER -> {
+                value = node.numberValue()
+                FieldType.NUMBER
+            }
+            JsonNodeType.NULL -> {
+                value = null
+                FieldType.MISSING
+            }
+            JsonNodeType.STRING -> {
+                value = node.textValue()
+                FieldType.STRING
+            }
+            JsonNodeType.BOOLEAN -> {
+                value = node.booleanValue()
+                FieldType.BOOLEAN
+            }
+            else -> {
+                value = null
+                FieldType.MISSING
+            }
+        }
         return BodyFieldDescriptor(
                 path = path,
-                value = node.toString(),
+                value = value,
                 description = "",
                 type = fieldType,
                 optional = false,
