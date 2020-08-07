@@ -45,7 +45,7 @@ data class RequestProcess<R>(
  */
 @restdoc.core.Since(Version.V1)
 enum class FieldType {
-    STRING, NUMBER, OBJECT, ARRAY, BOOLEAN
+    STRING, NUMBER, OBJECT, ARRAY, BOOLEAN,MISSING
 }
 
 

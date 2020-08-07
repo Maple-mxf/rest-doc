@@ -1,14 +1,8 @@
-[
-  {
-    "path": "users/settings",
-    "children": []
-  },
-  {
-    "path": "users",
-    "children": []
-  },
-  {
-    "path": "users/settings/name",
-    "children": []
+{
+  "type": "array",
+  "items": {
+    "id": "http://example.com/item-schema",
+    "type": "object",
+    "additionalProperties": {"$ref": "#"}
   }
-]
+}
