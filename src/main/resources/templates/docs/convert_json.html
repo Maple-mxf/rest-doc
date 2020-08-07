@@ -13,6 +13,10 @@
 
     <link rel="stylesheet" th:href="@{/layui/css/layui.css}"/>
     <link rel="stylesheet" th:href="@{/admin/css/pearForm.css}"/>
+
+
+    <link th:href="jsoneditor/dist/jsoneditor.min.css" rel="stylesheet" type="text/css">
+    <script th:src="jsoneditor/dist/jsoneditor.min.js"></script>
 </head>
 <body>
 
@@ -34,9 +38,18 @@
             </div>
         </div>
     </form>
+
+    <div id="editor">function foo(items) {
+        var x = "All this is syntax highlighted";
+        return x;
+        }
+    </div>
+
 </div>
 <script th:src="@{/layui/layui.js}"></script>
 <script th:src="@{/admin/js/jquery.js}"></script>
+
+
 
 <script type="text/javascript" th:inline="javascript">
     layui.use(['layer', 'form', 'element', 'jquery'], function () {
