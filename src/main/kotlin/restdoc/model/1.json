@@ -1,50 +1,36 @@
 [
   {
-    "path": "path",
-    "value": "name",
-    "description": "",
-    "type": "STRING",
-    "optional": false,
-    "defaultValue": "无可选值"
+    "path": "users",
+    "children": [
+      {
+        "path": "[]users[]/settings",
+        "children": [
+          {
+            "path": "[]users[]/settings/name",
+            "children": [],
+            "type": "JSON"
+          }
+        ],
+        "type": "JSON"
+      }
+    ],
+    "type": "ARRAY"
   },
   {
-    "path": "value",
-    "value": "Jack",
-    "description": "",
-    "type": "STRING",
-    "optional": false,
-    "defaultValue": "无可选值"
-  },
-  {
-    "path": "description",
-    "value": "用户姓名",
-    "description": "",
-    "type": "STRING",
-    "optional": false,
-    "defaultValue": "无可选值"
-  },
-  {
-    "path": "type",
-    "value": "STRING",
-    "description": "",
-    "type": "STRING",
-    "optional": false,
-    "defaultValue": "无可选值"
-  },
-  {
-    "path": "users[].name",
-    "value": "jack",
-    "description": "",
-    "type": "STRING",
-    "optional": false,
-    "defaultValue": "无可选值"
-  },
-  {
-    "path": "users[].age",
-    "value": 20,
-    "description": "",
-    "type": "NUMBER",
-    "optional": false,
-    "defaultValue": "无可选值"
+    "path": "personal",
+    "children": [
+      {
+        "path": "[]personal/settings",
+        "children": [
+          {
+            "path": "[]personal/settings/name",
+            "children": [],
+            "type": "JSON"
+          }
+        ],
+        "type": "JSON"
+      }
+    ],
+    "type": "JSON"
   }
 ]

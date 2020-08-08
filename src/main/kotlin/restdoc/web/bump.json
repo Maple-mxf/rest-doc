@@ -1,0 +1,50 @@
+[
+  {
+    "path": "path",
+    "value": "name",
+    "description": "",
+    "type": "STRING",
+    "optional": false,
+    "defaultValue": "无可选值"
+  },
+  {
+    "path": "value",
+    "value": "Jack",
+    "description": "",
+    "type": "STRING",
+    "optional": false,
+    "defaultValue": "无可选值"
+  },
+  {
+    "path": "description",
+    "value": "用户姓名",
+    "description": "",
+    "type": "STRING",
+    "optional": false,
+    "defaultValue": "无可选值"
+  },
+  {
+    "path": "type",
+    "value": "STRING",
+    "description": "",
+    "type": "STRING",
+    "optional": false,
+    "defaultValue": "无可选值"
+  },
+  {
+    "path": "users[].name",
+    "value": "jack",
+    "description": "",
+    "type": "STRING",
+    "optional": false,
+    "defaultValue": "无可选值"
+  },
+  {
+    "path": "users[].age",
+    "value": 20,
+    "description": "",
+    "type": "NUMBER",
+    "optional": false,
+    "defaultValue": "无可选值"
+  }
+]
