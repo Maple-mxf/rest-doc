@@ -1,7 +1,9 @@
 package restdoc.util
 
+import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.junit.Test
+import restdoc.model.BodyFieldDescriptor
 import java.io.File
 
 
@@ -28,6 +30,9 @@ class JacksonTest {
         for (field in tree.fields()) {
             println("${field.key}:${field.value} ")
         }
+
+        val array:List<BodyFieldDescriptor>  = mutableListOf()
+
     }
 
 }

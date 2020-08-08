@@ -1,36 +1,9 @@
-[
-  {
-    "path": "users",
-    "children": [
-      {
-        "path": "[]users[]/settings",
-        "children": [
-          {
-            "path": "[]users[]/settings/name",
-            "children": [],
-            "type": "JSON"
-          }
-        ],
-        "type": "JSON"
-      }
-    ],
-    "type": "ARRAY"
-  },
-  {
-    "path": "personal",
-    "children": [
-      {
-        "path": "[]personal/settings",
-        "children": [
-          {
-            "path": "[]personal/settings/name",
-            "children": [],
-            "type": "JSON"
-          }
-        ],
-        "type": "JSON"
-      }
-    ],
-    "type": "JSON"
+{
+  "path": "users",
+  "children": {
+    "path": "settings",
+    "children": {
+      "path": "name"
+    }
   }
-]
+}

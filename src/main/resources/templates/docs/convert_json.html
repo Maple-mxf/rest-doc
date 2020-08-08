@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title>Title</title>
 
-    <!--Import materialize.css-->
     <link type="text/css" rel="stylesheet" th:href="@{/admin/css/materialize.min.css}" media="screen,projection"/>
     <link type="text/css" rel="stylesheet" th:href="@{/admin/css/doc-font.css}"/>
 
@@ -13,54 +12,67 @@
 
     <link rel="stylesheet" th:href="@{/layui/css/layui.css}"/>
     <link rel="stylesheet" th:href="@{/admin/css/pearForm.css}"/>
-
-
-    <link th:href="jsoneditor/dist/jsoneditor.min.css" rel="stylesheet" type="text/css">
-    <script th:src="jsoneditor/dist/jsoneditor.min.js"></script>
 </head>
 <body>
 
 
 <div class="layui-container">
-    <form class="layui-form layui-form-pane" action="">
 
-        <div class="layui-form-item layui-form-text">
-            <div class="layui-input-block" id="json_text_area"
-                 style="font-family: 'JetBrains Mono',serif;font-size: 16px">
-                <textarea name="desc" placeholder="请输入JSON" class="layui-textarea"></textarea>
-            </div>
+    <div class="layui-form-item layui-form-text">
+        <div class="layui-input-block" style="font-family: 'JetBrains Mono',serif;font-size: 16px">
+                <textarea name="desc" id="json_text_input" placeholder="请输入JSON"
+                          class="layui-textarea" cols=20 rows=15></textarea>
         </div>
-
-        <div class="layui-form-item">
-            <div class="layui-input-block">
-                <button class="layui-btn" id="format_json_btn">格式化JSON</button>
-                <button class="layui-btn" id="convert">转换JSON</button>
-            </div>
-        </div>
-    </form>
-
-    <div id="editor">function foo(items) {
-        var x = "All this is syntax highlighted";
-        return x;
-        }
     </div>
+
+<!--    <div class="layui-form-item">-->
+<!--        <div class="layui-input-block">-->
+<!--            <button class="layui-btn" id="format_json_btn">格式化JSON</button>-->
+<!--            <button class="layui-btn" id="convert_json_btn">转换JSON</button>-->
+<!--        </div>-->
+<!--    </div>-->
 
 </div>
 <script th:src="@{/layui/layui.js}"></script>
 <script th:src="@{/admin/js/jquery.js}"></script>
 
 
-
 <script type="text/javascript" th:inline="javascript">
+
+    function getJSONValue() {
+        return $('#json_text_input').val();
+    }
+
     layui.use(['layer', 'form', 'element', 'jquery'], function () {
         var form = layui.form;
         var $ = layui.jquery;
         var layer = layui.layer;
 
-        $('#format_json_btn').click(function (event) {
-            $('#json_text_area').val()
+        $('textarea').dblclick(function (event) {
+            var ugly = $('#json_text_input').val();
+            if (ugly !== '') {
+                try {
+                    var obj = JSON.parse(ugly);
+                    var pretty = JSON.stringify(obj, undefined, 4);
+                    console.info(pretty)
+                    $('#json_text_input').val(pretty)
+                } catch (e) {
+                    layer.msg("JSON字符串错误，请检查")
+                }
+            }
         })
+        //
+        // $('#format_json_btn').click(function (event) {
+        //
+        // });
+        //
+        // $('#convert_json_btn').click(function (event) {
+        //     var index = parent.layer.getFrameIndex(window.name);
+        //     parent.layer.close(index);
+        //     return $('#json_text_input').val();
+        // })
     });
+
 </script>
 
 </body>

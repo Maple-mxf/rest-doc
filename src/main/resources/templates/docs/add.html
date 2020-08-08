@@ -280,7 +280,48 @@
                 area: ['900px', '600px'],
                 scrollbar: false,
                 type: 2,
-                content: '/restdoc/docs/json/convert'
+                content: '/restdoc/docs/json/convert',
+                closeBtn: 1,
+                btn: ['转换JSON', "格式化JSON"],
+                yes: function (index, layero) {
+                    var res = window["layui-layer-iframe" + index].getJSONValue();
+                    $.ajax({
+                        type: 'POST',
+                        dataType: 'JSON',
+                        contentType: 'application/json;charset=utf-8',
+                        url: 'docs/bump',
+                        data: res,
+                        async: false,
+                        success: function (data) {
+                            if (data.code === '200') {
+                                if (data.data.length >= 1) {
+                                    let firstLine = data.data[0];
+                                    $("#first-request-body-field input").each(function () {
+                                        if (this.name === 'requestFieldPath') {
+                                            this.value = firstLine['path']
+                                        } else if (this.name === 'requestFieldValue') {
+                                            this.value = firstLine['value']
+                                        }
+                                    });
+                                    console.info($(".multi-request-body").length)
+
+                                    let multiDivEls = $(".multi-request-body");
+
+                                    multiDivEls.each(function (item) {
+                                        console.info(item)
+                                    })
+
+                                }
+                            } else {
+                                layer.msg('JSON转换失败，错误信息:' + data.message)
+                            }
+                        },
+                        error: function (data) {
+                            layer.msg("JSON格式错误")
+                        }
+                    })
+                    layer.close(index); //如果设定了yes回调，需进行手工关闭
+                }
             });
         });
 
@@ -296,7 +337,7 @@
         $("#add_request_body_field").click(function (event) {
 
             let row = $('.one-line').html();
-            var html = '  <div class="layui-form-item">' + row + '</div>';
+            var html = '  <div class="layui-form-item multi-request-body">' + row + '</div>';
             $("#request-body-form").after(html);
 
             form.render();

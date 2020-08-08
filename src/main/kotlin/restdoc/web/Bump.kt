@@ -19,7 +19,21 @@ import restdoc.model.FieldType
  *
  * @since 1.0
  */
-class Bump(private val jsonString: String) {
+class Bump {
+
+    private val tree: JsonNode
+
+    constructor(jsonString: String) {
+        tree = mapper.readTree(jsonString)
+    }
+
+    constructor(json: Map<String, Any>) {
+        tree = mapper.convertValue(json, JsonNode::class.java)
+    }
+
+    constructor(tree: JsonNode) {
+        this.tree = tree
+    }
 
     private val mapper: ObjectMapper = ObjectMapper()
 
@@ -30,7 +44,7 @@ class Bump(private val jsonString: String) {
      * @return multi field descriptor
      */
     fun bump(): List<BodyFieldDescriptor> {
-        bumpTree("", mapper.readTree(this.jsonString))
+        bumpTree("", this.tree)
         return this.fieldDescriptor
     }
 

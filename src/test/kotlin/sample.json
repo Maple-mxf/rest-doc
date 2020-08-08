@@ -1,34 +1,9 @@
-[
-  {
-    "path": "",
-    "value": "{\"type\":\"array\",\"items\":{\"id\":\"http://example.com/item-schema\",\"type\":\"object\",\"additionalProperties\":{\"$ref\":\"#\"}}}",
-    "description": "",
-    "type": "OBJECT",
-    "optional": false,
-    "defaultValue": "无可选值"
-  },
-  {
-    "path": ".items",
-    "value": "{\"id\":\"http://example.com/item-schema\",\"type\":\"object\",\"additionalProperties\":{\"$ref\":\"#\"}}",
-    "description": "",
-    "type": "OBJECT",
-    "optional": false,
-    "defaultValue": "无可选值"
-  },
-  {
-    "path": ".items",
-    "value": "{\"id\":\"http://example.com/item-schema\",\"type\":\"object\",\"additionalProperties\":{\"$ref\":\"#\"}}",
-    "description": "",
-    "type": "OBJECT",
-    "optional": false,
-    "defaultValue": "无可选值"
-  },
-  {
-    "path": ".items.additionalProperties",
-    "value": "{\"$ref\":\"#\"}",
-    "description": "",
-    "type": "OBJECT",
-    "optional": false,
-    "defaultValue": "无可选值"
-  }
-]
+{
+  "users": [
+    [
+      {"name": "jack"}
+    ]
+  ]
+}
+
+users[][].name='jack'

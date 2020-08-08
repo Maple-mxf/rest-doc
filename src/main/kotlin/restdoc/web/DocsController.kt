@@ -1,5 +1,6 @@
 package restdoc.web
 
+import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.mongodb.core.MongoTemplate
@@ -7,13 +8,14 @@ import org.springframework.data.mongodb.core.query.Query
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
+import restdoc.core.Result
 import restdoc.core.ok
 import restdoc.model.*
 import java.util.*
 
 @Controller
 @RequestMapping("/docs")
-class DocsViewController {
+class DocsController {
 
     @Autowired
     lateinit var mapper: ObjectMapper
@@ -26,6 +28,10 @@ class DocsViewController {
 
     @GetMapping("/json/convert")
     fun convertJSONView(): String = "docs/convert_json"
+
+    @PostMapping("/bump")
+    @ResponseBody
+    fun bump(@RequestBody tree: JsonNode): Result = ok(Bump(tree).bump())
 
     @GetMapping("/document")
     fun detail(model: Model): String {
