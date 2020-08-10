@@ -20,8 +20,8 @@ class FlattenTest {
 
         val fields: List<BodyFieldDescriptor> = mutableListOf(
                 BodyFieldDescriptor(path = "[]users[].settings", value = null, description = "", type = FieldType.ARRAY, optional = false, defaultValue = ""),
-                BodyFieldDescriptor(path = "[]users[].settings.name", value = null, description = "", type = FieldType.ARRAY, optional = false, defaultValue = ""),
-                BodyFieldDescriptor(path = "[]personal.settings.name", value = null, description = "", type = FieldType.ARRAY, optional = false, defaultValue = "")
+                BodyFieldDescriptor(path = "[]users[].settings.name", value = null, description = "", type = FieldType.ARRAY, optional = false, defaultValue = "")/*,
+                BodyFieldDescriptor(path = "[]personal.settings.name", value = null, description = "", type = FieldType.ARRAY, optional = false, defaultValue = "")*/
         )
 
         val flattenNodeToTree = flatten.flattenNodeToTree(fields)

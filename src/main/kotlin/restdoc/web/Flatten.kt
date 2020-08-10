@@ -30,11 +30,9 @@ class Flatten {
     }
 
     /**
-     *
+     *@param fields Body fields array
      */
     fun flattenToArrayNode(fields: List<BodyFieldDescriptor>): List<JSONFieldNode> {
-        val arrayNode = mapper.createArrayNode()
-
         val fieldsPath: Set<String> = fields.flatMap {
             val els = it.path.split(".").reversed()
             els.mapIndexed { index, _ -> els.subList(index, els.size).reversed().joinToString("/") }
@@ -43,8 +41,7 @@ class Flatten {
         val paths = fieldsPath.toList()
 
         val outNodes: List<JSONFieldNode> = fieldsPath
-                .map { it.replace("[]", "") }
-                .filter { it.matches(Regex("^[a-zA-Z]+[0-9]?$")) }
+                .filter { it.matches(Regex("^(\\[\\])?[a-zA-Z]+[0-9]?(\\[\\])?$")) }
                 .map { JSONFieldNode(path = it, children = null, type = null) }
                 .map {
                     getNodeValue(it, paths)
@@ -54,16 +51,20 @@ class Flatten {
         return outNodes
     }
 
+    fun buildArrayNode(outNodes: List<JSONFieldNode>) {
+        val arrayNode = mapper.createArrayNode()
+    }
+
 
     /**
      *
      */
-    fun getNodeValue(jsonField: JSONFieldNode, fields: List<String>) {
+    private fun getNodeValue(jsonField: JSONFieldNode, fields: List<String>) {
         val start = jsonField.path.replace("[", "").replace("]", "")
 
         val childrenNodes = fields.filter {
             val tmp = it.replace("[", "").replace("]", "")
-            val regex = "^${start}(\\[\\])?[/][a-zA-Z]+[0-9]?(\\[\\])?$"
+            val regex = "^(\\[\\])?${start}(\\[\\])?[/][a-zA-Z]+[0-9]?(\\[\\])?$"
             val matches = tmp.matches(Regex(regex))
             matches
         }.map { JSONFieldNode(path = it, children = null, type = null) }
