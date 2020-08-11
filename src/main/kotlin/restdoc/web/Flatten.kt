@@ -2,6 +2,7 @@ package restdoc.web
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
+import jdk.nashorn.internal.ir.ObjectNode
 import org.springframework.stereotype.Component
 import restdoc.model.BodyFieldDescriptor
 import restdoc.model.JSONFieldNode
@@ -78,6 +79,23 @@ class Flatten {
 
         println(prefixTagLength)
         println(backendTagLength)
+    }
+
+    fun buildJsonNode1(outNode: JSONFieldNode, on: ObjectNode) {
+        val paths = outNode.path.split("/")
+        val currentPath = paths.last()
+
+        val path = currentPath.replace("[]", "")
+        val index = currentPath.indexOf(path)
+
+        val preTags = currentPath.substring(0, index)
+        val backTags = currentPath.substring(index + path.length)
+
+        val preTagSize = preTags.split("[").filter { it.isNotBlank() }.size
+        val backTagSize = backTags.split("[").filter { it.isNotBlank() }.size
+
+        for (i in preTagSize downTo 0 step 1) {
+        }
     }
 
 
