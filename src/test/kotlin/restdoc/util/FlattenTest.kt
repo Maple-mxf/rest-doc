@@ -38,4 +38,10 @@ class FlattenTest {
         println("users".matches(Regex("^[a-z]+[0-9]?$")))
     }
 
+    @Test
+    fun split(){
+        val splitChar = "[]users[]".replace("[]", "")
+        val split = "[]users[]".split(splitChar)
+        println(split)
+    }
 }

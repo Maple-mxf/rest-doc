@@ -48,11 +48,36 @@ class Flatten {
                     it
                 }
 
+        buildArrayNode(outNodes)
+
         return outNodes
     }
 
     fun buildArrayNode(outNodes: List<JSONFieldNode>) {
         val arrayNode = mapper.createArrayNode()
+        for (outNode in outNodes) {
+            buildJsonNode(outNode)
+        }
+    }
+
+    fun buildJsonNode(outNode: JSONFieldNode) {
+        val paths = outNode.path.split("/")
+        val currentPath = paths.last()
+
+        val matchResult = Regex("(a-zA-Z)+").find(currentPath)
+        val field = matchResult?.groupValues?.last()
+
+        val prefixIndex = field?.let { currentPath.indexOf(it) }
+        val prefix = prefixIndex?.let { currentPath.substring(0, it) }
+
+        val backendIndex = prefixIndex?.plus(field.length)?.minus(1)
+        val backend = backendIndex?.let { currentPath.substring(it) }
+
+        val prefixTagLength = prefix?.let { Regex("^(\\[\\])?$").find(it)?.groupValues?.size }
+        val backendTagLength = backend?.let { Regex("^(\\[\\])?$").find(it)?.groupValues?.size }
+
+        println(prefixTagLength)
+        println(backendTagLength)
     }
 
 
