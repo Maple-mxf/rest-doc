@@ -2,16 +2,16 @@ package restdoc.util
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.junit.Test
-import restdoc.web.Bump
+import restdoc.web.BumpJson
 import java.io.File
 
-class BumpTest {
+class BumpJsonTest {
     private val mapper: ObjectMapper = ObjectMapper()
 
 
     @Test
     fun testBumpJson() {
-        val bump = Bump(File("E:\\jw\\rest-doc\\src\\test\\kotlin\\request.json").readText())
+        val bump = BumpJson(File("E:\\jw\\rest-doc\\src\\test\\kotlin\\request.json").readText())
 
         println(mapper.writeValueAsString(bump.bump()))
     }

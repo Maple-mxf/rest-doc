@@ -6,9 +6,7 @@ class RegexTest {
     @Test
     fun test0() {
         val string = "[][]name"
-
         val matches = string.matches(Regex("[\\[\\]]+[a-z0-9A-Z]+$"))
-
         println(matches)
     }
 
@@ -74,5 +72,51 @@ class RegexTest {
         val matches = field.matches(Regex("^users(\\[\\])+[/][a-zA-Z]+[0-9]+(\\[\\])?$"))
 
         println(matches)
+    }
+
+
+    @Test
+    fun testGroupRegex() {
+        val path = "name[1123123][1]"
+
+        val regex = Regex("^[a-zA-Z]+[a-zA-Z0-9]*((\\[\\d+\\])*)$")
+        val matchResult = regex.find(path)
+
+        if (matchResult != null) {
+            val groupValues = matchResult.groupValues
+
+            for (groupValue in groupValues) {
+                println(groupValue)
+            }
+        }
+    }
+
+    @Test
+    fun testSplitChar() {
+        val str = "[2][1]"
+        val regex = Regex("^((\\[\\d+\\])+)$")
+        val matchResult = regex.find(str)
+        if (matchResult != null) {
+            for (groupValue in matchResult.groupValues) {
+                println(groupValue)
+            }
+        }
+        val split = str.split("]")
+
+        for (s in split) {
+            println(s.replace("[","").replace("]",""))
+        }
+    }
+
+    @Test
+    fun testGetIndexNum(){
+        val path = "name[1][2]"
+        val matchResult = Regex("((\\[\\d+\\])+)").find(path)
+
+     matchResult?.let {
+         for (groupValue in it.groupValues) {
+             println(groupValue)
+         }
+     }
     }
 }

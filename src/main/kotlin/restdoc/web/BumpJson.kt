@@ -19,7 +19,7 @@ import restdoc.model.FieldType
  *
  * @since 1.0
  */
-class Bump {
+class BumpJson {
 
     private val tree: JsonNode
 

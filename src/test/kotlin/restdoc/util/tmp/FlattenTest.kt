@@ -1,5 +1,6 @@
 package restdoc.util.tmp
 
+import org.apache.catalina.mapper.Mapper
 import org.junit.Test
 import restdoc.model.BodyFieldDescriptor
 import restdoc.model.FieldType
@@ -26,8 +27,7 @@ public class FlattenTest {
         val flattenNodeToTree = flatten.flattenNodeToTree(fields)
 
         // "^(\\[\\])+[a-zA-Z]+[0-9](\\[\\])?+$"
-
-
+//        println(Mapper)
     }
 
     @Test

@@ -1,12 +1,8 @@
-{
-  "path": "root",
-  "type": "array",
-  "children": [
-    {
-      "path": "name",
-      "type": "array",
-      "children": [
-      ]
-    }
+[
+  [
+    [
+      {
+      }
+    ]
   ]
-}
+]

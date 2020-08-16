@@ -31,7 +31,7 @@ class DocsController {
 
     @PostMapping("/bump")
     @ResponseBody
-    fun bump(@RequestBody tree: JsonNode): Result = ok(Bump(tree).bump())
+    fun bump(@RequestBody tree: JsonNode): Result = ok(BumpJson(tree).bump())
 
     @GetMapping("/document")
     fun detail(model: Model): String {
