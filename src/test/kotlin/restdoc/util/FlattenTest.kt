@@ -19,8 +19,8 @@ class FlattenTest {
     fun flattenArray() {
 
         val fields: List<BodyFieldDescriptor> = mutableListOf(
-                BodyFieldDescriptor(path = "[][]users[].settings", value = null, description = "", type = FieldType.ARRAY, optional = false, defaultValue = "")/*,
-                BodyFieldDescriptor(path = "[]users[].settings.name", value = null, description = "", type = FieldType.ARRAY, optional = false, defaultValue = ""),
+                BodyFieldDescriptor(path = "[]users[].settings", value = null, description = "", type = FieldType.ARRAY, optional = false, defaultValue = ""),
+                BodyFieldDescriptor(path = "[]users[].settings.name", value = null, description = "", type = FieldType.ARRAY, optional = false, defaultValue = "")/*,
                 BodyFieldDescriptor(path = "[]personal.settings.name", value = null, description = "", type = FieldType.ARRAY, optional = false, defaultValue = "")*/
         )
 
@@ -38,4 +38,10 @@ class FlattenTest {
         println("users".matches(Regex("^[a-z]+[0-9]?$")))
     }
 
+    @Test
+    fun split(){
+        val splitChar = "[]users[]".replace("[]", "")
+        val split = "[]users[]".split(splitChar)
+        println(split)
+    }
 }

@@ -1,9 +1,19 @@
-{
-  "path": "users",
-  "children": {
-    "path": "settings",
-    "children": {
-      "path": "name"
-    }
+[
+  {
+    "path": "[]users[]",
+    "children": [
+      {
+        "path": "[]users[]/settings",
+        "children": [
+          {
+            "path": "[]users[]/settings/name",
+            "children": [],
+            "type": "JSON"
+          }
+        ],
+        "type": "JSON"
+      }
+    ],
+    "type": "ARRAY"
   }
-}
+]
