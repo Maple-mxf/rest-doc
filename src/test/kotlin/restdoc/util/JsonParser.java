@@ -12,6 +12,7 @@ import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static java.lang.Integer.parseInt;
 import static java.util.Comparator.comparingInt;
 import static java.util.Comparator.nullsFirst;
 import static java.util.regex.Pattern.compile;
@@ -167,7 +168,7 @@ public class JsonParser {
                     if (jn instanceof ArrayNode) {
                         Matcher matcher = compile("(\\[\\d+\\])+").matcher(childPaths[i - 1]);
 
-                        if (matcher.find()){
+                        if (matcher.find()) {
                             List<String> indexes = Arrays.stream(matcher.group(1).split("\\]"))
                                     .map(t -> t.replaceAll("\\[", ""))
                                     .collect(toList());
@@ -179,13 +180,19 @@ public class JsonParser {
                             if (i == childPaths.length - 1) objectNode.putPOJO(ph, value);
                             else objectNode.putPOJO(ph, null);
 
-                            ((ArrayNode) jn).insertPOJO(Integer.parseInt(lastIndex), objectNode);
+                            ((ArrayNode) jn).insertPOJO(parseInt(lastIndex), objectNode);
+
+                            jn = objectNode;
                         }
                     } else {
-                        if (i == childPaths.length - 1) ((ObjectNode) jn).putPOJO(ph, value);
-                        else ((ObjectNode) jn).putPOJO(ph, mapper.createObjectNode());
+                        ObjectNode objectNode = mapper.createObjectNode();
+                        if (i == childPaths.length - 1) {
+                            objectNode.putPOJO(ph, value);
+                        } else {
+                            ((ObjectNode) jn).putPOJO(ph, objectNode);
+                            jn = objectNode;
+                        }
                     }
-
                 }
             } else {
                 System.err.println("Error Not matched");
