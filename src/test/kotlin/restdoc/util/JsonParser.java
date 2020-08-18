@@ -7,6 +7,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import restdoc.model.BodyFieldDescriptor;
 
 import java.util.*;
+import java.util.function.BinaryOperator;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,7 +26,7 @@ public class JsonParser {
     final ObjectNode on = mapper.createObjectNode();
 
     public JsonParser(List<BodyFieldDescriptor> descriptors) {
-        this.descriptors = descriptors
+        /*this.descriptors = descriptors
                 .stream()
                 .flatMap(descriptor -> {
                     String[] paths = descriptor.getPath().split("\\.");
@@ -51,12 +53,33 @@ public class JsonParser {
                                     descriptor.getDefaultValue()));
                 })
                 .collect(toMap(BodyFieldDescriptor::getPath, t -> t, (t, t2) -> t2))
-                .values();
+                .values();*/
 
-        this.parse(null);
+        this.descriptors = this.getMinNode(descriptors);
+
+        parse1();
+    }
+
+    private List<BodyFieldDescriptor> getMinNode(List<BodyFieldDescriptor> dts) {
+
+        return new ArrayList<>(dts.stream()
+                .filter(t -> dts.stream()
+                        .noneMatch(d -> d.getPath()
+                                .matches(String.format("^%s\\.[a-zA-Z_]+[a-zA-Z0-9]*(.*)$",
+                                        this.escape(t.getPath()))))
+                )
+                .collect(toMap(BodyFieldDescriptor::getPath, Function.identity(), (descriptor, descriptor2) -> descriptor2))
+                .values());
+    }
+
+    public void parse1(){
+        for (BodyFieldDescriptor descriptor : this.descriptors) {
+            this.buildPOJO(descriptor.getPath(),descriptor.getValue());
+        }
     }
 
 
+    @Deprecated
     public void parse(String parentPath) {
         List<BodyFieldDescriptor> children = getChildren(parentPath);
 
@@ -83,24 +106,27 @@ public class JsonParser {
             return descriptors.stream()
                     .filter(descriptor ->
                             compile(
-                                    String.format("^%s\\.[a-zA-Z]+[a-zA-Z0-9]*(\\[\\d+\\])*$", this.escape(parentPath))).matcher(descriptor.getPath()).find())
+                                    String.format("^%s\\.[a-zA-Z]+[a-zA-Z0-9]*(\\[\\d+\\])*$", this.escape(parentPath)))
+                                    .matcher(descriptor.getPath()).find())
                     .collect(toList());
         }
     }
 
     final Pattern fieldNamePattern = compile("[a-zA-Z0-9_]+[a-zA-Z0-9]*");
 
-    private String escape(String string){
-       return string.replaceAll("\\.", "\\\\.")
+    private String escape(String string) {
+        return string.replaceAll("\\.", "\\\\.")
                 .replaceAll("\\[", "\\\\[")
                 .replaceAll("\\]", "\\\\]");
     }
+
 
     private void buildPOJO(String path, Object value) {
         String[] childPaths = path.split("\\.");
         JsonNode jn = this.on;
 
-        for (String ph : childPaths) {
+        for (int i = 0; i < childPaths.length; i++) {
+            String ph = childPaths[i];
             Matcher fieldMatcher = fieldNamePattern.matcher(ph);
 
             if (fieldMatcher.find()) {
@@ -136,18 +162,22 @@ public class JsonParser {
                         }
                     }
                 } else {
-                    Pattern filterChildPattern = compile(String.format("^%s(\\.[a-zA-Z_]+)$", this.escape(path)));
+                   /* Pattern filterChildPattern = compile(String.format("^%s(\\.[a-zA-Z_]+)$", this.escape(path)));
                     List<BodyFieldDescriptor> children = this.descriptors.stream()
                             .filter(t -> filterChildPattern.matcher(t.getPath()).find())
                             .collect(toList());
 
                     ObjectNode objectNode = (ObjectNode) jn;
                     if (children.isEmpty()) {
-
                         objectNode.putPOJO(field, value);
                     } else {
                         objectNode.putPOJO(field, mapper.createObjectNode());
+                    }*/
+
+                    if (jn instanceof ArrayNode){
+                        ph[i-1]
                     }
+
                 }
             } else {
                 System.err.println("Error Not matched");
