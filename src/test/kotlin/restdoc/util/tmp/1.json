@@ -1,4 +1,26 @@
 [
-  {"name": "jack"}
+  {
+    "path": "users[1].settings",
+    "value": null,
+    "description": "",
+    "type": "ARRAY",
+    "optional": false,
+    "defaultValue": ""
+  },
+  {
+    "path": "users[1]",
+    "value": null,
+    "description": "",
+    "type": "ARRAY",
+    "optional": false,
+    "defaultValue": ""
+  },
+  {
+    "path": "users[1].settings.name",
+    "value": null,
+    "description": "",
+    "type": "ARRAY",
+    "optional": false,
+    "defaultValue": ""
+  }
 ]
-

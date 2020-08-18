@@ -1,9 +1,9 @@
 package restdoc.web
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.node.ArrayNode
-import com.fasterxml.jackson.databind.node.ObjectNode
+import com.fasterxml.jackson.databind.node.*
 import restdoc.model.BodyFieldDescriptor
+import java.math.BigDecimal
 
 class FlattenJson(val descriptors: List<BodyFieldDescriptor>) {
 
@@ -33,15 +33,11 @@ class FlattenJson(val descriptors: List<BodyFieldDescriptor>) {
         val node: ObjectNode = on
 
         for (path in pathArray) {
-
             // if Path is Array
             if (path.matches(Regex("^[a-zA-Z]+[a-zA-Z0-9]?(\\[\\d+\\])+$"))) {
-
                 Regex("([a-zA-Z]+[a-zA-Z0-9]?)").find(path)?.groupValues?.get(1)
                         ?.let {
-
-                            var childNode = mapper.createArrayNode()
-
+                            val childNode = mapper.createArrayNode()
                             val ias = Regex("((\\[\\d+\\])+)").find(path)?.let { index ->
                                 val str = index.groupValues[index.groupValues.size - 2]
                                 val indexArray = str.split("]")
@@ -49,13 +45,15 @@ class FlattenJson(val descriptors: List<BodyFieldDescriptor>) {
                                         .map { t -> t.toInt() }
                                 indexArray
                             }
-
                             node.putPOJO(it, childNode)
                             var tmpNode: ArrayNode = childNode
-
-                            ias?.forEach { index ->
-                                tmpNode[index] = mapper.createArrayNode()
-                                tmpNode = childNode[index] as ArrayNode
+                            ias?.forEachIndexed { index, value ->
+                                if (index != ias.size - 1) {
+                                    tmpNode[value] = mapper.createArrayNode()
+                                    tmpNode = childNode[value] as ArrayNode
+                                } else {
+                                    tmpNode[value] = createJsonNodeOfType(outNode.value)
+                                }
                             }
                         }
             }
@@ -66,4 +64,33 @@ class FlattenJson(val descriptors: List<BodyFieldDescriptor>) {
         }
     }
 
+    fun createJsonNodeOfType(value: Any?): ValueNode {
+        when (value) {
+            is Boolean -> {
+                return BooleanNode.valueOf(value)
+            }
+            is Int -> {
+                return IntNode.valueOf(value)
+            }
+            is Long -> {
+                return LongNode.valueOf(value)
+            }
+            is String -> {
+                return TextNode.valueOf(value)
+            }
+            is Float -> {
+                return FloatNode.valueOf(value)
+            }
+            is Double -> {
+                return DoubleNode.valueOf(value)
+            }
+            is Short -> {
+                return ShortNode.valueOf(value)
+            }
+            is BigDecimal -> {
+                return DecimalNode.valueOf(value)
+            }
+            else -> return MissingNode.getInstance()
+        }
+    }
 }

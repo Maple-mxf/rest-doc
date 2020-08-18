@@ -25,7 +25,19 @@ data class BodyFieldDescriptor(
         val type: FieldType = FieldType.OBJECT,
         val optional: Boolean = false,
         val defaultValue: Any?
-)
+) {
+
+    override fun equals(other: Any?): Boolean {
+        if (other is BodyFieldDescriptor) {
+            return this.path.equals(other.path)
+        }
+        return super.equals(other)
+    }
+
+    override fun hashCode(): Int {
+        return super.hashCode()
+    }
+}
 
 data class URIVarDescriptor(
         val field: String,

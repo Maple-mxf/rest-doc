@@ -1,6 +1,5 @@
 package restdoc.util;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -13,15 +12,14 @@ import java.util.regex.Pattern;
 
 import static java.util.Comparator.comparingInt;
 import static java.util.regex.Pattern.compile;
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.*;
 
 
 public class JsonParser {
 
     private final ObjectMapper mapper = new ObjectMapper();
 
-    private final List<BodyFieldDescriptor> descriptors;
+    private final Collection<BodyFieldDescriptor> descriptors;
 
     final ObjectNode on = mapper.createObjectNode();
 
@@ -45,15 +43,15 @@ public class JsonParser {
                     }
                     return childrenPath
                             .stream()
-                            .map(t -> new BodyFieldDescriptor(t, values.get(t), descriptor.getDescription(), descriptor.getType(), descriptor.getOptional(), descriptor.getDefaultValue()));
+                            .map(t -> new BodyFieldDescriptor(
+                                    t, values.get(t),
+                                    descriptor.getDescription(),
+                                    descriptor.getType(),
+                                    descriptor.getOptional(),
+                                    descriptor.getDefaultValue()));
                 })
-                .collect(toList());
-
-        try {
-            System.err.println(mapper.writeValueAsString(descriptors));
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
+                .collect(toMap(BodyFieldDescriptor::getPath, t -> t, (t, t2) -> t2))
+                .values();
 
         this.parse(null);
     }
@@ -61,8 +59,10 @@ public class JsonParser {
 
     public void parse(String parentPath) {
         List<BodyFieldDescriptor> children = getChildren(parentPath);
+
         for (BodyFieldDescriptor child : children) {
             buildPOJO(child.getPath(), child.getValue());
+            parse(child.getPath());
         }
     }
 
@@ -79,24 +79,28 @@ public class JsonParser {
                     .map(Map.Entry::getValue)
                     .orElse(new ArrayList<>());
 
-            // Find first level node
-
-        }
-        else {
+        } else {
             return descriptors.stream()
-                    .filter(descriptor -> compile(String.format("^%s\\.[a-zA-Z]+[a-zA-Z0-9]*(\\[\\d+\\])*$", parentPath)).matcher(descriptor.getPath()).find())
+                    .filter(descriptor ->
+                            compile(
+                                    String.format("^%s\\.[a-zA-Z]+[a-zA-Z0-9]*(\\[\\d+\\])*$", this.escape(parentPath))).matcher(descriptor.getPath()).find())
                     .collect(toList());
         }
     }
 
     final Pattern fieldNamePattern = compile("[a-zA-Z0-9_]+[a-zA-Z0-9]*");
 
+    private String escape(String string){
+       return string.replaceAll("\\.", "\\\\.")
+                .replaceAll("\\[", "\\\\[")
+                .replaceAll("\\]", "\\\\]");
+    }
+
     private void buildPOJO(String path, Object value) {
         String[] childPaths = path.split("\\.");
         JsonNode jn = this.on;
 
-        for (int i = 0; i < childPaths.length; i++) {
-            String ph = childPaths[i];
+        for (String ph : childPaths) {
             Matcher fieldMatcher = fieldNamePattern.matcher(ph);
 
             if (fieldMatcher.find()) {
@@ -131,9 +135,8 @@ public class JsonParser {
                             jn = an;
                         }
                     }
-                }
-                else {
-                    Pattern filterChildPattern = compile(String.format("^%s(\\.[a-zA-Z_]+)$", path));
+                } else {
+                    Pattern filterChildPattern = compile(String.format("^%s(\\.[a-zA-Z_]+)$", this.escape(path)));
                     List<BodyFieldDescriptor> children = this.descriptors.stream()
                             .filter(t -> filterChildPattern.matcher(t.getPath()).find())
                             .collect(toList());
@@ -142,13 +145,11 @@ public class JsonParser {
                     if (children.isEmpty()) {
 
                         objectNode.putPOJO(field, value);
-                    }
-                    else {
+                    } else {
                         objectNode.putPOJO(field, mapper.createObjectNode());
                     }
                 }
-            }
-            else {
+            } else {
                 System.err.println("Error Not matched");
             }
         }
