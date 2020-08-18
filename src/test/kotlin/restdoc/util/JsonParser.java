@@ -13,6 +13,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static java.util.Comparator.comparingInt;
+import static java.util.Comparator.nullsFirst;
 import static java.util.regex.Pattern.compile;
 import static java.util.stream.Collectors.*;
 
@@ -72,9 +73,9 @@ public class JsonParser {
                 .values());
     }
 
-    public void parse1(){
+    public void parse1() {
         for (BodyFieldDescriptor descriptor : this.descriptors) {
-            this.buildPOJO(descriptor.getPath(),descriptor.getValue());
+            this.buildPOJO(descriptor.getPath(), descriptor.getValue());
         }
     }
 
@@ -133,7 +134,7 @@ public class JsonParser {
                 String field = fieldMatcher.group(0);
                 boolean isArray = ph.endsWith("]");
                 if (isArray) {
-                    Matcher matcher = compile("(\\[\\d+\\])+").matcher(path);
+                    Matcher matcher = compile("(\\[\\d+\\])+").matcher(ph);
                     if (matcher.find()) {
                         List<String> indexes = Arrays.stream(matcher.group(1).split("\\]"))
                                 .map(t -> t.replaceAll("\\[", ""))
@@ -162,20 +163,27 @@ public class JsonParser {
                         }
                     }
                 } else {
-                   /* Pattern filterChildPattern = compile(String.format("^%s(\\.[a-zA-Z_]+)$", this.escape(path)));
-                    List<BodyFieldDescriptor> children = this.descriptors.stream()
-                            .filter(t -> filterChildPattern.matcher(t.getPath()).find())
-                            .collect(toList());
 
-                    ObjectNode objectNode = (ObjectNode) jn;
-                    if (children.isEmpty()) {
-                        objectNode.putPOJO(field, value);
+                    if (jn instanceof ArrayNode) {
+                        Matcher matcher = compile("(\\[\\d+\\])+").matcher(childPaths[i - 1]);
+
+                        if (matcher.find()){
+                            List<String> indexes = Arrays.stream(matcher.group(1).split("\\]"))
+                                    .map(t -> t.replaceAll("\\[", ""))
+                                    .collect(toList());
+
+
+                            String lastIndex = indexes.get(indexes.size() - 1);
+                            ObjectNode objectNode = mapper.createObjectNode();
+
+                            if (i == childPaths.length - 1) objectNode.putPOJO(ph, value);
+                            else objectNode.putPOJO(ph, null);
+
+                            ((ArrayNode) jn).insertPOJO(Integer.parseInt(lastIndex), objectNode);
+                        }
                     } else {
-                        objectNode.putPOJO(field, mapper.createObjectNode());
-                    }*/
-
-                    if (jn instanceof ArrayNode){
-                        ph[i-1]
+                        if (i == childPaths.length - 1) ((ObjectNode) jn).putPOJO(ph, value);
+                        else ((ObjectNode) jn).putPOJO(ph, mapper.createObjectNode());
                     }
 
                 }
