@@ -1,19 +1,18 @@
 [
   {
-    "path": "[]users[]",
-    "children": [
-      {
-        "path": "[]users[]/settings",
-        "children": [
-          {
-            "path": "[]users[]/settings/name",
-            "children": [],
-            "type": "JSON"
-          }
-        ],
-        "type": "JSON"
-      }
-    ],
-    "type": "ARRAY"
+    "path": "users[1].settings",
+    "value": null,
+    "description": "",
+    "type": "ARRAY",
+    "optional": false,
+    "defaultValue": ""
+  },
+  {
+    "path": "users[1].settings.name",
+    "value": null,
+    "description": "",
+    "type": "ARRAY",
+    "optional": false,
+    "defaultValue": ""
   }
 ]

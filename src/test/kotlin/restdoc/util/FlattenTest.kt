@@ -44,4 +44,14 @@ class FlattenTest {
         val split = "[]users[]".split(splitChar)
         println(split)
     }
+
+
+    @Test
+    fun parseJson(){
+        val fields: List<BodyFieldDescriptor> = mutableListOf(
+                BodyFieldDescriptor(path = "users[1].settings", value = null, description = "", type = FieldType.ARRAY, optional = false, defaultValue = ""),
+                BodyFieldDescriptor(path = "users[1].settings.name", value = null, description = "", type = FieldType.ARRAY, optional = false, defaultValue = "")
+        )
+        System.err.println(JsonParser(fields).jsonValue)
+    }
 }
