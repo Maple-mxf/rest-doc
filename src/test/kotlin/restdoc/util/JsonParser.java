@@ -178,7 +178,7 @@ public class JsonParser {
                             ObjectNode objectNode = mapper.createObjectNode();
 
                             if (i == childPaths.length - 1) objectNode.putPOJO(ph, value);
-                            else objectNode.putPOJO(ph, null);
+                            else objectNode.putPOJO(ph, objectNode);
 
                             ((ArrayNode) jn).insertPOJO(parseInt(lastIndex), objectNode);
 
