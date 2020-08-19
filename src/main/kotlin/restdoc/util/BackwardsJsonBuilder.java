@@ -57,7 +57,7 @@ public class BackwardsJsonBuilder {
 
     private void putTreeValue(String path, Object value) {
         String[] childPaths = path.split("\\.");
-        JsonNode jn = mapper.createObjectNode();
+        JsonNode jn = this.jsonTree;
 
         for (int i = 0; i < childPaths.length; i++) {
             String childPath = childPaths[i];
@@ -75,7 +75,9 @@ public class BackwardsJsonBuilder {
                                 ArrayNode arrayNode = mapper.createArrayNode();
                                 _internal.putPOJO(field, arrayNode);
                                 jn = arrayNode;
-                                if (index == indexes.size() - 1) arrayNode.insertPOJO(indexes.get(0), value);
+                                if (index == indexes.size() - 1) {
+                                    arrayNode.insertPOJO(indexes.get(0), value);
+                                }
                             }
                             else if (index == indexes.size() - 1) {
                                 ArrayNode arrayNode = (ArrayNode) jn;
