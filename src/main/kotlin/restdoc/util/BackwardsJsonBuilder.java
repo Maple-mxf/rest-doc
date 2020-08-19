@@ -30,12 +30,16 @@ public class BackwardsJsonBuilder {
 
     private List<KeyValue> keyValues;
 
-    private final Pattern fieldNamePattern = compile("[a-zA-Z0-9_]+[a-zA-Z0-9]*");
+    // Filter the field
+    private final Pattern fieldPattern = compile("[a-zA-Z0-9_]+[a-zA-Z0-9]*");
 
+    // Filter Json array index
     private final Pattern indexPattern = compile("(\\[\\d+\\])+");
 
+    // Filter non number Json array index(default index = 0)
     private final Pattern nonNumberIndexPattern = compile("(\\[\\d*\\])+");
 
+    // Filter Json array field
     private final Pattern arrayPattern = compile("[a-zA-Z0-9_]+[a-zA-Z0-9]*(\\[\\d*\\])+");
 
     private final ObjectNode jsonTree = mapper.createObjectNode();
@@ -51,14 +55,13 @@ public class BackwardsJsonBuilder {
         }
     }
 
-
     private void putTreeValue(String path, Object value) {
         String[] childPaths = path.split("\\.");
         JsonNode jn = mapper.createObjectNode();
 
         for (int i = 0; i < childPaths.length; i++) {
             String childPath = childPaths[i];
-            Matcher fieldMatcher = fieldNamePattern.matcher(childPath);
+            Matcher fieldMatcher = fieldPattern.matcher(childPath);
 
             if (fieldMatcher.find()) {
                 String field = fieldMatcher.group(0);
