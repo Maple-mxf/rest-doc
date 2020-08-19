@@ -74,12 +74,12 @@ class BizServiceException(override val message: String?, val status: Status) : R
 /**
  * @since 1.0
  */
-fun ofBizError(status: Status, message: String): BizServiceException = throw BizServiceException(message, status)
+fun throwError(status: Status, message: String): Unit = throw BizServiceException(message, status)
 
 /**
  *@since 1.0
  */
-fun ofBizError(status: Status): BizServiceException = throw BizServiceException(status)
+fun throwError(status: Status): Unit = throw BizServiceException(status)
 
 /**
  *@since 1.0

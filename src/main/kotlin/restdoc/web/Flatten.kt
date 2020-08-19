@@ -15,6 +15,7 @@ import restdoc.model.JSONFieldType
  *
  * @see Bump bump the json tree to flatten array
  */
+@Deprecated(message = "It is error")
 @Component
 class Flatten {
 

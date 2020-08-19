@@ -7,14 +7,12 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import restdoc.model.BodyFieldDescriptor;
 
 import java.util.*;
-import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static java.lang.Integer.parseInt;
 import static java.util.Comparator.comparingInt;
-import static java.util.Comparator.nullsFirst;
 import static java.util.regex.Pattern.compile;
 import static java.util.stream.Collectors.*;
 
@@ -28,37 +26,7 @@ public class JsonParser {
     final ObjectNode on = mapper.createObjectNode();
 
     public JsonParser(List<BodyFieldDescriptor> descriptors) {
-        /*this.descriptors = descriptors
-                .stream()
-                .flatMap(descriptor -> {
-                    String[] paths = descriptor.getPath().split("\\.");
-                    List<String> childrenPath = new ArrayList<>();
-
-                    Map<String, Object> values = new HashMap<>();
-                    for (int i = 0; i < paths.length; i++) {
-                        String[] tmpPaths = Arrays.copyOfRange(paths, 0, i);
-                        String[] ps = Arrays.copyOf(tmpPaths, i + 1, String[].class);
-                        ps[i] = paths[i];
-
-                        String joinPath = String.join(".", ps);
-                        childrenPath.add(joinPath);
-
-                        if (i == paths.length - 1) values.put(joinPath, descriptor.getValue());
-                    }
-                    return childrenPath
-                            .stream()
-                            .map(t -> new BodyFieldDescriptor(
-                                    t, values.get(t),
-                                    descriptor.getDescription(),
-                                    descriptor.getType(),
-                                    descriptor.getOptional(),
-                                    descriptor.getDefaultValue()));
-                })
-                .collect(toMap(BodyFieldDescriptor::getPath, t -> t, (t, t2) -> t2))
-                .values();*/
-
         this.descriptors = this.getMinNode(descriptors);
-
         parse1();
     }
 
@@ -104,7 +72,8 @@ public class JsonParser {
                     .map(Map.Entry::getValue)
                     .orElse(new ArrayList<>());
 
-        } else {
+        }
+        else {
             return descriptors.stream()
                     .filter(descriptor ->
                             compile(
@@ -163,38 +132,43 @@ public class JsonParser {
                             jn = an;
                         }
                     }
-                } else {
-
+                }
+                else {
                     if (jn instanceof ArrayNode) {
                         Matcher matcher = compile("(\\[\\d+\\])+").matcher(childPaths[i - 1]);
-
                         if (matcher.find()) {
                             List<String> indexes = Arrays.stream(matcher.group(1).split("\\]"))
                                     .map(t -> t.replaceAll("\\[", ""))
                                     .collect(toList());
 
-
                             String lastIndex = indexes.get(indexes.size() - 1);
                             ObjectNode objectNode = mapper.createObjectNode();
-
-                            if (i == childPaths.length - 1) objectNode.putPOJO(ph, value);
-                            else objectNode.putPOJO(ph, objectNode);
-
                             ((ArrayNode) jn).insertPOJO(parseInt(lastIndex), objectNode);
 
-                            jn = objectNode;
+                            if (i == childPaths.length - 1) {
+                                objectNode.putPOJO(ph, value);
+                                jn = objectNode;
+                            }
+                            else {
+                                ObjectNode childNode = mapper.createObjectNode();
+                                objectNode.putPOJO(ph, childNode);
+                                jn = childNode;
+                            }
                         }
-                    } else {
-                        ObjectNode objectNode = mapper.createObjectNode();
+                    }
+                    else {
                         if (i == childPaths.length - 1) {
-                            objectNode.putPOJO(ph, value);
-                        } else {
+                            ((ObjectNode) jn).putPOJO(ph, value);
+                        }
+                        else {
+                            ObjectNode objectNode = mapper.createObjectNode();
                             ((ObjectNode) jn).putPOJO(ph, objectNode);
                             jn = objectNode;
                         }
                     }
                 }
-            } else {
+            }
+            else {
                 System.err.println("Error Not matched");
             }
         }
