@@ -65,29 +65,25 @@ public class BackwardsJsonBuilder {
                 if (arrayPattern.matcher(childPath).find()) {
                     Matcher matcherIndex = nonNumberIndexPattern.matcher(childPath);
                     if (matcherIndex.find()) {
-
                         List<Integer> indexes = this.splitIndex(matcherIndex.group(1));
-
                         for (int index = 0; index < indexes.size(); index++) {
-                            // First Element
                             if (index == 0) {
                                 ObjectNode _internal = (ObjectNode) jn;
                                 ArrayNode arrayNode = mapper.createArrayNode();
                                 _internal.putPOJO(field, arrayNode);
                                 jn = arrayNode;
-                                continue;
+                                if (index == indexes.size() - 1) arrayNode.insertPOJO(indexes.get(0), value);
                             }
-                            // Last Element
                             else if (index == indexes.size() - 1) {
                                 ArrayNode arrayNode = (ArrayNode) jn;
                                 arrayNode.insertPOJO(index, value);
-                                continue;
                             }
-                            // Middle Element
-                            ArrayNode arrayNode = (ArrayNode) jn;
-                            ArrayNode an = mapper.createArrayNode();
-                            arrayNode.insert(index, an);
-                            jn = an;
+                            else {
+                                ArrayNode arrayNode = (ArrayNode) jn;
+                                ArrayNode an = mapper.createArrayNode();
+                                arrayNode.insert(index, an);
+                                jn = an;
+                            }
                         }
                     }
                     else {
@@ -96,15 +92,13 @@ public class BackwardsJsonBuilder {
                 }
                 else {
                     if (jn instanceof ArrayNode) {
-                        Matcher matcher = indexPattern.matcher(childPaths[i - 1]);
+                        Matcher matcher = nonNumberIndexPattern.matcher(childPaths[i - 1]);
                         if (matcher.find()) {
-                            List<String> indexes = Arrays.stream(matcher.group(1).split("\\]"))
-                                    .map(t -> t.replaceAll("\\[", ""))
-                                    .collect(toList());
+                            List<Integer> indexes = this.splitIndex(matcher.group(1));
+                            Integer lastIndex = indexes.get(indexes.size() - 1);
 
-                            String lastIndex = indexes.get(indexes.size() - 1);
                             ObjectNode objectNode = mapper.createObjectNode();
-                            ((ArrayNode) jn).insertPOJO(parseInt(lastIndex), objectNode);
+                            ((ArrayNode) jn).insertPOJO(lastIndex, objectNode);
 
                             if (i == childPaths.length - 1) {
                                 objectNode.putPOJO(childPath, value);
@@ -162,4 +156,18 @@ public class BackwardsJsonBuilder {
     public ObjectNode getJsonTree() {
         return jsonTree;
     }
+
+    /*private Position calArrayPosition(int index, int size) {
+        if (index == 0 && index < size - 1) return Position.START;
+        if (index > 0 && index < size - 1) return Position.MIDDLE;
+        if (index == size - 1) return Position.END;
+        return Position.START_AND_END;
+    }
+
+    public enum Position {
+        START,
+        START_AND_END,
+        MIDDLE,
+        END
+    }*/
 }

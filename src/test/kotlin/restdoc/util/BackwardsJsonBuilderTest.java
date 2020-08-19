@@ -17,6 +17,8 @@ public class BackwardsJsonBuilderTest {
         /*keyValues.add(new KeyValue("user.name", "jack"));
         keyValues.add(new KeyValue("user[].name", "jack array"));
         keyValues.add(new KeyValue("company.name", "alibabacloud"));*/
+
+        /**/
         keyValues.add(new KeyValue("company.name[1]", "alibabacloud"));
 
         System.err.println(new BackwardsJsonBuilder(keyValues).getJsonTree());
