@@ -54,7 +54,7 @@ public class BackwardsJsonBuilder {
 
     private void putTreeValue(String path, Object value) {
         String[] childPaths = path.split("\\.");
-        JsonNode jn = this.jsonTree;
+        JsonNode jn = mapper.createObjectNode();
 
         for (int i = 0; i < childPaths.length; i++) {
             String childPath = childPaths[i];
@@ -156,18 +156,4 @@ public class BackwardsJsonBuilder {
     public ObjectNode getJsonTree() {
         return jsonTree;
     }
-
-    /*private Position calArrayPosition(int index, int size) {
-        if (index == 0 && index < size - 1) return Position.START;
-        if (index > 0 && index < size - 1) return Position.MIDDLE;
-        if (index == size - 1) return Position.END;
-        return Position.START_AND_END;
-    }
-
-    public enum Position {
-        START,
-        START_AND_END,
-        MIDDLE,
-        END
-    }*/
 }
