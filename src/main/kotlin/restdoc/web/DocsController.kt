@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*
 import restdoc.core.Result
 import restdoc.core.ok
 import restdoc.model.*
-import restdoc.util.BumpJson
+import restdoc.util.JsonDeProjector
 import java.util.*
 
 @Controller
@@ -30,9 +30,9 @@ class DocsController {
     @GetMapping("/json/convert")
     fun convertJSONView(): String = "docs/convert_json"
 
-    @PostMapping("/bump")
+    @PostMapping("/deProjector")
     @ResponseBody
-    fun bump(@RequestBody tree: JsonNode): Result = ok(BumpJson(tree).bump())
+    fun deProjector(@RequestBody tree: JsonNode): Result = ok(JsonDeProjector(tree).deProject())
 
     @GetMapping("/document")
     fun detail(model: Model): String {
