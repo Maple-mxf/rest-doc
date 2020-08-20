@@ -16,6 +16,7 @@ import java.util.regex.Pattern;
  *
  * @since 2.0
  */
+@Deprecated
 public class JsonParserTest {
 
     @Test

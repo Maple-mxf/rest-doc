@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import org.junit.Test
 import java.io.File
 
+@Deprecated(message = "")
 class BumpJsonTest {
     private val mapper: ObjectMapper = ObjectMapper()
 

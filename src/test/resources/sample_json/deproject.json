@@ -1,0 +1,18 @@
+[
+  {
+    "path": ".users",
+    "value": null,
+    "description": "",
+    "type": "ARRAY",
+    "optional": false,
+    "defaultValue": "NoDefaultValue"
+  },
+  {
+    "path": "[0][0].null",
+    "value": null,
+    "description": "",
+    "type": "MISSING",
+    "optional": false,
+    "defaultValue": "NoDefaultValue"
+  }
+]

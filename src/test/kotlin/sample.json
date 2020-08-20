@@ -1,10 +1,8 @@
 {
   "users": [
-    [
-      {
-        "name": "value",
-        "age": "value"
-      }
-    ]
+    {
+      "name": "value",
+      "age": "value"
+    }
   ]
 }

@@ -6,7 +6,7 @@ import restdoc.model.BodyFieldDescriptor
 import restdoc.model.FieldType
 import restdoc.web.Flatten
 
-
+@Deprecated(message = "")
 class FlattenTest {
 
     val flatten: Flatten = Flatten()

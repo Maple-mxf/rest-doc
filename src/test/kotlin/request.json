@@ -1,18 +1,26 @@
 [
   {
-    "path": "users[].name",
-    "value": "value",
+    "path": "users",
+    "value": null,
     "description": "",
-    "type": "STRING",
+    "type": "OBJECT",
     "optional": false,
-    "defaultValue": "无可选值"
+    "defaultValue": "NoDefaultValue"
   },
   {
-    "path": "settings[].name",
+    "path": "users.usersusers[0].name.name",
     "value": "value",
     "description": "",
     "type": "STRING",
     "optional": false,
-    "defaultValue": "无可选值"
+    "defaultValue": "NoDefaultValue"
+  },
+  {
+    "path": "users.usersusers[0].age.age",
+    "value": "value",
+    "description": "",
+    "type": "STRING",
+    "optional": false,
+    "defaultValue": "NoDefaultValue"
   }
 ]

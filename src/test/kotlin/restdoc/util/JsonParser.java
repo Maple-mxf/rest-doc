@@ -16,7 +16,7 @@ import static java.util.Comparator.comparingInt;
 import static java.util.regex.Pattern.compile;
 import static java.util.stream.Collectors.*;
 
-
+@Deprecated
 public class JsonParser {
 
     private final ObjectMapper mapper = new ObjectMapper();
