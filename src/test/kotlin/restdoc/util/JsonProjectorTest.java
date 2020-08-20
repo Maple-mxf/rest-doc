@@ -1,5 +1,7 @@
 package restdoc.util;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Lists;
 import org.junit.Test;
 import restdoc.model.PathValue;
@@ -18,12 +20,12 @@ import restdoc.model.PathValue;
 public class JsonProjectorTest {
 
 
+        // users users[0] users[0][0] users[0][0].name = value
     @Test
-    public void testResolve() {
-        new JsonProjector(Lists.newArrayList(
-                new PathValue("users[0][1][2].name", "value"),
-                new PathValue("settings[0][1][2].name", "value")
-        ));
+    public void testResolve() throws JsonProcessingException {
+        ObjectNode jsonTree = new JsonProjector(Lists.newArrayList(
+                new PathValue("users[1][2].name", "value")
+        )).getJsonTree();
     }
 
 }

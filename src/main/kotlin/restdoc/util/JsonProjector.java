@@ -1,5 +1,6 @@
 package restdoc.util;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -28,6 +29,44 @@ import static java.util.stream.Collectors.toList;
 import static restdoc.core.StandardKt.throwError;
 
 /**
+ * <p>The JsonProjector provided project the flatten json descriptor to json object</p>
+ *
+ * <p>Project rule</p>
+ *
+ * <ul>
+ *     <li>Each key must be start with English alphabet</li>
+ *     <li>Json Array must be end with brackets '[' or ']' ,Index in square brackets is optional. sample: users[] equivalent to users[0]</li>
+ *     <li>If json array No index,default index is zero</li>
+ * </ul>
+ *
+ *
+ * <p>sample</p>
+ *
+ * <pre>
+ *     {@code
+ *
+ *          ObjectNode jsonTree = new JsonProjector(Lists.newArrayList(
+ *                 new PathValue("users[1][2].name", "value")
+ *         )).getJsonTree();
+ *     }
+ *
+ *     operation result
+ *
+ *  {@code
+ *
+ * {
+ *   "users": [
+ *     [
+ *       {
+ *         "name": "value"
+ *       }
+ *     ]
+ *   ]
+ *  }
+ * }
+ * </pre>
+ *
+ * @author ubuntu-m
  * @since 2.0
  */
 public class JsonProjector {
@@ -81,10 +120,14 @@ public class JsonProjector {
      *
      * @param pathValues Given flatten path and json descriptor
      */
-    public JsonProjector(List<PathValue> pathValues) {
+    public JsonProjector(List<PathValue> pathValues) throws JsonProcessingException {
+
+        List<PathValue> pathValueList = this.resolve(pathValues);
+
+        System.err.println(mapper.writeValueAsString(pathValueList));
 
         // Build for rootNode
-        this.buildForTreeNode(this.resolve(pathValues));
+        this.buildForTreeNode(pathValueList);
 
         // Build for jsonNode
         this.jsonTree = this.buildForJsonNode();
