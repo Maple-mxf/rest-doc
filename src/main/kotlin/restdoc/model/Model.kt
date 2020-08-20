@@ -5,31 +5,31 @@ import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
 import org.springframework.http.HttpMethod
 
-@Document(collation = "restdoc_api_project_config")
-data class ApiProjectConfig(
+@Document(collection = "restdoc_project_config")
+data class ProjectConfig(
         @Id var id: String?,
         val projectId: String,
         val testURIPrefix: String
 );
 
 
-@Document(collation = "restdoc_api_project")
-data class ApiProject(
+@Document(collection = "restdoc_project")
+data class Project(
         @Id val id: String,
         val name: String,
         val desc: String,
         val createTime: Long
 )
 
-@Document(collation = "restdoc_api_group")
-data class ApiGroup(
+@Document(collection = "restdoc_group")
+data class Group(
         @Id val id: String,
         val name: String,
         val desc: String,
         val createTime: Long
 )
 
-//@Document(collation = "restdoc_api_doc")
+@Document(collection = "restdoc_document")
 data class ApiDocument(
         @Id var id: String?,
         var projectId: String?,
@@ -47,6 +47,7 @@ data class ApiDocument(
 )
 
 
+@Document(collection = "restdoc_menu")
 data class Menu(
         val id: Int,
         val title: String,
@@ -57,5 +58,25 @@ data class Menu(
         val children: MutableList<Menu>? = null
 )
 
-enum class JSONFieldType { JSON, ARRAY }
-data class JSONFieldNode(val path: String, var children: List<JSONFieldNode>?, var type: JSONFieldType?)
+@Document(collection = "restdoc_team")
+data class Team(
+        val id: String,
+        var name: String,
+        var createTime: Long,
+        var createBy: String,
+        var owner: String,
+        var cover: String
+)
+
+@Document(collection = "restdoc_user")
+data class User(
+        val id: String,
+        var name: String?,
+        var createTime: Long?,
+        var status: AccountStatus = AccountStatus.NORMAL,
+        var teamId: String
+)
+
+enum class AccountStatus {
+    NORMAL, FREEZE
+}

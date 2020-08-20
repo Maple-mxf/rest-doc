@@ -8,7 +8,7 @@ package restdoc.core
  */
 enum class Status(val status: String,
                   val code: String,
-                  val message: String?) {
+                  var message: String?) {
 
     /**
      * Process Success
@@ -49,7 +49,24 @@ enum class Status(val status: String,
     /**
      * Third Service Error
      */
-    THIRD_SERVICE_ERROR("ThirdServiceError", "T500", "第三方服务错误")
+    THIRD_SERVICE_ERROR("ThirdServiceError", "T500", "第三方服务错误");
+
+    fun instanceError(errorMessage: String): ServiceException {
+        this.message = errorMessage
+        return instanceError()
+    }
+
+    fun instanceError(): ServiceException {
+        return ServiceException(this)
+    }
+
+    fun error() {
+        throwError(this)
+    }
+
+    fun error(errorMessage: String) {
+        throwError(this, errorMessage)
+    }
 }
 
 /**
@@ -67,19 +84,19 @@ data class Result(
 /**
  *@since 1.0
  */
-class BizServiceException(override val message: String?, val status: Status) : RuntimeException(message) {
+class ServiceException(override val message: String?, val status: Status) : RuntimeException(message) {
     constructor(status: Status) : this(message = status.message, status = status)
 }
 
 /**
  * @since 1.0
  */
-fun throwError(status: Status, message: String): Unit = throw BizServiceException(message, status)
+fun throwError(status: Status, message: String): Unit = throw ServiceException(message, status)
 
 /**
  *@since 1.0
  */
-fun throwError(status: Status): Unit = throw BizServiceException(status)
+fun throwError(status: Status): Unit = throw ServiceException(status)
 
 /**
  *@since 1.0

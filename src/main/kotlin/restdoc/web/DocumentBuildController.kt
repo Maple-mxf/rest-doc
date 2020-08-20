@@ -22,7 +22,7 @@ import restdoc.core.Status
 import restdoc.core.failure
 import restdoc.core.ok
 import restdoc.model.ApiDocument
-import restdoc.model.ApiProjectConfig
+import restdoc.model.ProjectConfig
 import restdoc.model.BodyFieldDescriptor
 import restdoc.model.RequestProcess
 import restdoc.util.Client
@@ -66,9 +66,9 @@ class DocumentBuildController(
     fun saveAndExecute(@RequestBody apiDocument: ApiDocument): Result {
 
         // Get project config
-        val projectConfig: ApiProjectConfig = mongoTemplate.findOne(
+        val projectConfig: ProjectConfig = mongoTemplate.findOne(
                 Query().addCriteria(Criteria.where("projectId").`is`(apiDocument.projectId)),
-                ApiProjectConfig::class.java) ?: return failure(Status.BAD_REQUEST)
+                ProjectConfig::class.java) ?: return failure(Status.BAD_REQUEST)
 
         // Create Header Or Default
         val header: Map<String, List<String>> = apiDocument.requestHeaderDescriptor?.map { it.field to it.value }?.toMap()
