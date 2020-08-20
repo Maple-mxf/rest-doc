@@ -1,7 +1,70 @@
-{
-  "company": {
-    "name": [
-      "alibaba"
+[
+  {
+    "path": "users",
+    "value": null,
+    "type": "OBJECT",
+    "children": [
+      {
+        "path": "users[0]",
+        "value": null,
+        "type": "ARRAY",
+        "children": [
+          {
+            "path": "users[0][1]",
+            "value": null,
+            "type": "ARRAY",
+            "children": [
+              {
+                "path": "users[0][1][2]",
+                "value": null,
+                "type": "ARRAY",
+                "children": [
+                  {
+                    "path": "users[0][1][2].name",
+                    "value": "value",
+                    "type": "OBJECT",
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "path": "settings",
+    "value": null,
+    "type": "OBJECT",
+    "children": [
+      {
+        "path": "settings[0]",
+        "value": null,
+        "type": "ARRAY",
+        "children": [
+          {
+            "path": "settings[0][1]",
+            "value": null,
+            "type": "ARRAY",
+            "children": [
+              {
+                "path": "settings[0][1][2]",
+                "value": null,
+                "type": "ARRAY",
+                "children": [
+                  {
+                    "path": "settings[0][1][2].name",
+                    "value": "value",
+                    "type": "OBJECT",
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
     ]
   }
-}
+]

@@ -20,7 +20,10 @@ public class JsonProjectorTest {
 
     @Test
     public void testResolve() {
-        new JsonProjector(Lists.newArrayList(new PathValue("users[0][1][2].name", "value")));
+        new JsonProjector(Lists.newArrayList(
+                new PathValue("users[0][1][2].name", "value"),
+                new PathValue("settings[0][1][2].name", "value")
+        ));
     }
 
 }

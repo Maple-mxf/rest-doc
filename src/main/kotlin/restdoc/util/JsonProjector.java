@@ -1,14 +1,19 @@
 package restdoc.util;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.FluentIterable;
+import com.google.common.collect.Lists;
+import restdoc.model.FieldType;
 import restdoc.model.Node;
 import restdoc.model.PathValue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -26,8 +31,17 @@ public class JsonProjector {
 
     private final ObjectMapper mapper = new ObjectMapper();
 
+    // All Node
+    private List<Node> nodes = new ArrayList<>();
+
     // Nodes
-    private List<Node> nodeTree;
+    private Node nodeTree = new Node("root", "", FieldType.OBJECT, new ArrayList<>());
+
+    // After project. mapping a json tree
+    private final ObjectNode jsonTree;
+
+    // Filter the field
+    private final String fieldRegex = "^[a-zA-Z0-9_]+[a-zA-Z0-9]*$";
 
     // Filter the field
     private final Pattern fieldPattern = compile("[a-zA-Z0-9_]+[a-zA-Z0-9]*");
@@ -40,8 +54,6 @@ public class JsonProjector {
 
     // Filter Json array field
     private final static Pattern arrayPattern = compile("([a-zA-Z0-9_]+[a-zA-Z0-9]*)(\\[\\d*\\])+");
-
-    private final ObjectNode jsonTree = mapper.createObjectNode();
 
     /**
      * Convert given flatten json descriptor to node tree {@link Node}
@@ -64,13 +76,17 @@ public class JsonProjector {
      * @param pathValues Given flatten path and json descriptor
      */
     public JsonProjector(List<PathValue> pathValues) {
-        try {
-            System.err.println(mapper.writeValueAsString(this.resolve(pathValues)));
-        } catch (Throwable e) {
-            e.printStackTrace();
-        }
+
+        // Build for rootNode
+        this.buildForTreeNode(this.resolve(pathValues));
+
+        // Build for jsonNode
+        this.jsonTree = this.buildForJsonNode();
     }
 
+    public ObjectNode getJsonTree() {
+        return this.jsonTree;
+    }
 
     /**
      * Resolve the given path values
@@ -125,7 +141,6 @@ public class JsonProjector {
                     Matcher matcher = arrayPattern.matcher(lastField);
 
                     if (matcher.find()) {
-
                         String field = matcher.group(1);
                         List<Integer> indexes = this.splitIndex(lastField.substring(field.length()));
 
@@ -160,15 +175,84 @@ public class JsonProjector {
     }
 
     /**
+     * Build tree node
      *
+     * @param pathValues after resolve path values {@link JsonProjector#resolve(List)}
+     * @see Node
      */
-    private List<Node> buildTree(List<PathValue> pathValues) {
-        // Find First level node
-//        pathValues.stream().filter(t->t.getPath())
+    @VisibleForTesting
+    protected void buildForTreeNode(List<PathValue> pathValues) {
 
-        return null;
+        this.nodes.addAll(FluentIterable.from(pathValues)
+                .transform(pv -> new Node(pv.getPath(), pv.getValue(), FieldType.OBJECT, new ArrayList<>()))
+                .toList());
+
+        // Find First level node
+        List<Node> parentNodes = nodes.stream()
+                .filter(t -> t.getPath().matches(fieldRegex))
+                .collect(toList());
+
+        for (Node parentNode : parentNodes) {
+            findChildren(parentNode);
+            this.nodeTree.getChildren().add(parentNode);
+        }
     }
 
+    /**
+     * Build json node
+     *
+     * @see com.fasterxml.jackson.databind.JsonNode
+     */
+    @VisibleForTesting
+    protected ObjectNode buildForJsonNode() {
+        List<Node> children = this.nodeTree.getChildren();
+        ObjectNode on = mapper.createObjectNode();
+
+        for (Node child : children) {
+            ObjectNode childNode = this.buildForChildJsonNode(child);
+            ArrayList<Map.Entry<String, JsonNode>> entries = Lists.newArrayList(childNode.fields());
+
+            if (!entries.isEmpty()) {
+                String key = entries.get(0).getKey();
+                JsonNode value = entries.get(0).getValue();
+                on.putPOJO(key, value);
+            }
+        }
+        return on;
+    }
+
+    /**
+     * Build json for child node
+     */
+    private ObjectNode buildForChildJsonNode(Node parentNode) {
+        ObjectNode objectNode = mapper.createObjectNode();
+
+        Node pn = parentNode;
+
+        while (pn != null && !pn.getChildren().isEmpty()) {
+        }
+
+        return objectNode;
+    }
+
+
+    private void findChildren(Node parentNode) {
+        String regexValue = String.format("^%s\\.[a-zA-Z_]+[a-zA-Z0-9_]*$", escape(parentNode.getPath()));
+        String regexArray = String.format("^%s(\\[\\d+\\])$", escape(parentNode.getPath()));
+
+        List<Node> children = this.nodes.stream()
+                .filter(node -> {
+                    boolean matchesValue = node.getPath().matches(regexValue);
+                    boolean matchesArray = node.getPath().matches(regexArray);
+                    return matchesArray || matchesValue;
+                })
+                .collect(toList());
+        parentNode.getChildren().addAll(children);
+
+        for (Node child : children) {
+            findChildren(child);
+        }
+    }
 
     private List<Integer> splitIndex(String indexString) {
         List<String> indexStrings = Arrays.stream(indexString.split("\\]"))
@@ -180,7 +264,7 @@ public class JsonProjector {
                 .collect(toList());
     }
 
-    private String escape(String string) {
+    private static String escape(String string) {
         return string.replaceAll("\\.", "\\\\.")
                 .replaceAll("\\[", "\\\\[")
                 .replaceAll("\\]", "\\\\]");
