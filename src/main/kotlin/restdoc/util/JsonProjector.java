@@ -108,18 +108,26 @@ public class JsonProjector {
         return pathValues.stream()
                 .flatMap(t -> {
                     String[] pathArray = t.getPath().split("\\.");
+
                     return IntStream.range(0, pathArray.length)
-                            .mapToObj(i ->
-                                    (i < pathArray.length - 1) ?
-                                            new PathValue(pathArray[i], null) :
-                                            new PathValue(pathArray[i], t.getValue()));
+                            .mapToObj(i -> {
+                                String path = String.join(".", Arrays.copyOfRange(pathArray, 0, i + 1));
+                                return (i < pathArray.length - 1) ?
+                                        new PathValue(path, null) :
+                                        new PathValue(path, t.getValue());
+                            });
                 })
                 .flatMap(e -> {
-                    Matcher matcher = arrayPattern.matcher(e.getPath());
+
+                    String[] pathArray = e.getPath().split("\\.");
+                    String lastField = pathArray[pathArray.length - 1];
+
+                    Matcher matcher = arrayPattern.matcher(lastField);
+
                     if (matcher.find()) {
 
                         String field = matcher.group(1);
-                        List<Integer> indexes = this.splitIndex(e.getPath().substring(field.length()));
+                        List<Integer> indexes = this.splitIndex(lastField.substring(field.length()));
 
                         List<String> indices = IntStream.range(0, indexes.size())
                                 .mapToObj(index ->
@@ -149,6 +157,16 @@ public class JsonProjector {
                         return Stream.of(e);
                     }
                 }).collect(toList());
+    }
+
+    /**
+     *
+     */
+    private List<Node> buildTree(List<PathValue> pathValues) {
+        // Find First level node
+//        pathValues.stream().filter(t->t.getPath())
+
+        return null;
     }
 
 

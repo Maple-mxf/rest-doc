@@ -13,6 +13,10 @@
   },
   {
     "path": "users[0][1][2]",
+    "value": null
+  },
+  {
+    "path": "users[0][1][2].name",
     "value": "value"
   }
 ]
