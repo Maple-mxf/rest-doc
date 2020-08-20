@@ -1,22 +1,18 @@
-{
-  "users": [
-    [
-      [
-        {
-          "name": "value"
-        }
-      ]
-    ]
-  ],
-  "settings": [
-    [
-      [
-        {
-          "name": "value"
-        }
-      ]
-    ]
-  ]
-}
-
-// users users[0] users[0][0] users[0][0].name = value
+[
+  {
+    "path": "users[].name",
+    "value": "value",
+    "description": "",
+    "type": "STRING",
+    "optional": false,
+    "defaultValue": "无可选值"
+  },
+  {
+    "path": "settings[].name",
+    "value": "value",
+    "description": "",
+    "type": "STRING",
+    "optional": false,
+    "defaultValue": "无可选值"
+  }
+]

@@ -2,7 +2,6 @@ package restdoc.util
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.junit.Test
-import restdoc.web.BumpJson
 import java.io.File
 
 class BumpJsonTest {
@@ -11,7 +10,7 @@ class BumpJsonTest {
 
     @Test
     fun testBumpJson() {
-        val bump = BumpJson(File("E:\\jw\\rest-doc\\src\\test\\kotlin\\request.json").readText())
+        val bump = BumpJson(File("C:\\Users\\mxf\\IdeaProjects\\rest-doc\\src\\test\\kotlin\\request.json").readText())
 
         println(mapper.writeValueAsString(bump.bump()))
     }

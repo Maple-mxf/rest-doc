@@ -1,6 +1,5 @@
 package restdoc.util;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -17,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -66,7 +66,7 @@ import static restdoc.core.StandardKt.throwError;
  * </pre>
  *
  * @author ubuntu-m
- * @since 2.0
+ * @since 1.0
  */
 public class JsonProjector {
 
@@ -77,9 +77,6 @@ public class JsonProjector {
 
     // Nodes
     private Node nodeTree = new Node("root", "", FieldType.OBJECT, new ArrayList<>());
-
-    // After project. mapping a json tree
-    private final ObjectNode jsonTree;
 
     // Filter the field
     private final static String FIELD_REGEX = "^[a-zA-Z0-9_]+[a-zA-Z0-9]*$";
@@ -119,21 +116,20 @@ public class JsonProjector {
      *
      * @param pathValues Given flatten path and json descriptor
      */
-    public JsonProjector(List<PathValue> pathValues) throws JsonProcessingException {
+    public JsonProjector(List<PathValue> pathValues) {
 
-        List<PathValue> pathValueList = this.resolve(pathValues);
-
+        List<PathValue> pathValueList = new ArrayList<>(this.resolve(pathValues)
+                .stream()
+                .collect(Collectors.toMap(PathValue::getPath, Function.identity(), (p1, p2) -> p2))
+                .values());
 
         // Build for rootNode
         this.buildForTreeNode(pathValueList);
-
-        // Build for jsonNode
-        this.jsonTree = this.buildForJsonNode();
-
     }
 
-    public ObjectNode getJsonTree() {
-        return this.jsonTree;
+    public ObjectNode project() {
+        // After project. mapping a json tree
+        return this.buildForJsonNode();
     }
 
     /**

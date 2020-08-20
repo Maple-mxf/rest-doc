@@ -20,13 +20,13 @@ import restdoc.model.PathValue;
 public class JsonProjectorTest {
 
 
-        // users users[0] users[0][0] users[0][0].name = value
+    // users users[0] users[0][0] users[0][0].name = value
     @Test
     public void testResolve() throws JsonProcessingException {
         ObjectNode jsonTree = new JsonProjector(Lists.newArrayList(
                 new PathValue("users[1][1].name", "value"),
                 new PathValue("users[1][1].age", "value")
-        )).getJsonTree();
+        )).project();
 
         System.err.println(jsonTree);
     }

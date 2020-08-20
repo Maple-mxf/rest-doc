@@ -1,4 +1,4 @@
-package restdoc.web
+package restdoc.util
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -19,6 +19,7 @@ import restdoc.model.FieldType
  *
  * @since 1.0
  */
+@Deprecated(message = "")
 class BumpJson {
 
     private val tree: JsonNode

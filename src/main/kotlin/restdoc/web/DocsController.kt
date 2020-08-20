@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*
 import restdoc.core.Result
 import restdoc.core.ok
 import restdoc.model.*
+import restdoc.util.BumpJson
 import java.util.*
 
 @Controller
