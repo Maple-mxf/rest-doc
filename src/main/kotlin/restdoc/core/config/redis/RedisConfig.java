@@ -15,16 +15,12 @@ import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
-/**
- */
+
 @Configuration
 @EnableCaching
 public class RedisConfig extends CachingConfigurerSupport {
 
-    /**
-     * @return 自定义策略生成的key
-     * 只需要讲注解上keyGenerator的值设置为keyGenerator即可
-     */
+
     @Override
     @Bean
     public KeyGenerator keyGenerator() {
@@ -43,9 +39,6 @@ public class RedisConfig extends CachingConfigurerSupport {
         };
     }
 
-    /**
-     * RedisTemplate配置
-     */
     @Bean
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
 

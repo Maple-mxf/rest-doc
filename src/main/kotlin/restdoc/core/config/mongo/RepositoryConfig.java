@@ -14,7 +14,7 @@ import restdoc.base.mongo.BaseRepositoryImpl;
 @Configuration
 @AutoConfigureBefore(value = {MongoAutoConfiguration.class})
 @EnableMongoRepositories(basePackages =
-        {"com.onepushing.common.respository"},
+        {"restdoc.repository"},
         repositoryBaseClass = BaseRepositoryImpl.class,
         repositoryFactoryBeanClass = BaseMongoRepositoryFactoryBean.class
 )
