@@ -123,7 +123,6 @@ public class JsonProjector {
 
         List<PathValue> pathValueList = this.resolve(pathValues);
 
-        System.err.println(mapper.writeValueAsString(pathValueList));
 
         // Build for rootNode
         this.buildForTreeNode(pathValueList);
@@ -131,7 +130,6 @@ public class JsonProjector {
         // Build for jsonNode
         this.jsonTree = this.buildForJsonNode();
 
-        System.err.println(jsonTree);
     }
 
     public ObjectNode getJsonTree() {
@@ -221,7 +219,11 @@ public class JsonProjector {
                     else {
                         return Stream.of(e);
                     }
-                }).collect(toList());
+                })
+                .peek(t -> {
+                    t.setPath(t.getPath().replaceAll("\\[\\]", "[0]"));
+                })
+                .collect(toList());
     }
 
     /**
@@ -306,7 +308,7 @@ public class JsonProjector {
             else {
                 FieldType pnType = FieldType.OBJECT;
 
-                if (children.stream().allMatch(node -> node.getPath().matches(String.format("^%s\\[\\d+\\]$", escape(pn.getPath()))))) {
+                if (children.stream().allMatch(node -> node.getPath().matches(String.format("^%s\\[\\d*\\]$", escape(pn.getPath()))))) {
                     pnType = FieldType.ARRAY;
                 }
 
@@ -353,7 +355,7 @@ public class JsonProjector {
 
     private void findChildren(Node parentNode) {
         String regexValue = String.format("^%s\\.[a-zA-Z_]+[a-zA-Z0-9_]*$", escape(parentNode.getPath()));
-        String regexArray = String.format("^%s(\\[\\d+\\])$", escape(parentNode.getPath()));
+        String regexArray = String.format("^%s(\\[\\d*\\])$", escape(parentNode.getPath()));
 
         List<Node> children = this.nodes.stream()
                 .filter(node -> {

@@ -24,8 +24,11 @@ public class JsonProjectorTest {
     @Test
     public void testResolve() throws JsonProcessingException {
         ObjectNode jsonTree = new JsonProjector(Lists.newArrayList(
-                new PathValue("users[1][2].name", "value")
+                new PathValue("users[1][1].name", "value"),
+                new PathValue("users[1][1].age", "value")
         )).getJsonTree();
+
+        System.err.println(jsonTree);
     }
 
 }
