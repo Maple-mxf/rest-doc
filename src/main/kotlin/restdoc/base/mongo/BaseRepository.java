@@ -34,19 +34,19 @@ public interface BaseRepository<T, ID extends Serializable> extends MongoReposit
 
     MapReduceResults<T> mapReduce(String mapFunction, String reduceFunction);
 
-    <S extends T> Optional<S> findOne(Query query);
+    Optional<T> findOne(Query query);
 
-    <S extends T> S getOne(Query query);
+    T getOne(Query query);
 
-    <S extends T> List<S> list(Query query);
+    List<T> list(Query query);
 
-    <S extends T> List<S> listSort(Query query, Sort sort);
+    List<T> listSort(Query query, Sort sort);
 
-    <S extends T> Page<S> page(Query query, Pageable pageable);
+    Page<T> page(Query query, Pageable pageable);
 
-    <S extends T> long count(Query query);
+    long count(Query query);
 
-    <S extends T> boolean exists(Query query);
+    boolean exists(Query query);
 
     /**
      * 索引管理
@@ -60,29 +60,29 @@ public interface BaseRepository<T, ID extends Serializable> extends MongoReposit
     /**
      * update an entity by id
      */
-    <S extends T> UpdateResult update(S entity);
+    UpdateResult update(T entity);
 
 
-    <S extends T> UpdateResult updateById(ID id, S entity);
+    UpdateResult updateById(ID id, T entity);
 
     /**
      * update an entity by id and version{@link org.springframework.data.annotation.Version}
      */
-    <S extends T> UpdateResult updateByIdAndVersion(S entity);
+    UpdateResult updateByIdAndVersion(T entity);
 
     /**
      * batch update
      */
-    <S extends T> UpdateResult updateBatch(List<S> entities);
+    UpdateResult updateBatch(List<T> entities);
 
     /**
      * update by query as conditions
      */
-    <S extends T> UpdateResult update(S entity, Query query);
+    UpdateResult update(T entity, Query query);
 
 
     @Deprecated
-    <S extends T> UpdateResult update(Query query, Update update);
+    UpdateResult update(Query query, Update update);
 
     /**
      * delete by Id

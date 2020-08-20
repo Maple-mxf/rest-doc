@@ -106,7 +106,7 @@ fun ok(): Result = Result()
 /**
  *@since 1.0
  */
-fun ok(data: Any): Result = Result(data = data)
+fun ok(data: Any?): Result = Result(data = data)
 
 /**
  *@since 1.0

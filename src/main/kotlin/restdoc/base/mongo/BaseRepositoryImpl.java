@@ -62,46 +62,46 @@ public class BaseRepositoryImpl<T, ID extends Serializable>
     }
 
     @Override
-    public <S extends T> Optional<S> findOne(Query query) {
-        return (Optional<S>) Optional.ofNullable(mongoOperations.findOne(query, entityInformation.getJavaType()));
+    public  Optional<T> findOne(Query query) {
+        return (Optional<T>) Optional.ofNullable(mongoOperations.findOne(query, entityInformation.getJavaType()));
     }
 
     @Override
-    public <S extends T> S getOne(Query query) {
-        return (S) this.findOne(query).orElse(null);
+    public  T getOne(Query query) {
+        return (T) this.findOne(query).orElse(null);
     }
 
     @Override
-    public <S extends T> List<S> list(Query query) {
+    public  List<T> list(Query query) {
         List<T> ts = mongoOperations.find(query, entityInformation.getJavaType());
-        return (List<S>) ts;
+        return (List<T>) ts;
     }
 
     @Override
-    public <S extends T> List<S> listSort(Query query, Sort sort) {
+    public  List<T> listSort(Query query, Sort sort) {
         query.with(sort);
         return this.list(query);
     }
 
     @Override
-    public <S extends T> boolean exists(Query query) {
+    public  boolean exists(Query query) {
         return this.mongoOperations.exists(query, entityInformation.getJavaType());
     }
 
     @Override
-    public <S extends T> long count(Query query) {
+    public  long count(Query query) {
         return this.mongoOperations.count(query, entityInformation.getJavaType());
     }
 
     @Override
-    public <S extends T> Page<S> page(Query query, Pageable pageable) {
+    public  Page<T> page(Query query, Pageable pageable) {
         query.with(pageable);
         List<T> result = mongoOperations.find(query, entityInformation.getJavaType());
         Page<T> page = PageableExecutionUtils.getPage(result, pageable,
                 () -> mongoOperations.count(Query.of(query).limit(-1).skip(-1),
                         entityInformation.getCollectionName()));
 
-        return (Page<S>) page;
+        return (Page<T>) page;
     }
 
     /**
@@ -156,12 +156,12 @@ public class BaseRepositoryImpl<T, ID extends Serializable>
      * @see org.springframework.data.mongodb.core.MongoTemplate#save(Object)
      */
     @Override
-    public <S extends T> UpdateResult update(S entity) {
+    public  UpdateResult update(T entity) {
         ID id = this.entityInformation.getId(entity);
         if (id == null) throw new IllegalArgumentException("BaseRepository update method id param is require");
 
         // 是否是一个新的对象
-        EntityOperations.AdaptibleEntity<S> source = operations.forEntity(entity, conversionService);
+        EntityOperations.AdaptibleEntity<T> source = operations.forEntity(entity, conversionService);
         Query query = source.getByIdQuery();
         Update update = new Update();
 
@@ -182,12 +182,12 @@ public class BaseRepositoryImpl<T, ID extends Serializable>
     }
 
     @Override
-    public <S extends T> UpdateResult updateByIdAndVersion(S entity) {
+    public  UpdateResult updateByIdAndVersion(T entity) {
         ID id = this.entityInformation.getId(entity);
         if (id == null) throw new IllegalArgumentException("BaseRepository update method id param is require");
 
         // 是否是一个新的对象
-        EntityOperations.AdaptibleEntity<S> source = operations.forEntity(entity, conversionService);
+        EntityOperations.AdaptibleEntity<T> source = operations.forEntity(entity, conversionService);
 
         // 是否属于版本控制的数据 基于CAS乐观锁进行控制
         Query query;
@@ -221,7 +221,7 @@ public class BaseRepositoryImpl<T, ID extends Serializable>
     }
 
     @Override
-    public <S extends T> UpdateResult updateBatch(List<S> entities) {
+    public  UpdateResult updateBatch(List<T> entities) {
         if (entities == null || entities.size() == 0) {
             return UpdateResult.acknowledged(0L, 0L, null);
         }
@@ -234,12 +234,12 @@ public class BaseRepositoryImpl<T, ID extends Serializable>
 
     @Override
     @Deprecated
-    public <S extends T> UpdateResult update(Query query, Update update) {
+    public  UpdateResult update(Query query, Update update) {
         return mongoOperations.updateMulti(query, update, this.entityInformation.getCollectionName());
     }
 
     @Override
-    public <S extends T> UpdateResult update(S entity, Query query) {
+    public  UpdateResult update(T entity, Query query) {
         return null;
     }
 
@@ -249,10 +249,10 @@ public class BaseRepositoryImpl<T, ID extends Serializable>
     }
 
     @Override
-    public <S extends T> UpdateResult updateById(ID id, S entity) {
+    public  UpdateResult updateById(ID id, T entity) {
         if (id == null) throw new IllegalArgumentException("BaseRepository update method id param is require");
         // 是否是一个新的对象
-        EntityOperations.AdaptibleEntity<S> source = operations.forEntity(entity, conversionService);
+        EntityOperations.AdaptibleEntity<T> source = operations.forEntity(entity, conversionService);
 
         // 是否属于版本控制的数据 基于CAS乐观锁进行控制
         Query query = new Query();

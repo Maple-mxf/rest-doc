@@ -17,8 +17,9 @@ data class ProjectConfig(
 data class Project(
         @Id val id: String,
         val name: String,
-        val desc: String,
-        val createTime: Long
+        val desc: String?,
+        val createTime: Long?,
+        var teamId: String?
 )
 
 @Document(collection = "restdoc_group")
@@ -49,7 +50,7 @@ data class ApiDocument(
 
 @Document(collection = "restdoc_menu")
 data class Menu(
-        val id: Int,
+        @Id val id: Int,
         val title: String,
         val type: Int,
         val openType: String? = "_iframe",
@@ -60,7 +61,7 @@ data class Menu(
 
 @Document(collection = "restdoc_team")
 data class Team(
-        val id: String,
+        @Id val id: String,
         var name: String,
         var createTime: Long,
         var createBy: String,
@@ -70,7 +71,7 @@ data class Team(
 
 @Document(collection = "restdoc_user")
 data class User(
-        val id: String,
+        @Id val id: String,
         var name: String?,
         var createTime: Long?,
         var status: AccountStatus = AccountStatus.NORMAL,
