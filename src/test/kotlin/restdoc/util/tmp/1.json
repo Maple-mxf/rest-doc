@@ -1,9 +1,16 @@
 {
   "users": [
-    {
-      "settings": {
-        "name": "jack"
-      }
-    }
+    [
+      [
+        [
+          {
+            "name": 1,
+            "age": 20
+          }
+        ]
+      ]
+    ]
   ]
 }
+
+// user -> users[0] -> users[0][0] -> users[0][0][0] -> users[0][0][0].name = 1

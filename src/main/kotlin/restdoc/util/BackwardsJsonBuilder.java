@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import restdoc.core.Status;
+import restdoc.model.PathValue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,11 +25,12 @@ import static restdoc.core.StandardKt.throwError;
  *
  * @since 2.0
  */
+@Deprecated
 public class BackwardsJsonBuilder {
 
     private final ObjectMapper mapper = new ObjectMapper();
 
-    private List<KeyValue> keyValues;
+    private List<PathValue> pathValues;
 
     // Filter the field
     private final Pattern fieldPattern = compile("[a-zA-Z0-9_]+[a-zA-Z0-9]*");
@@ -44,14 +46,14 @@ public class BackwardsJsonBuilder {
 
     private final ObjectNode jsonTree = mapper.createObjectNode();
 
-    public BackwardsJsonBuilder(List<KeyValue> keyValues) {
-        this.keyValues = this.findMinChildNodes(keyValues);
+    public BackwardsJsonBuilder(List<PathValue> pathValues) {
+        this.pathValues = this.findMinChildNodes(pathValues);
         build();
     }
 
     private void build() {
-        for (KeyValue keyValue : this.keyValues) {
-            putTreeValue(keyValue.getPath(), keyValue.getValue());
+        for (PathValue pathValue : this.pathValues) {
+            putTreeValue(pathValue.getPath(), pathValue.getValue());
         }
     }
 
@@ -147,14 +149,14 @@ public class BackwardsJsonBuilder {
                 .replaceAll("\\]", "\\\\]");
     }
 
-    private List<KeyValue> findMinChildNodes(List<KeyValue> dts) {
+    private List<PathValue> findMinChildNodes(List<PathValue> dts) {
         return new ArrayList<>(dts.stream()
                 .filter(t -> dts.stream()
                         .noneMatch(d -> d.getPath()
                                 .matches(String.format("^%s\\.[a-zA-Z_]+[a-zA-Z0-9]*(.*)$",
                                         this.escape(t.getPath()))))
                 )
-                .collect(toMap(KeyValue::getPath, Function.identity(), (descriptor, descriptor2) -> descriptor2))
+                .collect(toMap(PathValue::getPath, Function.identity(), (descriptor, descriptor2) -> descriptor2))
                 .values());
     }
 
