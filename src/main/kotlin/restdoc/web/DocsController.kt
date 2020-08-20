@@ -15,6 +15,7 @@ import restdoc.util.JsonDeProjector
 import java.util.*
 
 @Controller
+@Deprecated(message = "")
 @RequestMapping("/docs")
 class DocsController {
 

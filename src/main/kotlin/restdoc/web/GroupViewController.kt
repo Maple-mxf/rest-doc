@@ -4,16 +4,17 @@ import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 
-@RequestMapping("/project/view")
+@RequestMapping("/group/view")
 @Controller
-class ProjectViewController {
+class GroupViewController {
 
     @GetMapping("")
     fun list(): String {
         return ""
     }
 
+    @GetMapping
     fun get(): String {
-        return "";
+        return ""
     }
 }

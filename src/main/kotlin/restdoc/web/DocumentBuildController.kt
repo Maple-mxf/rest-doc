@@ -22,12 +22,13 @@ import restdoc.core.Status
 import restdoc.core.failure
 import restdoc.core.ok
 import restdoc.model.ApiDocument
-import restdoc.model.ProjectConfig
 import restdoc.model.BodyFieldDescriptor
+import restdoc.model.ProjectConfig
 import restdoc.model.RequestProcess
 import restdoc.util.Client
 
 @Controller
+@Deprecated(message = "")
 @RequestMapping("/docsBuilder")
 class DocumentBuildController(
         @Autowired val mongoTemplate: MongoTemplate,
@@ -53,9 +54,6 @@ class DocumentBuildController(
 
     @GetMapping("/add_view1")
     fun addView1(model: Model): String = "add1"
-
-    @GetMapping("/test")
-    fun testView(model: Model): String = "test"
 
     /**
      * Save api field info and record http response result
@@ -164,6 +162,4 @@ class DocumentBuildController(
         }
         return false;
     }
-
-
 }

@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 
 @RequestMapping("/project/view")
 @Controller
-class ProjectViewController {
+class TeamViewController {
 
     @GetMapping("")
     fun list(): String {
