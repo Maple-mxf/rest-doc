@@ -50,10 +50,9 @@ import static restdoc.core.StandardKt.throwError;
  *         )).getJsonTree();
  *     }
  *
- *     operation result
+ * operation result As follows json code
  *
- *  {@code
- *
+ * {@code
  * {
  *   "users": [
  *     [
