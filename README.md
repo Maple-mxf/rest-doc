@@ -1,3 +1,3 @@
 # rest-doc
 
-![](https://img.shields.io/npm/v/drone.svg)
+![](https://github.com/ubuntu-m/rest-doc/blob/master/src/test/resources/images.jpg)
