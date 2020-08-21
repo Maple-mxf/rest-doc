@@ -12,7 +12,7 @@ class ProjectViewController {
     fun list(): String {
         return ""
     }
-
+    @GetMapping("/{id}")
     fun get(): String {
         return "";
     }

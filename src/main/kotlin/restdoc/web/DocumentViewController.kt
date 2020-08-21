@@ -13,7 +13,7 @@ class DocumentViewController {
         return ""
     }
 
-    @GetMapping
+    @GetMapping("/{id}")
     fun get(): String {
         return ""
     }

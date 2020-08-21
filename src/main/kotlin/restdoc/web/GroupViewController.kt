@@ -13,8 +13,7 @@ class GroupViewController {
         return ""
     }
 
-    @GetMapping
-    fun get(): String {
+    @GetMapping("/{id}")    fun get(): String {
         return ""
     }
 }

@@ -19,7 +19,7 @@ import restdoc.web.obj.UpdateProjectDto
 import java.util.*
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/user/view")
 @Verify
 class UserViewController {
 

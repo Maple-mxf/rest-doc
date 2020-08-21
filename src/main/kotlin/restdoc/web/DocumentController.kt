@@ -8,7 +8,6 @@ import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.web.bind.annotation.*
 import restdoc.base.auth.HolderKit
-import restdoc.base.auth.Verify
 import restdoc.core.Result
 import restdoc.core.ok
 import restdoc.model.Project
@@ -18,9 +17,9 @@ import restdoc.web.obj.CreateProjectDto
 import restdoc.web.obj.UpdateProjectDto
 import java.util.*
 
-@RestController
-@RequestMapping("/document")
-@Verify
+//@RestController
+//@RequestMapping("/document")
+//@Verify
 class DocumentController {
 
     @Autowired
