@@ -1,4 +1,4 @@
-package restdoc.core.requestexecutor
+package restdoc.core.executor
 
 import org.springframework.http.HttpMethod
 

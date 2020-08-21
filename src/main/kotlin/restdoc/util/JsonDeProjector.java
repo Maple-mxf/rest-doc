@@ -46,7 +46,7 @@ public class JsonDeProjector {
         if (valueNode instanceof ArrayNode) {
             ArrayNode an = (ArrayNode) valueNode;
             for (int i = 0; i < an.size(); i++) {
-                keyPath = format("%s%s[%s]", keyPath, key, i);
+                keyPath = format("%s.%s[%s]", keyPath, key, i);
                 findChildren(keyPath, NULL_KEY, an.get(i));
             }
         }
@@ -59,18 +59,16 @@ public class JsonDeProjector {
                 Iterator<String> iterator = on.fieldNames();
                 while (iterator.hasNext()) {
                     String field = iterator.next();
-                    findChildren(keyPath, field, on.get(field));
+                    findChildren(keyPath, field, on);
                 }
             }
             // JSON
             else {
-                keyPath = keyPath.isEmpty() ? key : format("%s", keyPath);
-
-                this.add(keyPath, null, FieldType.OBJECT);
+                keyPath = keyPath.isEmpty() ? key : format("%s.%s", keyPath, key);
 
                 JsonNode jn = on.get(key);
-
                 if (jn instanceof ArrayNode) {
+                    this.add(keyPath, null, FieldType.ARRAY);
                     ArrayNode an = (ArrayNode) jn;
                     for (int i = 0; i < an.size(); i++) {
                         keyPath = format("%s[%s]", keyPath, i);
@@ -78,6 +76,7 @@ public class JsonDeProjector {
                     }
                 }
                 else if (jn instanceof ObjectNode) {
+                    this.add(keyPath, null, FieldType.OBJECT);
                     ObjectNode one = (ObjectNode) jn;
                     Iterator<String> iterator = one.fieldNames();
                     while (iterator.hasNext()) {
@@ -86,20 +85,19 @@ public class JsonDeProjector {
                     }
                 }
                 else if (jn instanceof BooleanNode) {
-                    this.add(format("%s.%s", keyPath, key), valueNode.booleanValue(), FieldType.BOOLEAN);
+                    this.add(keyPath, jn.booleanValue(), FieldType.BOOLEAN);
                 }
                 else if (jn instanceof NumericNode) {
-                    this.add(format("%s.%s", keyPath, key), valueNode.numberValue(), FieldType.NUMBER);
+                    this.add(keyPath, jn.numberValue(), FieldType.NUMBER);
                 }
                 else if (jn instanceof TextNode) {
-                    this.add(format("%s.%s", keyPath, key), valueNode.textValue(), FieldType.STRING);
+                    this.add(keyPath, jn.textValue(), FieldType.STRING);
                 }
                 else {
-                    this.add(format("%s.%s", keyPath, key), null, FieldType.MISSING);
+                    this.add(keyPath, null, FieldType.MISSING);
                 }
             }
         }
-
     }
 
     private void add(String path, Object value, FieldType type) {

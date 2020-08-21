@@ -1,8 +1,36 @@
 {
-  "users": [
-    {
-      "name": "value",
-      "age": "value"
-    }
-  ]
+  "scheduled": true,
+  "scheduledTime": 1592452723174,
+  "content": "Kobe is NBA people",
+  "recipients": {
+    "member": [
+      {
+        "firmId": "168498749354",
+        "allCheck": false,
+        "groups": [
+          {
+            "groupId": "groupId",
+            "members": [],
+            "receiver": [],
+            "excludes": []
+          }
+        ]
+      }
+    ],
+    "inner": [
+      {
+        "firmId": "168498749354",
+        "allCheck": false,
+        "groups": [
+          {
+            "groupId": "groupId",
+            "members": [],
+            "receiver": [],
+            "excludes": []
+          }
+        ]
+      }
+    ]
+  },
+  "validateOnly": false
 }

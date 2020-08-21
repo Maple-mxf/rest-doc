@@ -1,4 +1,4 @@
-package restdoc.core.requestexecutor
+package restdoc.core.executor
 
 import com.fasterxml.jackson.databind.JsonNode
 import org.springframework.beans.factory.annotation.Autowired
