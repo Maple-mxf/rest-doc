@@ -75,7 +75,6 @@ class DocsController {
         val apiDocument = ApiDocument(
                 id = UUID.randomUUID().toString(),
                 projectId = "DefaultProjectId",
-                groupId = "DefaultGroupId",
                 name = "DefaultName",
                 resource = "DefaultResource",
                 url = requestVo.url,

@@ -34,9 +34,8 @@ data class Group(
 data class ApiDocument(
         @Id var id: String?,
         var projectId: String?,
-        var groupId: String?,
         var name: String?,
-        var resource: String?,
+        var resource: String,
         val url: String,
         var requestHeaderDescriptor: List<HeaderFieldDescriptor>?,
         var requestParameterDescriptor: List<ParameterDescriptor>?,
