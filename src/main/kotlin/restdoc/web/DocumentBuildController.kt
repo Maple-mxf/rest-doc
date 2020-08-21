@@ -8,9 +8,7 @@ import org.springframework.core.ParameterizedTypeReference
 import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
-import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
-import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -140,26 +138,5 @@ class DocumentBuildController(
      */
     fun flattenToJsonNode(fields: List<BodyFieldDescriptor>): JsonNode {
         return mapper.createObjectNode()
-    }
-
-    /**
-     * Expect give response fields
-     */
-    fun expectResponse(responseEntity: ResponseEntity<JsonNode>?,
-                       expectHeaders: Any,
-                       expectBody: JsonNode): Boolean {
-
-        if (responseEntity == null) return false
-
-        if (HttpStatus.OK.equals(responseEntity.statusCode)) {
-            val body = responseEntity.body
-            val headers = responseEntity.headers
-
-            val headerValues: List<String> = headers[""] as List<String>
-
-            //
-            body?.at("/")
-        }
-        return false;
     }
 }

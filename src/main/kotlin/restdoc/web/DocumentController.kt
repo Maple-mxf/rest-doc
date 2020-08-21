@@ -1,5 +1,6 @@
 package restdoc.web
 
+import com.fasterxml.jackson.databind.JsonNode
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Sort.Order.desc
 import org.springframework.data.domain.Sort.by
@@ -8,18 +9,21 @@ import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.web.bind.annotation.*
 import restdoc.base.auth.HolderKit
+import restdoc.base.auth.Verify
 import restdoc.core.Result
 import restdoc.core.ok
 import restdoc.model.Project
 import restdoc.repository.ProjectRepository
 import restdoc.util.IDUtil
+import restdoc.util.JsonDeProjector
 import restdoc.web.obj.CreateProjectDto
+import restdoc.web.obj.RequestVo
 import restdoc.web.obj.UpdateProjectDto
 import java.util.*
 
-//@RestController
-//@RequestMapping("/document")
-//@Verify
+@RestController
+@RequestMapping("/document")
+@Verify
 class DocumentController {
 
     @Autowired
@@ -61,6 +65,17 @@ class DocumentController {
                 createTime = null,
                 teamId = null,
                 desc = dto.desc))
+        return ok()
+    }
+
+    @PostMapping("/deProject")
+    @ResponseBody
+    fun deProjector(@RequestBody tree: JsonNode): Result = ok(JsonDeProjector(tree).deProject())
+
+
+    @PostMapping("/project")
+    @ResponseBody
+    fun projector(@RequestBody requestVo: RequestVo): Result {
         return ok()
     }
 }

@@ -51,8 +51,6 @@ class DocsController {
     @ResponseBody
     fun buildDoc(@RequestBody requestVo: RequestVo): Any {
 
-        println(mapper.writeValueAsString(requestVo))
-
         val requestHeaderDescriptor = requestVo.headers.map {
             HeaderFieldDescriptor(
                     field = it.headerKey,
