@@ -1,4 +1,4 @@
-package restdoc.model
+package restdoc.web.obj
 
 data class RequestVo(
         val url: String,

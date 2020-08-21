@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Lists;
 import org.junit.Test;
-import restdoc.model.PathValue;
 
 /**
  * <p>说明</p>

@@ -1,4 +1,6 @@
-package restdoc.model
+package restdoc.util
+
+import restdoc.model.FieldType
 
 /**
  * Path and value

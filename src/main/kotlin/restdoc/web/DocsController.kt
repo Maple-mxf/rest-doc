@@ -10,8 +10,12 @@ import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
 import restdoc.core.Result
 import restdoc.core.ok
-import restdoc.model.*
+import restdoc.model.ApiDocument
+import restdoc.model.BodyFieldDescriptor
+import restdoc.model.FieldType
+import restdoc.model.HeaderFieldDescriptor
 import restdoc.util.JsonDeProjector
+import restdoc.web.obj.RequestVo
 import java.util.*
 
 @Controller

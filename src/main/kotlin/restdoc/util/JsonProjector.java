@@ -9,8 +9,6 @@ import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
 import restdoc.core.Status;
 import restdoc.model.FieldType;
-import restdoc.model.Node;
-import restdoc.model.PathValue;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -12,7 +12,7 @@ import restdoc.base.auth.Verify
 import restdoc.core.Result
 import restdoc.core.ok
 import restdoc.model.Project
-import restdoc.repository.ProjectRepository
+import restdoc.repository.GroupRepository
 import restdoc.util.IDUtil
 import restdoc.web.obj.CreateProjectDto
 import restdoc.web.obj.UpdateProjectDto
@@ -27,7 +27,7 @@ class GroupController {
     lateinit var mongoTemplate: MongoTemplate
 
     @Autowired
-    lateinit var projectRepository: ProjectRepository
+    lateinit var groupRepository: GroupRepository
 
     @Autowired
     lateinit var holderKit: HolderKit
@@ -36,7 +36,7 @@ class GroupController {
     fun list(): Result {
         val query = Query().addCriteria(Criteria("teamId").`is`(holderKit.user.teamId))
         query.with(by(desc("createTime")))
-        return ok(projectRepository.list(query))
+        return ok(groupRepository.list(query))
     }
 
     @GetMapping("/{id}")
@@ -56,12 +56,12 @@ class GroupController {
 
     @PatchMapping("")
     fun update(@RequestBody dto: UpdateProjectDto): Result {
-        projectRepository.update(Project(
+        /*groupRepository.update(Gr(
                 id = dto.id,
                 name = dto.name,
                 createTime = null,
                 teamId = null,
-                desc = dto.desc))
+                desc = dto.desc))*/
         return ok()
     }
 }

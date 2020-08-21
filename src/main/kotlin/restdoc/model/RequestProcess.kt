@@ -30,6 +30,7 @@ fun <R> responseType(method: HttpMethod): ParameterizedTypeReference<R> {
  * @sample ParameterizedTypeReference.forType
  * @since 1.0
  */
+@Deprecated(message = "")
 data class RequestProcess<R>(
         val url: String,
         var header: Map<String, List<String>>,
