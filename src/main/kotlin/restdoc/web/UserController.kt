@@ -48,7 +48,7 @@ class UserController {
         val project = Project(id = IDUtil.id(),
                 name = dto.name,
                 createTime = Date().time,
-                teamId = holderKit.user.teamId,
+                projectId = holderKit.user.teamId,
                 desc = dto.desc)
         mongoTemplate.save(project)
         return ok()
@@ -60,7 +60,7 @@ class UserController {
                 id = dto.id,
                 name = dto.name,
                 createTime = null,
-                teamId = null,
+                projectId = null,
                 desc = dto.desc))
         return ok()
     }

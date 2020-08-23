@@ -21,6 +21,9 @@ import restdoc.web.obj.RequestVo
 import restdoc.web.obj.UpdateProjectDto
 import java.util.*
 
+/**
+ * @see Project
+ */
 @RestController
 @RequestMapping("/document")
 @Verify
@@ -35,9 +38,9 @@ class DocumentController {
     @Autowired
     lateinit var holderKit: HolderKit
 
-    @GetMapping("")
-    fun list(): Result {
-        val query = Query().addCriteria(Criteria("teamId").`is`(holderKit.user.teamId))
+    @GetMapping("/list/{projectId}")
+    fun list(@PathVariable projectId: String): Result {
+        val query = Query().addCriteria(Criteria("projectId").`is`(projectId))
         query.with(by(desc("createTime")))
         return ok(projectRepository.list(query))
     }
@@ -51,7 +54,7 @@ class DocumentController {
         val project = Project(id = IDUtil.id(),
                 name = dto.name,
                 createTime = Date().time,
-                teamId = holderKit.user.teamId,
+                projectId = holderKit.user.teamId,
                 desc = dto.desc)
         mongoTemplate.save(project)
         return ok()
@@ -63,7 +66,7 @@ class DocumentController {
                 id = dto.id,
                 name = dto.name,
                 createTime = null,
-                teamId = null,
+                projectId = null,
                 desc = dto.desc))
         return ok()
     }

@@ -184,7 +184,7 @@ public class JsonProjector {
 
                     if (matcher.find()) {
                         String field = matcher.group(1);
-                        List<Integer> indexes = this.splitIndex(lastField.substring(field.length()));
+                        List<Integer> indexes = splitIndex(lastField.substring(field.length()));
 
                         List<String> indices = IntStream.range(0, indexes.size())
                                 .mapToObj(index ->
@@ -365,7 +365,7 @@ public class JsonProjector {
         }
     }
 
-    private List<Integer> splitIndex(String indexString) {
+    private static List<Integer> splitIndex(String indexString) {
         List<String> indexStrings = Arrays.stream(indexString.split("\\]"))
                 .map(t -> t.replaceAll("\\[", ""))
                 .collect(toList());

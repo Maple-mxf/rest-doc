@@ -48,7 +48,7 @@ class GroupController {
         val project = Project(id = IDUtil.id(),
                 name = dto.name,
                 createTime = Date().time,
-                teamId = holderKit.user.teamId,
+                projectId = holderKit.user.teamId,
                 desc = dto.desc)
         mongoTemplate.save(project)
         return ok()

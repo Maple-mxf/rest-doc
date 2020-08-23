@@ -19,7 +19,7 @@ data class Project(
         val name: String,
         val desc: String?,
         val createTime: Long?,
-        var teamId: String?
+        var projectId: String?
 )
 
 @Document(collection = "restdoc_group")

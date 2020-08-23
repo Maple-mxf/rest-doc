@@ -1,10 +1,7 @@
 package restdoc.web
 
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.domain.Sort.Order.desc
-import org.springframework.data.domain.Sort.by
 import org.springframework.data.mongodb.core.MongoTemplate
-import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.web.bind.annotation.*
 import restdoc.base.auth.HolderKit
@@ -31,11 +28,11 @@ class ProjectController {
     @Autowired
     lateinit var holderKit: HolderKit
 
-    @GetMapping("")
+    @GetMapping("/list")
     fun list(): Result {
-        val query = Query().addCriteria(Criteria("teamId").`is`(holderKit.user.teamId))
-        query.with(by(desc("createTime")))
-        return ok(projectRepository.list(query))
+        /*val query = Query().addCriteria(Criteria("teamId").`is`(holderKit.user.teamId))
+        query.with(by(desc("createTime")))*/
+        return ok(projectRepository.list(Query()))
     }
 
     @GetMapping("/{id}")
@@ -43,12 +40,13 @@ class ProjectController {
 
     @PostMapping("")
     fun create(@RequestBody dto: CreateProjectDto): Result {
-
-        val project = Project(id = IDUtil.id(),
+        val project = Project(
+                id = IDUtil.id(),
                 name = dto.name,
                 createTime = Date().time,
-                teamId = holderKit.user.teamId,
-                desc = dto.desc)
+                projectId = "DefaultTeam",
+                desc = dto.desc
+        )
         mongoTemplate.save(project)
         return ok()
     }
@@ -59,7 +57,7 @@ class ProjectController {
                 id = dto.id,
                 name = dto.name,
                 createTime = null,
-                teamId = null,
+                projectId = null,
                 desc = dto.desc))
         return ok()
     }

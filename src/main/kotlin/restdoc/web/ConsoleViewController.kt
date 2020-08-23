@@ -34,6 +34,18 @@ class ConsoleViewController {
                                 title = "REST文档",
                                 type = 1,
                                 href = "/restdoc/docs",
+                                icon = "layui-icon layui-icon-console"),
+
+                        Menu(id = 4,
+                                title = "My Team",
+                                type = 1,
+                                href = "/restdoc/team/view",
+                                icon = "layui-icon layui-icon-console"),
+
+                        Menu(id = 5,
+                                title = "Project",
+                                type = 1,
+                                href = "/restdoc/project/view",
                                 icon = "layui-icon layui-icon-console")
                 )))
 

@@ -1,16 +1,18 @@
 package restdoc.web
 
 import org.springframework.stereotype.Controller
+import org.springframework.ui.Model
+import org.springframework.ui.set
 import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.PathVariable
 
-@RequestMapping("/document/view")
 @Controller
 class DocumentViewController {
 
-    @GetMapping("")
-    fun list(): String {
-        return ""
+    @GetMapping("/{projectId}/document/view/list/")
+    fun list(@PathVariable projectId: String, model: Model): String {
+        model.set("projectId", projectId)
+        return "docs/list"
     }
 
     @GetMapping("/{id}")

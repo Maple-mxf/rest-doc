@@ -10,10 +10,14 @@ class ProjectViewController {
 
     @GetMapping("")
     fun list(): String {
-        return ""
+        return "project/list"
     }
+
     @GetMapping("/{id}")
     fun get(): String {
-        return "";
+        return "forward:project/detail";
     }
+
+    @GetMapping("/add")
+    fun create(): String = "project/add"
 }
