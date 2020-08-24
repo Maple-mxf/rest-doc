@@ -17,16 +17,9 @@
 <body>
 <div class="layui-fluid">
 
-    <div class="layui-row">
-        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-            <legend>Build The Http Request</legend>
-        </fieldset>
-    </div>
-
     <form class="layui-form layui-form-pane" action="" id="request_form">
 
         <fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px;">
-            <legend>Request URL</legend>
             <div class="layui-form-item">
 
                 <div class="layui-input-inline">
@@ -44,17 +37,71 @@
                 <div class="layui-input-inline">
                     <input type="text" name="url" placeholder="url" autocomplete="off" style="width: 300%"
                            class="layui-input">
+
                 </div>
+                <button class="layui-btn" style="margin-left: 25%;float: left" lay-submit lay-filter="*">执行</button>
             </div>
         </fieldset>
 
+
         <fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px;">
-            <legend>Request Header</legend>
+            <legend>REST路径参数</legend>
+
+            <div class="layui-form-item" style="margin-top: 10px">
+                <div class="layui-inline">
+                    <button type="button" class="layui-btn" id="add_pathvar_field">
+                        增加参数
+                    </button>
+                </div>
+            </div>
+
+            <div id="request-pathvar-div">
+                <div class="layui-form-item one-request-header-line" id="first-pathvar-field">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">字段</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="headerKey" placeholder="Key" autocomplete="off"
+                                   class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">值</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="headerValue" placeholder="Value" autocomplete="off"
+                                   class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-inline">
+                        <label class="layui-form-label">说明</label>
+                        <div class="layui-input-inline">
+                            <input type="text" placeholder="参数说明" name="headerDescription" autocomplete="off"
+                                   class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-inline">
+                        <button type="button" class="layui-btn layui-btn-danger" id="deletePathvarBtn"
+                                style="margin-left: 10px"
+                                onclick="deleteHeaderFieldLine(this)">
+                            <i class="layui-icon layui-icon-subtraction" style="font-size: 30px; color: white;"></i>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+        </fieldset>
+
+
+        <fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px;">
+            <legend>请求头</legend>
 
             <div class="layui-form-item" style="margin-top: 10px">
                 <div class="layui-inline">
                     <button type="button" class="layui-btn" id="add_request_header_field">
-                        <i class="layui-icon layui-icon-addition" style="font-size: 30px; color: white;"></i>
+                        <!--                        <i class="layui-icon layui-icon-addition" style="font-size: 30px; color: white;"></i>-->
+                        增加参数
                     </button>
                 </div>
             </div>
@@ -105,16 +152,17 @@
         </fieldset>
 
         <fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px;">
-            <legend>Request Body</legend>
+            <legend>请求参数</legend>
 
             <div class="layui-form-item" style="margin-top: 10px">
                 <div class="layui-inline">
                     <button type="button" class="layui-btn" id="add_request_body_field">
-                        <i class="layui-icon layui-icon-addition" style="font-size: 30px; color: white;"></i>
+                        <!--                        <i class="layui-icon layui-icon-addition" style="font-size: 30px; color: white;"></i>-->
+                        增加参数
                     </button>
 
                     <button type="button" class="layui-btn" id="convert_json_to_fields">
-                        JSON转换
+                        JSON快速转换
                     </button>
                 </div>
             </div>
@@ -127,7 +175,7 @@
                         <div class="layui-input-inline">
                             <input type="text"
                                    name="requestFieldPath"
-                                   placeholder="字段Path" lay-verify="required"
+                                   placeholder="字段Path"
                                    autocomplete="off"
                                    class="layui-input">
                         </div>
@@ -137,7 +185,7 @@
                         <div class="layui-input-inline">
                             <input type="text"
                                    name="requestFieldValue"
-                                   placeholder="字段值" lay-verify="required"
+                                   placeholder="字段值"
                                    autocomplete="off"
                                    class="layui-input">
                         </div>
@@ -148,7 +196,6 @@
                             <input type="text"
                                    name="requestFieldType"
                                    placeholder="字段类型"
-                                   lay-verify="required"
                                    autocomplete="off"
                                    class="layui-input">
                         </div>
@@ -159,7 +206,6 @@
                             <input type="text"
                                    name="requestFieldDescription"
                                    placeholder="字段说明"
-                                   lay-verify="required"
                                    autocomplete="off"
                                    class="layui-input">
                         </div>
@@ -181,12 +227,13 @@
         </fieldset>
 
         <fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px;">
-            <legend>Response Body</legend>
+            <legend>期望响应参数</legend>
 
             <div class="layui-form-item" style="margin-top: 10px">
                 <div class="layui-inline">
                     <button type="button" class="layui-btn" id="add_response_body_field">
-                        <i class="layui-icon layui-icon-addition" style="font-size: 30px; color: white;"></i>
+                        <!--                        <i class="layui-icon layui-icon-addition" style="font-size: 30px; color: white;"></i>-->
+                        增加参数
                     </button>
                 </div>
             </div>
@@ -198,7 +245,6 @@
                         <div class="layui-input-inline">
                             <input type="text"
                                    name="responseFieldPath"
-                                   lay-verify="required"
                                    autocomplete="off"
                                    class="layui-input">
                         </div>
@@ -208,7 +254,6 @@
                         <div class="layui-input-inline">
                             <input type="text"
                                    name="responseFieldType"
-                                   lay-verify="required"
                                    autocomplete="off"
                                    class="layui-input">
                         </div>
@@ -218,7 +263,6 @@
                         <div class="layui-input-inline">
                             <input type="text"
                                    name="responseFieldDescription"
-                                   lay-verify="required"
                                    autocomplete="off"
                                    class="layui-input">
                         </div>
@@ -234,24 +278,6 @@
                             <i class="layui-icon layui-icon-subtraction" style="font-size: 30px; color: white;"></i>
                         </button>
                     </div>
-                </div>
-            </div>
-        </fieldset>
-
-
-        <fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px;">
-            <legend>执行策略</legend>
-
-            <div class="layui-form-item">
-                <div class="layui-input-inline">
-                    <select name="executeStrategy">
-                        <option value="RequestOnly">仅执行该请求</option>
-                        <option value="DocumentOny">仅记录文档</option>
-                        <option value="RequestDocument">执行该请求并且记录文档</option>
-                    </select>
-                </div>
-                <div class="layui-input-inline" style="margin-left: 2%">
-                    <button class="layui-btn" lay-submit lay-filter="*">执行</button>
                 </div>
             </div>
         </fieldset>
@@ -354,7 +380,7 @@
 
         form.on('submit(*)', function (data) {
 
-            var map = getFormData(data.field)
+            /*var map = getFormData(data.field)
 
             $.ajax({
                 type: 'POST',
@@ -366,7 +392,18 @@
                 success: function (data) {
                     console.info(data)
                 }
+            });*/
+
+            layer.open({
+                type: 2,
+                title:'运行结果',
+                area: ['900px', '600px'],
+                content: "/restdoc/document/view/executeResult",
+                btn: ['保存运行结果', '取消'],
+                isOutAnim: false,
+                skin: 'layui-layer-lan'
             });
+
 
             return false;
         });

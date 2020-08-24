@@ -23,13 +23,6 @@ class ConsoleViewController {
                 href = "",
                 icon = "layui-icon layui-icon-console",
                 children = mutableListOf(
-                        Menu(id = 2,
-                                title = "门户CI",
-                                type = 1,
-                                href = "/console/ci",
-                                icon = "layui-icon layui-icon-console"),
-
-
                         Menu(id = 3,
                                 title = "REST文档",
                                 type = 1,

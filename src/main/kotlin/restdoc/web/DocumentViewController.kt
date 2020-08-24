@@ -19,4 +19,7 @@ class DocumentViewController {
     fun get(): String {
         return ""
     }
+
+    @GetMapping("/document/view/executeResult")
+    fun executeResult(): String = "docs/executeResult"
 }

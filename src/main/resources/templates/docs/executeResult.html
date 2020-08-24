@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title>富文本编辑器</title>
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}"/>
+    <link rel="stylesheet" th:href="@{/admin/css/pearForm.css}"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/admin/css/doc-font.css}"/>
+    <style>
+        body {
+            margin: 10px;
+            background-color: #0C0C0C;
+            color: whitesmoke;
+            font-family: "Consolas",serif;
+            font-size: 17px;
+        }
+    </style>
+</head>
+<body>
+
+
+<p style="color: white">
+    Http Status:200 <br/>
+    HttpResponseHeader:<br/>
+      accept:xml<br/>
+</p>
+
+<script th:src="@{/layui/layui.js}"></script>
+<script th:src="@{/admin/js/jquery.js}"></script>
+<script th:src="@{/admin/js/util.js}"></script>
+<script type="text/javascript" th:inline="javascript">
+    //注意：折叠面板 依赖 element 模块，否则无法进行功能性操作
+    layui.use('element', function () {
+        var element = layui.element;
+
+        //…
+    });
+</script>
+</body>
+</html>
