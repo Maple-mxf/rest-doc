@@ -49,12 +49,13 @@
                     var name = result[key].name;
                     var desc = result[key].desc;
                     var projectId = result[key].id;
+                    projectId = projectId.toString();
 
                     console.info(projectId);
 
                     if (desc == null) desc = "";
                     var createTime = formatTimestamp(result[key].createTime);
-                    var html = "        <div id='" + projectId + "' class=\"layui-col-md3 project-item\" onclick='clickProject(" + projectId + ")'>\n" +
+                    var html = "        <div id='" + projectId + "' class=\"layui-col-md3 project-item\" onclick='clickProject(this)'>\n" +
                         "            <div class=\"layui-card\">\n" +
                         "                <div class=\"layui-card-header\">" + name + "</div>\n" +
                         "                <div class=\"layui-card-body\">\n" +
@@ -79,13 +80,12 @@
         lay = layui.layer;
     });
 
-    function clickProject(id) {
-
-       console.info(id);
-
+    function clickProject(obj) {
+        console.info(obj)
+        var id = obj.id
         lay.open({
             title: 'Project Detail',
-            area: ['500px', '300px'],
+            area: ['800px', '500px'],
             scrollbar: false,
             type: 2,
             content: '/restdoc/project/' + id + '/view'

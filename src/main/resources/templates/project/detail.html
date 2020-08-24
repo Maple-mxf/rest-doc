@@ -13,10 +13,10 @@
     </style>
 </head>
 <body>
-<table class="layui-table">
+<table class="layui-table"  lay-even lay-skin="line" lay-size="lg">
     <colgroup>
-        <col width="150">
         <col width="200">
+        <col width="300">
         <col>
     </colgroup>
     <tbody>
@@ -28,10 +28,10 @@
         <td>Project Description</td>
         <td th:text="${project.desc}"></td>
     </tr>
-    
+
     <tr>
         <td>Project CreateTime</td>
-        <td th:text="${#dates.format(project.desc, 'yyyy-MM-dd HH:mm')}"></td>
+        <td th:text="${#dates.format(project.createTime, 'yyyy-MM-dd HH:mm')}"></td>
     </tr>
     </tbody>
 </table>
