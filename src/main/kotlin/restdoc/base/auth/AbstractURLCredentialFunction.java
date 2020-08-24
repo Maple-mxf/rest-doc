@@ -7,11 +7,11 @@ import javax.servlet.http.HttpServletRequest;
 /**
  *
  */
-public abstract class AbstractBeBasedOnURLCredentialFunction extends AbstractCredentialFunction {
+public abstract class AbstractURLCredentialFunction extends AbstractCredentialFunction {
 
     private String urlParamName;
 
-    public AbstractBeBasedOnURLCredentialFunction(String urlParamName) {
+    public AbstractURLCredentialFunction(String urlParamName) {
         com.google.common.base.Verify.verify(!Strings.isNullOrEmpty(urlParamName),
                 "headerKey must be set up  require non null");
         this.urlParamName = urlParamName;

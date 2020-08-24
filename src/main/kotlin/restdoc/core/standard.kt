@@ -51,6 +51,16 @@ enum class Status(val status: String,
      */
     THIRD_SERVICE_ERROR("ThirdServiceError", "T500", "第三方服务错误");
 
+    fun verify(expression: Boolean) {
+        if (expression) {
+            this.error(this.message!!)
+        }
+    }
+
+    fun verify(expression: Boolean, errorMessage: String): Unit {
+        if (expression) this.error(errorMessage)
+    }
+
     fun instanceError(errorMessage: String): ServiceException {
         this.message = errorMessage
         return instanceError()

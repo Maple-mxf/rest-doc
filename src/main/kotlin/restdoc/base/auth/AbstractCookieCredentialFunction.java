@@ -8,14 +8,14 @@ import java.util.stream.Stream;
 
 /**
  */
-public abstract class AbstractBeBasedOnCookieCredentialFunction extends AbstractCredentialFunction {
+public abstract class AbstractCookieCredentialFunction extends AbstractCredentialFunction {
 
     /**
      * {@link Cookie}
      */
     private String cookieName;
 
-    public AbstractBeBasedOnCookieCredentialFunction(String cookieName) {
+    public AbstractCookieCredentialFunction(String cookieName) {
         com.google.common.base.Verify.verify(!Strings.isNullOrEmpty(cookieName), "cookieName must be set up  require non null");
         this.cookieName = cookieName;
     }

@@ -7,17 +7,17 @@ import javax.servlet.http.HttpServletRequest;
 /**
  *
  */
-public abstract class AbstractBeBasedOnHeaderCredentialFunction extends AbstractCredentialFunction {
+public abstract class AbstractHeaderCredentialFunction extends AbstractCredentialFunction {
 
     /**
      * headerKey
      */
     private String headerKey;
 
-    public AbstractBeBasedOnHeaderCredentialFunction() {
+    public AbstractHeaderCredentialFunction() {
     }
 
-    public AbstractBeBasedOnHeaderCredentialFunction(String headerKey) {
+    public AbstractHeaderCredentialFunction(String headerKey) {
         com.google.common.base.Verify.verify(!Strings.isNullOrEmpty(headerKey),
                 "headerKey must be set up  require non null");
         this.headerKey = headerKey;

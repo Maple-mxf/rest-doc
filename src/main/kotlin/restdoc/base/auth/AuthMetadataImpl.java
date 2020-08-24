@@ -44,7 +44,7 @@ public class AuthMetadataImpl implements AuthMetadata {
         return ImmutableSet.of(defaultAuthRule);
     }
 
-    private class DefaultTokenVerify extends AbstractBeBasedOnHeaderCredentialFunction {
+    private class DefaultTokenVerify extends AbstractHeaderCredentialFunction {
 
         public DefaultTokenVerify() {
             super(Token.ACCESS_TOKEN);

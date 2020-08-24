@@ -10,12 +10,17 @@
         body {
             background-color: #F2F2F2;
         }
+
+        .project-item :hover {
+            background: #dadada;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
 <div style="padding: 20px; " class="layui-container">
     <div class="layui-row">
-        <div class="layui-row layui-col-space20">
+        <div class="layui-row layui-col-space20 layui-col-md-offset3">
             <div class="layui-col-md2">
                 <a th:href="@{/project/view/add}" class="layui-btn">创建RestApiDoc项目</a>
             </div>
@@ -45,15 +50,16 @@
                     var desc = result[key].desc;
                     var projectId = result[key].id;
 
+                    console.info(projectId);
+
                     if (desc == null) desc = "";
                     var createTime = formatTimestamp(result[key].createTime);
-                    var html = "        <div class=\"layui-col-md3\">\n" +
+                    var html = "        <div id='" + projectId + "' class=\"layui-col-md3 project-item\" onclick='clickProject(" + projectId + ")'>\n" +
                         "            <div class=\"layui-card\">\n" +
                         "                <div class=\"layui-card-header\">" + name + "</div>\n" +
                         "                <div class=\"layui-card-body\">\n" +
-                        "                    " + desc + "<br>\n" +
-                        "                    " + createTime + "\n" +
-                        "        <label style='margin-left: 80%'> <a href='/restdoc/" + projectId + "/resource/view/list'><i class=\"layui-icon layui-icon-next\" style=\"font-size: 22px; color: #1E9FFF;\"></i></a>  \n</label>        </div>\n" +
+                        "                    " + desc + "<br><br>\n" +
+                        "        <label style='margin-left: 90%'> <a href='/restdoc/" + projectId + "/resource/view/list'><i class=\"layui-icon layui-icon-next\" style=\"font-size: 22px; color: #1E9FFF;\"></i></a>  \n</label>        </div>\n" +
                         "            </div>\n" +
                         "        </div>";
 
@@ -64,6 +70,27 @@
             }
         }
     });
+
+    var lay;
+    layui.use(['element', 'layer'], function () {
+        var element = layui.element;
+        var layer = layui.layer;
+        var $ = layui.jquery;
+        lay = layui.layer;
+    });
+
+    function clickProject(id) {
+
+       console.info(id);
+
+        lay.open({
+            title: 'Project Detail',
+            area: ['500px', '300px'],
+            scrollbar: false,
+            type: 2,
+            content: '/restdoc/project/' + id + '/view'
+        });
+    }
 
 </script>
 </body>

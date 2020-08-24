@@ -1,7 +1,7 @@
 server:
   servlet:
     context-path: /restdoc
-  port: 8080
+  port: 8432
 
 spring:
   thymeleaf:
