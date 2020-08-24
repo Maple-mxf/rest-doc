@@ -104,10 +104,24 @@ open class HeadRequestExecutor : AbstractSimpleExecutor() {
     }
 }
 
-open class ExecutorDelegate(val url: String,
-                            val method: HttpMethod,
-                            val descriptors: List<BodyFieldDescriptor>
-) {
-    
+/**
+ * @see RestTemplate.exchange
+ */
+@Component
+open class ExecutorDelegate {
+
+    @Autowired
+    lateinit var restTemplate: RestTemplate
+
+    fun execute(url: String,
+                uriVar: Map<String, Any>,
+                method: HttpMethod,
+                descriptors: List<BodyFieldDescriptor>) {
+
+        val uri = restTemplate.uriTemplateHandler.expand(url, uriVar)
+        val url = uri.toASCIIString()
+
+        
+    }
 }
 
