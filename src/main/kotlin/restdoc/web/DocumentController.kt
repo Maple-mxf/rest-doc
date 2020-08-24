@@ -12,6 +12,9 @@ import restdoc.base.auth.HolderKit
 import restdoc.base.auth.Verify
 import restdoc.core.Result
 import restdoc.core.ok
+import restdoc.model.BodyFieldDescriptor
+import restdoc.model.FieldType
+import restdoc.model.HeaderFieldDescriptor
 import restdoc.model.Project
 import restdoc.repository.ProjectRepository
 import restdoc.util.IDUtil
@@ -82,5 +85,34 @@ class DocumentController {
         return ok()
     }
 
+    @PostMapping("/execute")
+    @ResponseBody
+    fun execute(@RequestBody requestVo: RequestVo): Result {
+
+        val requestHeaderDescriptor = requestVo.headers.map {
+            HeaderFieldDescriptor(
+                    field = it.headerKey,
+                    value = it.headerValue.split(","),
+                    description = it.headerDescription,
+                    optional = it.headerConstraint
+            )
+        }
+
+        val requestBodyDescriptor = requestVo.requestBody.map {
+            BodyFieldDescriptor(
+                    path = it.requestFieldPath,
+                    value = it.requestFieldValue,
+                    description = it.requestFieldDescription,
+                    type = FieldType.valueOf(it.requestFieldType),
+                    optional = it.requestFieldConstraint,
+                    defaultValue = null
+            )
+        }
+
+        // Handler URL
+
+
+        return ok()
+    }
 
 }

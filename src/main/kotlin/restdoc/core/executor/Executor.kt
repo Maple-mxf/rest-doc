@@ -8,6 +8,7 @@ import org.springframework.http.HttpMethod
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestTemplate
+import restdoc.model.BodyFieldDescriptor
 
 interface Executor {
 
@@ -25,7 +26,6 @@ abstract class AbstractExecutor : Executor {
         for (entry in headerMap) headers.set(entry.key, entry.value)
         return headers
     }
-
 }
 
 abstract class AbstractSimpleExecutor : AbstractExecutor() {
@@ -102,5 +102,12 @@ open class HeadRequestExecutor : AbstractSimpleExecutor() {
     override fun method(): HttpMethod {
         return HttpMethod.HEAD
     }
+}
+
+open class ExecutorDelegate(val url: String,
+                            val method: HttpMethod,
+                            val descriptors: List<BodyFieldDescriptor>
+) {
+    
 }
 
