@@ -1,9 +1,11 @@
 package restdoc.core.config
 
+import org.hibernate.validator.HibernateValidator
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.redis.core.RedisTemplate
+import org.springframework.validation.beanvalidation.MethodValidationPostProcessor
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.servlet.config.annotation.CorsRegistry
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry
@@ -11,6 +13,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 import restdoc.base.auth.AuthContext
 import restdoc.base.auth.AuthMetadataImpl
 import restdoc.base.auth.AuthenticationInterceptor
+import javax.validation.Validation
+import javax.validation.Validator
+import javax.validation.ValidatorFactory
 
 
 /**
@@ -53,6 +58,22 @@ open class ApplicationConfiguration : WebMvcConfigurer {
                 .allowedHeaders("*")
                 .allowedMethods("POST", "GET", "PUT", "DELETE", "OPTIONS", "PATCH")
                 .allowedOrigins("*")
+    }
+
+    @Bean
+    open fun validator(): Validator? {
+        val validatorFactory: ValidatorFactory = Validation.byProvider(HibernateValidator::class.java)
+                .configure()
+                .addProperty("hibernate.validator.fail_fast", "true")
+                .buildValidatorFactory()
+        return validatorFactory.getValidator()
+    }
+
+    @Bean
+    open fun methodValidationPostProcessor(): MethodValidationPostProcessor? {
+        val postProcessor = MethodValidationPostProcessor()
+        postProcessor.setValidator(validator())
+        return postProcessor
     }
 
 }
