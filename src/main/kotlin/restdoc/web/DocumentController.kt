@@ -27,7 +27,7 @@ import restdoc.repository.ProjectRepository
 import restdoc.util.IDUtil
 import restdoc.util.JsonDeProjector
 import restdoc.web.obj.CreateProjectDto
-import restdoc.web.obj.RequestVo
+import restdoc.web.obj.RequestDto
 import restdoc.web.obj.UpdateProjectDto
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -97,14 +97,14 @@ class DocumentController {
 
 
     @PostMapping("/project")
-    fun projector(@RequestBody requestVo: RequestVo): Result {
+    fun projector(@RequestBody requestDto: RequestDto): Result {
         return ok()
     }
 
 
     @PostMapping("/httpTask/submit")
-    fun submitHttpTask(@RequestBody @Valid requestVo: RequestVo): Result {
-        val requestHeaderDescriptor = requestVo.headers.map {
+    fun submitHttpTask(@RequestBody @Valid requestDto: RequestDto): Result {
+        val requestHeaderDescriptor = requestDto.headers.map {
             HeaderFieldDescriptor(
                     field = it.headerKey,
                     value = it.headerValue.split(","),
@@ -112,8 +112,8 @@ class DocumentController {
                     optional = it.headerConstraint
             )
         }
-        
-        val requestBodyDescriptor = requestVo.requestBody.map {
+
+        val requestBodyDescriptor = requestDto.requestBody.map {
             BodyFieldDescriptor(
                     path = it.requestFieldPath,
                     value = it.requestFieldValue,
@@ -128,8 +128,8 @@ class DocumentController {
 
         GlobalScope.launch {
             val executeResult = delete.execute(
-                    url = requestVo.url,
-                    method = HttpMethod.valueOf(requestVo.method),
+                    url = requestDto.url,
+                    method = HttpMethod.valueOf(requestDto.method),
                     headers = requestHeaderDescriptor.map { it.field to (it.value.joinToString(",")) }.toMap(),
                     descriptors = requestBodyDescriptor,
                     uriVar = mapOf())

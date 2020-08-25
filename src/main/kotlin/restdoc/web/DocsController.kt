@@ -15,7 +15,7 @@ import restdoc.model.BodyFieldDescriptor
 import restdoc.model.FieldType
 import restdoc.model.HeaderFieldDescriptor
 import restdoc.util.JsonDeProjector
-import restdoc.web.obj.RequestVo
+import restdoc.web.obj.RequestDto
 import java.util.*
 
 @Controller
@@ -49,9 +49,9 @@ class DocsController {
 
     @PostMapping("/build")
     @ResponseBody
-    fun buildDoc(@RequestBody requestVo: RequestVo): Any {
+    fun buildDoc(@RequestBody requestDto: RequestDto): Any {
 
-        val requestHeaderDescriptor = requestVo.headers.map {
+        val requestHeaderDescriptor = requestDto.headers.map {
             HeaderFieldDescriptor(
                     field = it.headerKey,
                     value = it.headerValue.split(","),
@@ -61,7 +61,7 @@ class DocsController {
         }
 
 
-        val requestBodyDescriptor = requestVo.requestBody.map {
+        val requestBodyDescriptor = requestDto.requestBody.map {
             BodyFieldDescriptor(
                     path = it.requestFieldPath,
                     value = it.requestFieldValue,
@@ -77,7 +77,7 @@ class DocsController {
                 projectId = "DefaultProjectId",
                 name = "DefaultName",
                 resource = "DefaultResource",
-                url = requestVo.url,
+                url = requestDto.url,
                 requestHeaderDescriptor = requestHeaderDescriptor,
                 requestParameterDescriptor = listOf(),
                 requestBodyDescriptor = requestBodyDescriptor,
