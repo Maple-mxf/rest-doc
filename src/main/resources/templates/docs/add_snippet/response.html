@@ -27,16 +27,20 @@
                     </div>
                 </div>
                 <div class="layui-inline">
-                    <label class="layui-form-label">字段类型</label>
                     <div class="layui-input-inline">
-                        <input type="text"
-                               name="responseFieldType"
-                               autocomplete="off"
-                               class="layui-input">
+                        <select name="responseFieldType">
+                            <option value="" selected>请选择类型</option>
+                            <option value="GET">Object</option>
+                            <option value="POST">Array</option>
+                            <option value="PUT">Boolean</option>
+                            <option value="DELETE">Number</option>
+                            <option value="PATCH">String</option>
+                        </select>
                     </div>
                 </div>
+
                 <div class="layui-inline">
-                    <label class="layui-form-label">字段说明</label>
+                    <label class="layui-form-label">说明</label>
                     <div class="layui-input-inline">
                         <input type="text"
                                name="responseFieldDescription"
