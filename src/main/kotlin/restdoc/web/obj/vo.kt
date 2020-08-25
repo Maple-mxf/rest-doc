@@ -1,10 +1,11 @@
 package restdoc.web.obj
 
-import javax.validation.constraints.NotBlank
+import javax.validation.constraints.Pattern
 
 data class RequestVo(
-        @NotBlank(message = "url不可为空")
+        @Pattern(regexp = "")
         val url: String,
+
         val method: String,
         val headers: List<HeaderVo>,
         val requestBody: List<RequestBodyVo>,

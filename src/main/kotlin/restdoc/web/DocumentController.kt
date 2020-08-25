@@ -104,9 +104,6 @@ class DocumentController {
 
     @PostMapping("/httpTask/submit")
     fun submitHttpTask(@RequestBody @Valid requestVo: RequestVo): Result {
-
-        println(mapper.writeValueAsString(requestVo))
-
         val requestHeaderDescriptor = requestVo.headers.map {
             HeaderFieldDescriptor(
                     field = it.headerKey,
@@ -115,7 +112,7 @@ class DocumentController {
                     optional = it.headerConstraint
             )
         }
-
+        
         val requestBodyDescriptor = requestVo.requestBody.map {
             BodyFieldDescriptor(
                     path = it.requestFieldPath,
