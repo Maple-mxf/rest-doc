@@ -7,10 +7,12 @@ import org.springframework.data.domain.Sort.by
 import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
+import org.springframework.http.HttpMethod
 import org.springframework.web.bind.annotation.*
 import restdoc.base.auth.HolderKit
 import restdoc.base.auth.Verify
 import restdoc.core.Result
+import restdoc.core.executor.ExecutorDelegate
 import restdoc.core.ok
 import restdoc.model.BodyFieldDescriptor
 import restdoc.model.FieldType
@@ -40,6 +42,9 @@ class DocumentController {
 
     @Autowired
     lateinit var holderKit: HolderKit
+
+    @Autowired
+    lateinit var delete: ExecutorDelegate
 
     @GetMapping("/list/{projectId}")
     fun list(@PathVariable projectId: String): Result {
@@ -109,10 +114,14 @@ class DocumentController {
             )
         }
 
-        // Handler URL
+        val executeResult = delete.execute(
+                url = requestVo.url,
+                method = HttpMethod.valueOf(requestVo.method),
+                headers = requestHeaderDescriptor.map { it.field to (it.value.joinToString(",")) }.toMap(),
+                descriptors = requestBodyDescriptor,
+                uriVar = mapOf())
 
-
-        return ok()
+        return ok(executeResult)
     }
 
 }

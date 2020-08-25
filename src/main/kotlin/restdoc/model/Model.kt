@@ -80,3 +80,12 @@ data class User(
 enum class AccountStatus {
     NORMAL, FREEZE
 }
+
+data class ExecuteResult(
+        val status: Int, val url: String,
+        val method: String,
+        val requestHeader: Map<String, Any>,
+        val responseHeader: Map<String, Any>,
+        val content: JsonNode?,
+        val body: JsonNode?
+)
