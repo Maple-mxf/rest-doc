@@ -13,8 +13,10 @@
             margin: 10px;
             background-color: #0C0C0C;
             color: whitesmoke;
-            font-family: "Consolas", serif;
-            font-size: 17px;
+        /*    font-family: "Consolas", serif;
+            font-size: 17px;*/
+
+            font-size: 14px;
         }
     </style>
 </head>
@@ -37,8 +39,7 @@
         //…
     });
 
-    var taskId = $('#taskId').val();
-
+    var taskId = $('#taskId').val().toString();
 
     $.ajax({
         type: 'GET',
@@ -46,9 +47,18 @@
         url: '/restdoc/document/httpTask/' + taskId,
         async: false,
         success: function (data) {
+
+            console.info(data);
+
+
+            //JSON.stringify(map)
             if (data['code'] === "200") {
-                $("#content").text(data['data'])
-            }else{
+                $("#content").append("url : " + data['data']['url'] + '<br/>')
+                $("#content").append("status code : " + data['data']['status'] + '<br/>')
+                $("#content").append("request header : " + JSON.stringify(data['data']['requestHeader']) + '<br/><br/>')
+                $("#content").append("response header : " + JSON.stringify(data['data']['responseHeader']) + '<br/><br/>')
+                $("#content").append("response body : " + JSON.stringify(data['data']['content']) + '<br/><br/>')
+            } else {
                 console.info(data)
             }
         }

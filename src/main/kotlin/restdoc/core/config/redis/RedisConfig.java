@@ -3,7 +3,6 @@ package restdoc.core.config.redis;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectMapper.DefaultTyping;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.interceptor.KeyGenerator;
@@ -48,7 +47,7 @@ public class RedisConfig extends CachingConfigurerSupport {
         //
         ObjectMapper om = new ObjectMapper();
         om.setVisibility(PropertyAccessor.ALL, Visibility.ANY);
-        om.enableDefaultTyping(DefaultTyping.NON_FINAL);
+//        om.enableDefaultTyping(DefaultTyping.NON_FINAL);
         jackson2JsonRedisSerializer.setObjectMapper(om);
 
         // 配置redisTemplate

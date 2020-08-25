@@ -14,7 +14,6 @@ import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.http.HttpMethod
 import org.springframework.web.bind.annotation.*
 import restdoc.base.auth.HolderKit
-import restdoc.base.auth.Verify
 import restdoc.core.Result
 import restdoc.core.Status
 import restdoc.core.executor.ExecutorDelegate
@@ -121,7 +120,7 @@ class DocumentController {
                     path = it.requestFieldPath,
                     value = it.requestFieldValue,
                     description = it.requestFieldDescription,
-                    type = FieldType.valueOf(it.requestFieldType),
+                    type = FieldType.OBJECT,
                     optional = it.requestFieldConstraint,
                     defaultValue = null
             )
