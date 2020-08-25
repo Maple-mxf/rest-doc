@@ -1,6 +1,9 @@
 package restdoc.web.obj
 
+import javax.validation.constraints.NotBlank
+
 data class RequestVo(
+        @NotBlank(message = "url不可为空")
         val url: String,
         val method: String,
         val headers: List<HeaderVo>,

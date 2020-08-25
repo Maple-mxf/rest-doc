@@ -31,6 +31,7 @@ import restdoc.web.obj.RequestVo
 import restdoc.web.obj.UpdateProjectDto
 import java.util.*
 import java.util.concurrent.TimeUnit
+import javax.validation.Valid
 
 /**
  * @see Project
@@ -102,7 +103,7 @@ class DocumentController {
 
 
     @PostMapping("/httpTask/submit")
-    fun submitHttpTask(@RequestBody requestVo: RequestVo): Result {
+    fun submitHttpTask(@RequestBody @Valid requestVo: RequestVo): Result {
 
         println(mapper.writeValueAsString(requestVo))
 
