@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="content">
+    <fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px;">
+        <legend>请求参数</legend>
+
+        <div class="layui-form-item" style="margin-top: 10px">
+            <div class="layui-inline">
+                <button type="button" class="layui-btn" id="add_request_body_field">
+                    <!--                        <i class="layui-icon layui-icon-addition" style="font-size: 30px; color: white;"></i>-->
+                    增加参数
+                </button>
+
+                <button type="button" class="layui-btn" id="convert_json_to_fields">
+                    JSON快速转换
+                </button>
+            </div>
+        </div>
+
+
+        <div id="request-body-form">
+            <div class="layui-form-item one-line" id="first-request-body-field">
+                <div class="layui-inline">
+                    <label class="layui-form-label">字段Path</label>
+                    <div class="layui-input-inline">
+                        <input type="text"
+                               name="requestFieldPath"
+                               placeholder="字段Path"
+                               autocomplete="off"
+                               class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">字段值</label>
+                    <div class="layui-input-inline">
+                        <input type="text"
+                               name="requestFieldValue"
+                               placeholder="字段值"
+                               autocomplete="off"
+                               class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">字段类型</label>
+                    <div class="layui-input-inline">
+                        <input type="text"
+                               name="requestFieldType"
+                               placeholder="字段类型"
+                               autocomplete="off"
+                               class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">字段说明</label>
+                    <div class="layui-input-inline">
+                        <input type="text"
+                               name="requestFieldDescription"
+                               placeholder="字段说明"
+                               autocomplete="off"
+                               class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline" style="width: 5%">
+                    <div class="layui-input-inline">
+                        <input type="checkbox" checked
+                               name="requestFieldConstraint" title="必选">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <button type="button" class="layui-btn layui-btn-danger" style="margin-left: 10px"
+                            onclick="deleteRequestBodyBtn(this)">
+                        <i class="layui-icon layui-icon-subtraction" style="font-size: 30px; color: white;"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+</div>
+
+</body>
+</html>

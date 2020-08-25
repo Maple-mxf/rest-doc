@@ -12,6 +12,9 @@ import restdoc.model.BodyFieldDescriptor
 import restdoc.model.ExecuteResult
 import restdoc.util.JsonProjector
 import restdoc.util.PathValue
+import java.util.concurrent.ConcurrentHashMap
+
+private val cache = ConcurrentHashMap<HttpMethod, Executor>()
 
 interface Executor {
 
@@ -24,11 +27,9 @@ abstract class AbstractExecutor : Executor {
     @Autowired
     lateinit var restTemplate: RestTemplate
 
-    @Autowired
-    lateinit var delegate: ExecutorDelegate
 
     init {
-        delegate.cache[this.method()] = this
+        cache[this.method()] = this
     }
 
     fun constructHeaders(headerMap: Map<String, String>): HttpHeaders {
@@ -118,6 +119,7 @@ open class HeadRequestExecutor : AbstractSimpleExecutor() {
     }
 }
 
+
 /**
  * @see RestTemplate.exchange
  */
@@ -126,8 +128,6 @@ open class ExecutorDelegate {
 
     @Autowired
     lateinit var restTemplate: RestTemplate
-
-    val cache: MutableMap<HttpMethod, Executor> = mutableMapOf()
 
     fun execute(url: String,
                 uriVar: Map<String, Any>,
@@ -146,8 +146,8 @@ open class ExecutorDelegate {
                 content = content)
 
         val executor = cache[method]
-        
-        val url: String = restTemplate.uriTemplateHandler.expand(url, uriVar).toASCIIString()
+
+        val expandURL: String = restTemplate.uriTemplateHandler.expand(url, uriVar).toASCIIString()
 
         if (executor != null) {
             val entity: ResponseEntity<JsonNode> = executor.execute(request)
@@ -158,7 +158,7 @@ open class ExecutorDelegate {
             return ExecuteResult(
                     status = entity.statusCodeValue,
                     method = method.name,
-                    url = url,
+                    url = expandURL,
                     requestHeader = headers,
                     responseHeader = responseHeader,
                     content = content,
@@ -169,7 +169,7 @@ open class ExecutorDelegate {
         return ExecuteResult(
                 status = 400,
                 method = method.name,
-                url = url,
+                url = expandURL,
                 requestHeader = headers,
                 responseHeader = mapOf(),
                 content = content,

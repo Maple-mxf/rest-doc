@@ -13,7 +13,7 @@
             margin: 10px;
             background-color: #0C0C0C;
             color: whitesmoke;
-            font-family: "Consolas",serif;
+            font-family: "Consolas", serif;
             font-size: 17px;
         }
     </style>
@@ -21,10 +21,9 @@
 <body>
 
 
-<p style="color: white">
-    Http Status:200 <br/>
-    HttpResponseHeader:<br/>
-      accept:xml<br/>
+<input type="hidden" id="taskId" th:value="${taskId}">
+
+<p style="color: white" id="content">
 </p>
 
 <script th:src="@{/layui/layui.js}"></script>
@@ -37,6 +36,25 @@
 
         //…
     });
+
+    var taskId = $('#taskId').val();
+
+
+    $.ajax({
+        type: 'GET',
+        contentType: 'application/json;charset=utf-8',
+        url: '/restdoc/document/httpTask/' + taskId,
+        async: false,
+        success: function (data) {
+            if (data['code'] === "200") {
+                $("#content").text(data['data'])
+            }else{
+                console.info(data)
+            }
+        }
+    });
+
+
 </script>
 </body>
 </html>

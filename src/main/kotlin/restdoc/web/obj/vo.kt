@@ -3,7 +3,6 @@ package restdoc.web.obj
 data class RequestVo(
         val url: String,
         val method: String,
-        val executeStrategy: String,
         val headers: List<HeaderVo>,
         val requestBody: List<RequestBodyVo>,
         val responseBody: List<ResponseBodyVo>)

@@ -1,18 +1,24 @@
 package restdoc.web
 
 import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.databind.ObjectMapper
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Sort.Order.desc
 import org.springframework.data.domain.Sort.by
 import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
+import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.http.HttpMethod
 import org.springframework.web.bind.annotation.*
 import restdoc.base.auth.HolderKit
 import restdoc.base.auth.Verify
 import restdoc.core.Result
+import restdoc.core.Status
 import restdoc.core.executor.ExecutorDelegate
+import restdoc.core.failure
 import restdoc.core.ok
 import restdoc.model.BodyFieldDescriptor
 import restdoc.model.FieldType
@@ -25,13 +31,14 @@ import restdoc.web.obj.CreateProjectDto
 import restdoc.web.obj.RequestVo
 import restdoc.web.obj.UpdateProjectDto
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 /**
  * @see Project
  */
 @RestController
 @RequestMapping("/document")
-@Verify
+//@Verify
 class DocumentController {
 
     @Autowired
@@ -45,6 +52,12 @@ class DocumentController {
 
     @Autowired
     lateinit var delete: ExecutorDelegate
+
+    @Autowired
+    lateinit var redisTemplate: RedisTemplate<String, Any>
+
+    @Autowired
+    lateinit var mapper: ObjectMapper
 
     @GetMapping("/list/{projectId}")
     fun list(@PathVariable projectId: String): Result {
@@ -80,19 +93,19 @@ class DocumentController {
     }
 
     @PostMapping("/deProject")
-    @ResponseBody
     fun deProjector(@RequestBody tree: JsonNode): Result = ok(JsonDeProjector(tree).deProject())
 
 
     @PostMapping("/project")
-    @ResponseBody
     fun projector(@RequestBody requestVo: RequestVo): Result {
         return ok()
     }
 
-    @PostMapping("/execute")
-    @ResponseBody
-    fun execute(@RequestBody requestVo: RequestVo): Result {
+
+    @PostMapping("/httpTask/submit")
+    fun submitHttpTask(@RequestBody requestVo: RequestVo): Result {
+
+        println(mapper.writeValueAsString(requestVo))
 
         val requestHeaderDescriptor = requestVo.headers.map {
             HeaderFieldDescriptor(
@@ -114,14 +127,27 @@ class DocumentController {
             )
         }
 
-        val executeResult = delete.execute(
-                url = requestVo.url,
-                method = HttpMethod.valueOf(requestVo.method),
-                headers = requestHeaderDescriptor.map { it.field to (it.value.joinToString(",")) }.toMap(),
-                descriptors = requestBodyDescriptor,
-                uriVar = mapOf())
+        val taskId = IDUtil.id()
 
-        return ok(executeResult)
+        GlobalScope.launch {
+            val executeResult = delete.execute(
+                    url = requestVo.url,
+                    method = HttpMethod.valueOf(requestVo.method),
+                    headers = requestHeaderDescriptor.map { it.field to (it.value.joinToString(",")) }.toMap(),
+                    descriptors = requestBodyDescriptor,
+                    uriVar = mapOf())
+
+            redisTemplate.opsForValue().set(taskId, executeResult)
+
+            redisTemplate.expire(taskId, 60, TimeUnit.SECONDS)
+        }
+
+        return ok(taskId)
     }
 
+    @GetMapping("/httpTask/{taskId}")
+    fun execute(@PathVariable taskId: String): Result {
+        val executeResult = redisTemplate.opsForValue().get(taskId) ?: return failure(Status.INVALID_REQUEST)
+        return ok(executeResult)
+    }
 }

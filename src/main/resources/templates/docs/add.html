@@ -43,244 +43,14 @@
             </div>
         </fieldset>
 
+        <div th:include="docs/add_snippet/urivar :: urivar"></div>
 
-        <fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px;">
-            <legend>REST路径参数</legend>
+        <div th:include="docs/add_snippet/header :: header"></div>
 
-            <div class="layui-form-item" style="margin-top: 10px">
-                <div class="layui-inline">
-                    <button type="button" class="layui-btn" id="add_pathvar_field">
-                        增加参数
-                    </button>
-                </div>
-            </div>
+        <div th:include="docs/add_snippet/content :: content"></div>
 
-            <div id="request-pathvar-div">
-                <div class="layui-form-item one-request-header-line" id="first-pathvar-field">
-                    <div class="layui-inline">
-                        <label class="layui-form-label">字段</label>
-                        <div class="layui-input-inline">
-                            <input type="text" name="headerKey" placeholder="Key" autocomplete="off"
-                                   class="layui-input">
-                        </div>
-                    </div>
-                    <div class="layui-inline">
-                        <label class="layui-form-label">值</label>
-                        <div class="layui-input-inline">
-                            <input type="text" name="headerValue" placeholder="Value" autocomplete="off"
-                                   class="layui-input">
-                        </div>
-                    </div>
+        <div th:include="docs/add_snippet/response :: response"></div>
 
-                    <div class="layui-inline">
-                        <label class="layui-form-label">说明</label>
-                        <div class="layui-input-inline">
-                            <input type="text" placeholder="参数说明" name="headerDescription" autocomplete="off"
-                                   class="layui-input">
-                        </div>
-                    </div>
-
-                    <div class="layui-inline">
-                        <button type="button" class="layui-btn layui-btn-danger" id="deletePathvarBtn"
-                                style="margin-left: 10px"
-                                onclick="deleteHeaderFieldLine(this)">
-                            <i class="layui-icon layui-icon-subtraction" style="font-size: 30px; color: white;"></i>
-                        </button>
-                    </div>
-                </div>
-
-            </div>
-
-        </fieldset>
-
-
-        <fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px;">
-            <legend>请求头</legend>
-
-            <div class="layui-form-item" style="margin-top: 10px">
-                <div class="layui-inline">
-                    <button type="button" class="layui-btn" id="add_request_header_field">
-                        <!--                        <i class="layui-icon layui-icon-addition" style="font-size: 30px; color: white;"></i>-->
-                        增加参数
-                    </button>
-                </div>
-            </div>
-
-            <div id="request-header-div">
-                <div class="layui-form-item one-request-header-line" id="first-header-field">
-                    <div class="layui-inline">
-                        <label class="layui-form-label">请求头</label>
-                        <div class="layui-input-inline">
-                            <input type="text" name="headerKey" placeholder="Key" autocomplete="off"
-                                   value="Content-Type" class="layui-input">
-                        </div>
-                    </div>
-                    <div class="layui-inline">
-                        <label class="layui-form-label">值</label>
-                        <div class="layui-input-inline">
-                            <input type="text" name="headerValue" placeholder="Value" autocomplete="off"
-                                   value="application/json;utf-8"
-                                   class="layui-input">
-                        </div>
-                    </div>
-
-                    <div class="layui-inline">
-                        <label class="layui-form-label">说明</label>
-                        <div class="layui-input-inline">
-                            <input type="text" placeholder="请求内容格式说明" name="headerDescription" autocomplete="off"
-                                   class="layui-input">
-                        </div>
-                    </div>
-
-                    <div class="layui-inline">
-                        <div class="layui-input-inline" style="width: 5%">
-                            <input type="checkbox" checked name="headerConstraint" title="必选">
-                        </div>
-                    </div>
-
-                    <div class="layui-inline">
-                        <button type="button" class="layui-btn layui-btn-danger" id="deleteHeaderBtn"
-                                style="margin-left: 10px"
-                                onclick="deleteHeaderFieldLine(this)">
-                            <i class="layui-icon layui-icon-subtraction" style="font-size: 30px; color: white;"></i>
-                        </button>
-                    </div>
-                </div>
-
-            </div>
-
-        </fieldset>
-
-        <fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px;">
-            <legend>请求参数</legend>
-
-            <div class="layui-form-item" style="margin-top: 10px">
-                <div class="layui-inline">
-                    <button type="button" class="layui-btn" id="add_request_body_field">
-                        <!--                        <i class="layui-icon layui-icon-addition" style="font-size: 30px; color: white;"></i>-->
-                        增加参数
-                    </button>
-
-                    <button type="button" class="layui-btn" id="convert_json_to_fields">
-                        JSON快速转换
-                    </button>
-                </div>
-            </div>
-
-
-            <div id="request-body-form">
-                <div class="layui-form-item one-line" id="first-request-body-field">
-                    <div class="layui-inline">
-                        <label class="layui-form-label">字段Path</label>
-                        <div class="layui-input-inline">
-                            <input type="text"
-                                   name="requestFieldPath"
-                                   placeholder="字段Path"
-                                   autocomplete="off"
-                                   class="layui-input">
-                        </div>
-                    </div>
-                    <div class="layui-inline">
-                        <label class="layui-form-label">字段值</label>
-                        <div class="layui-input-inline">
-                            <input type="text"
-                                   name="requestFieldValue"
-                                   placeholder="字段值"
-                                   autocomplete="off"
-                                   class="layui-input">
-                        </div>
-                    </div>
-                    <div class="layui-inline">
-                        <label class="layui-form-label">字段类型</label>
-                        <div class="layui-input-inline">
-                            <input type="text"
-                                   name="requestFieldType"
-                                   placeholder="字段类型"
-                                   autocomplete="off"
-                                   class="layui-input">
-                        </div>
-                    </div>
-                    <div class="layui-inline">
-                        <label class="layui-form-label">字段说明</label>
-                        <div class="layui-input-inline">
-                            <input type="text"
-                                   name="requestFieldDescription"
-                                   placeholder="字段说明"
-                                   autocomplete="off"
-                                   class="layui-input">
-                        </div>
-                    </div>
-                    <div class="layui-inline" style="width: 5%">
-                        <div class="layui-input-inline">
-                            <input type="checkbox" checked
-                                   name="requestFieldConstraint" title="必选">
-                        </div>
-                    </div>
-                    <div class="layui-inline">
-                        <button type="button" class="layui-btn layui-btn-danger" style="margin-left: 10px"
-                                onclick="deleteRequestBodyBtn(this)">
-                            <i class="layui-icon layui-icon-subtraction" style="font-size: 30px; color: white;"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </fieldset>
-
-        <fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px;">
-            <legend>期望响应参数</legend>
-
-            <div class="layui-form-item" style="margin-top: 10px">
-                <div class="layui-inline">
-                    <button type="button" class="layui-btn" id="add_response_body_field">
-                        <!--                        <i class="layui-icon layui-icon-addition" style="font-size: 30px; color: white;"></i>-->
-                        增加参数
-                    </button>
-                </div>
-            </div>
-
-            <div id="response-body-div">
-                <div class="layui-form-item one-response-body-line" id="first-response-field">
-                    <div class="layui-inline">
-                        <label class="layui-form-label">字段Path</label>
-                        <div class="layui-input-inline">
-                            <input type="text"
-                                   name="responseFieldPath"
-                                   autocomplete="off"
-                                   class="layui-input">
-                        </div>
-                    </div>
-                    <div class="layui-inline">
-                        <label class="layui-form-label">字段类型</label>
-                        <div class="layui-input-inline">
-                            <input type="text"
-                                   name="responseFieldType"
-                                   autocomplete="off"
-                                   class="layui-input">
-                        </div>
-                    </div>
-                    <div class="layui-inline">
-                        <label class="layui-form-label">字段说明</label>
-                        <div class="layui-input-inline">
-                            <input type="text"
-                                   name="responseFieldDescription"
-                                   autocomplete="off"
-                                   class="layui-input">
-                        </div>
-                    </div>
-                    <div class="layui-inline" style="width: 5%">
-                        <div class="layui-input-inline">
-                            <input type="checkbox" checked
-                                   name="responseFieldConstraint" title="必选">
-                        </div>
-                    </div>
-                    <div class="layui-inline" style="margin-left: 10px">
-                        <button type="button" class="layui-btn layui-btn-danger" onclick="deleteResponseBodyBtn(this)">
-                            <i class="layui-icon layui-icon-subtraction" style="font-size: 30px; color: white;"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </fieldset>
     </form>
 </div>
 
@@ -353,7 +123,7 @@
 
         $("#add_request_header_field").click(function (event) {
 
-            let row = $('.one-request-header-line').html();
+            let row = $('#first-header-field').html();
             var html = '  <div class="layui-form-item">' + row + '</div>';
             $("#request-header-div").after(html);
 
@@ -378,32 +148,55 @@
             form.render();
         });
 
+        $("#add_pathvar_field_btn").click(function (event) {
+
+            let row = $('#first-pathvar-field').html();
+            var html = '  <div class="layui-form-item">' + row + '</div>';
+            $("#request-pathvar-div").after(html);
+
+            form.render();
+        });
+
         form.on('submit(*)', function (data) {
 
-            /*var map = getFormData(data.field)
+            var map = getFormData(data.field);
+
+            console.info(map)
+
+            var httpTaskId = null;
 
             $.ajax({
                 type: 'POST',
                 dataType: 'JSON',
                 contentType: 'application/json;charset=utf-8',
-                url: 'docs/build',
+                url: '/restdoc/document/httpTask/submit',
                 data: JSON.stringify(map),
                 async: false,
                 success: function (data) {
-                    console.info(data)
+                    if (data['code'] === "200") {
+                        if (data['data'] != null) {
+                            httpTaskId = data['data'];
+                        }
+                        {
+                            layer.msg("任务提交失败")
+                        }
+                    } else {
+                        layer.msg(data['message'])
+                    }
                 }
-            });*/
-
-            layer.open({
-                type: 2,
-                title:'运行结果',
-                area: ['900px', '600px'],
-                content: "/restdoc/document/view/executeResult",
-                btn: ['保存运行结果', '取消'],
-                isOutAnim: false,
-                skin: 'layui-layer-lan'
             });
 
+            if (httpTaskId != null) {
+                layer.open({
+                    type: 2,
+                    title: '运行结果',
+                    area: ['900px', '600px'],
+                    content: "/restdoc/document/view/httpTask/" + httpTaskId,
+                    btn: ['保存运行结果', '取消'],
+                    isOutAnim: false,
+                    skin: 'layui-layer-lan'
+                });
+            }
 
             return false;
         });
@@ -449,6 +242,19 @@
         }
     }
 
+    function deleteUriVarFieldLine(obj) {
+        console.info(obj.id)
+        var parent = obj.parentNode.parentNode.parentNode
+
+        var children = obj.parentNode.parentNode
+
+        if (children.id === "first-pathvar-field") {
+            msg.msg("Not")
+        } else {
+            parent.removeChild(children)
+        }
+    }
+
 
     function getFormData(value) {
 
@@ -478,13 +284,17 @@
         var headerDescriptionNodes = $('input[name=headerDescription]')
         var headerConstraintNodes = $('input[name=headerConstraint]')
 
-        var array = new Array()
+        var array = [];
+
+        console.info(headerKeyNodes.length);
+        console.info(headerConstraintNodes.length);
 
         for (let i = 0; i < headerKeyNodes.length; i++) {
-            var map = new Map()
-            map["headerKey"] = headerKeyNodes[i].value
-            map["headerValue"] = headerValueNodes[i].value
-            map["headerDescription"] = headerDescriptionNodes[i].value
+            var map = new Map();
+            map["headerKey"] = headerKeyNodes[i].value;
+            map["headerValue"] = headerValueNodes[i].value;
+            map["headerDescription"] = headerDescriptionNodes[i].value;
+            console.info(headerConstraintNodes[i]);
             map["headerConstraint"] = (headerConstraintNodes[i].value === 'on')
 
             array[i] = map

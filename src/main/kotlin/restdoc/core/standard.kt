@@ -31,6 +31,11 @@ enum class Status(val status: String,
     FORBIDDEN("Forbidden", "C_403", "服务器理解请求客户端的请求，但是拒绝执行此请求"),
 
     /**
+     * Invalid Request
+     */
+    INVALID_REQUEST(" InvalidRequest", "C_405", "请求无效，请刷新页面重试"),
+
+    /**
      * Unauthorized
      */
     UNAUTHORIZED("Unauthorized", "C_401", "请求要求用户的身份认证"),
@@ -122,3 +127,5 @@ fun ok(data: Any?): Result = Result(data = data)
  *@since 1.0
  */
 fun failure(status: Status): Result = Result(status = status.status, code = status.code, message = status.message)
+
+fun failure(status: Status, message: String): Result = Result(status = status.status, code = status.code, message = message)
