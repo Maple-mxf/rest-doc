@@ -37,7 +37,7 @@ data class Document(
         var name: String?,
         var resource: String,
         val url: String,
-        var requestHeaderDescriptor: List<HeaderFieldDescriptor>?,
+        public var requestHeaderDescriptor: List<HeaderFieldDescriptor>?,
         var requestBodyDescriptor: List<BodyFieldDescriptor>?,
         var responseBodyDescriptors: List<BodyFieldDescriptor>?,
         val method: HttpMethod = HttpMethod.GET,

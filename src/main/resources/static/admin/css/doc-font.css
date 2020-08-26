@@ -4,7 +4,7 @@
 }
 
 
-body{
-    background-color: #fafafa;
-    font-family: "JetBrains Mono";
+@font-face {
+    font-family: "Roboto";
+    src: url('../../font/Roboto-Regular.ttf');
 }
