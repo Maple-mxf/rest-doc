@@ -7,8 +7,25 @@
     <title>富文本编辑器</title>
     <link rel="stylesheet" th:href="@{/layui/css/layui.css}"/>
     <link rel="stylesheet" th:href="@{/admin/css/pearForm.css}"/>
-    <link type="text/css" rel="stylesheet" th:href="@{/admin/css/doc-font.css}"/>
+<!--    <link type="text/css" rel="stylesheet" th:href="@{/admin/css/doc-font.css}"/>-->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <style>
+        .common-command {
+            background: black;
+            /*border: 1px solid #ddd;
+            border-left: 3px solid #f36d33;*/
+            color: ghostwhite;
+            page-break-inside: avoid;
+            font-family: Roboto, serif;
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 1.6em;
+            max-width: 100%;
+            overflow: auto;
+            padding: 1em 1.5em;
+            display: block;
+            word-wrap: break-word;
+        }
     </style>
 </head>
 <body>
@@ -17,7 +34,7 @@
 <input type="hidden" id="taskId" th:value="${taskId}">
 
 
-<pre class="layui-code" id="content" style=" color: whitesmoke;font-family: 'JetBrains Mono',serif">
+<pre id="content" class="common-command" style=" color: whitesmoke;font-family: 'Roboto',serif">
 </pre>
 
 
@@ -27,14 +44,14 @@
 <script type="text/javascript" th:inline="javascript">
 
 
-    layui.use('code', function () {
+  /*  layui.use('code', function () {
         layui.code({
             title: 'Http Task Execute Result'
             , skin: 'notepad'
             , encode: true //是否转义html标签。默认不开启
             , about: false
         });
-    });
+    });*/
 
 
     var taskId = $('#taskId').val().toString();
