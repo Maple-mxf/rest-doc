@@ -17,10 +17,7 @@ import restdoc.core.Status
 import restdoc.core.executor.ExecutorDelegate
 import restdoc.core.failure
 import restdoc.core.ok
-import restdoc.model.BodyFieldDescriptor
-import restdoc.model.FieldType
-import restdoc.model.HeaderFieldDescriptor
-import restdoc.model.Project
+import restdoc.model.*
 import restdoc.repository.ProjectRepository
 import restdoc.util.IDUtil
 import restdoc.util.JsonDeProjector
@@ -102,30 +99,32 @@ class DocumentController {
 
     @PostMapping("/httpTask/submit")
     fun submitHttpTask(@RequestBody @Valid requestDto: RequestDto): Result {
-        
-        val requestHeaderDescriptor = requestDto.headers.map {
-            HeaderFieldDescriptor(
-                    field = it.headerKey,
-                    value = it.headerValue.split(","),
-                    description = it.headerDescription,
-                    optional = it.headerConstraint
-            )
-        }
 
-        val requestBodyDescriptor = requestDto.requestBody.map {
-            BodyFieldDescriptor(
-                    path = it.requestFieldPath,
-                    value = it.requestFieldValue,
-                    description = it.requestFieldDescription,
-                    type = FieldType.OBJECT,
-                    optional = it.requestFieldConstraint,
-                    defaultValue = null
-            )
-        }
+        val requestHeaderDescriptor = requestDto.headers
+                .filter { it.headerKey.isNotBlank() }
+                .map {
+                    HeaderFieldDescriptor(
+                            field = it.headerKey,
+                            value = it.headerValue.split(","),
+                            description = it.headerDescription,
+                            optional = it.headerConstraint
+                    )
+                }
+
+        val requestBodyDescriptor = requestDto.requestBody
+                .filter { it.requestFieldPath.isNotBlank() }
+                .map {
+                    BodyFieldDescriptor(
+                            path = it.requestFieldPath,
+                            value = it.requestFieldValue,
+                            description = it.requestFieldDescription,
+                            type = FieldType.OBJECT,
+                            optional = it.requestFieldConstraint,
+                            defaultValue = null
+                    )
+                }
 
         val taskId = IDUtil.id()
-
-
 
         try {
             val executeResult = delete.execute(
@@ -146,7 +145,17 @@ class DocumentController {
 
     @GetMapping("/httpTask/{taskId}")
     fun execute(@PathVariable taskId: String): Result {
-        val executeResult = redisTemplate.opsForValue().get(taskId) ?: return failure(Status.INVALID_REQUEST)
+        val result = redisTemplate.opsForValue().get(taskId) ?: return failure(Status.INVALID_REQUEST, "请刷新页面重试")
+
+        val map = result as LinkedHashMap<String, Any>
+        val executeResult = mapper.convertValue(map, ExecuteResult::class.java)
+        val responseHeader = executeResult.responseHeader
+                .map {
+                    val value: List<Any> = it.value as List<Any>
+                    it.key to value.joinToString(",")
+                }
+                .toMap()
+        executeResult.responseHeader = responseHeader
         return ok(executeResult)
     }
 }

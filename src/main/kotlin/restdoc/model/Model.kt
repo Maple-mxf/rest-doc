@@ -82,10 +82,10 @@ enum class AccountStatus {
 }
 
 data class ExecuteResult(
-        val status: Int, val url: String,
-        val method: String,
-        val requestHeader: Map<String, Any>,
-        val responseHeader: Map<String, Any>,
-        val content: JsonNode?,
-        val body: JsonNode?
+        var status: Int, var url: String,
+        var method: String,
+        var requestHeader: Map<String, Any>,
+        var responseHeader: Map<String, Any>,
+        var content: JsonNode?,
+        var body: JsonNode?
 )

@@ -22,9 +22,9 @@
         <fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px;">
             <div class="layui-form-item">
                 <div class="layui-input-inline">
-                    <select name="method">
-                        <option value="" disabled>请选择请求方式</option>
-                        <option value="GET" selected>GET</option>
+                    <select name="method" lay-verify="method">
+                        <option value="NON" disabled>请选择请求方式</option>
+                        <option value="GET">GET</option>
                         <option value="POST">POST</option>
                         <option value="PUT">PUT</option>
                         <option value="DELETE">DELETE</option>
@@ -71,11 +71,14 @@
         var layer = layui.layer;
 
         form.verify({
-            //value：表单的值、item：表单的DOM对象
             url: function (value, item) {
                 if (!new RegExp("^(http(s?)\\:\\/\\/)?[0-9a-zA-Z]([-.\\w]*[0-9a-zA-Z])*(:(0-9)*)*(\\/?)([a-zA-Z0-9\\-\\.\\?\\,\\'\\/\\\\\\+&amp;%$#_]*)?$").test(value)) {
                     return "URL格式不正确";
                 }
+            },
+            type: function (value, item) {
+                if (value === "NON")
+                    return "请选择参数类型";
             }
             , pass: []
         });
@@ -169,15 +172,12 @@
         });
 
         form.on('submit(*)', function (data) {
-
+            var index = layer.load(1);
             var map = getFormData(data.field);
 
             console.info(map)
 
             var httpTaskId = null;
-
-            var index = layer.load();
-
             $.ajax({
                 type: 'POST',
                 dataType: 'JSON',
@@ -197,7 +197,7 @@
                     }
 
                 },
-                error:function () {
+                error: function () {
                     layer.msg("网络异常")
                 }
             });
@@ -206,7 +206,7 @@
                 layer.open({
                     type: 2,
                     title: '运行结果',
-                    area: ['900px', '600px'],
+                    area: ['800px', '900px'],
                     content: "/restdoc/document/view/httpTask/" + httpTaskId,
                     btn: ['保存运行结果', '取消'],
                     isOutAnim: false,
@@ -284,18 +284,12 @@
 
         var url = value["url"]
 
-        if (
-            url.indexOf("https") !== 0 ||
-            url.indexOf("http") !== 0
-        ) {
+        if (!new RegExp("^((http)(s?))(.*)$")) {
             url = "http://" + url;
         }
         map['url'] = url
         map['method'] = value["method"]
         map['executeStrategy'] = value["executeStrategy"]
-
-        // console.info(data)
-
         map['headers'] = header
         map['requestBody'] = requestBody
         map['responseBody'] = responseBody

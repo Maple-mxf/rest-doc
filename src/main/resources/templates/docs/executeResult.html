@@ -9,15 +9,6 @@
     <link rel="stylesheet" th:href="@{/admin/css/pearForm.css}"/>
     <link type="text/css" rel="stylesheet" th:href="@{/admin/css/doc-font.css}"/>
     <style>
-        body {
-            margin: 10px;
-            background-color: #0C0C0C;
-            color: whitesmoke;
-            /*    font-family: "Consolas", serif;
-                font-size: 17px;*/
-
-            font-size: 14px;
-        }
     </style>
 </head>
 <body>
@@ -25,19 +16,26 @@
 
 <input type="hidden" id="taskId" th:value="${taskId}">
 
-<p style="color: white" id="content">
-</p>
+
+<pre class="layui-code" id="content" style=" color: whitesmoke;font-family: 'JetBrains Mono',serif">
+</pre>
+
 
 <script th:src="@{/layui/layui.js}"></script>
 <script th:src="@{/admin/js/jquery.js}"></script>
 <script th:src="@{/admin/js/util.js}"></script>
 <script type="text/javascript" th:inline="javascript">
-    //注意：折叠面板 依赖 element 模块，否则无法进行功能性操作
-    layui.use('element', function () {
-        var element = layui.element;
 
-        //…
+
+    layui.use('code', function () {
+        layui.code({
+            title: 'Http Task Execute Result'
+            , skin: 'notepad'
+            , encode: true //是否转义html标签。默认不开启
+            , about: false
+        });
     });
+
 
     var taskId = $('#taskId').val().toString();
 
@@ -46,11 +44,12 @@
 
         //JSON.stringify(map)
         if (data['code'] === "200") {
-            $("#content").append("url : " + data['data']['url'] + '<br/>')
-            $("#content").append("status code : " + data['data']['status'] + '<br/>')
-            $("#content").append("request header : <br/>" + formatJson(data['data']['requestHeader']) + '<br/><br/>')
-            $("#content").append("response header : <br/>" + formatJson(data['data']['responseHeader']) + '<br/><br/>')
-            $("#content").append("response body : <br/>" + formatJson(data['data']['content']) + '<br/><br/>')
+            $("#content").append("url : " + data['data']['url'] + '\n')
+            $("#content").append("status code : " + data['data']['status'] + '\n\n')
+            $("#content").append("request header : \n" + formatJson(data['data']['requestHeader']) + '\n\n')
+            $("#content").append("request param : \n" + formatJson(data['data']['content']) + '\n\n')
+            $("#content").append("response header : \n" + formatJson(data['data']['responseHeader']) + '\n\n')
+            $("#content").append("response body : \n" + formatJson(data['data']['body']))
             break;
         } else {
             console.info(data)
@@ -79,7 +78,7 @@
             // var obj = JSON.parse(ugly);
             var pretty = JSON.stringify(ugly, undefined, 4);
             console.info(pretty)
-          return pretty
+            return pretty
         } catch (e) {
             // layer.msg("JSON字符串错误，请检查")
             return ugly
