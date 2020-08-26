@@ -10,13 +10,8 @@ import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
 import restdoc.core.Result
 import restdoc.core.ok
-import restdoc.model.ApiDocument
-import restdoc.model.BodyFieldDescriptor
-import restdoc.model.FieldType
-import restdoc.model.HeaderFieldDescriptor
+import restdoc.model.Document
 import restdoc.util.JsonDeProjector
-import restdoc.web.obj.RequestDto
-import java.util.*
 
 @Controller
 @Deprecated(message = "")
@@ -41,52 +36,10 @@ class DocsController {
 
     @GetMapping("/document")
     fun detail(model: Model): String {
-        val apiDocument: ApiDocument? = mongoTemplate.findOne(Query(), ApiDocument::class.java)
-        model.addAttribute("apiDocument", apiDocument)
+        val document: Document? = mongoTemplate.findOne(Query(), Document::class.java)
+        model.addAttribute("apiDocument", document)
         model.addAttribute("word", "Hello")
         return "docs/detail";
     }
 
-    @PostMapping("/build")
-    @ResponseBody
-    fun buildDoc(@RequestBody requestDto: RequestDto): Any {
-
-        val requestHeaderDescriptor = requestDto.headers.map {
-            HeaderFieldDescriptor(
-                    field = it.headerKey,
-                    value = it.headerValue.split(","),
-                    description = it.headerDescription,
-                    optional = it.headerConstraint
-            )
-        }
-
-
-        val requestBodyDescriptor = requestDto.requestBody.map {
-            BodyFieldDescriptor(
-                    path = it.requestFieldPath,
-                    value = it.requestFieldValue,
-                    description = it.requestFieldDescription,
-                    type = FieldType.valueOf(it.requestFieldType),
-                    optional = it.requestFieldConstraint,
-                    defaultValue = null
-            )
-        }
-
-        val apiDocument = ApiDocument(
-                id = UUID.randomUUID().toString(),
-                projectId = "DefaultProjectId",
-                name = "DefaultName",
-                resource = "DefaultResource",
-                url = requestDto.url,
-                requestHeaderDescriptor = requestHeaderDescriptor,
-                requestParameterDescriptor = listOf(),
-                requestBodyDescriptor = requestBodyDescriptor,
-                uriVariables = null,
-                expectResponseBody = null,
-                expectResponseHeaders = null)
-
-        mongoTemplate.save(apiDocument)
-
-        return ok()
-    }
 }

@@ -39,10 +39,11 @@
 
     var taskId = $('#taskId').val().toString();
 
+    var taskData = null;
+
     for (let i = 0; i < 100; i++) {
         var data = getExecuteResult()
-
-        //JSON.stringify(map)
+        taskData = data
         if (data['code'] === "200") {
             $("#content").append("url : " + data['data']['url'] + '\n')
             $("#content").append("status code : " + data['data']['status'] + '\n\n')
@@ -54,6 +55,10 @@
         } else {
             console.info(data)
         }
+    }
+
+    function getTaskData() {
+        return taskData;
     }
 
     function getExecuteResult() {

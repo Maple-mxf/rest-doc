@@ -2,8 +2,8 @@ package restdoc.repository
 
 import org.springframework.stereotype.Repository
 import restdoc.base.mongo.BaseRepository
-import restdoc.model.ApiDocument
+import restdoc.model.Document
 
 @Repository
-interface DocumentRepository : BaseRepository<ApiDocument, String> {
+interface DocumentRepository : BaseRepository<Document, String> {
 }

@@ -86,6 +86,7 @@ enum class FieldType {
  * @constructor
  * @since 1.0
  */
+@Deprecated(message = "")
 data class ParameterDescriptor(
         val path: String,
         val type: FieldType = FieldType.OBJECT,

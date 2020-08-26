@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/admin/css/materialize.min.css}" media="screen,projection"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/admin/css/doc-font.css}"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+</head>
+<body>
+
+
+<div class="row">
+    <table class="highlight" style="font-size: 15px">
+        <thead>
+        <tr>
+            <th>请求头参数</th>
+            <th>示例值</th>
+            <th>是否可选</th>
+            <th>参数说明</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <th:foreach th:each="item :${document.requestHeaderDescriptor}">
+            <tr>
+                <td th:text="${item.field}"></td>
+                <td th:text="${item.value}"></td>
+                <td th:text="${item.optional}"></td>
+                <td th:text="${item.description}"></td>
+            </tr>
+        </th:foreach>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

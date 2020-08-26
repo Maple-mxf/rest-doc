@@ -31,19 +31,20 @@ data class Group(
 )
 
 @Document(collection = "restdoc_document")
-data class ApiDocument(
+data class Document(
         @Id var id: String?,
         var projectId: String?,
         var name: String?,
         var resource: String,
         val url: String,
         var requestHeaderDescriptor: List<HeaderFieldDescriptor>?,
-        var requestParameterDescriptor: List<ParameterDescriptor>?,
         var requestBodyDescriptor: List<BodyFieldDescriptor>?,
+        var responseBodyDescriptors: List<BodyFieldDescriptor>?,
         val method: HttpMethod = HttpMethod.GET,
         val uriVariables: List<URIVarDescriptor>?,
-        val expectResponseHeaders: Any?,
-        val expectResponseBody: JsonNode?
+        val expectResponseHeaders: Map<String, Any>?,
+        val expectResponseBody: Map<String, Any>?,
+        val executeResult: Map<String, Any?>? = null
 )
 
 

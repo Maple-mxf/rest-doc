@@ -19,7 +19,7 @@ import restdoc.core.Result
 import restdoc.core.Status
 import restdoc.core.failure
 import restdoc.core.ok
-import restdoc.model.ApiDocument
+import restdoc.model.Document
 import restdoc.model.BodyFieldDescriptor
 import restdoc.model.ProjectConfig
 import restdoc.model.RequestProcess
@@ -59,27 +59,27 @@ class DocumentBuildController(
      */
     @PostMapping("/saveAndExecute/")
     @Deprecated(message = "")
-    fun saveAndExecute(@RequestBody apiDocument: ApiDocument): Result {
+    fun saveAndExecute(@RequestBody document: Document): Result {
 
         // Get project config
         val projectConfig: ProjectConfig = mongoTemplate.findOne(
-                Query().addCriteria(Criteria.where("projectId").`is`(apiDocument.projectId)),
+                Query().addCriteria(Criteria.where("projectId").`is`(document.projectId)),
                 ProjectConfig::class.java) ?: return failure(Status.BAD_REQUEST)
 
         // Create Header Or Default
-        val header: Map<String, List<String>> = apiDocument.requestHeaderDescriptor?.map { it.field to it.value }?.toMap()
+        val header: Map<String, List<String>> = document.requestHeaderDescriptor?.map { it.field to it.value }?.toMap()
                 ?: defaultHeader
 
         // Convert Flatten Data Fields
-        val body = apiDocument.requestBodyDescriptor?.let { this.flattenToTree(it) }
+        val body = document.requestBodyDescriptor?.let { this.flattenToTree(it) }
 
         // Build Request Processor
         val requestProcess = RequestProcess<JsonNode>(
-                url = "${projectConfig.testURIPrefix}${apiDocument.url}",
+                url = "${projectConfig.testURIPrefix}${document.url}",
                 header = header,
                 body = body,
-                method = apiDocument.method,
-                uriVariables = apiDocument.uriVariables?.map { it.field to "${it.value}" }?.toMap(),
+                method = document.method,
+                uriVariables = document.uriVariables?.map { it.field to "${it.value}" }?.toMap(),
                 parameterizedTypeReference = ParameterizedTypeReference.forType(JsonNode::class.java))
 
         // Invoke Api
@@ -89,7 +89,7 @@ class DocumentBuildController(
 //        val expectResponse = this.expectResponse(responseEntity, apiDocument.expectResponseHeaders, apiDocument.expectResponseBody)
 
         // Save given the api document
-        mongoTemplate.save(apiDocument)
+        mongoTemplate.save(document)
 
         // Invoke the api
         // client.process()

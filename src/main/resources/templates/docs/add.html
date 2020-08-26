@@ -206,11 +206,19 @@
                 layer.open({
                     type: 2,
                     title: '运行结果',
-                    area: ['800px', '900px'],
+                    area: ['800px', '700px'],
                     content: "/restdoc/document/view/httpTask/" + httpTaskId,
                     btn: ['保存运行结果', '取消'],
                     isOutAnim: false,
-                    skin: 'layui-layer-lan'
+                    skin: 'layui-layer-lan',
+                    yes: function (index, layero) {
+                        var taskData = window["layui-layer-iframe" + index].getTaskData();
+                        if (taskData == null) {
+                            layer.msg("保存运行结果失败，请刷新页面重试")
+                        } else {
+                            layer.close(index);
+                        }
+                    }
                 });
             }
 
