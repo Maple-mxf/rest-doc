@@ -25,8 +25,6 @@ import org.springframework.data.mapping.PersistentPropertyAccessor;
 import org.springframework.data.mapping.context.MappingContext;
 import org.springframework.data.mapping.model.ConvertingPropertyAccessor;
 import org.springframework.data.mongodb.core.MappedDocument;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.convert.MongoWriter;
 import org.springframework.data.mongodb.core.mapping.MongoPersistentEntity;
 import org.springframework.data.mongodb.core.mapping.MongoPersistentProperty;
@@ -44,16 +42,6 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 
-/**
- * Common operations performed on an entity in the context of it's mapping metadata.
- *
- * @author Oliver Gierke
- * @author Mark Paluch
- * @author Christoph Strobl
- * @see MongoTemplate
- * @see ReactiveMongoTemplate
- * @since 2.1
- */
 public class EntityOperations {
 
     private static final String ID_FIELD = "_id";
