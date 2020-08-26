@@ -13,8 +13,8 @@
             margin: 10px;
             background-color: #0C0C0C;
             color: whitesmoke;
-        /*    font-family: "Consolas", serif;
-            font-size: 17px;*/
+            /*    font-family: "Consolas", serif;
+                font-size: 17px;*/
 
             font-size: 14px;
         }
@@ -41,28 +41,50 @@
 
     var taskId = $('#taskId').val().toString();
 
-    $.ajax({
-        type: 'GET',
-        contentType: 'application/json;charset=utf-8',
-        url: '/restdoc/document/httpTask/' + taskId,
-        async: false,
-        success: function (data) {
+    for (let i = 0; i < 100; i++) {
+        var data = getExecuteResult()
 
-            console.info(data);
-
-
-            //JSON.stringify(map)
-            if (data['code'] === "200") {
-                $("#content").append("url : " + data['data']['url'] + '<br/>')
-                $("#content").append("status code : " + data['data']['status'] + '<br/>')
-                $("#content").append("request header : " + JSON.stringify(data['data']['requestHeader']) + '<br/><br/>')
-                $("#content").append("response header : " + JSON.stringify(data['data']['responseHeader']) + '<br/><br/>')
-                $("#content").append("response body : " + JSON.stringify(data['data']['content']) + '<br/><br/>')
-            } else {
-                console.info(data)
-            }
+        //JSON.stringify(map)
+        if (data['code'] === "200") {
+            $("#content").append("url : " + data['data']['url'] + '<br/>')
+            $("#content").append("status code : " + data['data']['status'] + '<br/>')
+            $("#content").append("request header : <br/>" + formatJson(data['data']['requestHeader']) + '<br/><br/>')
+            $("#content").append("response header : <br/>" + formatJson(data['data']['responseHeader']) + '<br/><br/>')
+            $("#content").append("response body : <br/>" + formatJson(data['data']['content']) + '<br/><br/>')
+            break;
+        } else {
+            console.info(data)
         }
-    });
+    }
+
+    function getExecuteResult() {
+        var result = null;
+
+        $.ajax({
+            type: 'GET',
+            contentType: 'application/json;charset=utf-8',
+            url: '/restdoc/document/httpTask/' + taskId,
+            async: false,
+            success: function (data) {
+                result = data;
+            }
+        });
+
+        return result;
+    }
+
+
+    function formatJson(ugly) {
+        try {
+            // var obj = JSON.parse(ugly);
+            var pretty = JSON.stringify(ugly, undefined, 4);
+            console.info(pretty)
+          return pretty
+        } catch (e) {
+            // layer.msg("JSON字符串错误，请检查")
+            return ugly
+        }
+    }
 
 
 </script>

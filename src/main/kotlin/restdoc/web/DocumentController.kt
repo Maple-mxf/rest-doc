@@ -2,8 +2,6 @@ package restdoc.web
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Sort.Order.desc
 import org.springframework.data.domain.Sort.by
@@ -104,6 +102,7 @@ class DocumentController {
 
     @PostMapping("/httpTask/submit")
     fun submitHttpTask(@RequestBody @Valid requestDto: RequestDto): Result {
+        
         val requestHeaderDescriptor = requestDto.headers.map {
             HeaderFieldDescriptor(
                     field = it.headerKey,
@@ -126,17 +125,20 @@ class DocumentController {
 
         val taskId = IDUtil.id()
 
-        GlobalScope.launch {
+
+
+        try {
             val executeResult = delete.execute(
                     url = requestDto.url,
                     method = HttpMethod.valueOf(requestDto.method),
                     headers = requestHeaderDescriptor.map { it.field to (it.value.joinToString(",")) }.toMap(),
                     descriptors = requestBodyDescriptor,
                     uriVar = mapOf())
-
             redisTemplate.opsForValue().set(taskId, executeResult)
-
             redisTemplate.expire(taskId, 60, TimeUnit.SECONDS)
+
+        } catch (e: Throwable) {
+            return failure(Status.BAD_REQUEST, e.message.toString())
         }
 
         return ok(taskId)

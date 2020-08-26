@@ -24,7 +24,7 @@
                 <div class="layui-input-inline">
                     <select name="method">
                         <option value="" disabled>请选择请求方式</option>
-                        <option value="GET" selected="">GET</option>
+                        <option value="GET" selected>GET</option>
                         <option value="POST">POST</option>
                         <option value="PUT">PUT</option>
                         <option value="DELETE">DELETE</option>
@@ -34,7 +34,8 @@
                 </div>
                 <label class="layui-form-label">http://</label>
                 <div class="layui-input-inline">
-                    <input type="text" name="url" placeholder="url" autocomplete="off" style="width: 220%"
+                    <input type="text" name="url" placeholder="url" lay-verify="url" autocomplete="off"
+                           style="width: 220%"
                            class="layui-input">
 
                 </div>
@@ -68,6 +69,17 @@
         var $ = layui.jquery;
         msg = layui.layer;
         var layer = layui.layer;
+
+        form.verify({
+            //value：表单的值、item：表单的DOM对象
+            url: function (value, item) {
+                if (!new RegExp("^(http(s?)\\:\\/\\/)?[0-9a-zA-Z]([-.\\w]*[0-9a-zA-Z])*(:(0-9)*)*(\\/?)([a-zA-Z0-9\\-\\.\\?\\,\\'\\/\\\\\\+&amp;%$#_]*)?$").test(value)) {
+                    return "URL格式不正确";
+                }
+            }
+            , pass: []
+        });
+
 
         $('#convert_json_to_fields').click(function (event) {
             layer.open({
@@ -114,7 +126,7 @@
                         error: function (data) {
                             layer.msg("JSON格式错误")
                         }
-                    })
+                    });
                     layer.close(index); //如果设定了yes回调，需进行手工关闭
                 }
             });
@@ -164,6 +176,8 @@
 
             var httpTaskId = null;
 
+            var index = layer.load();
+
             $.ajax({
                 type: 'POST',
                 dataType: 'JSON',
@@ -175,13 +189,16 @@
                     if (data['code'] === "200") {
                         if (data['data'] != null) {
                             httpTaskId = data['data'];
-                        }
-                        {
+                        } else {
                             layer.msg("任务提交失败")
                         }
                     } else {
                         layer.msg(data['message'])
                     }
+
+                },
+                error:function () {
+                    layer.msg("网络异常")
                 }
             });
 
@@ -196,6 +213,8 @@
                     skin: 'layui-layer-lan'
                 });
             }
+
+            layer.close(index);
 
             return false;
         });
@@ -263,7 +282,15 @@
 
         var map = new Map()
 
-        map['url'] = value["url"]
+        var url = value["url"]
+
+        if (
+            url.indexOf("https") !== 0 ||
+            url.indexOf("http") !== 0
+        ) {
+            url = "http://" + url;
+        }
+        map['url'] = url
         map['method'] = value["method"]
         map['executeStrategy'] = value["executeStrategy"]
 
@@ -285,15 +312,11 @@
 
         var array = [];
 
-        console.info(headerKeyNodes.length);
-        console.info(headerConstraintNodes.length);
-
         for (let i = 0; i < headerKeyNodes.length; i++) {
             var map = new Map();
             map["headerKey"] = headerKeyNodes[i].value;
             map["headerValue"] = headerValueNodes[i].value;
             map["headerDescription"] = headerDescriptionNodes[i].value;
-            console.info(headerConstraintNodes[i]);
             map["headerConstraint"] = (headerConstraintNodes[i].value === 'on')
 
             array[i] = map
@@ -304,20 +327,23 @@
     function getRequestBodyKeyValueJsonArray() {
         var requestFieldPathNodes = $('input[name=requestFieldPath]')
         var requestFieldValueNodes = $('input[name=requestFieldValue]')
-        var requestFieldTypeNodes = $('input[name=requestFieldType]')
+        var requestFieldTypeNodes = $('select[name=requestFieldType]')
         var requestFieldDescriptionNodes = $('input[name=requestFieldDescription]')
         var requestFieldConstraintNodes = $('input[name=requestFieldConstraint]')
 
 
-        var array = new Array()
+        var array = [];
+
+        console.info(requestFieldTypeNodes.length);
 
         for (let i = 0; i < requestFieldPathNodes.length; i++) {
-            var map = new Map()
+            var map = new Map();
             map["requestFieldPath"] = requestFieldPathNodes[i].value
             map["requestFieldValue"] = requestFieldValueNodes[i].value
-            map["requestFieldType"] = requestFieldTypeNodes[i].value
-            map["requestFieldDescription"] = requestFieldDescriptionNodes[i].value
-            map["requestFieldConstraint"] = (requestFieldConstraintNodes[i].value === 'on')
+
+            map["requestFieldType"] = requestFieldTypeNodes[i].value;
+            map["requestFieldDescription"] = requestFieldDescriptionNodes[i].value;
+            map["requestFieldConstraint"] = (requestFieldConstraintNodes[i].value === 'on');
 
             array[i] = map
         }
@@ -326,7 +352,7 @@
 
     function getResponseBodyKeyValueJsonArray() {
         var responseFieldPathNodes = $('input[name=responseFieldPath]')
-        var responseFieldTypeNodes = $('input[name=responseFieldType]')
+        var responseFieldTypeNodes = $('select[name=responseFieldType]')
         var responseFieldDescriptionNodes = $('input[name=responseFieldDescription]')
         var responseFieldConstraintNodes = $('input[name=responseFieldConstraint]')
 
@@ -337,7 +363,8 @@
             var map = new Map()
             map["responseFieldPath"] = responseFieldPathNodes[i].value
             map["responseFieldValue"] = responseFieldDescriptionNodes[i].value
-            map["responseFieldType"] = responseFieldTypeNodes[i].value
+
+            map["responseFieldType"] = responseFieldTypeNodes[i].value;
             map["responseFieldDescription"] = responseFieldDescriptionNodes[i].value
             map["responseFieldConstraint"] = (responseFieldConstraintNodes[i].value === 'on')
 
