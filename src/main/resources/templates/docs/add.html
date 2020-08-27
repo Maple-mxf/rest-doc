@@ -21,41 +21,51 @@
 <body>
 <div class="layui-fluid">
 
-    <form class="layui-form layui-form-pane" action="" id="request_form">
+    <div class="layui-row">
 
-        <fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px;">
-            <div class="layui-form-item">
-                <div class="layui-input-inline">
-                    <select name="method" lay-verify="method">
-                        <option value="NON" disabled>请选择请求方式</option>
-                        <option value="GET">GET</option>
-                        <option value="POST">POST</option>
-                        <option value="PUT">PUT</option>
-                        <option value="DELETE">DELETE</option>
-                        <option value="PATCH">PATCH</option>
-                        <option value="OPTION">OPTION</option>
-                    </select>
-                </div>
-                <label class="layui-form-label">http://</label>
-                <div class="layui-input-inline">
-                    <input type="text" name="url" placeholder="url" lay-verify="url" autocomplete="off"
-                           style="width: 220%"
-                           class="layui-input">
+        <div class="layui-col-md8">
+            <form class="layui-form layui-form-pane" action="" id="request_form">
+                <fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px;">
+                    <div class="layui-form-item">
+                        <div class="layui-input-inline">
+                            <select name="method" lay-verify="method">
+                                <option value="NON" disabled>请选择请求方式</option>
+                                <option value="GET">GET</option>
+                                <option value="POST">POST</option>
+                                <option value="PUT">PUT</option>
+                                <option value="DELETE">DELETE</option>
+                                <option value="PATCH">PATCH</option>
+                                <option value="OPTION">OPTION</option>
+                            </select>
+                        </div>
+                        <label class="layui-form-label">http://</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="url" placeholder="url" lay-verify="url" autocomplete="off"
+                                   style="width: 220%"
+                                   class="layui-input">
 
-                </div>
-                <button class="layui-btn" style="margin-left: 25%;float: left" lay-submit lay-filter="*">执行</button>
-            </div>
-        </fieldset>
+                        </div>
+                        <button class="layui-btn" style="margin-left: 25%;float: left" lay-submit lay-filter="*">执行
+                        </button>
+                    </div>
+                </fieldset>
 
-        <div th:include="docs/add_snippet/urivar :: urivar"></div>
+                <div th:include="docs/add_snippet/urivar :: urivar"></div>
 
-        <div th:include="docs/add_snippet/header :: header"></div>
+                <div th:include="docs/add_snippet/header :: header"></div>
 
-        <div th:include="docs/add_snippet/content :: content"></div>
+                <div th:include="docs/add_snippet/content :: content"></div>
 
-        <div th:include="docs/add_snippet/response :: response"></div>
+                <div th:include="docs/add_snippet/response :: response"></div>
 
-    </form>
+            </form>
+        </div>
+
+        <div class="layui-col-md4">
+            你的内容 3/12
+        </div>
+    </div>
+
 </div>
 
 <script th:src="@{/layui/layui.js}"></script>
@@ -63,6 +73,7 @@
 <script th:src="@{/admin/js/doc/content.js}"></script>
 <script th:src="@{/admin/js/doc/response.js}"></script>
 <script th:src="@{/admin/js/doc/urivar.js}"></script>
+<script th:src="@{/admin/js/doc/header.js}"></script>
 <script type="text/javascript" th:inline="javascript">
 
     var msg;
@@ -212,11 +223,7 @@
 
 
         $("#add_request_header_field").click(function (event) {
-
-            let row = $('#first-header-field').html();
-            var html = '  <div class="layui-form-item">' + row + '</div>';
-            $("#request-header-div").after(html);
-
+            $("#header-fieldset").append(oneheaderline);
             form.render();
         });
 
@@ -341,11 +348,7 @@
         console.info(obj.id)
         var parent = obj.parentNode.parentNode.parentNode
         var children = obj.parentNode.parentNode
-        if (children.id === "first-header-field") {
-            msg.msg("Not")
-        } else {
-            parent.removeChild(children)
-        }
+        parent.removeChild(children)
     }
 
     function deleteUriVarFieldLine(obj) {
