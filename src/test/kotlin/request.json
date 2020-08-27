@@ -1,106 +1,39 @@
 {
-  "code": 1,
-  "data": [
-    {
-      "type": "CONTAINER",
-      "position": "content",
-      "title": "容器",
-      "id": "94b39b4b-8e78-4881-bfa4-b36d99aa7d2b",
-      "style": {},
-      "path": [
-        "94b39b4b-8e78-4881-bfa4-b36d99aa7d2b"
-      ],
-      "childNodes": [
-        {
-          "type": "title",
-          "id": "4e0a6408-70c4-4977-9c34-375ba41b63a1",
-          "style": {},
-          "path": [
-            "94b39b4b-8e78-4881-bfa4-b36d99aa7d2b",
-            "4e0a6408-70c4-4977-9c34-375ba41b63a1"
-          ],
-          "data": "这是h2文本"
-        },
-        {
-          "type": "TEXT",
-          "id": "4e0a6408-70c4-4977-9c34-375ba41b63a6",
-          "style": {},
-          "path": [
-            "94b39b4b-8e78-4881-bfa4-b36d99aa7d2b",
-            "4e0a6408-70c4-4977-9c34-375ba41b63a6"
-          ],
-          "data": "这是一点文本"
-        },
-        {
-          "type": "HTML",
-          "id": "c98307e0-3a1a-45b5-a87a-d1fa7514f574",
-          "style": {},
-          "path": [
-            "94b39b4b-8e78-4881-bfa4-b36d99aa7d2b",
-            "c98307e0-3a1a-45b5-a87a-d1fa7514f574"
-          ],
-          "data": "<div>这是一段HTML</div>"
-        }
-      ]
+  "status": 200,
+  "url": "http://39.106.104.216:8090/cloudwebsite/api/idempotent/getToken",
+  "method": "GET",
+  "requestHeader": {
+    "Content-Type": "application/json;utf-8"
+  },
+  "responseHeader": {
+    "Vary": [
+      "Origin",
+      "Access-Control-Request-Method",
+      "Access-Control-Request-Headers"
+    ],
+    "Content-Type": [
+      "application/json"
+    ],
+    "Transfer-Encoding": [
+      "chunked"
+    ],
+    "Date": [
+      "Wed, 26 Aug 2020 07:22:42 GMT"
+    ],
+    "Keep-Alive": [
+      "timeout=60"
+    ],
+    "Connection": [
+      "keep-alive"
+    ]
+  },
+  "content": {},
+  "body": {
+    "code": 1,
+    "msg": "OK",
+    "data": {
+      "idempotentToken": "748079965857124352"
     },
-    {
-      "type": "IMAGE",
-      "title": "图片",
-      "position": "content",
-      "id": "06452982-9d33-4649-b31f-4eb849f8f919",
-      "src": "",
-      "href": "",
-      "style": {},
-      "alt": "",
-      "path": [
-        "94b39b4b-8e78-4881-bfa4-b36d99aa7d2b",
-        "c98307e0-3a1a-45b5-a87a-d1fa7514f574"
-      ]
-    },
-    {
-      "type": "CONTAINER",
-      "position": "content",
-      "id": "1d8670f8-16ef-440c-b9fe-c4dfa8411619",
-      "style": {
-        "width": 1140,
-        "height": 600
-      },
-      "path": [
-        "1d8670f8-16ef-440c-b9fe-c4dfa8411619"
-      ],
-      "childNodes": [
-        {
-          "type": "SHAPE",
-          "id": "5a806a99-f896-40c1-8690-ee6ec2bddc64",
-          "style": {},
-          "icon": "iconxiazai"
-        },
-        {
-          "type": "SLIDER",
-          "effects": "fade",
-          "time": 1,
-          "style": {
-            "border-radius": "0 0 8px 9px"
-          },
-          "id": "59d0ee2d-2075-4c2d-9a53-cfea76bd8779",
-          "data": [
-            {
-              "alt": "",
-              "id": "e40fd731-6778-4a1e-a510-4d94d638f258",
-              "target": "_blank",
-              "href": "",
-              "src": "//18977264.s21i.faiusr.com/2/ABUIABACGAAg1KOz_QUot7TR0gIwgAU4wAI!600x600.jpg"
-            },
-            {
-              "id": "e40fd781-6778-4a1e-a510-4d94d638f258",
-              "alt": "",
-              "target": "_blank",
-              "src": "//18977264.s21i.faiusr.com/2/ABUIABACGAAguJez_QUojPOe1gEwuAg4gA8!600x600.jpg"
-            }
-          ]
-        }
-      ]
-    }
-  ],
-  "success": true
+    "success": true
+  }
 }

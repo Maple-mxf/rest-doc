@@ -96,7 +96,7 @@
                 type: 2,
                 content: '/restdoc/docs/json/convert',
                 closeBtn: 1,
-                btn: ['转换JSON', "格式化JSON"],
+                btn: ['转换JSON'],
                 yes: function (index, layero) {
                     var res = window["layui-layer-iframe" + index].getJSONValue();
                     $.ajax({
@@ -109,21 +109,45 @@
                         success: function (data) {
                             if (data.code === '200') {
                                 if (data.data.length >= 1) {
-                                    let firstLine = data.data[0];
-                                    $("#first-request-body-field input").each(function () {
+                                    // 清除多余的
+                                    clearRequestParamInput();
+
+                                    var left = data.data.length - 1
+
+                                    for (let i = 0; i < left; i++) {
+                                        addRequestParamInput()
+                                    }
+
+                                    var all_input_line = $("#body-fieldset").children(".multi-request-body");
+
+                                    for (let i = 0; i < all_input_line.length; i++) {
+                                        let line = all_input_line[i];
+
+                                        console.info($(line).find("input").length)
+
+                                        $(line).find("input").each(function () {
+                                            if (this.name === 'requestFieldPath') {
+                                                this.value = data.data[i]['path']
+                                            } else if (this.name === 'requestFieldValue') {
+                                                this.value = data.data[i]['value']
+                                            }
+                                        })
+
+                                        console.info($($(line).find("select:first-child")))
+
+                                       /* $($(line).find("select:first-child"))
+                                            .find("option[value=" + data.data[i]['type'] + "]")
+                                            .attr("selected", true);*/
+                                    }
+
+
+                                    /*$("#first-request-body-field input").each(function () {
                                         if (this.name === 'requestFieldPath') {
                                             this.value = firstLine['path']
                                         } else if (this.name === 'requestFieldValue') {
                                             this.value = firstLine['value']
                                         }
-                                    });
-                                    console.info($(".multi-request-body").length)
-
-                                    let multiDivEls = $(".multi-request-body");
-
-                                    multiDivEls.each(function (item) {
-                                        console.info(item)
-                                    })
+                                    });*/
 
                                 }
                             } else {
@@ -148,12 +172,31 @@
             form.render();
         });
 
-        $("#add_request_body_field").click(function (event) {
-
+        function addRequestParamInput() {
             let row = $('.one-line').html();
             var html = '  <div class="layui-form-item multi-request-body">' + row + '</div>';
-            $("#request-body-form").after(html);
+            $("#first-request-body-field").after(html);
+        }
 
+        function clearRequestParamInput() {
+            var all_input_line = $("#body-fieldset").children(".multi-request-body")
+            var line_length = all_input_line.length
+
+            if (line_length > 1) {
+                for (let i = 1; i < line_length; i++) {
+                    var obj = all_input_line[i]
+                    var parent = obj.parentNode
+                    if (obj.id === "first-request-body-field") {
+                        msg.msg("Not")
+                    } else {
+                        parent.removeChild(obj)
+                    }
+                }
+            }
+        }
+
+        $("#add_request_body_field").click(function (event) {
+            addRequestParamInput()
             form.render();
         });
 
@@ -244,13 +287,8 @@
     }
 
     function deleteRequestBodyBtn(obj) {
-
-        console.info(obj.id)
-
         var parent = obj.parentNode.parentNode.parentNode
-
         var children = obj.parentNode.parentNode
-
         if (children.id === "first-request-body-field") {
             msg.msg("Not")
         } else {
@@ -261,10 +299,7 @@
     function deleteHeaderFieldLine(obj) {
         console.info(obj.id)
         var parent = obj.parentNode.parentNode.parentNode
-
         var children = obj.parentNode.parentNode
-
-
         if (children.id === "first-header-field") {
             msg.msg("Not")
         } else {

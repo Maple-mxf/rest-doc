@@ -18,19 +18,14 @@
 
 <div class="layui-container">
 
+    <label>双击格式化JSON</label>
+
     <div class="layui-form-item layui-form-text">
         <div class="layui-input-block" style="font-family: 'JetBrains Mono',serif;font-size: 16px">
                 <textarea name="desc" id="json_text_input" placeholder="请输入JSON"
                           class="layui-textarea" cols=20 rows=15></textarea>
         </div>
     </div>
-
-<!--    <div class="layui-form-item">-->
-<!--        <div class="layui-input-block">-->
-<!--            <button class="layui-btn" id="format_json_btn">格式化JSON</button>-->
-<!--            <button class="layui-btn" id="convert_json_btn">转换JSON</button>-->
-<!--        </div>-->
-<!--    </div>-->
 
 </div>
 <script th:src="@{/layui/layui.js}"></script>
@@ -61,16 +56,6 @@
                 }
             }
         })
-        //
-        // $('#format_json_btn').click(function (event) {
-        //
-        // });
-        //
-        // $('#convert_json_btn').click(function (event) {
-        //     var index = parent.layer.getFrameIndex(window.name);
-        //     parent.layer.close(index);
-        //     return $('#json_text_input').val();
-        // })
     });
 
 </script>
