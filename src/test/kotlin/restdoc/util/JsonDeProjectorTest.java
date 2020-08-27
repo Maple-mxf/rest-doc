@@ -10,11 +10,10 @@ import java.io.IOException;
 import java.util.List;
 
 public class JsonDeProjectorTest {
-
     private final ObjectMapper mapper = new ObjectMapper();
-
     @Test
     public void testDeProject() throws IOException {
+
         JsonNode jsonNode = mapper.readValue(
                 new File("C:\\Users\\mxf\\IdeaProjects\\rest-doc\\src\\test\\kotlin\\sample.json"),
                 JsonNode.class);

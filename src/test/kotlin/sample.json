@@ -1,35 +1,9 @@
 {
-  "requestHeader": {
-    "Content-Type": "application/json;utf-8"
-  },
-  "responseHeader": {
-    "Vary": [
-      "Origin",
-      "Access-Control-Request-Method",
-      "Access-Control-Request-Headers"
-    ],
-    "Content-Type": [
-      "application/json"
-    ],
-    "Transfer-Encoding": [
-      "chunked"
-    ],
-    "Date": [
-      "Wed, 26 Aug 2020 07:22:42 GMT"
-    ],
-    "Keep-Alive": [
-      "timeout=60"
-    ],
-    "Connection": [
-      "keep-alive"
-    ]
-  },
   "body": {
     "code": 1,
     "msg": "OK",
     "data": {
       "idempotentToken": "748079965857124352"
-    },
-    "success": true
+    }
   }
 }

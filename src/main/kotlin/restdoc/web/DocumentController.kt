@@ -21,7 +21,6 @@ import restdoc.core.ok
 import restdoc.model.*
 import restdoc.repository.ProjectRepository
 import restdoc.util.IDUtil
-import restdoc.util.JsonDeProjector
 import restdoc.web.obj.CreateProjectDto
 import restdoc.web.obj.RequestDto
 import restdoc.web.obj.UpdateProjectDto
@@ -87,9 +86,6 @@ class DocumentController {
                 desc = dto.desc))
         return ok()
     }
-
-    @PostMapping("/deProject")
-    fun deProjector(@RequestBody tree: JsonNode): Result = ok(JsonDeProjector(tree).deProject())
 
 
     @PostMapping("/project")

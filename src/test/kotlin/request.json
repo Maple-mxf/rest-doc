@@ -1,122 +1,42 @@
 [
   {
-    "path": "requestHeader",
-    "value": null,
-    "description": "",
-    "type": "OBJECT",
-    "optional": false,
-    "defaultValue": "NoDefaultValue"
-  },
-  {
-    "path": "requestHeader.Content-Type",
-    "value": "application/json;utf-8",
-    "description": "",
-    "type": "STRING",
-    "optional": false,
-    "defaultValue": "NoDefaultValue"
-  },
-  {
-    "path": "responseHeader",
-    "value": null,
-    "description": "",
-    "type": "OBJECT",
-    "optional": false,
-    "defaultValue": "NoDefaultValue"
-  },
-  {
-    "path": "responseHeader.Vary",
-    "value": null,
-    "description": "",
-    "type": "ARRAY",
-    "optional": false,
-    "defaultValue": "NoDefaultValue"
-  },
-  {
-    "path": "responseHeader.Content-Type",
-    "value": null,
-    "description": "",
-    "type": "ARRAY",
-    "optional": false,
-    "defaultValue": "NoDefaultValue"
-  },
-  {
-    "path": "responseHeader.Transfer-Encoding",
-    "value": null,
-    "description": "",
-    "type": "ARRAY",
-    "optional": false,
-    "defaultValue": "NoDefaultValue"
-  },
-  {
-    "path": "responseHeader.Date",
-    "value": null,
-    "description": "",
-    "type": "ARRAY",
-    "optional": false,
-    "defaultValue": "NoDefaultValue"
-  },
-  {
-    "path": "responseHeader.Keep-Alive",
-    "value": null,
-    "description": "",
-    "type": "ARRAY",
-    "optional": false,
-    "defaultValue": "NoDefaultValue"
-  },
-  {
-    "path": "responseHeader.Connection",
-    "value": null,
-    "description": "",
-    "type": "ARRAY",
-    "optional": false,
-    "defaultValue": "NoDefaultValue"
-  },
-  {
     "path": "body",
     "value": null,
-    "description": "",
+    "description": null,
     "type": "OBJECT",
     "optional": false,
-    "defaultValue": "NoDefaultValue"
+    "defaultValue": null
   },
   {
     "path": "body.code",
     "value": 1,
-    "description": "",
+    "description": null,
     "type": "NUMBER",
     "optional": false,
-    "defaultValue": "NoDefaultValue"
+    "defaultValue": 1
   },
   {
     "path": "body.msg",
     "value": "OK",
-    "description": "",
+    "description": null,
     "type": "STRING",
     "optional": false,
-    "defaultValue": "NoDefaultValue"
+    "defaultValue": "OK"
   },
   {
     "path": "body.data",
     "value": null,
-    "description": "",
+    "description": null,
     "type": "OBJECT",
     "optional": false,
-    "defaultValue": "NoDefaultValue"
+    "defaultValue": null
   },
   {
-    "path": "body.data",
-    "value": null,
-    "description": "",
-    "type": "MISSING",
+    "path": "body.data.idempotentToken",
+    "value": "748079965857124352",
+    "description": null,
+    "type": "STRING",
     "optional": false,
-    "defaultValue": "NoDefaultValue"
-  },
-  {
-    "path": "body.success",
-    "value": true,
-    "description": "",
-    "type": "BOOLEAN",
-    "optional": false,
-    "defaultValue": "NoDefaultValue"
+    "defaultValue": "748079965857124352"
   }
 ]
