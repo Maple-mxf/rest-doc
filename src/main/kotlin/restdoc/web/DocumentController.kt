@@ -1,7 +1,6 @@
 package restdoc.web
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.convertValue
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Sort.Order.desc
 import org.springframework.data.domain.Sort.by
@@ -20,7 +19,6 @@ import restdoc.core.ok
 import restdoc.model.*
 import restdoc.repository.ProjectRepository
 import restdoc.util.IDUtil
-import restdoc.web.obj.CreateProjectDto
 import restdoc.web.obj.RequestDto
 import restdoc.web.obj.UpdateProjectDto
 import java.util.*
@@ -64,15 +62,56 @@ class DocumentController {
     fun get(@PathVariable id: String): Result = ok(mongoTemplate.findById(id, Project::class.java))
 
     @PostMapping("")
-    fun create(@RequestBody dto: CreateProjectDto): Result {
+    fun create(@RequestBody @Valid requestDto: RequestDto): Result {
 
-        val project = Project(id = IDUtil.id(),
-                name = dto.name,
-                createTime = Date().time,
-                projectId = holderKit.user.teamId,
-                desc = dto.desc)
-        mongoTemplate.save(project)
-        return ok()
+        // Handler Url
+        if (!requestDto.url.startsWith("http") &&
+                !requestDto.url.startsWith("https")) {
+            requestDto.url = String.format("%s%s", "http://", requestDto.url)
+        }
+
+        val requestHeaderDescriptor = requestDto.headers
+                .filter { it.headerKey.isNotBlank() }
+                .map {
+                    HeaderFieldDescriptor(
+                            field = it.headerKey,
+                            value = it.headerValue.split(","),
+                            description = it.headerDescription,
+                            optional = it.headerConstraint)
+                }
+
+        val requestBodyDescriptor = requestDto.requestBody
+                .filter { it.requestFieldPath.isNotBlank() }
+                .map {
+                    BodyFieldDescriptor(
+                            path = it.requestFieldPath,
+                            value = it.requestFieldValue,
+                            description = it.requestFieldDescription,
+                            type = FieldType.OBJECT,
+                            optional = it.requestFieldConstraint,
+                            defaultValue = null
+                    )
+                }
+
+        // Save An Api Project Document
+        val document = Document(
+                id = IDUtil.id(),
+                name = present,
+                projectId = present,
+                resource = present,
+                url = requestDto.url,
+                requestHeaderDescriptor = requestHeaderDescriptor,
+                requestBodyDescriptor = requestBodyDescriptor,
+                responseBodyDescriptors = null,
+                method = HttpMethod.valueOf(requestDto.method),
+                uriVariables = null,
+                expectResponseHeaders = null,
+                expectResponseBody = null,
+                executeResult = requestDto.executeResult)
+
+        mongoTemplate.save(document)
+        
+        return ok(document.id)
     }
 
     @PatchMapping("")
@@ -93,6 +132,7 @@ class DocumentController {
     }
 
     private val present: String = "Default"
+
 
     @PostMapping("/httpTask/submit")
     fun submitHttpTask(@RequestBody @Valid requestDto: RequestDto): Result {
@@ -138,33 +178,9 @@ class DocumentController {
 
             redisTemplate.opsForValue().set(taskId, executeResult)
             redisTemplate.expire(taskId, 1000, TimeUnit.SECONDS)
-
-            val convertValue = mapper.convertValue<Map<String, Any?>>(executeResult)
-
-            // Save An Api Project Document
-            val document = Document(id = taskId,
-                    name = present,
-                    projectId = present,
-                    resource = present,
-                    url = requestDto.url,
-                    requestHeaderDescriptor = requestHeaderDescriptor,
-                    requestBodyDescriptor = requestBodyDescriptor,
-                    responseBodyDescriptors = null,
-                    method = HttpMethod.valueOf(requestDto.method),
-                    uriVariables = null,
-                    expectResponseHeaders = null,
-                    expectResponseBody = null,
-                    executeResult = convertValue)
-
-            mongoTemplate.save(document)
         } catch (e: Throwable) {
             return failure(Status.BAD_REQUEST, e.message.toString())
         }
-
-
-
-
-
         return ok(taskId)
     }
 

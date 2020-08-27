@@ -13,7 +13,8 @@ data class RequestDto(
         val method: String,
         val headers: List<HeaderDto>,
         val requestBody: List<RequestBodyDto>,
-        val responseBody: List<ResponseBodyDto>)
+        val responseBody: List<ResponseBodyDto>,
+        val executeResult: Map<String, Any>? = null)
 
 data class HeaderDto(
         val headerKey: String,

@@ -137,6 +137,8 @@
 
     var msg;
 
+    var globalExecuteResult = null;
+
     layui.use([
         'util', 'layer',
         'form', 'upload',
@@ -292,11 +294,35 @@
             form.render();
         });
 
-
         form.on('submit(save)', function (data) {
             var index = layer.load(1);
             var map = getFormData(data.field);
+            map['executeResult'] = globalExecuteResult
 
+            $.ajax({
+                type: 'POST',
+                dataType: 'JSON',
+                contentType: 'application/json;charset=utf-8',
+                url: '/restdoc/document',
+                data: JSON.stringify(map),
+                async: false,
+                success: function (data) {
+                    if (data['code'] === "200") {
+                        if (data['data'] != null) {
+                            var id = data['data'];
+                            
+                        } else {
+                            layer.msg("保存失败")
+                        }
+                    } else {
+                        layer.msg(data['message'])
+                    }
+
+                },
+                error: function () {
+                    layer.msg("网络异常")
+                }
+            });
             layer.close(index)
         })
 
@@ -343,7 +369,9 @@
                 var responseBody = null;
 
                 for (let i = 0; i < 100; i++) {
+
                     var executeResult = getExecuteResult(httpTaskId)
+                    globalExecuteResult = executeResult
 
                     responseBody = executeResult['data']['body']
 
@@ -363,8 +391,6 @@
                 if (responseBody != null) {
                     completeExecuteCallback(JSON.stringify(responseBody))
                 }
-
-
                 $('pre').append("<br>Execute Complete")
             }
 
