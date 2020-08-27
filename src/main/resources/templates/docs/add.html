@@ -14,6 +14,30 @@
             font-family: 'Roboto', sans-serif;
             font-size: 15px;
         }
+
+        .common-command {
+            background: black;
+            /*border: 1px solid #ddd;
+            border-left: 3px solid #f36d33;*/
+            color: whitesmoke;
+            page-break-inside: avoid;
+            font-family: Roboto, serif;
+            font-size: 13px;
+            line-height: 1.6;
+            margin-bottom: 1.6em;
+            max-width: 100%;
+            overflow: auto;
+            padding: 1em 1.5em;
+            display: block;
+            word-wrap: break-word;
+            height: 100%;
+            border-top: 3px solid #ff7043;
+        }
+
+        #test-result {
+            display: none;
+        }
+
     </style>
 
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
@@ -61,8 +85,11 @@
             </form>
         </div>
 
-        <div class="layui-col-md4">
-            你的内容 3/12
+        <div class="layui-col-md4" id="command-div">
+
+               <pre id="test-result" class="common-command" style="height: 700px;">
+            </pre>
+
         </div>
     </div>
 
@@ -277,10 +304,23 @@
         });
 
         form.on('submit(*)', function (data) {
+
             var index = layer.load(1);
+
+            /*if ($("#test-result").css("display") == "none") {
+
+            }else{
+
+            }*/
+
+            $("#test-result").slideDown();
+
             var map = getFormData(data.field);
 
             var httpTaskId = null;
+
+            $('pre').html("Http Task Executing; Please waiting...\n")
+
             $.ajax({
                 type: 'POST',
                 dataType: 'JSON',
@@ -292,6 +332,7 @@
                     if (data['code'] === "200") {
                         if (data['data'] != null) {
                             httpTaskId = data['data'];
+                            layer.msg('执行成功')
                         } else {
                             layer.msg("任务提交失败")
                         }
@@ -306,23 +347,40 @@
             });
 
             if (httpTaskId != null) {
-                layer.open({
-                    type: 2,
-                    title: '运行结果',
-                    area: ['800px', '700px'],
-                    content: "/restdoc/document/view/httpTask/" + httpTaskId,
-                    btn: ['保存运行结果', '取消'],
-                    isOutAnim: false,
-                    skin: 'layui-layer-lan',
-                    yes: function (index, layero) {
-                        var taskData = window["layui-layer-iframe" + index].getTaskData();
-                        if (taskData == null) {
-                            layer.msg("保存运行结果失败，请刷新页面重试")
-                        } else {
-                            layer.close(index);
-                        }
+                for (let i = 0; i < 100; i++) {
+                    var executeResult = getExecuteResult(httpTaskId)
+                    if (executeResult['code'] === "200") {
+                        $("pre").append("url : " + executeResult['data']['url'] + '\n')
+                        $("pre").append("status code : " + executeResult['data']['status'] + '\n\n')
+                        $("pre").append("request header : \n" + formatJson(executeResult['data']['requestHeader']) + '\n\n')
+                        $("pre").append("request param : \n" + formatJson(executeResult['data']['content']) + '\n\n')
+                        $("pre").append("response header : \n" + formatJson(executeResult['data']['responseHeader']) + '\n\n')
+                        $("pre").append("response body : \n" + formatJson(executeResult['data']['body']))
+                        break;
+                    } else {
+                        console.info(data)
                     }
-                });
+                }
+
+                $('pre').append("<br>Execute Complete")
+
+                /* layer.open({
+                     type: 2,
+                     title: '运行结果',
+                     area: ['800px', '700px'],
+                     content: "/restdoc/document/view/httpTask/" + httpTaskId,
+                     btn: ['保存运行结果', '取消'],
+                     isOutAnim: false,
+                     skin: 'layui-layer-lan',
+                     yes: function (index, layero) {
+                         var taskData = window["layui-layer-iframe" + index].getTaskData();
+                         if (taskData == null) {
+                             layer.msg("保存运行结果失败，请刷新页面重试")
+                         } else {
+                             layer.close(index);
+                         }
+                     }
+                 });*/
             }
 
             layer.close(index);
@@ -330,7 +388,35 @@
             return false;
         });
 
+        function getExecuteResult(taskId) {
+            var result = null;
+            $.ajax({
+                type: 'GET',
+                contentType: 'application/json;charset=utf-8',
+                url: '/restdoc/document/httpTask/' + taskId,
+                async: false,
+                success: function (data) {
+                    result = data;
+                }
+            });
+
+            return result;
+        }
+
+        function formatJson(ugly) {
+            try {
+                // var obj = JSON.parse(ugly);
+                var pretty = JSON.stringify(ugly, undefined, 4);
+                console.info(pretty)
+                return pretty
+            } catch (e) {
+                // layer.msg("JSON字符串错误，请检查")
+                return ugly
+            }
+        }
+
     });
+
 
     function deleteResponseBodyBtn(obj) {
         var parent = obj.parentNode.parentNode.parentNode
