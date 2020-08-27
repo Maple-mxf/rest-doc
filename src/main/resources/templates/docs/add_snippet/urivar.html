@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 <div th:fragment="urivar">
-    <fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px;">
+    <fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px;" id="uri-fieldset">
         <legend>REST路径参数</legend>
 
         <div class="layui-form-item" style="margin-top: 10px">
@@ -10,46 +10,6 @@
                 <button type="button" class="layui-btn" id="add_pathvar_field_btn">
                     增加参数
                 </button>
-            </div>
-        </div>
-
-        <div id="request-pathvar-div">
-            <div class="layui-form-item one-request-header-line" id="first-pathvar-field">
-                <div class="layui-inline">
-<!--                    <label class="layui-form-label">字段</label>-->
-                    <div class="layui-input-inline">
-                        <input type="text" name="uriKey" placeholder="Key" autocomplete="off"
-                               class="layui-input">
-                    </div>
-                </div>
-
-                <div class="layui-inline">
-                    <label>=</label>
-                </div>
-
-                <div class="layui-inline">
-<!--                    <label class="layui-form-label">值</label>-->
-                    <div class="layui-input-inline">
-                        <input type="text" name="uriVal" placeholder="Value" autocomplete="off"
-                               class="layui-input">
-                    </div>
-                </div>
-
-                <div class="layui-inline">
-                    <label class="layui-form-label">说明</label>
-                    <div class="layui-input-inline">
-                        <input type="text" placeholder="参数说明" name="uriDesc" autocomplete="off"
-                               class="layui-input">
-                    </div>
-                </div>
-
-                <div class="layui-inline">
-                    <button type="button" class="layui-btn layui-btn-danger" id="deletePathvarBtn"
-                            style="margin-left: 10px"
-                            onclick="deleteUriVarFieldLine(this)">
-                        <i class="layui-icon layui-icon-subtraction" style="font-size: 30px; color: white;"></i>
-                    </button>
-                </div>
             </div>
         </div>
 

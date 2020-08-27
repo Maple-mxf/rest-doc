@@ -60,6 +60,9 @@
 
 <script th:src="@{/layui/layui.js}"></script>
 <script th:src="@{/admin/js/jquery.js}"></script>
+<script th:src="@{/admin/js/doc/content.js}"></script>
+<script th:src="@{/admin/js/doc/response.js}"></script>
+<script th:src="@{/admin/js/doc/urivar.js}"></script>
 <script type="text/javascript" th:inline="javascript">
 
     var msg;
@@ -109,22 +112,16 @@
                         success: function (data) {
                             if (data.code === '200') {
                                 if (data.data.length >= 1) {
-                                    // 清除多余的
                                     clearRequestParamInput();
 
-                                    var left = data.data.length - 1
-
-                                    for (let i = 0; i < left; i++) {
-                                        addRequestParamInput()
+                                    for (let i = 0; i < data.data.length; i++) {
+                                        addRequestParamInput();
                                     }
 
                                     var all_input_line = $("#body-fieldset").children(".multi-request-body");
 
                                     for (let i = 0; i < all_input_line.length; i++) {
                                         let line = all_input_line[i];
-
-                                        console.info($(line).find("input").length)
-
                                         $(line).find("input").each(function () {
                                             if (this.name === 'requestFieldPath') {
                                                 this.value = data.data[i]['path']
@@ -133,23 +130,13 @@
                                             }
                                         })
 
-                                        console.info($($(line).find("select:first-child")))
-
-                                       /* $($(line).find("select:first-child"))
+                                        $($(line).find("select:first-child"))
                                             .find("option[value=" + data.data[i]['type'] + "]")
-                                            .attr("selected", true);*/
+                                            .attr("selected", true);
                                     }
-
-
-                                    /*$("#first-request-body-field input").each(function () {
-                                        if (this.name === 'requestFieldPath') {
-                                            this.value = firstLine['path']
-                                        } else if (this.name === 'requestFieldValue') {
-                                            this.value = firstLine['value']
-                                        }
-                                    });*/
-
                                 }
+                                // 重新渲染页面
+                                form.render();
                             } else {
                                 layer.msg('JSON转换失败，错误信息:' + data.message)
                             }
@@ -158,10 +145,71 @@
                             layer.msg("JSON格式错误")
                         }
                     });
-                    layer.close(index); //如果设定了yes回调，需进行手工关闭
+                    layer.close(index);
                 }
             });
         });
+
+
+        $('#convert_response_json_fields').click(function (event) {
+            layer.open({
+                title: 'JSON快速转换',
+                area: ['900px', '600px'],
+                scrollbar: false,
+                type: 2,
+                content: '/restdoc/docs/json/convert',
+                closeBtn: 1,
+                btn: ['转换JSON'],
+                yes: function (index, layero) {
+                    var res = window["layui-layer-iframe" + index].getJSONValue();
+                    $.ajax({
+                        type: 'POST',
+                        dataType: 'JSON',
+                        contentType: 'application/json;charset=utf-8',
+                        url: 'docs/deProjector',
+                        data: res,
+                        async: false,
+                        success: function (data) {
+                            if (data.code === '200') {
+                                if (data.data.length >= 1) {
+                                    clearResponseParamInput();
+
+                                    for (let i = 0; i < data.data.length; i++) {
+                                        addResponseParamInput();
+                                    }
+
+                                    var all_input_line = $("#response-fieldset").children(".one-response-body-line");
+
+                                    for (let i = 0; i < all_input_line.length; i++) {
+                                        let line = all_input_line[i];
+                                        $(line).find("input").each(function () {
+                                            if (this.name === 'responseFieldPath') {
+                                                this.value = data.data[i]['path']
+                                            } /*else if (this.name === 'requestFieldValue') {
+                                                this.value = data.data[i]['value']
+                                            }*/
+                                        })
+
+                                        $($(line).find("select:first-child"))
+                                            .find("option[value=" + data.data[i]['type'] + "]")
+                                            .attr("selected", true);
+                                    }
+                                }
+                                // 重新渲染页面
+                                form.render();
+                            } else {
+                                layer.msg('JSON转换失败，错误信息:' + data.message)
+                            }
+                        },
+                        error: function (data) {
+                            layer.msg("JSON格式错误")
+                        }
+                    });
+                    layer.close(index);
+                }
+            });
+        });
+
 
         $("#add_request_header_field").click(function (event) {
 
@@ -173,24 +221,35 @@
         });
 
         function addRequestParamInput() {
-            let row = $('.one-line').html();
-            var html = '  <div class="layui-form-item multi-request-body">' + row + '</div>';
-            $("#first-request-body-field").after(html);
+            $("#body-fieldset").append(oneline);
+        }
+
+        function addResponseParamInput() {
+            $("#response-fieldset").append(responseoneline);
+        }
+
+        function clearResponseParamInput() {
+            var all_input_line = $("#response-fieldset").children(".one-response-body-line")
+            var line_length = all_input_line.length
+
+            if (line_length > 0) {
+                for (let i = 0; i < line_length; i++) {
+                    var obj = all_input_line[i]
+                    var parent = obj.parentNode
+                    parent.removeChild(obj)
+                }
+            }
         }
 
         function clearRequestParamInput() {
             var all_input_line = $("#body-fieldset").children(".multi-request-body")
             var line_length = all_input_line.length
 
-            if (line_length > 1) {
-                for (let i = 1; i < line_length; i++) {
+            if (line_length > 0) {
+                for (let i = 0; i < line_length; i++) {
                     var obj = all_input_line[i]
                     var parent = obj.parentNode
-                    if (obj.id === "first-request-body-field") {
-                        msg.msg("Not")
-                    } else {
-                        parent.removeChild(obj)
-                    }
+                    parent.removeChild(obj)
                 }
             }
         }
@@ -201,28 +260,18 @@
         });
 
         $("#add_response_body_field").click(function (event) {
-
-            let row = $('.one-response-body-line').html();
-            var html = '  <div class="layui-form-item">' + row + '</div>';
-            $("#response-body-div").after(html);
-
+            $("#response-fieldset").append(responseoneline);
             form.render();
         });
 
         $("#add_pathvar_field_btn").click(function (event) {
-
-            let row = $('#first-pathvar-field').html();
-            var html = '  <div class="layui-form-item">' + row + '</div>';
-            $("#request-pathvar-div").after(html);
-
+            $("#uri-fieldset").append(oneuriline);
             form.render();
         });
 
         form.on('submit(*)', function (data) {
             var index = layer.load(1);
             var map = getFormData(data.field);
-
-            console.info(map)
 
             var httpTaskId = null;
             $.ajax({
@@ -279,21 +328,13 @@
     function deleteResponseBodyBtn(obj) {
         var parent = obj.parentNode.parentNode.parentNode
         var children = obj.parentNode.parentNode
-        if (children.id === "first-response-field") {
-            msg.msg("Not")
-        } else {
-            parent.removeChild(children)
-        }
+        parent.removeChild(children)
     }
 
     function deleteRequestBodyBtn(obj) {
         var parent = obj.parentNode.parentNode.parentNode
         var children = obj.parentNode.parentNode
-        if (children.id === "first-request-body-field") {
-            msg.msg("Not")
-        } else {
-            parent.removeChild(children)
-        }
+        parent.removeChild(children)
     }
 
     function deleteHeaderFieldLine(obj) {
@@ -310,14 +351,8 @@
     function deleteUriVarFieldLine(obj) {
         console.info(obj.id)
         var parent = obj.parentNode.parentNode.parentNode
-
         var children = obj.parentNode.parentNode
-
-        if (children.id === "first-pathvar-field") {
-            msg.msg("Not")
-        } else {
-            parent.removeChild(children)
-        }
+        parent.removeChild(children)
     }
 
 
