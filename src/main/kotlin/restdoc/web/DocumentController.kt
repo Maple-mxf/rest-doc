@@ -93,16 +93,29 @@ class DocumentController {
                     )
                 }
 
+        val responseBodyDescriptor = requestDto.responseBody
+                .filter { it.responseFieldPath.isNotBlank() }
+                .map {
+                    BodyFieldDescriptor(
+                            path = it.responseFieldPath,
+                            value = it.responseFieldValue,
+                            description = it.responseFieldDescription,
+                            type = FieldType.OBJECT,
+                            optional = it.responseFieldConstraint,
+                            defaultValue = null
+                    )
+                }
+
         // Save An Api Project Document
         val document = Document(
                 id = IDUtil.id(),
-                name = present,
+                name = requestDto.name,
                 projectId = present,
-                resource = present,
+                resource = requestDto.resource,
                 url = requestDto.url,
                 requestHeaderDescriptor = requestHeaderDescriptor,
                 requestBodyDescriptor = requestBodyDescriptor,
-                responseBodyDescriptors = null,
+                responseBodyDescriptors = responseBodyDescriptor,
                 method = HttpMethod.valueOf(requestDto.method),
                 uriVariables = null,
                 expectResponseHeaders = null,
@@ -110,7 +123,7 @@ class DocumentController {
                 executeResult = requestDto.executeResult)
 
         mongoTemplate.save(document)
-        
+
         return ok(document.id)
     }
 

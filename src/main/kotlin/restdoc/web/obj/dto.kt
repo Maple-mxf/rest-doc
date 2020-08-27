@@ -10,6 +10,9 @@ data class UpdateProjectDto(val id: String, val name: String, val desc: String)
 data class RequestDto(
         @Pattern(regexp = "")
         var url: String,
+        val name: String?,
+        val description: String?,
+        val resource: String,
         val method: String,
         val headers: List<HeaderDto>,
         val requestBody: List<RequestBodyDto>,
