@@ -1,39 +1,122 @@
-{
-  "status": 200,
-  "url": "http://39.106.104.216:8090/cloudwebsite/api/idempotent/getToken",
-  "method": "GET",
-  "requestHeader": {
-    "Content-Type": "application/json;utf-8"
+[
+  {
+    "path": "requestHeader",
+    "value": null,
+    "description": "",
+    "type": "OBJECT",
+    "optional": false,
+    "defaultValue": "NoDefaultValue"
   },
-  "responseHeader": {
-    "Vary": [
-      "Origin",
-      "Access-Control-Request-Method",
-      "Access-Control-Request-Headers"
-    ],
-    "Content-Type": [
-      "application/json"
-    ],
-    "Transfer-Encoding": [
-      "chunked"
-    ],
-    "Date": [
-      "Wed, 26 Aug 2020 07:22:42 GMT"
-    ],
-    "Keep-Alive": [
-      "timeout=60"
-    ],
-    "Connection": [
-      "keep-alive"
-    ]
+  {
+    "path": "requestHeader.Content-Type",
+    "value": "application/json;utf-8",
+    "description": "",
+    "type": "STRING",
+    "optional": false,
+    "defaultValue": "NoDefaultValue"
   },
-  "content": {},
-  "body": {
-    "code": 1,
-    "msg": "OK",
-    "data": {
-      "idempotentToken": "748079965857124352"
-    },
-    "success": true
+  {
+    "path": "responseHeader",
+    "value": null,
+    "description": "",
+    "type": "OBJECT",
+    "optional": false,
+    "defaultValue": "NoDefaultValue"
+  },
+  {
+    "path": "responseHeader.Vary",
+    "value": null,
+    "description": "",
+    "type": "ARRAY",
+    "optional": false,
+    "defaultValue": "NoDefaultValue"
+  },
+  {
+    "path": "responseHeader.Content-Type",
+    "value": null,
+    "description": "",
+    "type": "ARRAY",
+    "optional": false,
+    "defaultValue": "NoDefaultValue"
+  },
+  {
+    "path": "responseHeader.Transfer-Encoding",
+    "value": null,
+    "description": "",
+    "type": "ARRAY",
+    "optional": false,
+    "defaultValue": "NoDefaultValue"
+  },
+  {
+    "path": "responseHeader.Date",
+    "value": null,
+    "description": "",
+    "type": "ARRAY",
+    "optional": false,
+    "defaultValue": "NoDefaultValue"
+  },
+  {
+    "path": "responseHeader.Keep-Alive",
+    "value": null,
+    "description": "",
+    "type": "ARRAY",
+    "optional": false,
+    "defaultValue": "NoDefaultValue"
+  },
+  {
+    "path": "responseHeader.Connection",
+    "value": null,
+    "description": "",
+    "type": "ARRAY",
+    "optional": false,
+    "defaultValue": "NoDefaultValue"
+  },
+  {
+    "path": "body",
+    "value": null,
+    "description": "",
+    "type": "OBJECT",
+    "optional": false,
+    "defaultValue": "NoDefaultValue"
+  },
+  {
+    "path": "body.code",
+    "value": 1,
+    "description": "",
+    "type": "NUMBER",
+    "optional": false,
+    "defaultValue": "NoDefaultValue"
+  },
+  {
+    "path": "body.msg",
+    "value": "OK",
+    "description": "",
+    "type": "STRING",
+    "optional": false,
+    "defaultValue": "NoDefaultValue"
+  },
+  {
+    "path": "body.data",
+    "value": null,
+    "description": "",
+    "type": "OBJECT",
+    "optional": false,
+    "defaultValue": "NoDefaultValue"
+  },
+  {
+    "path": "body.data",
+    "value": null,
+    "description": "",
+    "type": "MISSING",
+    "optional": false,
+    "defaultValue": "NoDefaultValue"
+  },
+  {
+    "path": "body.success",
+    "value": true,
+    "description": "",
+    "type": "BOOLEAN",
+    "optional": false,
+    "defaultValue": "NoDefaultValue"
   }
-}
+]

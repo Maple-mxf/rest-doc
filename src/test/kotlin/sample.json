@@ -1,36 +1,35 @@
 {
-  "scheduled": true,
-  "scheduledTime": 1592452723174,
-  "content": "Kobe is NBA people",
-  "recipients": {
-    "member": [
-      {
-        "firmId": "168498749354",
-        "allCheck": false,
-        "groups": [
-          {
-            "groupId": "groupId",
-            "members": [],
-            "receiver": [],
-            "excludes": []
-          }
-        ]
-      }
+  "requestHeader": {
+    "Content-Type": "application/json;utf-8"
+  },
+  "responseHeader": {
+    "Vary": [
+      "Origin",
+      "Access-Control-Request-Method",
+      "Access-Control-Request-Headers"
     ],
-    "inner": [
-      {
-        "firmId": "168498749354",
-        "allCheck": false,
-        "groups": [
-          {
-            "groupId": "groupId",
-            "members": [],
-            "receiver": [],
-            "excludes": []
-          }
-        ]
-      }
+    "Content-Type": [
+      "application/json"
+    ],
+    "Transfer-Encoding": [
+      "chunked"
+    ],
+    "Date": [
+      "Wed, 26 Aug 2020 07:22:42 GMT"
+    ],
+    "Keep-Alive": [
+      "timeout=60"
+    ],
+    "Connection": [
+      "keep-alive"
     ]
   },
-  "validateOnly": false
+  "body": {
+    "code": 1,
+    "msg": "OK",
+    "data": {
+      "idempotentToken": "748079965857124352"
+    },
+    "success": true
+  }
 }
