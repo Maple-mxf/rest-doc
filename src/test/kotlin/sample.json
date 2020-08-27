@@ -1,9 +1,18 @@
 {
-  "body": {
-    "code": 1,
-    "msg": "OK",
-    "data": {
-      "idempotentToken": "748079965857124352"
+  "url": "http://39.106.104.216:8090/cloudwebsite/api/idempotent/getToken",
+  "name": "API名称",
+  "description": "resource",
+  "resource": "token",
+  "method": "GET",
+  "headers": [],
+  "requestBody": [
+    {
+      "requestFieldPath": "name",
+      "requestFieldValue": "jack",
+      "requestFieldType": "STRING",
+      "requestFieldDescription": "用户姓名",
+      "requestFieldConstraint": true
     }
-  }
+  ],
+  "responseBody": []
 }

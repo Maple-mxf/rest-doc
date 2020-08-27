@@ -47,9 +47,26 @@
 
     <div class="layui-row">
 
-        <div class="layui-col-md8">
+        <div class="layui-col-md9">
             <form class="layui-form layui-form-pane" action="" id="request_form">
-                <fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px;">
+
+                <fieldset class="layui-elem-field site-demo-button">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">API名称</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="name" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">所属资源</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="resource" class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset class="layui-elem-field site-demo-button" style="margin-top: 10px;">
                     <div class="layui-form-item">
                         <div class="layui-input-inline">
                             <select name="method" lay-verify="method">
@@ -64,12 +81,17 @@
                         </div>
                         <label class="layui-form-label">http://</label>
                         <div class="layui-input-inline">
-                            <input type="text" name="url" placeholder="url" lay-verify="url" autocomplete="off"
+                            <input type="text" name="url" placeholder="127.0.0.1:8080/springboot/{resource}/{id}"
+                                   lay-verify="url" autocomplete="off"
                                    style="width: 220%"
                                    class="layui-input">
-
                         </div>
-                        <button class="layui-btn" style="margin-left: 25%;float: left" lay-submit lay-filter="*">执行
+
+                        <button class="layui-btn" style="margin-left: 25%;float: left" lay-submit lay-filter="execute">
+                            调试
+                        </button>
+                        <button class="layui-btn" style="margin-left: 10px;float: left" lay-submit lay-filter="save">
+                            保存文档
                         </button>
                     </div>
                 </fieldset>
@@ -82,10 +104,20 @@
 
                 <div th:include="docs/add_snippet/response :: response"></div>
 
+
+                <fieldset class="layui-elem-field site-demo-button">
+                    <legend>API说明</legend>
+                    <div class="layui-form-item layui-form-text">
+                        <div class="layui-input-block">
+                            <textarea placeholder="请输入内容" class="layui-textarea" name="description"></textarea>
+                        </div>
+                    </div>
+                </fieldset>
+
             </form>
         </div>
 
-        <div class="layui-col-md4" id="command-div">
+        <div class="layui-col-md3" id="command-div">
 
                <pre id="test-result" class="common-command" style="height: 700px;">
             </pre>
@@ -200,54 +232,11 @@
                 btn: ['转换JSON'],
                 yes: function (index, layero) {
                     var res = window["layui-layer-iframe" + index].getJSONValue();
-                    $.ajax({
-                        type: 'POST',
-                        dataType: 'JSON',
-                        contentType: 'application/json;charset=utf-8',
-                        url: 'docs/deProjector',
-                        data: res,
-                        async: false,
-                        success: function (data) {
-                            if (data.code === '200') {
-                                if (data.data.length >= 1) {
-                                    clearResponseParamInput();
-
-                                    for (let i = 0; i < data.data.length; i++) {
-                                        addResponseParamInput();
-                                    }
-
-                                    var all_input_line = $("#response-fieldset").children(".one-response-body-line");
-
-                                    for (let i = 0; i < all_input_line.length; i++) {
-                                        let line = all_input_line[i];
-                                        $(line).find("input").each(function () {
-                                            if (this.name === 'responseFieldPath') {
-                                                this.value = data.data[i]['path']
-                                            } /*else if (this.name === 'requestFieldValue') {
-                                                this.value = data.data[i]['value']
-                                            }*/
-                                        })
-
-                                        $($(line).find("select:first-child"))
-                                            .find("option[value=" + data.data[i]['type'] + "]")
-                                            .attr("selected", true);
-                                    }
-                                }
-                                // 重新渲染页面
-                                form.render();
-                            } else {
-                                layer.msg('JSON转换失败，错误信息:' + data.message)
-                            }
-                        },
-                        error: function (data) {
-                            layer.msg("JSON格式错误")
-                        }
-                    });
+                    completeExecuteCallback(res)
                     layer.close(index);
                 }
             });
         });
-
 
         $("#add_request_header_field").click(function (event) {
             $("#header-fieldset").append(oneheaderline);
@@ -303,15 +292,18 @@
             form.render();
         });
 
-        form.on('submit(*)', function (data) {
+
+        form.on('submit(save)', function (data) {
+            var index = layer.load(1);
+            var map = getFormData(data.field);
+
+            layer.close(index)
+        })
+
+
+        form.on('submit(execute)', function (data) {
 
             var index = layer.load(1);
-
-            /*if ($("#test-result").css("display") == "none") {
-
-            }else{
-
-            }*/
 
             $("#test-result").slideDown();
 
@@ -347,8 +339,14 @@
             });
 
             if (httpTaskId != null) {
+
+                var responseBody = null;
+
                 for (let i = 0; i < 100; i++) {
                     var executeResult = getExecuteResult(httpTaskId)
+
+                    responseBody = executeResult['data']['body']
+
                     if (executeResult['code'] === "200") {
                         $("pre").append("url : " + executeResult['data']['url'] + '\n')
                         $("pre").append("status code : " + executeResult['data']['status'] + '\n\n')
@@ -362,31 +360,65 @@
                     }
                 }
 
-                $('pre').append("<br>Execute Complete")
+                if (responseBody != null) {
+                    completeExecuteCallback(JSON.stringify(responseBody))
+                }
 
-                /* layer.open({
-                     type: 2,
-                     title: '运行结果',
-                     area: ['800px', '700px'],
-                     content: "/restdoc/document/view/httpTask/" + httpTaskId,
-                     btn: ['保存运行结果', '取消'],
-                     isOutAnim: false,
-                     skin: 'layui-layer-lan',
-                     yes: function (index, layero) {
-                         var taskData = window["layui-layer-iframe" + index].getTaskData();
-                         if (taskData == null) {
-                             layer.msg("保存运行结果失败，请刷新页面重试")
-                         } else {
-                             layer.close(index);
-                         }
-                     }
-                 });*/
+
+                $('pre').append("<br>Execute Complete")
             }
 
             layer.close(index);
 
             return false;
         });
+
+
+        function completeExecuteCallback(body) {
+            $.ajax({
+                type: 'POST',
+                dataType: 'JSON',
+                contentType: 'application/json;charset=utf-8',
+                url: 'docs/deProjector',
+                data: body,
+                async: false,
+                success: function (data) {
+                    if (data.code === '200') {
+                        if (data.data.length >= 1) {
+                            clearResponseParamInput();
+
+                            for (let i = 0; i < data.data.length; i++) {
+                                addResponseParamInput();
+                            }
+
+                            var all_input_line = $("#response-fieldset").children(".one-response-body-line");
+
+                            for (let i = 0; i < all_input_line.length; i++) {
+                                let line = all_input_line[i];
+                                $(line).find("input").each(function () {
+                                    if (this.name === 'responseFieldPath') {
+                                        this.value = data.data[i]['path']
+                                    } /*else if (this.name === 'requestFieldValue') {
+                                                this.value = data.data[i]['value']
+                                            }*/
+                                })
+
+                                $($(line).find("select:first-child"))
+                                    .find("option[value=" + data.data[i]['type'] + "]")
+                                    .attr("selected", true);
+                            }
+                        }
+                        // 重新渲染页面
+                        form.render();
+                    } else {
+                        layer.msg('JSON转换失败，错误信息:' + data.message)
+                    }
+                },
+                error: function (data) {
+                    layer.msg("JSON格式错误")
+                }
+            });
+        }
 
         function getExecuteResult(taskId) {
             var result = null;
@@ -459,8 +491,10 @@
             url = "http://" + url;
         }
         map['url'] = url
+        map['name'] = value['name']
+        map['description'] = value['description']
+        map['resource'] = value['resource']
         map['method'] = value["method"]
-        map['executeStrategy'] = value["executeStrategy"]
         map['headers'] = header
         map['requestBody'] = requestBody
         map['responseBody'] = responseBody

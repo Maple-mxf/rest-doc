@@ -1,6 +1,5 @@
 package restdoc.web
 
-import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.convertValue
 import org.springframework.beans.factory.annotation.Autowired
@@ -97,6 +96,12 @@ class DocumentController {
 
     @PostMapping("/httpTask/submit")
     fun submitHttpTask(@RequestBody @Valid requestDto: RequestDto): Result {
+
+        // Handler Url
+        if (!requestDto.url.startsWith("http") &&
+                !requestDto.url.startsWith("https")) {
+            requestDto.url = String.format("%s%s", "http://", requestDto.url)
+        }
 
         val requestHeaderDescriptor = requestDto.headers
                 .filter { it.headerKey.isNotBlank() }
