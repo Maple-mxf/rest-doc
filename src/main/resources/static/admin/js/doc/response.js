@@ -27,9 +27,8 @@ var responseoneline = "            <div class=\"layui-form-item one-response-bod
     "                               name=\"responseFieldConstraint\" title=\"必选\">\n" +
     "                    </div>\n" +
     "                </div>\n" +
-    "                <div class=\"layui-inline\" style=\"margin-left: 10px\">\n" +
+    "                <div class=\"layui-inline\" style=\"margin-left: 40px\">\n" +
     "<button title='点击显示字段备注' type=\"button\" class=\"layui-btn layui-btn-sm layui-btn-primary\" id=\"deleteHeaderBtn\"\n" +
-    "                            style=\"margin-left: 10px\"\n" +
     "                            onclick=\"addResponseParamDescBtn(this)\">\n" +
     "                        <i class=\"layui-icon layui-icon-tips\" style=\"font-size: 30px; color: black;\"></i></button>" +
     "                    <button title='删除当前字段' type=\"button\" class=\"layui-btn layui-btn-sm layui-btn-primary\" onclick=\"deleteResponseBodyBtn(this)\">\n" +
