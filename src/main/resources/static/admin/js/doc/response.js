@@ -20,16 +20,7 @@ var responseoneline = "            <div class=\"layui-form-item one-response-bod
     "                        </select>\n" +
     "                    </div>\n" +
     "                </div>\n" +
-    "\n" +
-    "                <div class=\"layui-inline\">\n" +
-    "                    <label class=\"layui-form-label\">说明</label>\n" +
-    "                    <div class=\"layui-input-inline\">\n" +
-    "                        <input type=\"text\"\n" +
-    "                               name=\"responseFieldDescription\"\n" +
-    "                               autocomplete=\"off\"\n" +
-    "                               class=\"layui-input\">\n" +
-    "                    </div>\n" +
-    "                </div>\n" +
+    "<textarea name='responseFieldDescription' style='display: none' cols='30' rows='10'></textarea>" +
     "                <div class=\"layui-inline\" style=\"width: 5%\">\n" +
     "                    <div class=\"layui-input-inline\">\n" +
     "                        <input type=\"checkbox\" checked\n" +
@@ -37,10 +28,11 @@ var responseoneline = "            <div class=\"layui-form-item one-response-bod
     "                    </div>\n" +
     "                </div>\n" +
     "                <div class=\"layui-inline\" style=\"margin-left: 10px\">\n" +
-    "                    <button type=\"button\" class=\"layui-btn layui-btn-sm layui-btn-primary\" onclick=\"deleteResponseBodyBtn(this)\">\n" +
-    "                        <i class=\"layui-icon layui-icon-subtraction\" style=\"font-size: 30px; color: black;\"></i>\n" +
-    "                    <button type=\"button\" class=\"layui-btn layui-btn-danger\" onclick=\"deleteResponseBodyBtn(this)\">\n" +
-    "                        <i class=\"layui-icon layui-icon-subtraction\" style=\"font-size: 30px; color: white;\"></i>\n" +
-    "                    </button>\n" +
+    "<button title='点击显示字段备注' type=\"button\" class=\"layui-btn layui-btn-sm layui-btn-primary\" id=\"deleteHeaderBtn\"\n" +
+    "                            style=\"margin-left: 10px\"\n" +
+    "                            onclick=\"addResponseParamDescBtn(this)\">\n" +
+    "                        <i class=\"layui-icon layui-icon-tips\" style=\"font-size: 30px; color: black;\"></i></button>" +
+    "                    <button title='删除当前字段' type=\"button\" class=\"layui-btn layui-btn-sm layui-btn-primary\" onclick=\"deleteResponseBodyBtn(this)\">\n" +
+    "                        <i class=\"layui-icon layui-icon-subtraction\" style=\"font-size: 30px; color: black;\"></i>\n</button>" +
     "                </div>\n" +
     "            </div>";

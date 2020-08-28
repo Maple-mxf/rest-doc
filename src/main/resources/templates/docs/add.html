@@ -49,7 +49,7 @@
 
     <div class="layui-row">
 
-        <div class="layui-col-md9">
+        <div class="layui-col-md7">
             <form class="layui-form layui-form-pane" action="" id="request_form">
                 <fieldset class="layui-elem-field site-demo-button">
                     <div class="layui-form-item">
@@ -200,27 +200,10 @@
                         </div>
                     </div>
                 </div>
-                <div th:include="docs/add_snippet/urivar :: urivar"></div>
-
-                <div th:include="docs/add_snippet/header :: header"></div>
-
-                <div th:include="docs/add_snippet/content :: content"></div>
-
-                <div th:include="docs/add_snippet/response :: response"></div>
-
-
-                <fieldset class="layui-elem-field site-demo-button">
-                    <legend>API说明</legend>
-                    <div class="layui-form-item layui-form-text">
-                        <div class="layui-input-block">
-                            <textarea placeholder="请输入内容" class="layui-textarea" name="description"></textarea>
-                        </div>
-                    </div>
-                </fieldset>
             </form>
         </div>
 
-        <div class="layui-col-md3" id="command-div">
+        <div class="layui-col-md5" id="command-div">
                <pre id="test-result" class="common-command" style="height: 700px;">
             </pre>
 
@@ -242,7 +225,6 @@
 <script th:src="@{/admin/js/doc/response.js}"></script>
 <script th:src="@{/admin/js/doc/urivar.js}"></script>
 <script th:src="@{/admin/js/doc/header.js}"></script>
-<<<<<<< HEAD
 <script th:src="@{/admin/js/marked.min.js}"></script>
 <script type="text/javascript" th:inline="javascript">
 
@@ -498,17 +480,10 @@
             });
 
             if (httpTaskId != null) {
-
                 var responseBody = null;
-
                 for (let i = 0; i < 100; i++) {
                     var executeResult = getExecuteResult(httpTaskId);
                     globalExecuteResult = executeResult;
-
-                    responseBody = executeResult['data']['body'];
-
-                    var executeResult = getExecuteResult(httpTaskId)
-                    globalExecuteResult = executeResult
 
                     responseBody = executeResult['data']['body']
 
@@ -540,85 +515,84 @@
             $("#response-fieldset").addClass("layui-show");
             form.render();
 
-            function completeExecuteCallback(body) {
-                $.ajax({
-                    type: 'POST',
-                    dataType: 'JSON',
-                    contentType: 'application/json;charset=utf-8',
-                    url: 'docs/deProjector',
-                    data: body,
-                    async: false,
-                    success: function (data) {
-                        if (data.code === '200') {
-                            if (data.data.length >= 1) {
-                                clearResponseParamInput();
+            $.ajax({
+                type: 'POST',
+                dataType: 'JSON',
+                contentType: 'application/json;charset=utf-8',
+                url: 'docs/deProjector',
+                data: body,
+                async: false,
+                success: function (data) {
+                    if (data.code === '200') {
+                        if (data.data.length >= 1) {
+                            clearResponseParamInput();
 
-                                for (let i = 0; i < data.data.length; i++) {
-                                    addResponseParamInput();
-                                }
+                            for (let i = 0; i < data.data.length; i++) {
+                                addResponseParamInput();
+                            }
 
-                                var all_input_line = $("#response-fieldset").children(".one-response-body-line");
+                            var all_input_line = $("#response-fieldset").children(".one-response-body-line");
 
-                                for (let i = 0; i < all_input_line.length; i++) {
-                                    let line = all_input_line[i];
-                                    $(line).find("input").each(function () {
-                                        if (this.name === 'responseFieldPath') {
-                                            this.value = data.data[i]['path']
-                                        } /*else if (this.name === 'requestFieldValue') {
+                            for (let i = 0; i < all_input_line.length; i++) {
+                                let line = all_input_line[i];
+                                $(line).find("input").each(function () {
+                                    if (this.name === 'responseFieldPath') {
+                                        this.value = data.data[i]['path']
+                                    } /*else if (this.name === 'requestFieldValue') {
                                                 this.value = data.data[i]['value']
                                             }*/
-                                    })
+                                })
 
-                                    $($(line).find("select:first-child"))
-                                        .find("option[value=" + data.data[i]['type'] + "]")
-                                        .attr("selected", true);
-                                }
+                                $($(line).find("select:first-child"))
+                                    .find("option[value=" + data.data[i]['type'] + "]")
+                                    .attr("selected", true);
                             }
-                            // 重新渲染页面
-                            form.render();
-                        } else {
-                            layer.msg('JSON转换失败，错误信息:' + data.message)
                         }
-                    },
-                    error: function (data) {
-                        layer.msg("JSON格式错误")
+                        // 重新渲染页面
+                        form.render();
+                    } else {
+                        layer.msg('JSON转换失败，错误信息:' + data.message)
                     }
-                });
-            }
-
-            function getExecuteResult(taskId) {
-                var result = null;
-                $.ajax({
-                    type: 'GET',
-                    contentType: 'application/json;charset=utf-8',
-                    url: '/restdoc/document/httpTask/' + taskId,
-                    async: false,
-                    success: function (data) {
-                        result = data;
-                    }
-                });
-
-                return result;
-            }
-
-            function formatJson(ugly) {
-                try {
-                    // var obj = JSON.parse(ugly);
-                    var pretty = JSON.stringify(ugly, undefined, 4);
-                    console.info(pretty)
-                    return pretty
-                } catch (e) {
-                    // layer.msg("JSON字符串错误，请检查")
-                    return ugly
+                },
+                error: function (data) {
+                    layer.msg("JSON格式错误")
                 }
+            });
+        }
+
+        function getExecuteResult(taskId) {
+            var result = null;
+            $.ajax({
+                type: 'GET',
+                contentType: 'application/json;charset=utf-8',
+                url: '/restdoc/document/httpTask/' + taskId,
+                async: false,
+                success: function (data) {
+                    result = data;
+                }
+            });
+
+            return result;
+        }
+
+        function formatJson(ugly) {
+            try {
+                // var obj = JSON.parse(ugly);
+                var pretty = JSON.stringify(ugly, undefined, 4);
+                console.info(pretty)
+                return pretty
+            } catch (e) {
+                // layer.msg("JSON字符串错误，请检查")
+                return ugly
             }
         }
     });
 
-    function addUriVarDescBtn(obj) {
-        var input = $($(obj).parent()).parent().find("textarea[name='uriDesc']");
-        var desc = $(input[0]).val();
 
+    function addResponseParamDescBtn(obj) {
+        var input = $($(obj).parent()).parent().find("textarea[name='responseFieldDescription']");
+        var desc = $(input[0]).val();
+        $("#L_content").val(desc);
         msg.open({
             type: 1,
             title: '字段描述',
@@ -628,6 +602,64 @@
             yes: function (index, layero) {
                 var res = $("#L_content").val();
                 $(input[0]).val(res);
+                $('#L_content').val("");
+                msg.close(index)
+            }
+        });
+    }
+
+    function addRequestParamDescBtn(obj) {
+        var input = $($(obj).parent()).parent().find("textarea[name='requestFieldDescription']");
+        var desc = $(input[0]).val();
+        $("#L_content").val(desc);
+        msg.open({
+            type: 1,
+            title: '字段描述',
+            content: $('#desc-hidden-div'),
+            area: ['600px', '400px'],
+            btn: ['确定'],
+            yes: function (index, layero) {
+                var res = $("#L_content").val();
+                $(input[0]).val(res);
+                $('#L_content').val("");
+                msg.close(index)
+            }
+        });
+    }
+
+    function addHeaderDescBtn(obj) {
+        var input = $($(obj).parent()).parent().find("textarea[name='headerDescription']");
+        var desc = $(input[0]).val();
+        $("#L_content").val(desc);
+        msg.open({
+            type: 1,
+            title: '字段描述',
+            content: $('#desc-hidden-div'),
+            area: ['600px', '400px'],
+            btn: ['确定'],
+            yes: function (index, layero) {
+                var res = $("#L_content").val();
+                $(input[0]).val(res);
+                $('#L_content').val("");
+                msg.close(index)
+            }
+        });
+    }
+
+    function addUriVarDescBtn(obj) {
+        var input = $($(obj).parent()).parent().find("textarea[name='uriDesc']");
+        var desc = $(input[0]).val();
+        $("#L_content").val(desc);
+        msg.open({
+            type: 1,
+            title: '字段描述',
+            content: $('#desc-hidden-div'),
+            area: ['600px', '400px'],
+            btn: ['确定'],
+            yes: function (index, layero) {
+                var res = $("#L_content").val();
+                $(input[0]).val(res);
+                $('#L_content').val("");
                 msg.close(index)
             }
         });
@@ -690,7 +722,7 @@
     function getHeaderKeyValueJsonArray() {
         var headerKeyNodes = $('input[name=headerKey]')
         var headerValueNodes = $('input[name=headerValue]')
-        var headerDescriptionNodes = $('input[name=headerDescription]')
+        var headerDescriptionNodes = $('textarea[name=headerDescription]')
         var headerConstraintNodes = $('input[name=headerConstraint]')
 
         var array = [];
@@ -711,7 +743,7 @@
         var requestFieldPathNodes = $('input[name=requestFieldPath]')
         var requestFieldValueNodes = $('input[name=requestFieldValue]')
         var requestFieldTypeNodes = $('select[name=requestFieldType]')
-        var requestFieldDescriptionNodes = $('input[name=requestFieldDescription]')
+        var requestFieldDescriptionNodes = $('textarea[name=requestFieldDescription]')
         var requestFieldConstraintNodes = $('input[name=requestFieldConstraint]')
 
 
@@ -736,7 +768,7 @@
     function getResponseBodyKeyValueJsonArray() {
         var responseFieldPathNodes = $('input[name=responseFieldPath]')
         var responseFieldTypeNodes = $('select[name=responseFieldType]')
-        var responseFieldDescriptionNodes = $('input[name=responseFieldDescription]')
+        var responseFieldDescriptionNodes = $('textarea[name=responseFieldDescription]')
         var responseFieldConstraintNodes = $('input[name=responseFieldConstraint]')
 
 
@@ -744,8 +776,8 @@
 
         for (let i = 0; i < responseFieldPathNodes.length; i++) {
             var map = new Map()
-            map["responseFieldPath"] = responseFieldPathNodes[i].value
-            map["responseFieldValue"] = responseFieldDescriptionNodes[i].value
+            map["responseFieldPath"] = responseFieldPathNodes[i].value;
+            map["responseFieldValue"] = responseFieldDescriptionNodes[i].value;
 
             map["responseFieldType"] = responseFieldTypeNodes[i].value;
             map["responseFieldDescription"] = responseFieldDescriptionNodes[i].value
