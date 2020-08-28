@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}"/>
+    <link rel="stylesheet" th:href="@{/admin/css/pearForm.css}"/>
+
+    <style type="text/css">
+        body {
+            background-color: #F2F2F2;
+        }
+
+        .project-item :hover {
+            background: #dadada;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div style="padding: 20px; " class="layui-container">
+    <div class="layui-row">
+        <div class="layui-row layui-col-space20 layui-col-md-offset3">
+            <div class="layui-col-md2">
+                <a th:href="@{/project/view/add}" class="layui-btn">创建RestApiDoc项目</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-row layui-col-space20" id="content">
+    </div>
+</div>
+
+<script th:src="@{/layui/layui.js}"></script>
+<script th:src="@{/admin/js/jquery.js}"></script>
+<script th:src="@{/admin/js/util.js}"></script>
+<script type="text/javascript" th:inline="javascript">
+
+    $.ajax({
+        type: 'GET',
+        dataType: 'JSON',
+        url: '/restdoc/project/list',
+        async: true,
+        success: function (data) {
+            if (data.code === "200") {
+                var result = data['data'];
+                for (var key in result) {
+
+                    var name = result[key].name;
+                    var desc = result[key].desc;
+                    var projectId = result[key].id;
+                    projectId = projectId.toString();
+
+                    console.info(projectId);
+
+                    if (desc == null) desc = "";
+                    var createTime = formatTimestamp(result[key].createTime);
+                    var html = "        <div id='" + projectId + "' class=\"layui-col-md3 project-item\" onclick='clickProject(this)'>\n" +
+                        "            <div class=\"layui-card\">\n" +
+                        "                <div class=\"layui-card-header\">" + name + "</div>\n" +
+                        "                <div class=\"layui-card-body\">\n" +
+                        "                    " + desc + "<br><br>\n" +
+                        "        <label style='margin-left: 90%'> <a href='/restdoc/" + projectId + "/resource/view/list'><i class=\"layui-icon layui-icon-next\" style=\"font-size: 22px; color: #1E9FFF;\"></i></a>  \n</label>        </div>\n" +
+                        "            </div>\n" +
+                        "        </div>";
+
+                    $('#content').append(html)
+                }
+            } else {
+                alert(data.message)
+            }
+        }
+    });
+
+    var lay;
+    layui.use(['element', 'layer'], function () {
+        var element = layui.element;
+        var layer = layui.layer;
+        var $ = layui.jquery;
+        lay = layui.layer;
+    });
+
+    function clickProject(obj) {
+        console.info(obj)
+        var id = obj.id
+        lay.open({
+            title: 'Project Detail',
+            area: ['800px', '500px'],
+            scrollbar: false,
+            type: 2,
+            content: '/restdoc/project/' + id + '/view'
+        });
+    }
+
+</script>
+</body>
+</html>

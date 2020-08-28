@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title>富文本编辑器</title>
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}"/>
+    <link rel="stylesheet" th:href="@{/admin/css/pearForm.css}"/>
+<!--    <link type="text/css" rel="stylesheet" th:href="@{/admin/css/doc-font.css}"/>-->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <style>
+        .common-command {
+            background: black;
+            /*border: 1px solid #ddd;
+            border-left: 3px solid #f36d33;*/
+            color: ghostwhite;
+            page-break-inside: avoid;
+            font-family: Roboto, serif;
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 1.6em;
+            max-width: 100%;
+            overflow: auto;
+            padding: 1em 1.5em;
+            display: block;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body>
+
+
+<input type="hidden" id="taskId" th:value="${taskId}">
+
+
+<pre id="content" class="common-command" style=" color: whitesmoke;font-family: 'Roboto',serif">
+</pre>
+
+
+<script th:src="@{/layui/layui.js}"></script>
+<script th:src="@{/admin/js/jquery.js}"></script>
+<script th:src="@{/admin/js/util.js}"></script>
+<script type="text/javascript" th:inline="javascript">
+
+
+  /*  layui.use('code', function () {
+        layui.code({
+            title: 'Http Task Execute Result'
+            , skin: 'notepad'
+            , encode: true //是否转义html标签。默认不开启
+            , about: false
+        });
+    });*/
+
+
+    var taskId = $('#taskId').val().toString();
+
+    var taskData = null;
+
+    for (let i = 0; i < 100; i++) {
+        var data = getExecuteResult()
+        taskData = data
+        if (data['code'] === "200") {
+            $("#content").append("url : " + data['data']['url'] + '\n')
+            $("#content").append("status code : " + data['data']['status'] + '\n\n')
+            $("#content").append("request header : \n" + formatJson(data['data']['requestHeader']) + '\n\n')
+            $("#content").append("request param : \n" + formatJson(data['data']['content']) + '\n\n')
+            $("#content").append("response header : \n" + formatJson(data['data']['responseHeader']) + '\n\n')
+            $("#content").append("response body : \n" + formatJson(data['data']['body']))
+            break;
+        } else {
+            console.info(data)
+        }
+    }
+
+    function getTaskData() {
+        return taskData;
+    }
+
+    function getExecuteResult() {
+        var result = null;
+
+        $.ajax({
+            type: 'GET',
+            contentType: 'application/json;charset=utf-8',
+            url: '/restdoc/document/httpTask/' + taskId,
+            async: false,
+            success: function (data) {
+                result = data;
+            }
+        });
+
+        return result;
+    }
+
+
+    function formatJson(ugly) {
+        try {
+            // var obj = JSON.parse(ugly);
+            var pretty = JSON.stringify(ugly, undefined, 4);
+            console.info(pretty)
+            return pretty
+        } catch (e) {
+            // layer.msg("JSON字符串错误，请检查")
+            return ugly
+        }
+    }
+
+
+</script>
+</body>
+</html>
