@@ -13,7 +13,7 @@
         }
 
 
-        pre{
+        pre {
             background: #f4f4f4;
             color: #666;
             page-break-inside: avoid;
@@ -46,6 +46,10 @@
             word-wrap: break-word;
         }
 
+        a {
+            text-decoration: underline #dadada;
+        }
+
     </style>
 
 </head>
@@ -66,7 +70,7 @@
                     <th th:text="${document.name}"></th>
                 </tr>
                 <tr>
-                    <th>请求方法</th>
+                    <th>方法</th>
                     <th th:text="${document.method}"></th>
                 </tr>
                 <tr>
@@ -74,11 +78,11 @@
                     <th th:text="${document.url}"></th>
                 </tr>
                 <tr>
-                    <th>所属资源</th>
+                    <th>资源</th>
                     <th th:text="${document.resource}"></th>
                 </tr>
                 <tr>
-                    <th>接口备注</th>
+                    <th>描述</th>
                     <th th:utext="${document.resource}"></th>
                 </tr>
             </table>
