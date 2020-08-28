@@ -51,6 +51,22 @@
 
         <div class="layui-col-md9">
             <form class="layui-form layui-form-pane" action="" id="request_form">
+                <fieldset class="layui-elem-field site-demo-button">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">API名称</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="name" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">所属资源</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="resource" class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
                 <fieldset class="layui-elem-field site-demo-button" style="margin-top: 10px;">
                     <div class="layui-form-item">
                         <div class="layui-input-inline">
@@ -80,7 +96,6 @@
                         </button>
                     </div>
                 </fieldset>
-
                 <div class="layui-collapse">
                     <div class="layui-colla-item">
                         <h2 class="layui-colla-title layui-bg-red">REST路径参数</h2>
@@ -185,7 +200,23 @@
                         </div>
                     </div>
                 </div>
+                <div th:include="docs/add_snippet/urivar :: urivar"></div>
 
+                <div th:include="docs/add_snippet/header :: header"></div>
+
+                <div th:include="docs/add_snippet/content :: content"></div>
+
+                <div th:include="docs/add_snippet/response :: response"></div>
+
+
+                <fieldset class="layui-elem-field site-demo-button">
+                    <legend>API说明</legend>
+                    <div class="layui-form-item layui-form-text">
+                        <div class="layui-input-block">
+                            <textarea placeholder="请输入内容" class="layui-textarea" name="description"></textarea>
+                        </div>
+                    </div>
+                </fieldset>
             </form>
         </div>
 
@@ -211,6 +242,7 @@
 <script th:src="@{/admin/js/doc/response.js}"></script>
 <script th:src="@{/admin/js/doc/urivar.js}"></script>
 <script th:src="@{/admin/js/doc/header.js}"></script>
+<<<<<<< HEAD
 <script th:src="@{/admin/js/marked.min.js}"></script>
 <script type="text/javascript" th:inline="javascript">
 
@@ -475,6 +507,11 @@
 
                     responseBody = executeResult['data']['body'];
 
+                    var executeResult = getExecuteResult(httpTaskId)
+                    globalExecuteResult = executeResult
+
+                    responseBody = executeResult['data']['body']
+
                     if (executeResult['code'] === "200") {
                         $("pre").append("url : " + executeResult['data']['url'] + '\n')
                         $("pre").append("status code : " + executeResult['data']['status'] + '\n\n')
@@ -502,79 +539,80 @@
         function completeExecuteCallback(body) {
             $("#response-fieldset").addClass("layui-show");
             form.render();
-            $.ajax({
-                type: 'POST',
-                dataType: 'JSON',
-                contentType: 'application/json;charset=utf-8',
-                url: 'docs/deProjector',
-                data: body,
-                async: false,
-                success: function (data) {
-                    if (data.code === '200') {
-                        if (data.data.length >= 1) {
-                            clearResponseParamInput();
 
-                            for (let i = 0; i < data.data.length; i++) {
-                                addResponseParamInput();
-                            }
+            function completeExecuteCallback(body) {
+                $.ajax({
+                    type: 'POST',
+                    dataType: 'JSON',
+                    contentType: 'application/json;charset=utf-8',
+                    url: 'docs/deProjector',
+                    data: body,
+                    async: false,
+                    success: function (data) {
+                        if (data.code === '200') {
+                            if (data.data.length >= 1) {
+                                clearResponseParamInput();
 
-                            var all_input_line = $("#response-fieldset").children(".one-response-body-line");
+                                for (let i = 0; i < data.data.length; i++) {
+                                    addResponseParamInput();
+                                }
 
-                            for (let i = 0; i < all_input_line.length; i++) {
-                                let line = all_input_line[i];
-                                $(line).find("input").each(function () {
-                                    if (this.name === 'responseFieldPath') {
-                                        this.value = data.data[i]['path']
-                                    } /*else if (this.name === 'requestFieldValue') {
+                                var all_input_line = $("#response-fieldset").children(".one-response-body-line");
+
+                                for (let i = 0; i < all_input_line.length; i++) {
+                                    let line = all_input_line[i];
+                                    $(line).find("input").each(function () {
+                                        if (this.name === 'responseFieldPath') {
+                                            this.value = data.data[i]['path']
+                                        } /*else if (this.name === 'requestFieldValue') {
                                                 this.value = data.data[i]['value']
                                             }*/
-                                })
+                                    })
 
-                                $($(line).find("select:first-child"))
-                                    .find("option[value=" + data.data[i]['type'] + "]")
-                                    .attr("selected", true);
+                                    $($(line).find("select:first-child"))
+                                        .find("option[value=" + data.data[i]['type'] + "]")
+                                        .attr("selected", true);
+                                }
                             }
+                            // 重新渲染页面
+                            form.render();
+                        } else {
+                            layer.msg('JSON转换失败，错误信息:' + data.message)
                         }
-                        // 重新渲染页面
-                        form.render();
-                    } else {
-                        layer.msg('JSON转换失败，错误信息:' + data.message)
+                    },
+                    error: function (data) {
+                        layer.msg("JSON格式错误")
                     }
-                },
-                error: function (data) {
-                    layer.msg("JSON格式错误")
+                });
+            }
+
+            function getExecuteResult(taskId) {
+                var result = null;
+                $.ajax({
+                    type: 'GET',
+                    contentType: 'application/json;charset=utf-8',
+                    url: '/restdoc/document/httpTask/' + taskId,
+                    async: false,
+                    success: function (data) {
+                        result = data;
+                    }
+                });
+
+                return result;
+            }
+
+            function formatJson(ugly) {
+                try {
+                    // var obj = JSON.parse(ugly);
+                    var pretty = JSON.stringify(ugly, undefined, 4);
+                    console.info(pretty)
+                    return pretty
+                } catch (e) {
+                    // layer.msg("JSON字符串错误，请检查")
+                    return ugly
                 }
-            });
-
-
-        }
-
-        function getExecuteResult(taskId) {
-            var result = null;
-            $.ajax({
-                type: 'GET',
-                contentType: 'application/json;charset=utf-8',
-                url: '/restdoc/document/httpTask/' + taskId,
-                async: false,
-                success: function (data) {
-                    result = data;
-                }
-            });
-
-            return result;
-        }
-
-        function formatJson(ugly) {
-            try {
-                // var obj = JSON.parse(ugly);
-                var pretty = JSON.stringify(ugly, undefined, 4);
-                return pretty
-            } catch (e) {
-                // layer.msg("JSON字符串错误，请检查")
-                return ugly
             }
         }
-
     });
 
     function addUriVarDescBtn(obj) {
@@ -609,6 +647,7 @@
 
     function deleteHeaderFieldLine(obj) {
         console.info(obj.id);
+        console.info(obj.id)
         var parent = obj.parentNode.parentNode.parentNode
         var children = obj.parentNode.parentNode
         parent.removeChild(children)

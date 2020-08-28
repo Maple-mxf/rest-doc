@@ -39,6 +39,10 @@ var oneheaderline = "\n" +
     "                            style=\"margin-left: 10px\"\n" +
     "                            onclick=\"deleteHeaderFieldLine(this)\">\n" +
     "                        <i class=\"layui-icon layui-icon-subtraction\" style=\"font-size: 30px; color: black;\"></i>\n" +
+    "                    <button type=\"button\" class=\"layui-btn layui-btn-danger\" id=\"deleteHeaderBtn\"\n" +
+    "                            style=\"margin-left: 10px\"\n" +
+    "                            onclick=\"deleteHeaderFieldLine(this)\">\n" +
+    "                        <i class=\"layui-icon layui-icon-subtraction\" style=\"font-size: 30px; color: white;\"></i>\n" +
     "                    </button>\n" +
     "                </div>\n" +
     "            </div>\n" +

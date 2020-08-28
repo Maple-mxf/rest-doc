@@ -53,6 +53,9 @@ var oneline = "        <div class=\"layui-form-item one-line multi-request-body\
     "                <button type=\"button\" class=\"layui-btn layui-btn-sm layui-btn-primary\" style=\"margin-left: 10px\"\n" +
     "                        onclick=\"deleteRequestBodyBtn(this)\">\n" +
     "                    <i class=\"layui-icon layui-icon-subtraction\" style=\"font-size: 30px; color: black;\"></i>\n" +
+    "                <button type=\"button\" class=\"layui-btn layui-btn-danger\" style=\"margin-left: 10px\"\n" +
+    "                        onclick=\"deleteRequestBodyBtn(this)\">\n" +
+    "                    <i class=\"layui-icon layui-icon-subtraction\" style=\"font-size: 30px; color: white;\"></i>\n" +
     "                </button>\n" +
     "            </div>\n" +
     "        </div>";
