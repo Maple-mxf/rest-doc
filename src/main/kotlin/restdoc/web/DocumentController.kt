@@ -17,6 +17,7 @@ import restdoc.core.executor.ExecutorDelegate
 import restdoc.core.failure
 import restdoc.core.ok
 import restdoc.model.*
+import restdoc.repository.DocumentRepository
 import restdoc.repository.ProjectRepository
 import restdoc.util.IDUtil
 import restdoc.web.obj.RequestDto
@@ -38,6 +39,9 @@ class DocumentController {
 
     @Autowired
     lateinit var projectRepository: ProjectRepository
+
+    @Autowired
+    lateinit var documentRepository: DocumentRepository
 
     @Autowired
     lateinit var holderKit: HolderKit
@@ -63,48 +67,11 @@ class DocumentController {
 
     @PostMapping("")
     fun create(@RequestBody @Valid requestDto: RequestDto): Result {
-
-        // Handler Url
-        if (!requestDto.url.startsWith("http") &&
-                !requestDto.url.startsWith("https")) {
-            requestDto.url = String.format("%s%s", "http://", requestDto.url)
-        }
-
-        val requestHeaderDescriptor = requestDto.headers
-                .filter { it.headerKey.isNotBlank() }
-                .map {
-                    HeaderFieldDescriptor(
-                            field = it.headerKey,
-                            value = it.headerValue.split(","),
-                            description = it.headerDescription,
-                            optional = it.headerConstraint)
-                }
-
-        val requestBodyDescriptor = requestDto.requestBody
-                .filter { it.requestFieldPath.isNotBlank() }
-                .map {
-                    BodyFieldDescriptor(
-                            path = it.requestFieldPath,
-                            value = it.requestFieldValue,
-                            description = it.requestFieldDescription,
-                            type = FieldType.OBJECT,
-                            optional = it.requestFieldConstraint,
-                            defaultValue = null
-                    )
-                }
-
-        val responseBodyDescriptor = requestDto.responseBody
-                .filter { it.responseFieldPath.isNotBlank() }
-                .map {
-                    BodyFieldDescriptor(
-                            path = it.responseFieldPath,
-                            value = it.responseFieldValue,
-                            description = it.responseFieldDescription,
-                            type = FieldType.OBJECT,
-                            optional = it.responseFieldConstraint,
-                            defaultValue = null
-                    )
-                }
+        requestDto.autocomplete()
+        val requestHeaderDescriptor = requestDto.mapToHeaderDescriptor()
+        val requestBodyDescriptor = requestDto.mapToRequestDescriptor()
+        val responseBodyDescriptor = requestDto.mapToResponseDescriptor()
+        val uriVarDescriptor = requestDto.mapToURIVarDescriptor()
 
         // Save An Api Project Document
         val document = Document(
@@ -117,25 +84,44 @@ class DocumentController {
                 requestBodyDescriptor = requestBodyDescriptor,
                 responseBodyDescriptors = responseBodyDescriptor,
                 method = HttpMethod.valueOf(requestDto.method),
-                uriVariables = null,
-                expectResponseHeaders = null,
-                expectResponseBody = null,
+                uriVariables = uriVarDescriptor,
                 executeResult = requestDto.executeResult)
 
-        mongoTemplate.save(document)
+        documentRepository.save(document)
 
         return ok(document.id)
     }
 
-    @PatchMapping("")
-    fun update(@RequestBody dto: UpdateProjectDto): Result {
-        projectRepository.update(Project(
-                id = dto.id,
-                name = dto.name,
-                createTime = null,
-                projectId = null,
-                desc = dto.desc))
-        return ok()
+    @PutMapping("")
+    fun patch(@RequestBody @Valid requestDto: RequestDto): Result {
+
+        if (requestDto.documentId == null) return failure(Status.INVALID_REQUEST, "缺少ID参数")
+
+        requestDto.autocomplete()
+        val requestHeaderDescriptor = requestDto.mapToHeaderDescriptor()
+        val requestBodyDescriptor = requestDto.mapToRequestDescriptor()
+        val responseBodyDescriptor = requestDto.mapToResponseDescriptor()
+        val uriVarDescriptor = requestDto.mapToURIVarDescriptor()
+
+        // Save An Api Project Document
+        val document = Document(
+                id = requestDto.documentId,
+                name = requestDto.name,
+                projectId = present,
+                resource = requestDto.resource,
+                url = requestDto.url,
+                requestHeaderDescriptor = requestHeaderDescriptor,
+                requestBodyDescriptor = requestBodyDescriptor,
+                responseBodyDescriptors = responseBodyDescriptor,
+                method = HttpMethod.valueOf(requestDto.method),
+                uriVariables = uriVarDescriptor,
+                executeResult = requestDto.executeResult)
+
+        val updateResult = documentRepository.update(document)
+
+        println(updateResult)
+
+        return ok(document.id)
     }
 
 
@@ -150,34 +136,9 @@ class DocumentController {
     @PostMapping("/httpTask/submit")
     fun submitHttpTask(@RequestBody @Valid requestDto: RequestDto): Result {
 
-        // Handler Url
-        if (!requestDto.url.startsWith("http") &&
-                !requestDto.url.startsWith("https")) {
-            requestDto.url = String.format("%s%s", "http://", requestDto.url)
-        }
-
-        val requestHeaderDescriptor = requestDto.headers
-                .filter { it.headerKey.isNotBlank() }
-                .map {
-                    HeaderFieldDescriptor(
-                            field = it.headerKey,
-                            value = it.headerValue.split(","),
-                            description = it.headerDescription,
-                            optional = it.headerConstraint)
-                }
-
-        val requestBodyDescriptor = requestDto.requestBody
-                .filter { it.requestFieldPath.isNotBlank() }
-                .map {
-                    BodyFieldDescriptor(
-                            path = it.requestFieldPath,
-                            value = it.requestFieldValue,
-                            description = it.requestFieldDescription,
-                            type = FieldType.OBJECT,
-                            optional = it.requestFieldConstraint,
-                            defaultValue = null
-                    )
-                }
+        requestDto.autocomplete()
+        val requestHeaderDescriptor = requestDto.mapToHeaderDescriptor()
+        val requestBodyDescriptor = requestDto.mapToRequestDescriptor()
 
         val taskId = IDUtil.id()
 

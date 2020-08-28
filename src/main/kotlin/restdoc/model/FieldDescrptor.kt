@@ -42,8 +42,7 @@ data class BodyFieldDescriptor(
 data class URIVarDescriptor(
         val field: String,
         val value: Any,
-        val description: String?,
-        val type: FieldType = FieldType.OBJECT
+        val description: String?
 )
 
 

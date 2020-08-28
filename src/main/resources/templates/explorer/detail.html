@@ -13,6 +13,21 @@
         }
 
 
+        pre{
+            background: #f4f4f4;
+            color: #666;
+            page-break-inside: avoid;
+            font-family: Roboto, serif;
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 1.6em;
+            max-width: 100%;
+            overflow: auto;
+            padding: 1em 1.5em;
+            display: block;
+            word-wrap: break-word;
+        }
+
 
         .common-code-pre {
             background: #f4f4f4;
@@ -64,7 +79,7 @@
                 </tr>
                 <tr>
                     <th>接口备注</th>
-                    <th th:text="${document.resource}"></th>
+                    <th th:utext="${document.resource}"></th>
                 </tr>
             </table>
         </div>
@@ -98,7 +113,7 @@
                         <td th:text="${item.field}"></td>
                         <td th:text="${item.value}"></td>
                         <td th:text="${item.optional}"></td>
-                        <td th:text="${item.description}"></td>
+                        <td th:utext="${item.description}"></td>
                     </tr>
                 </th:foreach>
                 </tbody>
@@ -136,7 +151,7 @@
                         <td th:text="${item.value}"></td>
                         <td th:text="${item.optional}"></td>
                         <td th:text="${item.defaultValue}"></td>
-                        <td th:text="${item.description}"></td>
+                        <td th:utext="${item.description}"></td>
                     </tr>
                 </th:foreach>
                 </tbody>
@@ -170,7 +185,7 @@
                         <td th:text="${item.path}"></td>
                         <td th:text="${item.type}"></td>
                         <td th:text="${item.defaultValue}"></td>
-                        <td th:text="${item.description}"></td>
+                        <td th:utext="${item.description}"></td>
                     </tr>
                 </th:foreach>
                 </tbody>

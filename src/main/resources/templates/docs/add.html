@@ -50,28 +50,17 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
 </head>
 <body>
+
+
+<input type="hidden" name="documentId" id="documentId"/>
+
+
 <div class="layui-fluid">
 
     <div class="layui-row">
 
-        <div class="layui-col-md7">
+        <div class="layui-col-md8">
             <form class="layui-form layui-form-pane" action="" id="request_form">
-                <fieldset class="layui-elem-field site-demo-button">
-                    <div class="layui-form-item">
-                        <div class="layui-inline">
-                            <label class="layui-form-label">API名称</label>
-                            <div class="layui-input-inline">
-                                <input type="text" name="name" class="layui-input">
-                            </div>
-                        </div>
-                        <div class="layui-inline">
-                            <label class="layui-form-label">所属资源</label>
-                            <div class="layui-input-inline">
-                                <input type="text" name="resource" class="layui-input">
-                            </div>
-                        </div>
-                    </div>
-                </fieldset>
                 <fieldset class="layui-elem-field site-demo-button" style="margin-top: 10px;">
                     <div class="layui-form-item">
                         <div class="layui-input-inline">
@@ -119,6 +108,34 @@
                     </div>
                 </div>
 
+                <div class="layui-collapse group">
+                    <div class="layui-colla-item">
+                        <h2 class="layui-colla-title layui-bg-blue">API基本信息</h2>
+                        <div class="layui-colla-content layui-bg-gray">
+
+                            <div class="layui-form-item">
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">API名称</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="name" class="layui-input">
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">所属资源</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="resource" class="layui-input">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item layui-form-text">
+                                <div class="layui-input-block">
+                                    <textarea placeholder="请输入内容" class="layui-textarea" name="description"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="layui-collapse group">
                     <div class="layui-colla-item">
                         <h2 class="layui-colla-title layui-bg-orange">请求头</h2>
@@ -176,39 +193,10 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="layui-collapse group">
-                    <div class="layui-colla-item">
-                        <h2 class="layui-colla-title layui-bg-blue">API基本信息</h2>
-                        <div class="layui-colla-content layui-bg-gray">
-
-                            <div class="layui-form-item">
-                                <div class="layui-inline">
-                                    <label class="layui-form-label">API名称</label>
-                                    <div class="layui-input-inline">
-                                        <input type="text" name="name" class="layui-input">
-                                    </div>
-                                </div>
-                                <div class="layui-inline">
-                                    <label class="layui-form-label">所属资源</label>
-                                    <div class="layui-input-inline">
-                                        <input type="text" name="resource" class="layui-input">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="layui-form-item layui-form-text">
-                                <div class="layui-input-block">
-                                    <textarea placeholder="请输入内容" class="layui-textarea" name="description"></textarea>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </form>
         </div>
 
-        <div class="layui-col-md5" id="command-div">
+        <div class="layui-col-md4" id="command-div">
                <pre id="test-result" class="common-command" style="height: 700px;">
             </pre>
 
@@ -410,10 +398,21 @@
         form.on('submit(save)', function (data) {
             var index = layer.load(1);
             var map = getFormData(data.field);
-            map['executeResult'] = globalExecuteResult
+            map['executeResult'] = globalExecuteResult;
+
+            var method;
+
+            var did = $("#documentId").val();
+
+            if (did == "") {
+                method = "POST"
+            } else {
+                method = "PUT"
+                map["documentId"] = did;
+            }
 
             $.ajax({
-                type: 'POST',
+                type: method,
                 dataType: 'JSON',
                 contentType: 'application/json;charset=utf-8',
                 url: '/restdoc/document',
@@ -423,6 +422,7 @@
                     if (data['code'] === "200") {
                         if (data['data'] != null) {
                             var id = data['data'];
+                            $('#documentId').val(id);
                             layer.confirm('查看文档详情页面', function (i) {
                                 layer.open({
                                     type: 2,
@@ -443,8 +443,10 @@
                     layer.msg("网络异常")
                 }
             });
-            layer.close(index)
-        })
+            layer.close(index);
+
+            return false;
+        });
 
 
         form.on('submit(execute)', function (data) {
@@ -591,6 +593,106 @@
                 return ugly
             }
         }
+
+        function getFormData(value) {
+            var header = getHeaderKeyValueJsonArray();
+            var requestFields = getRequestBodyKeyValueJsonArray();
+            var responseFields = getResponseBodyKeyValueJsonArray();
+            var uriFields = getUriVarJsonArray();
+
+            var map = new Map();
+
+            map['url'] = value["url"];
+            map['name'] = value['name'];
+            map['description'] = value['description'];
+            map['resource'] = value['resource'];
+            map['method'] = value["method"];
+            map['headers'] = header;
+            map['requestFields'] = requestFields;
+            map['responseFields'] = responseFields;
+            map['uriFields'] = uriFields;
+
+            return map;
+        }
+
+
+        function getHeaderKeyValueJsonArray() {
+            var headerKeyNodes = $('input[name=headerKey]')
+            var headerValueNodes = $('input[name=headerValue]')
+            var headerDescriptionNodes = $('textarea[name=headerDescription]')
+            var headerConstraintNodes = $('input[name=headerConstraint]')
+
+            var array = [];
+
+            for (let i = 0; i < headerKeyNodes.length; i++) {
+                var map = new Map();
+                map["headerKey"] = headerKeyNodes[i].value;
+                map["headerValue"] = headerValueNodes[i].value;
+                map["headerDescription"] = easyeditor.content(headerDescriptionNodes[i].value);
+                map["headerConstraint"] = (headerConstraintNodes[i].value === 'on');
+
+                array[i] = map
+            }
+            return array
+        }
+
+        function getRequestBodyKeyValueJsonArray() {
+            var requestFieldPathNodes = $('input[name=requestFieldPath]')
+            var requestFieldValueNodes = $('input[name=requestFieldValue]')
+            var requestFieldTypeNodes = $('select[name=requestFieldType]')
+            var requestFieldDescriptionNodes = $('textarea[name=requestFieldDescription]')
+            var requestFieldConstraintNodes = $('input[name=requestFieldConstraint]')
+            var array = [];
+
+            for (let i = 0; i < requestFieldPathNodes.length; i++) {
+                var map = new Map();
+                map["requestFieldPath"] = requestFieldPathNodes[i].value
+                map["requestFieldValue"] = requestFieldValueNodes[i].value
+
+                map["requestFieldType"] = requestFieldTypeNodes[i].value;
+                map["requestFieldDescription"] = easyeditor.content(requestFieldDescriptionNodes[i].value);
+                map["requestFieldConstraint"] = (requestFieldConstraintNodes[i].value === 'on');
+
+                array[i] = map
+            }
+            return array
+        }
+
+        function getUriVarJsonArray() {
+            var uriFields = $('input[name=uriField]');
+            var uriValueFields = $('input[name=uriValue]');
+            var uriDescFields = $('textarea[name=uriDesc]');
+            var array = new Array();
+            for (let i = 0; i < uriFields.length; i++) {
+                var map = new Map();
+                map['field'] = uriFields[i].value;
+                map['value'] = uriValueFields[i].value;
+                map['desc'] = easyeditor.content(uriDescFields[i].value);
+                array[i] = map;
+            }
+            return array
+        }
+
+
+        function getResponseBodyKeyValueJsonArray() {
+            var responseFieldPathNodes = $('input[name=responseFieldPath]');
+            var responseFieldTypeNodes = $('select[name=responseFieldType]');
+            var responseFieldDescriptionNodes = $('textarea[name=responseFieldDescription]');
+            var responseFieldConstraintNodes = $('input[name=responseFieldConstraint]');
+            var array = new Array();
+            for (let i = 0; i < responseFieldPathNodes.length; i++) {
+                var map = new Map()
+                map["responseFieldPath"] = responseFieldPathNodes[i].value;
+                map["responseFieldValue"] = responseFieldDescriptionNodes[i].value;
+
+                map["responseFieldType"] = responseFieldTypeNodes[i].value;
+                map["responseFieldDescription"] = easyeditor.content(responseFieldDescriptionNodes[i].value);
+                map["responseFieldConstraint"] = (responseFieldConstraintNodes[i].value === 'on')
+                array[i] = map
+            }
+            return array
+        }
+
     });
 
 
@@ -695,102 +797,6 @@
         var parent = obj.parentNode.parentNode.parentNode
         var children = obj.parentNode.parentNode
         parent.removeChild(children)
-    }
-
-
-    function getFormData(value) {
-
-        var header = getHeaderKeyValueJsonArray()
-        var requestBody = getRequestBodyKeyValueJsonArray()
-        var responseBody = getResponseBodyKeyValueJsonArray()
-
-        var map = new Map()
-
-        var url = value["url"]
-
-        if (!new RegExp("^((http)(s?))(.*)$")) {
-            url = "http://" + url;
-        }
-        map['url'] = url
-        map['name'] = value['name']
-        map['description'] = value['description']
-        map['resource'] = value['resource']
-        map['method'] = value["method"]
-        map['headers'] = header
-        map['requestBody'] = requestBody
-        map['responseBody'] = responseBody
-
-        return map;
-    }
-
-
-    function getHeaderKeyValueJsonArray() {
-        var headerKeyNodes = $('input[name=headerKey]')
-        var headerValueNodes = $('input[name=headerValue]')
-        var headerDescriptionNodes = $('textarea[name=headerDescription]')
-        var headerConstraintNodes = $('input[name=headerConstraint]')
-
-        var array = [];
-
-        for (let i = 0; i < headerKeyNodes.length; i++) {
-            var map = new Map();
-            map["headerKey"] = headerKeyNodes[i].value;
-            map["headerValue"] = headerValueNodes[i].value;
-            map["headerDescription"] = headerDescriptionNodes[i].value;
-            map["headerConstraint"] = (headerConstraintNodes[i].value === 'on')
-
-            array[i] = map
-        }
-        return array
-    }
-
-    function getRequestBodyKeyValueJsonArray() {
-        var requestFieldPathNodes = $('input[name=requestFieldPath]')
-        var requestFieldValueNodes = $('input[name=requestFieldValue]')
-        var requestFieldTypeNodes = $('select[name=requestFieldType]')
-        var requestFieldDescriptionNodes = $('textarea[name=requestFieldDescription]')
-        var requestFieldConstraintNodes = $('input[name=requestFieldConstraint]')
-
-
-        var array = [];
-
-        console.info(requestFieldTypeNodes.length);
-
-        for (let i = 0; i < requestFieldPathNodes.length; i++) {
-            var map = new Map();
-            map["requestFieldPath"] = requestFieldPathNodes[i].value
-            map["requestFieldValue"] = requestFieldValueNodes[i].value
-
-            map["requestFieldType"] = requestFieldTypeNodes[i].value;
-            map["requestFieldDescription"] = requestFieldDescriptionNodes[i].value;
-            map["requestFieldConstraint"] = (requestFieldConstraintNodes[i].value === 'on');
-
-            array[i] = map
-        }
-        return array
-    }
-
-    function getResponseBodyKeyValueJsonArray() {
-        var responseFieldPathNodes = $('input[name=responseFieldPath]')
-        var responseFieldTypeNodes = $('select[name=responseFieldType]')
-        var responseFieldDescriptionNodes = $('textarea[name=responseFieldDescription]')
-        var responseFieldConstraintNodes = $('input[name=responseFieldConstraint]')
-
-
-        var array = new Array()
-
-        for (let i = 0; i < responseFieldPathNodes.length; i++) {
-            var map = new Map()
-            map["responseFieldPath"] = responseFieldPathNodes[i].value;
-            map["responseFieldValue"] = responseFieldDescriptionNodes[i].value;
-
-            map["responseFieldType"] = responseFieldTypeNodes[i].value;
-            map["responseFieldDescription"] = responseFieldDescriptionNodes[i].value
-            map["responseFieldConstraint"] = (responseFieldConstraintNodes[i].value === 'on')
-
-            array[i] = map
-        }
-        return array
     }
 
 </script>

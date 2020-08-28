@@ -37,13 +37,11 @@ data class Document(
         var name: String?,
         var resource: String,
         val url: String,
-        public var requestHeaderDescriptor: List<HeaderFieldDescriptor>?,
+        var requestHeaderDescriptor: List<HeaderFieldDescriptor>?,
         var requestBodyDescriptor: List<BodyFieldDescriptor>?,
         var responseBodyDescriptors: List<BodyFieldDescriptor>?,
         val method: HttpMethod = HttpMethod.GET,
         val uriVariables: List<URIVarDescriptor>?,
-        val expectResponseHeaders: Map<String, Any>?,
-        val expectResponseBody: Map<String, Any>?,
         val executeResult: Map<String, Any?>? = null
 )
 
