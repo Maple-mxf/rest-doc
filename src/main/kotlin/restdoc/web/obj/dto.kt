@@ -4,7 +4,6 @@ import restdoc.model.BodyFieldDescriptor
 import restdoc.model.FieldType
 import restdoc.model.HeaderFieldDescriptor
 import restdoc.model.URIVarDescriptor
-import javax.validation.constraints.Pattern
 
 data class CreateProjectDto(val name: String, val desc: String?)
 
@@ -125,4 +124,10 @@ data class ResponseFieldDto(
         val responseFieldType: String,
         val responseFieldDescription: String,
         val responseFieldConstraint: Boolean
+)
+
+data class CreateResourceDto(
+        val name: String,
+        val tag: String,
+        var pid: String
 )

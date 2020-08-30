@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title>创建WIKI</title>
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}"/>
+    <link rel="stylesheet" th:href="@{/admin/css/pearForm.css}"/>
+    <link rel="stylesheet" th:href="@{/admin/css/easyeditor.css}"/>
+    <link rel="stylesheet" th:href="@{/admin/css/fangge-style.css}"/>
+    <link rel="stylesheet" th:href="@{/admin/css/doc-common.css}"/>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            margin: 10px;
+            background-color: whitesmoke;
+            font-family: 'Roboto', sans-serif;
+            font-size: 14px;
+        }
+
+
+    </style>
+</head>
+<body>
+
+<div th:replace="nav::nav"></div>
+<div id="sourceTreeDiv" class="layui-bg-gray" style="display: none">
+</div>
+<div class="layui-fluid layui-bg-gray">
+    <input type="hidden" th:value="${projectId}">
+
+    <div class="layui-row" style="margin-top: 5px">
+        <form class="layui-form layui-form-pane" action="">
+            <input type="hidden" id="pid" value="root">
+            <div class="layui-form-item" style="margin-left: 70%">
+                <div class="layui-inline">
+                    <label class="layui-form-label">目录</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="tableContent" name="tableContent" placeholder="请选择目录"
+                               class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <button class="layui-btn layui-btn-primary" lay-submit lay-filter="save">
+                        保存文档
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="layui-row">
+        <div class="layui-col-md5 detail-body layui-text easyeditor-content">
+            <fieldset class="layui-elem-field layui-field-title">
+                <legend>内容预览区</legend>
+            </fieldset>
+
+            <div id="previewContent" style="font-family: Roboto,serif">
+            </div>
+        </div>
+        <div class="layui-col-md7">
+            <!-- Markdown编辑器元素 -->
+            <textarea id="L_content" name="content" style="overflow-x:visible;overflow-y:visible;height: 800px" required
+                      lay-verify="required" placeholder="请输入字段备注"
+                      class="layui-textarea editor"></textarea>
+        </div>
+    </div>
+</div>
+<script th:src="@{/layui/layui.js}"></script>
+<script th:src="@{/admin/js/jquery.js}"></script>
+<script th:src="@{/admin/js/marked.min.js}"></script>
+
+<script>
+
+
+    layui.config({
+        base: '/restdoc/layui/lay/extends/'
+    }).extend({
+        easyeditor: 'easyeditor'
+    }).use(['easyeditor', 'jquery',
+        'tree', 'layer'], function () {
+        var $ = layui.jquery;
+        var easyeditor = layui.easyeditor;
+        var layer = layui.layer;
+        var tree = layui.tree;
+
+
+        easyeditor.init({
+            elem: '.editor',
+            onchangeCallback: [function () {
+                var html = easyeditor.content($("#L_content").val());
+                $('#previewContent').html(html);
+            }]
+        });
+        $("#L_content").on("change keyup paste input selectionchange propertychange", function () {
+            var html = easyeditor.content($("#L_content").val());
+            $('#previewContent').html(html);
+        });
+
+
+        var projectId = $("#projectId").val();
+
+        $.ajax({
+            type: 'GET',
+            url: '/restdoc/' + projectId + '/resource/tree',
+            async: false,
+            success: function (data) {
+                if (data['code'] === "200") {
+                    treeData = data['data'];
+                } else {
+                    layer.msg(data['message']);
+                }
+            },
+            error: function () {
+                layer.msg("网络异常")
+            }
+        });
+
+        tree.render({
+            elem: '#sourceTreeDiv'
+            , data: treeData
+            , id: 'id'
+            , showCheckbox: true
+            , oncheck: function (obj) {
+                console.log(obj.data.id);
+                checkData = obj.data.id;
+                $('#pid').val(obj.data.id);
+                $("#parent").val(obj.data.title);
+            }
+        });
+        tree.setChecked('id', "root");
+        var checkData = tree.getChecked('id');
+
+        $('#tableContent').click(function () {
+            layer.open({
+                type: 1,
+                title: '选择目录',
+                content: $('#sourceTreeDiv'),
+                area: ['300px', '400px'],
+                btn: ['确定', '取消'],
+                yes: function (index, layero) {
+                    layer.close(index)
+                }
+            });
+        });
+
+    });
+</script>
+</body>
+</html>

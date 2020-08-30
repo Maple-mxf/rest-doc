@@ -8,6 +8,9 @@ import restdoc.model.Menu
 @Controller
 class ConsoleViewController {
 
+    @GetMapping("/index1")
+    fun index1(): String = "index1"
+
     @GetMapping("")
     fun index(): String = "index"
 

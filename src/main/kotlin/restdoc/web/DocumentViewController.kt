@@ -39,4 +39,10 @@ class DocumentViewController {
     fun desc(): String {
         return "docs/desc"
     }
+
+    @GetMapping("/{projectId}/document/view/wiki/add")
+    fun createWiki(@PathVariable projectId: String, model: Model): String {
+        model.set("projectId", projectId)
+        return "docs/addWiki"
+    }
 }

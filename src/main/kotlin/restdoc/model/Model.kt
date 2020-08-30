@@ -2,6 +2,7 @@ package restdoc.model
 
 import com.fasterxml.jackson.databind.JsonNode
 import org.springframework.data.annotation.Id
+import org.springframework.data.mongodb.core.index.HashIndexed
 import org.springframework.data.mongodb.core.mapping.Document
 import org.springframework.http.HttpMethod
 
@@ -10,9 +11,26 @@ data class ProjectConfig(
         @Id var id: String?,
         val projectId: String,
         val testURIPrefix: String
-);
+)
+
+enum class ResourceType {
+    API,
+    TEXT_DOC
+}
 
 
+data class Resource(@Id var id: String?,
+                    var tag: String?,
+                    var name: String?,
+        // 父ID
+                    var pid: String?,
+                    @HashIndexed
+                    var projectId: String?,
+                    var createTime: Long?,
+                    var createBy: String?
+)
+
+@Deprecated(message = "")
 @Document(collection = "restdoc_project")
 data class Project(
         @Id val id: String,

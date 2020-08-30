@@ -14,7 +14,7 @@
             margin: 10px;
             background-color: whitesmoke;
             font-family: 'Roboto', sans-serif;
-            font-size: 15px;
+            font-size: 14px;
         }
 
         .common-command {
@@ -35,29 +35,23 @@
             height: 100%;
             border-top: 3px solid #ff7043;
         }
-
-
         .group {
             margin-top: 10px;
         }
-
-        #test-result {
-            display: none;
-        }
-
     </style>
 
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
 </head>
 <body>
-
-
 <input type="hidden" name="documentId" id="documentId"/>
-
-
 <div class="layui-fluid">
 
     <div class="layui-row">
+
+        <div class="layui-col-md4" id="command-div">
+               <pre id="test-result" class="common-command" style="height: 700px;">
+            </pre>
+        </div>
 
         <div class="layui-col-md8">
             <form class="layui-form layui-form-pane" action="" id="request_form">
@@ -199,11 +193,6 @@
             </form>
         </div>
 
-        <div class="layui-col-md4" id="command-div">
-               <pre id="test-result" class="common-command" style="height: 700px;">
-            </pre>
-
-        </div>
     </div>
 
 </div>
@@ -456,7 +445,7 @@
 
             var index = layer.load(1);
 
-            $("#test-result").slideDown();
+            // $("#test-result").slideDown();
 
             var map = getFormData(data.field);
 
