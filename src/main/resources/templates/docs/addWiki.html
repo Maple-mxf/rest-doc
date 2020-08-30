@@ -10,6 +10,8 @@
     <link rel="stylesheet" th:href="@{/admin/css/easyeditor.css}"/>
     <link rel="stylesheet" th:href="@{/admin/css/fangge-style.css}"/>
     <link rel="stylesheet" th:href="@{/admin/css/doc-common.css}"/>
+    <link rel="stylesheet" th:href="@{/admin/css/pear-tree/dtree.css}"/>
+
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
 
     <style>
@@ -20,6 +22,10 @@
             font-size: 14px;
         }
 
+        cite {
+            font-family: 'Roboto', sans-serif;
+            font-size: 14px;
+        }
 
     </style>
 </head>
@@ -29,7 +35,7 @@
 <div id="sourceTreeDiv" class="layui-bg-gray" style="display: none">
 </div>
 <div class="layui-fluid layui-bg-gray">
-    <input type="hidden" th:value="${projectId}">
+    <input id="projectId" type="hidden" th:value="${projectId}">
 
     <div class="layui-row" style="margin-top: 5px">
         <form class="layui-form layui-form-pane" action="">
@@ -52,7 +58,7 @@
     </div>
 
     <div class="layui-row">
-        <div class="layui-col-md5 detail-body layui-text easyeditor-content">
+        <div class="layui-col-md5 detail-body layui-text easyeditor-content" >
             <fieldset class="layui-elem-field layui-field-title">
                 <legend>内容预览区</legend>
             </fieldset>
@@ -80,11 +86,12 @@
     }).extend({
         easyeditor: 'easyeditor'
     }).use(['easyeditor', 'jquery',
-        'tree', 'layer'], function () {
+        'tree', 'layer', 'dtree'], function () {
         var $ = layui.jquery;
         var easyeditor = layui.easyeditor;
         var layer = layui.layer;
         var tree = layui.tree;
+        var dtree = layui.dtree;
 
 
         easyeditor.init({
@@ -118,11 +125,11 @@
             }
         });
 
-        tree.render({
+        dtree.render({
             elem: '#sourceTreeDiv'
             , data: treeData
             , id: 'id'
-            , showCheckbox: true
+            , icon: ["0"]
             , oncheck: function (obj) {
                 console.log(obj.data.id);
                 checkData = obj.data.id;
@@ -130,8 +137,8 @@
                 $("#parent").val(obj.data.title);
             }
         });
-        tree.setChecked('id', "root");
-        var checkData = tree.getChecked('id');
+        // tree.setChecked('id', "root");
+        // var checkData = tree.getChecked('id');
 
         $('#tableContent').click(function () {
             layer.open({
@@ -144,6 +151,14 @@
                     layer.close(index)
                 }
             });
+        });
+
+
+        dtree.on("node('sourceTreeDiv')" ,function(obj){
+            console.log(obj.param); // 点击当前节点传递的参数
+            console.log(obj.dom); // 当前节点的jquery对象
+            console.log(obj.childParams); // 当前节点的所有子节点参数
+            console.log(obj.parentParam); // 当前节点的父节点参数
         });
 
     });
