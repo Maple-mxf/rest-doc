@@ -17,20 +17,31 @@ pre {
 
 table{
     font-family: 'Roboto', sans-serif;
-    font-size: 14px;
+    font-size: 15px;
 }
 
 ul{
     font-family: 'Roboto', sans-serif;
-    font-size: 14px;
+    font-size: 15px;
 }
 
 ol{
     font-family: 'Roboto', sans-serif;
-    font-size: 14px;
+    font-size: 15px;
 }
 
 p{
     font-family: 'Roboto', sans-serif;
-    font-size: 14px;
+    font-size: 15px;
+}
+
+pre{
+    font-family: 'Roboto', sans-serif;
+    font-size: 15px;
+}
+
+
+textarea{
+    font-family: 'Roboto', sans-serif;
+    font-size: 15px;
 }

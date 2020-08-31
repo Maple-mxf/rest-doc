@@ -127,11 +127,11 @@ layui.define(['jquery', 'layer', 'form', 'element', 'upload', 'code', 'face'], f
                                     if (!field.image) return image.focus();
                                     layui.focusInsert(editor[0], '![图片加载失败](' + field.image + ')\n');
 
-									if (options.onchangeCallback != null && options.onchangeCallback.length > 0) {
-										for (let i = 0; i < options.onchangeCallback.length; i++) {
-											options.onchangeCallback[i]();
-										}
-									}
+                                    if (options.onchangeCallback != null && options.onchangeCallback.length > 0) {
+                                        for (let i = 0; i < options.onchangeCallback.length; i++) {
+                                            options.onchangeCallback[i]();
+                                        }
+                                    }
 
                                     layer.close(index);
                                 });
@@ -157,11 +157,11 @@ layui.define(['jquery', 'layer', 'form', 'element', 'upload', 'code', 'face'], f
                             }
                             layui.focusInsert(editor[0], ' [' + val + '](' + val + ')');
 
-							if (options.onchangeCallback != null && options.onchangeCallback.length > 0) {
-								for (let i = 0; i < options.onchangeCallback.length; i++) {
-									options.onchangeCallback[i]();
-								}
-							}
+                            if (options.onchangeCallback != null && options.onchangeCallback.length > 0) {
+                                for (let i = 0; i < options.onchangeCallback.length; i++) {
+                                    options.onchangeCallback[i]();
+                                }
+                            }
 
                             layer.close(index);
                         });
@@ -177,11 +177,11 @@ layui.define(['jquery', 'layer', 'form', 'element', 'upload', 'code', 'face'], f
                         }, function (val, index, elem) {
                             layui.focusInsert(editor[0], '\n~~~\n' + val + '\n~~~\n');
 
-							if (options.onchangeCallback != null && options.onchangeCallback.length > 0) {
-								for (let i = 0; i < options.onchangeCallback.length; i++) {
-									options.onchangeCallback[i]();
-								}
-							}
+                            if (options.onchangeCallback != null && options.onchangeCallback.length > 0) {
+                                for (let i = 0; i < options.onchangeCallback.length; i++) {
+                                    options.onchangeCallback[i]();
+                                }
+                            }
 
                             layer.close(index);
                         });
@@ -197,11 +197,11 @@ layui.define(['jquery', 'layer', 'form', 'element', 'upload', 'code', 'face'], f
                         }, function (val, index, elem) {
                             layui.focusInsert(editor[0], '> ' + val + '\n');
 
-							if (options.onchangeCallback != null && options.onchangeCallback.length > 0) {
-								for (let i = 0; i < options.onchangeCallback.length; i++) {
-									options.onchangeCallback[i]();
-								}
-							}
+                            if (options.onchangeCallback != null && options.onchangeCallback.length > 0) {
+                                for (let i = 0; i < options.onchangeCallback.length; i++) {
+                                    options.onchangeCallback[i]();
+                                }
+                            }
 
                             layer.close(index);
                         });
@@ -209,41 +209,41 @@ layui.define(['jquery', 'layer', 'form', 'element', 'upload', 'code', 'face'], f
                     hr: function (editor) { //插入水平分割线
                         layui.focusInsert(editor[0], '-----\n');
 
-						if (options.onchangeCallback != null && options.onchangeCallback.length > 0) {
-							for (let i = 0; i < options.onchangeCallback.length; i++) {
-								options.onchangeCallback[i]();
-							}
-						}
+                        if (options.onchangeCallback != null && options.onchangeCallback.length > 0) {
+                            for (let i = 0; i < options.onchangeCallback.length; i++) {
+                                options.onchangeCallback[i]();
+                            }
+                        }
 
                     },
                     ul: function (editor) { //插入无序列表
                         layui.focusInsert(editor[0], '\n-  \n-  \n-  \n');
 
-						if (options.onchangeCallback != null && options.onchangeCallback.length > 0) {
-							for (let i = 0; i < options.onchangeCallback.length; i++) {
-								options.onchangeCallback[i]();
-							}
-						}
+                        if (options.onchangeCallback != null && options.onchangeCallback.length > 0) {
+                            for (let i = 0; i < options.onchangeCallback.length; i++) {
+                                options.onchangeCallback[i]();
+                            }
+                        }
 
                     },
                     ol: function (editor) { //插入有序列表
                         layui.focusInsert(editor[0], '\n1. \n2. \n3. \n');
 
-						if (options.onchangeCallback != null && options.onchangeCallback.length > 0) {
-							for (let i = 0; i < options.onchangeCallback.length; i++) {
-								options.onchangeCallback[i]();
-							}
-						}
+                        if (options.onchangeCallback != null && options.onchangeCallback.length > 0) {
+                            for (let i = 0; i < options.onchangeCallback.length; i++) {
+                                options.onchangeCallback[i]();
+                            }
+                        }
 
                     },
                     table: function (editor) {
-                        layui.focusInsert(editor[0], '\n表头|表头|表头\n:---:|:--:|:---:\n内容|内容|内容 \n');
+                        layui.focusInsert(editor[0], '\n表头|表头|表头\n:---:|:--:|:---:\n内容|内容|内容\n');
 
-						if (options.onchangeCallback != null && options.onchangeCallback.length > 0) {
-							for (let i = 0; i < options.onchangeCallback.length; i++) {
-								options.onchangeCallback[i]();
-							}
-						}
+                        if (options.onchangeCallback != null && options.onchangeCallback.length > 0) {
+                            for (let i = 0; i < options.onchangeCallback.length; i++) {
+                                options.onchangeCallback[i]();
+                            }
+                        }
                     },
                     fullScreen: function (editor, span) { //全屏
                         $(window).resize(function () { //当浏览器大小变化时
@@ -316,10 +316,10 @@ layui.define(['jquery', 'layer', 'form', 'element', 'upload', 'code', 'face'], f
                             isOutAnim: false,
                             content: '<div class="detail-body layui-text easyeditor-content" style="margin:20px;">' + getContent() + '</div>',
                             success: function (layero) {
-                                easyeditor.codeContent({elem: layero.find('pre')});
+                                // easyeditor.codeContent({elem: layero.find('pre')});
                                 editor.on('keyup', function (val) {
                                     layero.find('.detail-body').html(getContent());
-                                    easyeditor.codeContent({elem: layero.find('pre')});
+                                    // easyeditor.codeContent({elem: layero.find('pre')});
                                 });
                                 mod.yulan.isOpen = true;
                                 othis.addClass('layui-this');
@@ -365,15 +365,16 @@ layui.define(['jquery', 'layer', 'form', 'element', 'upload', 'code', 'face'], f
                 title: 'code',
                 about: false,
                 encode: true
-            }
+            };
             if (options.codeSkin === 'notepad') {
                 params.skin = 'notepad';
             }
             layui.code(params);
         },
         content: function (content) {
-            content = marked(content.replace(/</g, '&lt;')//转义 < 防止部分xss
-                .replace(/  \n/g, "<br>")) //强制换行
+            content = marked(
+                content
+                    .replace(/  \n/g, "<br>")) //强制换行
                 .replace(/<code>|<\/code>/g, "") //去除代码块内侧的code标签
                 .replace(/<a/g, "<a target='blank' rel='nofollow'") //转义超链接
                 .replace(/<table/g, "<table class='layui-table' ") //表格样式

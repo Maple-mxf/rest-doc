@@ -20,7 +20,7 @@
     </style>
 </head>
 <body>
-
+<div th:replace="nav::nav"></div>
 
 <input type="hidden" id="projectId" th:value="${projectId}">
 
@@ -33,7 +33,9 @@
             <button class="layui-btn layui-btn-primary"
                     id="createApiDocument">创建REST doc
             </button>
-            <a th:href="/restdoc/${projectId}/document/view/wiki/add" class="layui-btn layui-btn-primary" target="_blank">创建WIKI</a>
+            <!--            <a th:href="/restdoc/${projectId}/document/view/wiki/add" class="layui-btn layui-btn-primary" target="_blank">创建WIKI</a>-->
+            <a th:href="@{'/'+${projectId}+'/document/view/wiki/add'}" class="layui-btn layui-btn-primary"
+               target="_blank">创建WIKI</a>
         </div>
 
         <fieldset class="layui-elem-field site-demo-button" style="margin-top: 10px;">

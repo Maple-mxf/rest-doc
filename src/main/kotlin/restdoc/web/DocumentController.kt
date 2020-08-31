@@ -16,12 +16,15 @@ import restdoc.core.Status
 import restdoc.core.executor.ExecutorDelegate
 import restdoc.core.failure
 import restdoc.core.ok
-import restdoc.model.*
+import restdoc.model.DocType
+import restdoc.model.Document
+import restdoc.model.ExecuteResult
+import restdoc.model.Project
 import restdoc.repository.DocumentRepository
 import restdoc.repository.ProjectRepository
 import restdoc.util.IDUtil
+import restdoc.web.obj.CreateUpdateWikiDto
 import restdoc.web.obj.RequestDto
-import restdoc.web.obj.UpdateProjectDto
 import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.validation.Valid
@@ -173,4 +176,36 @@ class DocumentController {
         executeResult.responseHeader = responseHeader
         return ok(executeResult)
     }
+
+    @PostMapping("/wiki")
+    fun createWikiDocument(@RequestBody dto: CreateUpdateWikiDto): Result {
+        var save = false;
+        if (dto.id == null || dto.id!!.isEmpty()) {
+            save = true
+            dto.id = IDUtil.id()
+        }
+
+        val document = Document(
+                id = dto.id,
+                projectId = dto.projectId,
+                name = dto.name,
+                resource = dto.resource,
+                url = "",
+                requestHeaderDescriptor = null,
+                requestBodyDescriptor = null,
+                responseBodyDescriptors = null,
+                uriVariables = null,
+                content = dto.content,
+                docType = DocType.WIKI
+        )
+
+        if (save) {
+            documentRepository.save(document)
+        } else {
+            documentRepository.update(document);
+        }
+
+        return ok(document.id)
+    }
+
 }

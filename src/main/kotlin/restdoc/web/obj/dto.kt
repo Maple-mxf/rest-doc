@@ -4,6 +4,7 @@ import restdoc.model.BodyFieldDescriptor
 import restdoc.model.FieldType
 import restdoc.model.HeaderFieldDescriptor
 import restdoc.model.URIVarDescriptor
+import javax.validation.constraints.NotBlank
 
 data class CreateProjectDto(val name: String, val desc: String?)
 
@@ -130,4 +131,17 @@ data class CreateResourceDto(
         val name: String,
         val tag: String,
         var pid: String
+)
+
+data class CreateUpdateWikiDto(
+        var id: String?,
+        @NotBlank
+        val projectId: String,
+        @NotBlank
+        val content: String,
+        @NotBlank
+        val resource: String,
+        @NotBlank
+        val name: String,
+        val tableContent: Any
 )

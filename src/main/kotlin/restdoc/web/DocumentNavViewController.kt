@@ -13,5 +13,4 @@ class DocumentNavViewController {
         model.addAttribute("projectId", projectId)
         return "explorer/nav"
     }
-
 }

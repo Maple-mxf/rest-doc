@@ -13,9 +13,9 @@ data class ProjectConfig(
         val testURIPrefix: String
 )
 
-enum class ResourceType {
+enum class DocType {
     API,
-    TEXT_DOC
+    WIKI
 }
 
 
@@ -60,7 +60,9 @@ data class Document(
         var responseBodyDescriptors: List<BodyFieldDescriptor>?,
         val method: HttpMethod = HttpMethod.GET,
         val uriVariables: List<URIVarDescriptor>?,
-        val executeResult: Map<String, Any?>? = null
+        val executeResult: Map<String, Any?>? = null,
+        val content: String? = null,
+        val docType: DocType = DocType.API
 )
 
 
