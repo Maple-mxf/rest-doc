@@ -1,5 +1,6 @@
 package restdoc.web
 
+import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Sort.Order.desc
@@ -23,6 +24,7 @@ import restdoc.model.Project
 import restdoc.repository.DocumentRepository
 import restdoc.repository.ProjectRepository
 import restdoc.util.IDUtil
+import restdoc.util.JsonDeProjector
 import restdoc.web.obj.CreateUpdateWikiDto
 import restdoc.web.obj.RequestDto
 import java.util.*
@@ -80,7 +82,7 @@ class DocumentController {
         val document = Document(
                 id = IDUtil.id(),
                 name = requestDto.name,
-                projectId = present,
+                projectId = requestDto.projectId,
                 resource = requestDto.resource,
                 url = requestDto.url,
                 requestHeaderDescriptor = requestHeaderDescriptor,
@@ -133,8 +135,10 @@ class DocumentController {
         return ok()
     }
 
-    private val present: String = "Default"
+    @PostMapping("/deProject")
+    fun deProjector(@RequestBody tree: JsonNode): Result = ok(JsonDeProjector(tree).deProject())
 
+    private val present: String = "Default"
 
     @PostMapping("/httpTask/submit")
     fun submitHttpTask(@RequestBody @Valid requestDto: RequestDto): Result {

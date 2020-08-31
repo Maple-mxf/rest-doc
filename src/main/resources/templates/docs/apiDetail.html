@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--Import materialize.css-->
+
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}"/>
+    <link rel="stylesheet" th:href="@{/admin/css/pearForm.css}"/>
+    <link rel="stylesheet" th:href="@{/admin/css/easyeditor.css}"/>
+    <link rel="stylesheet" th:href="@{/admin/css/fangge-style.css}"/>
+    <link rel="stylesheet" th:href="@{/admin/css/doc-common.css}"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/admin/css/doc-font.css}"/>
+
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="row">
+        <h3 class="header">收件箱API</h3>
+    </div>
+
+    <div class="row">
+        <table class="highlight" style="font-size: 15px">
+            <thead>
+            <tr>
+                <th>请求头参数</th>
+                <th>示例值</th>
+                <th>是否可选</th>
+                <th>参数说明</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <th:foreach th:each="item :${apiDocument.requestHeaderDescriptor}">
+                <tr>
+                    <td th:text="${item.field}"></td>
+                    <td th:text="${item.value}"></td>
+                    <td th:text="${item.optional}"></td>
+                    <td th:text="${item.description}"></td>
+                </tr>
+            </th:foreach>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="row">
+        <table class="highlight" style="font-size: 15px">
+            <thead>
+            <tr>
+                <th>请求参数path</th>
+                <th>参数类型</th>
+                <th>示例值</th>
+                <th>是否可选</th>
+                <th>默认值</th>
+                <th>参数说明</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            <th:foreach th:each="field :${apiDocument.requestBodyDescriptor}">
+                <tr>
+                    <td th:text="${field.path}"></td>
+                    <td th:text="${field.type}"></td>
+                    <td th:text="${field.value}"></td>
+                    <td th:text="${field.optional}"></td>
+                    <td th:text="${field.defaultValue}"></td>
+                    <td th:text="${field.description}"></td>
+                </tr>
+            </th:foreach>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+</body>
+</html>

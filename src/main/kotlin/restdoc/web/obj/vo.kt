@@ -20,7 +20,7 @@ fun findChild(parentNode: NavNode, navNodes: List<NavNode>) {
 }
 
 enum class NodeType {
-    RESOURCE, DOC
+    RESOURCE, WIKI, API
 }
 
 data class NavNode(var id: String,
@@ -32,6 +32,6 @@ data class NavNode(var id: String,
                    var spread: Boolean = true,
                    var checked: Boolean = false,
                    var disabled: Boolean = false,
-                   val type: NodeType = NodeType.RESOURCE
+                   var type: NodeType = NodeType.RESOURCE
 
 )

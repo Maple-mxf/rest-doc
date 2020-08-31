@@ -6,6 +6,7 @@ import org.springframework.data.mongodb.core.query.Query
 import org.springframework.web.bind.annotation.*
 import restdoc.core.Result
 import restdoc.core.ok
+import restdoc.model.DocType
 import restdoc.model.Resource
 import restdoc.repository.DocumentRepository
 import restdoc.repository.ResourceRepository
@@ -37,9 +38,8 @@ class ResourceController {
         return ok()
     }
 
-
     @GetMapping("/{projectId}/resource/tree")
-    fun getTree(@PathVariable projectId: String): Result {
+    fun getTree(@PathVariable projectId: String, @RequestParam(required = false, defaultValue = "false") onlyResource: Boolean): Result {
         val resources = resourceRepository.list(Query(Criteria("projectId").`is`(projectId)))
 
         val navNodes = resources.map {
@@ -50,6 +50,10 @@ class ResourceController {
                     pid = it.pid!!)
         }
         findChild(ROOT_NAV, navNodes)
+
+        if (onlyResource) {
+            return ok(mutableListOf(ROOT_NAV));
+        }
 
         val allNode = mutableListOf<NavNode>()
         allNode.add(ROOT_NAV)
@@ -63,7 +67,7 @@ class ResourceController {
 
             val childrenDocNode: MutableList<NavNode> = docs.filter { navNode.id.equals(it.resource) }
                     .map {
-                        NavNode(
+                        val node = NavNode(
                                 id = it.id!!,
                                 title = it.name!!,
                                 field = "",
@@ -71,9 +75,14 @@ class ResourceController {
                                 href = null,
                                 pid = navNode.id,
                                 spread = true,
-                                checked = false,
-                                type = NodeType.DOC
-                        )
+                                checked = false)
+
+                        if (DocType.API == it.docType) {
+                            node.type = NodeType.API
+                        } else {
+                            node.type = NodeType.WIKI
+                        }
+                        node
                     }.toMutableList()
 
             if (navNode.children != null) {

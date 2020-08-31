@@ -35,11 +35,8 @@
 <div id="sourceTreeDiv" class="layui-bg-gray" style="display: none">
 </div>
 <div class="layui-fluid layui-bg-gray">
-
-
     <div class="layui-row" style="margin-top: 5px">
         <form class="layui-form layui-form-pane" action="">
-
             <input type="hidden" id="resource" name="resource" value="root">
             <input id="projectId" name="projectId" type="hidden" th:value="${projectId}">
             <input id="id" type="hidden" name="id">
@@ -129,7 +126,7 @@
 
         $.ajax({
             type: 'GET',
-            url: '/restdoc/' + projectId + '/resource/tree',
+            url: '/restdoc/' + projectId + '/resource/tree?onlyResource=true',
             async: false,
             success: function (data) {
                 if (data['code'] === "200") {
@@ -171,7 +168,7 @@
         dtree.on("node('sourceTreeDiv')", function (obj) {
             console.log(obj.param); // 点击当前节点传递的参数
             $('#tableContent').val(obj.param.context)
-            $('#dir').val(obj.param.nodeId);
+            $('#resource').val(obj.param.nodeId);
             layer.closeAll()
         });
 
@@ -209,6 +206,7 @@
             return false;
         });
     });
+    $("#projectNav").addClass("layui-this")
 </script>
 </body>
 </html>

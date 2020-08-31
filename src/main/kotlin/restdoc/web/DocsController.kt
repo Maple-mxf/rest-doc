@@ -34,6 +34,7 @@ class DocsController {
     @ResponseBody
     fun deProjector(@RequestBody tree: JsonNode): Result = ok(JsonDeProjector(tree).deProject())
 
+    @Deprecated(message = "")
     @GetMapping("/document")
     fun detail(model: Model): String {
         val document: Document? = mongoTemplate.findOne(Query(), Document::class.java)
