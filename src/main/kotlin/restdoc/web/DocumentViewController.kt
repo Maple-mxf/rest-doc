@@ -63,21 +63,24 @@ class DocumentViewController {
         model.set("projectId", projectId)
         return "docs/add"
     }
-    
+
     @GetMapping("/document/{documentId}/view")
     fun getApi(@PathVariable documentId: String, model: Model): String {
         model.set("documentId", documentId)
 
-        val document: Document? = documentRepository.findById(documentId)
-                .orElseThrow(ofInstance(Status.BAD_REQUEST.instanceError()))
+        val document: Document = documentRepository.findById(documentId)
+                .orElse(null)
+                ?: return "docs/resourceDetail"
 
         model.addAttribute("document", document)
-        model.addAttribute("sample", mapper.writeValueAsString(document?.executeResult))
+        model.addAttribute("sample", mapper.writeValueAsString(document.executeResult))
 
-        if (DocType.API == document!!.docType) {
+        if (DocType.API == document.docType) {
             return "docs/apiDetail"
-        } else {
+        } else if (DocType.WIKI == document.docType) {
             return "docs/wikiDetail"
+        } else {
+            return "docs/resourceDetail"
         }
     }
 }

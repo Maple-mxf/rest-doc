@@ -3,7 +3,7 @@
 /* 默认风格*/
 .dtree-theme-item-this{background-color: #d2d2d2!important;}
 .dtree-theme-item:hover{background-color: #eaeceb!important;}
-.dtree-theme-item cite{font-size:12px!important;}
+/*.dtree-theme-item cite{font-size:12px!important;}*/
 .dtree-theme-item:hover cite{color:#fe7786!important;}
 
 .dtree-theme-dtreefont{font-size: 16px!important;}
@@ -15,7 +15,7 @@
 /* layui主题风格*/
 .dtree-layui-item-this{background: none!important;}
 .dtree-layui-item:hover{background: none!important;}
-.dtree-layui-item cite{font-size:14px!important;}
+/*.dtree-layui-item cite{font-size:14px!important;}*/
 .dtree-layui-item:hover cite{opacity:0.5;filter:Alpha(opacity=50);text-decoration: underline;}
 
 .dtree-layui-dtreefont{font-size: 18px!important;}
