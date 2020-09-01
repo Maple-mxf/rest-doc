@@ -203,7 +203,7 @@
             <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
                 <legend style="font-weight: bold">请求示例</legend>
             </fieldset>
-            <pre th:text="${sample}" class="common-code-pre">
+            <pre id="codeSample" class="common-code-pre">
 
             </pre>
         </div>
@@ -214,7 +214,7 @@
 <script th:src="@{/layui/layui.js}"></script>
 <script th:src="@{/admin/js/jquery.js}"></script>
 <script th:src="@{/admin/js/util.js}"></script>
-<script>
+<script th:inline="javascript">
 
 
     layui.use([
@@ -237,6 +237,18 @@
             });
         })
     });
+
+    var sample = [[${sample}]];
+
+
+    try {
+        var obj = JSON.parse(sample);
+        var pretty = JSON.stringify(obj, undefined, 4);
+        console.info(pretty);
+        $('#codeSample').html(pretty)
+    } catch (e) {
+        $('#codeSample').html(sample)
+    }
 
 
 </script>

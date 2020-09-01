@@ -22,7 +22,7 @@
     </style>
 </head>
 <body>
-<div th:replace="nav::nav"></div>
+<div th:include="nav::nav"></div>
 
 <input type="hidden" id="projectId" th:value="${projectId}">
 
@@ -46,6 +46,7 @@
         </fieldset>
     </div>
     <div class="layui-col-md9" id="docContent">
+        <iframe src="" id="docContentFrame" frameborder="0" style="width: 100%;height: 900px"></iframe>
     </div>
 </div>
 <script th:src="@{/layui/layui.js}"></script>
@@ -98,7 +99,7 @@
                 console.info(obj.data)
 
                 if (obj.data.type === "WIKI") {
-                    $.ajax({
+                    /*$.ajax({
                         type: 'GET',
                         url: '/restdoc/document/' + obj.data.id + '/view/wiki',
                         async: false,
@@ -108,19 +109,23 @@
                         error: function () {
                             layer.msg("网络异常");
                         }
-                    });
+                    });*/
+
+                    $("#docContentFrame").attr("src", '/restdoc/document/' + obj.data.id + '/view/wiki');
                 } else if (obj.data.type === "API") {
-                    $.ajax({
-                        type: 'GET',
-                        url: '/restdoc/document/' + obj.data.id + '/view/api',
-                        async: false,
-                        success: function (res) {
-                            $("#docContent").html(res);
-                        },
-                        error: function () {
-                            layer.msg("网络异常");
-                        }
-                    });
+                    /* $.ajax({
+                         type: 'GET',
+                         url: '/restdoc/document/' + obj.data.id + '/view/api',
+                         async: false,
+                         success: function (res) {
+                             $("#docContent").html(res);
+                         },
+                         error: function () {
+                             layer.msg("网络异常");
+                         }
+                     });*/
+
+                    $("#docContentFrame").attr("src", '/restdoc/document/' + obj.data.id + '/view/api');
                 }
 
             }

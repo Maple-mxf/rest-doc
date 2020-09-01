@@ -1,5 +1,6 @@
 package restdoc.web
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.common.base.Suppliers.ofInstance
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.redis.core.RedisTemplate
@@ -20,6 +21,9 @@ class DocumentViewController {
 
     @Autowired
     lateinit var documentRepository: DocumentRepository
+
+    @Autowired
+    lateinit var mapper: ObjectMapper
 
     @GetMapping("/{projectId}/document/view/list/")
     fun list(@PathVariable projectId: String, model: Model): String {
@@ -79,7 +83,7 @@ class DocumentViewController {
                 .orElseThrow(ofInstance(Status.BAD_REQUEST.instanceError()))
 
         model.addAttribute("document", document)
-        model.addAttribute("sample", document?.executeResult)
+        model.addAttribute("sample", mapper.writeValueAsString(document?.executeResult))
 
         return "docs/apiDetail";
     }
