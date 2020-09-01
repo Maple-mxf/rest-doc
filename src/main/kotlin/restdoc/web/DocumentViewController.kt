@@ -13,6 +13,7 @@ import restdoc.core.Status
 import restdoc.model.DocType
 import restdoc.model.Document
 import restdoc.repository.DocumentRepository
+import restdoc.repository.ResourceRepository
 
 @Controller
 class DocumentViewController {
@@ -22,6 +23,9 @@ class DocumentViewController {
 
     @Autowired
     lateinit var documentRepository: DocumentRepository
+
+    @Autowired
+    lateinit var resourceRepository: ResourceRepository
 
     @Autowired
     lateinit var mapper: ObjectMapper
@@ -72,6 +76,12 @@ class DocumentViewController {
                 .orElse(null)
                 ?: return "docs/resourceDetail"
 
+        val resource = resourceRepository.findById(document.resource)
+                .map { it.name }
+                .orElse(null)
+                ?: return "docs/resourceDetail"
+
+        model.addAttribute("resource",resource)
         model.addAttribute("document", document)
         model.addAttribute("sample", mapper.writeValueAsString(document.executeResult))
 

@@ -55,6 +55,7 @@ data class Document(
         var name: String?,
         var resource: String,
         val url: String,
+        val description: String? = null,
         var requestHeaderDescriptor: List<HeaderFieldDescriptor>?,
         var requestBodyDescriptor: List<BodyFieldDescriptor>?,
         var responseBodyDescriptors: List<BodyFieldDescriptor>?,

@@ -89,6 +89,7 @@ class DocumentController {
                 requestBodyDescriptor = requestBodyDescriptor,
                 responseBodyDescriptors = responseBodyDescriptor,
                 method = HttpMethod.valueOf(requestDto.method),
+                description = requestDto.description,
                 uriVariables = uriVarDescriptor,
                 executeResult = requestDto.executeResult,
                 docType = DocType.API)
