@@ -10,6 +10,7 @@ import org.springframework.ui.set
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import restdoc.core.Status
+import restdoc.model.DocType
 import restdoc.model.Document
 import restdoc.repository.DocumentRepository
 
@@ -62,20 +63,8 @@ class DocumentViewController {
         model.set("projectId", projectId)
         return "docs/add"
     }
-
-    @GetMapping("/document/{documentId}/view/wiki")
-    fun getWiki(@PathVariable documentId: String, model: Model): String {
-        model.set("documentId", documentId)
-
-        val document: Document? = documentRepository.findById(documentId)
-                .orElseThrow(ofInstance(Status.BAD_REQUEST.instanceError()))
-
-        model.addAttribute("wikiDocument", document)
-
-        return "docs/wikiDetail";
-    }
-
-    @GetMapping("/document/{documentId}/view/api")
+    
+    @GetMapping("/document/{documentId}/view")
     fun getApi(@PathVariable documentId: String, model: Model): String {
         model.set("documentId", documentId)
 
@@ -85,6 +74,10 @@ class DocumentViewController {
         model.addAttribute("document", document)
         model.addAttribute("sample", mapper.writeValueAsString(document?.executeResult))
 
-        return "docs/apiDetail";
+        if (DocType.API == document!!.docType) {
+            return "docs/apiDetail"
+        } else {
+            return "docs/wikiDetail"
+        }
     }
 }

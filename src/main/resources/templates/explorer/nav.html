@@ -10,6 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/admin/css/fangge-style.css}"/>
     <link rel="stylesheet" th:href="@{/admin/css/doc-common.css}"/>
+    <link rel="stylesheet" th:href="@{/admin/css/pear-tree/dtree.css}"/>
     <style>
         #tableContents {
             border-top: 3px solid #009688;
@@ -74,52 +75,30 @@
         var treeData = null;
         var projectId = $("#projectId").val();
 
-        $.ajax({
-            type: 'GET',
-            url: '/restdoc/' + projectId + '/resource/tree',
-            async: false,
-            success: function (data) {
-                if (data['code'] === "200") {
-                    treeData = data['data'];
-                } else {
-                    layer.msg(data['message']);
-                }
-            },
-            error: function () {
-                layer.msg("网络异常")
-            }
-        });
-
         dtree.render({
+            url: '/restdoc/' + projectId + '/resource/tree',
             elem: "#navTableOfContent",
-            data: treeData
+            // dataStyle: "layuiStyle",
+            // dataFormat: "list",
+            data: treeData,
+            response: {message: "msg", statusCode: 0},
+            ficon: ["1", "-1"]
         });
 
         // 点击节点触发回调，其中obj内包含丰富的数据，打开浏览器F12查看！
         dtree.on("node('navTableOfContent')", function (obj) {
-            layer.msg(JSON.stringify(obj.param));
-            console.log(obj.param);
-            if (obj.param.type === "WIKI") {
-                $("#docContentFrame").attr("src", '/restdoc/document/' + obj.data.id + '/view/wiki');
-            } else if (obj.param.type === "API") {
-                $("#docContentFrame").attr("src", '/restdoc/document/' + obj.data.id + '/view/api');
+
+            console.info(obj);
+
+            if (obj.data.type === "WIKI" || obj.data.type === "API") {
+                $("#docContentFrame").attr("src", '/restdoc/document/' + obj.data.id + '/view');
+            }
+
+            if (obj.param.leaf) {
+                // $("#docContentFrame").attr("src", '/restdoc/document/' + obj.param.nodeId + '/view');
             }
         });
 
-        /*tree.render({
-            elem: '#test1'  //绑定元素
-            , showLine: false
-            , edit: false
-            , accordion: false
-            , data: treeData
-            , click: function (obj) {
-                if (obj.data.type === "WIKI") {
-                    $("#docContentFrame").attr("src", '/restdoc/document/' + obj.data.id + '/view/wiki');
-                } else if (obj.data.type === "API") {
-                    $("#docContentFrame").attr("src", '/restdoc/document/' + obj.data.id + '/view/api');
-                }
-            }
-        });*/
 
         $('#createTableContentBtn').click(function (event) {
             var projectId = $('#projectId').val();
