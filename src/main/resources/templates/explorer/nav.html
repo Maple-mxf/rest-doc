@@ -98,10 +98,9 @@
                 console.info(obj.data)
 
                 if (obj.data.type === "WIKI") {
-                    var id = obj.data.id;
                     $.ajax({
                         type: 'GET',
-                        url: '/restdoc/document/' + id + '/view/wiki',
+                        url: '/restdoc/document/' + obj.data.id + '/view/wiki',
                         async: false,
                         success: function (res) {
                             $("#docContent").html(res);
@@ -113,7 +112,7 @@
                 } else if (obj.data.type === "API") {
                     $.ajax({
                         type: 'GET',
-                        url: '/restdoc/document/' + id + '/view/api',
+                        url: '/restdoc/document/' + obj.data.id + '/view/api',
                         async: false,
                         success: function (res) {
                             $("#docContent").html(res);

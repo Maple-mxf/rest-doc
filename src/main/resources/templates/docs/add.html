@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <title>富文本编辑器</title>
+    <title>API explorer</title>
     <link rel="stylesheet" th:href="@{/layui/css/layui.css}"/>
     <link rel="stylesheet" th:href="@{/admin/css/pearForm.css}"/>
     <link rel="stylesheet" th:href="@{/admin/css/easyeditor.css}"/>
@@ -36,6 +36,7 @@
             height: 100%;
             border-top: 3px solid #ff7043;
         }
+
         .group {
             margin-top: 10px;
         }
@@ -50,7 +51,7 @@
 </div>
 
 <input type="hidden" name="documentId" id="documentId"/>
-<input type="hidden" name="projectId" id="projectId"/>
+<input type="hidden" name="projectId" id="projectId" th:value="${projectId}"/>
 <div class="layui-fluid">
 
     <div class="layui-row">
@@ -111,8 +112,9 @@
                                                id="tableContent"
                                                class="layui-input"
                                                value="一级目录"
-                                               placeholder="请选择目录"
-                                        >
+                                               readonly="readonly"
+                                               placeholder="请选择目录">
+
                                         <input type="hidden" name="resource" id="resource" class="layui-input">
                                     </div>
                                 </div>
@@ -238,7 +240,9 @@
         'util', 'layer',
         'form', 'upload',
         'easyeditor',
-        'element', 'jquery','dtree',], function () {
+        'element',
+        'jquery',
+        'dtree',], function () {
 
         var easyeditor = layui.easyeditor;
         easyeditor.init({
@@ -256,6 +260,42 @@
         var layer = layui.layer;
         var element = layui.element;
 
+        var treeData = null;
+
+        $.ajax({
+            type: 'GET',
+            url: '/restdoc/' + $("#projectId").val() + '/resource/tree?onlyResource=true',
+            async: false,
+            success: function (data) {
+                if (data['code'] === "200") {
+                    treeData = data['data'];
+                } else {
+                    layer.msg(data['message']);
+                }
+            },
+            error: function () {
+                layer.msg("网络异常")
+            }
+        });
+        dtree.render({
+            elem: '#sourceTreeDiv'
+            , data: treeData
+            , id: 'id'
+            , icon: ["0"]
+            , oncheck: function (obj) {
+                console.log(obj.data.id);
+                checkData = obj.data.id;
+                $('#pid').val(obj.data.id);
+                $("#parent").val(obj.data.title);
+            }
+        });
+        dtree.on("node('sourceTreeDiv')", function (obj) {
+            console.log(obj.param);
+            $('#tableContent').val(obj.param.context)
+            $('#resource').val(obj.param.nodeId);
+            layer.closeAll()
+        });
+
         form.verify({
             url: function (value, item) {
                 if (!new RegExp("^(http(s?)\\:\\/\\/)?[0-9a-zA-Z]([-.\\w]*[0-9a-zA-Z])*(:(0-9)*)*(\\/?)([a-zA-Z0-9\\-\\.\\?\\,\\'\\/\\\\\\+&amp;%$#_]*)?$").test(value)) {
@@ -269,6 +309,16 @@
             , pass: []
         });
 
+        $('#tableContent').click(function () {
+            console.info("hello world");
+
+            layer.open({
+                type: 1,
+                title: '选择目录',
+                content: $('#sourceTreeDiv'),
+                area: ['300px', '400px']
+            });
+        });
 
         $('#convert_json_to_fields').click(function (event) {
             layer.open({
@@ -328,8 +378,6 @@
                 }
             });
         });
-
-
         $('#convert_response_json_fields').click(function (event) {
             layer.open({
                 title: 'JSON快速转换',
@@ -346,7 +394,6 @@
                 }
             });
         });
-
         $("#add_request_header_field").click(function (event) {
             $("#header-fieldset").append(oneheaderline);
             form.render();
@@ -361,46 +408,43 @@
         }
 
         function clearResponseParamInput() {
-            var all_input_line = $("#response-fieldset").children(".one-response-body-line")
-            var line_length = all_input_line.length
+            var all_input_line = $("#response-fieldset").children(".one-response-body-line");
+            var line_length = all_input_line.length;
 
             if (line_length > 0) {
                 for (let i = 0; i < line_length; i++) {
-                    var obj = all_input_line[i]
-                    var parent = obj.parentNode
+                    var obj = all_input_line[i];
+                    var parent = obj.parentNode;
                     parent.removeChild(obj)
                 }
             }
         }
 
         function clearRequestParamInput() {
-            var all_input_line = $("#body-fieldset").children(".multi-request-body")
-            var line_length = all_input_line.length
+            var all_input_line = $("#body-fieldset").children(".multi-request-body");
+            var line_length = all_input_line.length;
 
             if (line_length > 0) {
                 for (let i = 0; i < line_length; i++) {
-                    var obj = all_input_line[i]
-                    var parent = obj.parentNode
+                    var obj = all_input_line[i];
+                    var parent = obj.parentNode;
                     parent.removeChild(obj)
                 }
             }
         }
 
         $("#add_request_body_field").click(function (event) {
-            addRequestParamInput()
+            addRequestParamInput();
             form.render();
         });
-
         $("#add_response_body_field").click(function (event) {
             $("#response-fieldset").append(responseoneline);
             form.render();
         });
-
         $("#add_pathvar_field_btn").click(function (event) {
             $("#uri-fieldset").append(oneuriline);
             form.render();
         });
-
         form.on('submit(save)', function (data) {
             var index = layer.load(1);
             var map = getFormData(data.field);
@@ -414,7 +458,7 @@
             if (did == "") {
                 method = "POST"
             } else {
-                method = "PUT"
+                method = "PUT";
                 map["documentId"] = did;
             }
 
@@ -454,8 +498,6 @@
 
             return false;
         });
-
-
         form.on('submit(execute)', function (data) {
 
             var index = layer.load(1);
@@ -573,53 +615,6 @@
                     layer.msg("JSON格式错误")
                 }
             });
-
-
-            $.ajax({
-                type: 'GET',
-                url: '/restdoc/' + projectId + '/resource/tree?onlyResource=true',
-                async: false,
-                success: function (data) {
-                    if (data['code'] === "200") {
-                        treeData = data['data'];
-                    } else {
-                        layer.msg(data['message']);
-                    }
-                },
-                error: function () {
-                    layer.msg("网络异常")
-                }
-            });
-
-            dtree.render({
-                elem: '#sourceTreeDiv'
-                , data: treeData
-                , id: 'id'
-                , icon: ["0"]
-                , oncheck: function (obj) {
-                    console.log(obj.data.id);
-                    checkData = obj.data.id;
-                    $('#pid').val(obj.data.id);
-                    $("#parent").val(obj.data.title);
-                }
-            });
-
-            $('#tableContent').click(function () {
-                layer.open({
-                    type: 1,
-                    title: '选择目录',
-                    content: $('#sourceTreeDiv'),
-                    area: ['300px', '400px']
-                });
-            });
-
-            dtree.on("node('sourceTreeDiv')", function (obj) {
-                console.log(obj.param);
-                $('#tableContent').val(obj.param.context)
-                $('#resource').val(obj.param.nodeId);
-                layer.closeAll()
-            });
-
         }
 
         function getExecuteResult(taskId) {
@@ -669,7 +664,6 @@
 
             return map;
         }
-
 
         function getHeaderKeyValueJsonArray() {
             var headerKeyNodes = $('input[name=headerKey]')
@@ -727,7 +721,6 @@
             }
             return array
         }
-
 
         function getResponseBodyKeyValueJsonArray() {
             var responseFieldPathNodes = $('input[name=responseFieldPath]');

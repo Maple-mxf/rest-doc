@@ -78,7 +78,8 @@ class DocumentViewController {
         val document: Document? = documentRepository.findById(documentId)
                 .orElseThrow(ofInstance(Status.BAD_REQUEST.instanceError()))
 
-        model.addAttribute("apiDocument", document)
+        model.addAttribute("document", document)
+        model.addAttribute("sample", document?.executeResult)
 
         return "docs/apiDetail";
     }

@@ -90,7 +90,8 @@ class DocumentController {
                 responseBodyDescriptors = responseBodyDescriptor,
                 method = HttpMethod.valueOf(requestDto.method),
                 uriVariables = uriVarDescriptor,
-                executeResult = requestDto.executeResult)
+                executeResult = requestDto.executeResult,
+                docType = DocType.API)
 
         documentRepository.save(document)
 
