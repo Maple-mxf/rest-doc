@@ -42,7 +42,7 @@
             <div>
                 <button class="layui-btn" id="createTableContentBtn">创建目录</button>
             </div>
-            <div id="test1" style="font-size: 14px"></div>
+            <div id="navTableOfContent" style="font-size: 14px"></div>
         </fieldset>
     </div>
     <div class="layui-col-md9" id="docContent">
@@ -55,17 +55,21 @@
 
 <script>
 
-    $("#projectNav").addClass("layui-this")
+    $("#projectNav").addClass("layui-this");
 
-    layui.use([
+    layui.config({
+        base: '/restdoc/layui/lay/extends/'
+    }).use([
         'util',
         'layer',
         'element',
+        'dtree',
         'jquery',
         'tree'], function () {
         var tree = layui.tree;
         var $ = layui.jquery;
         var layer = layui.layer;
+        var dtree = layui.dtree;
 
         var treeData = null;
         var projectId = $("#projectId").val();
@@ -86,50 +90,36 @@
             }
         });
 
-        var inst1 = tree.render({
+        dtree.render({
+            elem: "#navTableOfContent",
+            data: treeData
+        });
+
+        // 点击节点触发回调，其中obj内包含丰富的数据，打开浏览器F12查看！
+        dtree.on("node('navTableOfContent')", function (obj) {
+            layer.msg(JSON.stringify(obj.param));
+            console.log(obj.param);
+            if (obj.param.type === "WIKI") {
+                $("#docContentFrame").attr("src", '/restdoc/document/' + obj.data.id + '/view/wiki');
+            } else if (obj.param.type === "API") {
+                $("#docContentFrame").attr("src", '/restdoc/document/' + obj.data.id + '/view/api');
+            }
+        });
+
+        /*tree.render({
             elem: '#test1'  //绑定元素
             , showLine: false
             , edit: false
             , accordion: false
-            // ,onlyIconControl:true
             , data: treeData
-
             , click: function (obj) {
-
-                console.info(obj.data)
-
                 if (obj.data.type === "WIKI") {
-                    /*$.ajax({
-                        type: 'GET',
-                        url: '/restdoc/document/' + obj.data.id + '/view/wiki',
-                        async: false,
-                        success: function (res) {
-                            $("#docContent").html(res);
-                        },
-                        error: function () {
-                            layer.msg("网络异常");
-                        }
-                    });*/
-
                     $("#docContentFrame").attr("src", '/restdoc/document/' + obj.data.id + '/view/wiki');
                 } else if (obj.data.type === "API") {
-                    /* $.ajax({
-                         type: 'GET',
-                         url: '/restdoc/document/' + obj.data.id + '/view/api',
-                         async: false,
-                         success: function (res) {
-                             $("#docContent").html(res);
-                         },
-                         error: function () {
-                             layer.msg("网络异常");
-                         }
-                     });*/
-
                     $("#docContentFrame").attr("src", '/restdoc/document/' + obj.data.id + '/view/api');
                 }
-
             }
-        });
+        });*/
 
         $('#createTableContentBtn').click(function (event) {
             var projectId = $('#projectId').val();
