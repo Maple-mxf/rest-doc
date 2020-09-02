@@ -32,3 +32,9 @@ spring:
       uri: mongodb://front_biz:qmbxfrontbizStorage@114.67.246.62:37001/non_standard
       authenticationDatabase: non_standard
       database: non_standard
+
+restdoc:
+  schedule:
+    port: 4321
+
+
