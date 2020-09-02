@@ -11,7 +11,7 @@
     <modules>
         <module>restdoc-web</module>
         <module>restdoc-client</module>
-        <module>restdoc-tcp-common</module>
+        <module>restdoc-remoting</module>
     </modules>
 
     <parent>
