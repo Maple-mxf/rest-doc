@@ -72,7 +72,13 @@ public class ScheduleServer implements CommandLineRunner {
     public void run(String... args) {
         log.info("ScheduleServer loading");
 
-        runTcpServer();
+        // Create new thread running tcpServer
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                runTcpServer();
+            }
+        }).start();
 
         log.info("ScheduleServer completed");
     }
