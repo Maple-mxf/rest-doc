@@ -18,6 +18,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  * @author ubuntu-m
  */
 @Component
+@Deprecated
 public class ConsumerManager implements CommandLineRunner {
 
     private static Logger log = LoggerFactory.getLogger(ConsumerManager.class);
