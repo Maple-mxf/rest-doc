@@ -11,6 +11,7 @@ import org.springframework.web.client.RestTemplate
 import restdoc.core.executor.Request
 import restdoc.web.model.BodyFieldDescriptor
 import restdoc.web.model.ExecuteResult
+import restdoc.web.util.JsonProjector
 import restdoc.web.util.PathValue
 import java.util.concurrent.ConcurrentHashMap
 

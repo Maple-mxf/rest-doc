@@ -21,7 +21,7 @@ public class TcpServerHandler extends ChannelInboundHandlerAdapter {
     private static ChannelGroup channels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
 
     static {
-        init();
+//        init();
     }
 
     public static void init() {

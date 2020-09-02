@@ -1,6 +1,5 @@
 package restdoc.web.model
 
-import restdoc.model.FieldType
 
 data class HeaderFieldDescriptor(
         val field: String,

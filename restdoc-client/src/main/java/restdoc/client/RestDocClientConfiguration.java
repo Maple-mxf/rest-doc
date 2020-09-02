@@ -33,8 +33,7 @@ public class RestDocClientConfiguration {
                 taskChannelInboundHandlerAdapter,
                 remotingCommandEncoder,
                 remotingCommandDecoder);
-
-        client.connection();
+        new Thread(client::connection).start();
         return client;
     }
 
