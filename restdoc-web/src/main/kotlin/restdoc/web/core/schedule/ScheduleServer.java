@@ -13,6 +13,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import restdoc.core.schedule.ScheduleProperties;
+import restdoc.remoting.netty.RemotingCommandDecoder;
+import restdoc.remoting.netty.RemotingCommandEncoder;
 
 
 /**
@@ -31,10 +33,18 @@ public class ScheduleServer implements CommandLineRunner {
     final
     ScheduleInstanceServerHandler scheduleInstanceServerHandler;
 
+    private final
+    RemotingCommandDecoder remotingCommandDecoder;
+
+    private final
+    RemotingCommandEncoder remotingCommandEncoder;
+
     public ScheduleServer(ScheduleProperties scheduleProperties,
-                          ScheduleInstanceServerHandler scheduleInstanceServerHandler) {
+                          ScheduleInstanceServerHandler scheduleInstanceServerHandler, RemotingCommandDecoder remotingCommandDecoder, RemotingCommandEncoder remotingCommandEncoder) {
         this.scheduleProperties = scheduleProperties;
         this.scheduleInstanceServerHandler = scheduleInstanceServerHandler;
+        this.remotingCommandDecoder = remotingCommandDecoder;
+        this.remotingCommandEncoder = remotingCommandEncoder;
     }
 
     private void runTcpServer() {
@@ -49,6 +59,9 @@ public class ScheduleServer implements CommandLineRunner {
                         @Override
                         public void initChannel(SocketChannel ch) {
                             ch.pipeline().addLast(scheduleInstanceServerHandler);
+                            ch.pipeline().addLast(remotingCommandDecoder);
+                            ch.pipeline().addLast(remotingCommandEncoder);
+
                         }
                     })
                     .option(ChannelOption.SO_BACKLOG, 128)          // (5)
@@ -57,9 +70,6 @@ public class ScheduleServer implements CommandLineRunner {
             // Bind and start to accept incoming connections.
             ChannelFuture f = b.bind(scheduleProperties.getPort()).sync(); // (7)
 
-            // Wait until the server socket is closed.
-            // In this example, this does not happen, but you can do that to gracefully
-            // shut down your server.
             f.channel().closeFuture().sync();
         } catch (InterruptedException e) {
             e.printStackTrace();

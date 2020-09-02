@@ -42,6 +42,7 @@ public class ScheduleInstanceServerHandler extends ChannelInboundHandlerAdapter 
      */
     private final ConsumerManager consumerManager;
 
+
     /**
      * ChannelGroup is channel collection. thread safe
      */
@@ -55,8 +56,8 @@ public class ScheduleInstanceServerHandler extends ChannelInboundHandlerAdapter 
     public void channelActive(ChannelHandlerContext ctx) {
 
         this.channels.add(ctx.channel());
-
         ChannelId id = ctx.channel().id();
+
         log.info("Channel {} connected", id);
     }
 
