@@ -16,6 +16,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * The RemotingCommand provided common communicate data format
+ * <p>
+ * <p>
+ * RemotingCommand is The request && response
  */
 public class RemotingCommand {
 

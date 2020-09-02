@@ -2,10 +2,10 @@ package restdoc.remoting.netty;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelOutboundHandlerAdapter;
-import io.netty.channel.ChannelPromise;
+import io.netty.handler.codec.MessageToByteEncoder;
 import restdoc.remoting.protocol.RemotingCommand;
-import restdoc.remoting.protocol.RemotingSerializable;
+
+import java.nio.ByteBuffer;
 
 
 /**
@@ -15,14 +15,19 @@ import restdoc.remoting.protocol.RemotingSerializable;
  *
  * @author ubuntu-m
  */
-public class RemotingCommandEncoder extends ChannelOutboundHandlerAdapter {
+public class RemotingCommandEncoder extends MessageToByteEncoder<RemotingCommand> {
 
     @Override
-    public void write(ChannelHandlerContext ctx, Object message, ChannelPromise promise) {
-        RemotingCommand command = (RemotingCommand) message;
-        ByteBuf encoded = ctx.alloc().buffer();
-        encoded.writeBytes(RemotingSerializable.encode(command));
-
-        ctx.write(encoded, promise);
+    public void encode(ChannelHandlerContext ctx, RemotingCommand remotingCommand, ByteBuf out) {
+        try {
+            ByteBuffer header = remotingCommand.encodeHeader();
+            out.writeBytes(header);
+            byte[] body = remotingCommand.getBody();
+            if (body != null) {
+                out.writeBytes(body);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
