@@ -90,7 +90,7 @@
 
         <dependency>
             <groupId>restdoc</groupId>
-            <artifactId>restdoc-tcp-common</artifactId>
+            <artifactId>restdoc-remoting</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
 

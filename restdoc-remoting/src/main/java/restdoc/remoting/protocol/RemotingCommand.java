@@ -132,6 +132,8 @@ public class RemotingCommand {
         byte[] headerData = new byte[headerLength];
         byteBuffer.get(headerData);
 
+        SerializeType protocolType = getProtocolType(oriHeaderLen);
+
         RemotingCommand cmd = headerDecode(headerData, getProtocolType(oriHeaderLen));
 
         int bodyLength = length - 4 - headerLength;
@@ -215,9 +217,7 @@ public class RemotingCommand {
         CommandCustomHeader objectHeader;
         try {
             objectHeader = classHeader.newInstance();
-        } catch (InstantiationException e) {
-            return null;
-        } catch (IllegalAccessException e) {
+        } catch (InstantiationException | IllegalAccessException e) {
             return null;
         }
 
@@ -263,10 +263,8 @@ public class RemotingCommand {
                     }
                 }
             }
-
             objectHeader.checkFields();
         }
-
         return objectHeader;
     }
 

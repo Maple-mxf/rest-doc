@@ -1,5 +1,8 @@
 package restdoc.web.server;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.ImmutableMap;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -11,14 +14,18 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.util.CharsetUtil;
 import io.netty.util.concurrent.GlobalEventExecutor;
+import restdoc.remoting.protocol.RemotingCommand;
+import restdoc.remoting.protocol.RemotingSerializable;
+import restdoc.remoting.protocol.RemotingSysResponseCode;
 
-import java.net.InetSocketAddress;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
 public class TcpServerHandler extends ChannelInboundHandlerAdapter {
 
     private static ChannelGroup channels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
+
+    ObjectMapper mapper = new ObjectMapper();
 
     static {
 //        init();
@@ -43,7 +50,7 @@ public class TcpServerHandler extends ChannelInboundHandlerAdapter {
 
 
     @Override
-    public void channelActive(final ChannelHandlerContext ctx) { // (1)
+    public void channelActive(final ChannelHandlerContext ctx) throws JsonProcessingException { // (1)
 
         channels.add(ctx.channel());
         ChannelConfig config = ctx.channel().config();
@@ -51,27 +58,19 @@ public class TcpServerHandler extends ChannelInboundHandlerAdapter {
         Map<ChannelOption<?>, Object> options = config.getOptions();
         options.forEach((option, value) -> System.err.println(String.format("%s %s %s", option.id(), option.name(), value)));
 
-        InetSocketAddress socketAddress = (InetSocketAddress) ctx.channel().remoteAddress();
 
-        ChannelMetadata metadata = ctx.channel().metadata();
+        byte[] bytes = mapper.writeValueAsString(ImmutableMap.of("k", "v"))
+                .getBytes(CharsetUtil.UTF_8);
 
-        ctx.channel().remoteAddress();
+        RemotingCommand remotingCommand = RemotingCommand.createRequestCommand(RemotingSysResponseCode.SUCCESS, () -> {
+        });
+        remotingCommand.setCode(1);
+        remotingCommand.setVersion(1);
+        remotingCommand.setBody(bytes);
 
-      /*  InetAddress address = socketAddress.getAddress();
-        String hostString = socketAddress.getHostString();
-        System.err.println(address);*/
+        ByteBuf byteBuf = Unpooled.buffer().writeBytes(RemotingSerializable.toJson(remotingCommand).getBytes(CharsetUtil.UTF_8));
+        ctx.channel().writeAndFlush(byteBuf);
 
-       /* final ByteBuf time = ctx.alloc().buffer(4);           // (2)
-        time.writeInt((int) (System.currentTimeMillis() / 1000L + 2208988800L));
-
-        final ChannelFuture f = ctx.writeAndFlush(time); // (3)*/
-        /*f.addListener(new ChannelFutureListener() {
-            @Override
-            public void operationComplete(ChannelFuture future) {
-                assert f == future;
-                ctx.close();
-            }
-        }); */
     }
 
     @Override

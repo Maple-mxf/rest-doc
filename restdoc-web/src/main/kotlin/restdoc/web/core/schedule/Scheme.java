@@ -19,6 +19,7 @@ import java.io.IOException;
  *
  * @author ubuntu-m
  */
+@Deprecated
 class Scheme {
     
     /**

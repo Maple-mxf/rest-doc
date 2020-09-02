@@ -3,8 +3,7 @@ package restdoc.client.remoting;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
-import org.springframework.stereotype.Component;
-import restdoc.remoting.protocol.RemotingCommand;
+import io.netty.util.CharsetUtil;
 
 import java.util.List;
 
@@ -18,10 +17,14 @@ public class RemotingCommandDecoder extends ByteToMessageDecoder {
      */
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf buf, List<Object> commands) {
-        int readableBytes = buf.readableBytes();
-        byte[] bytes = buf.readBytes(readableBytes).array();
+        int length = buf.readableBytes();
 
-        RemotingCommand command = RemotingCommand.decode(bytes);
-        commands.add(command);
+        byte[] bytes = new byte[length];
+        buf.readBytes(bytes);
+
+//        RemotingCommand command = RemotingCommand.decode(bytes);
+//        commands.add(command);
+
+        System.err.println(new String(bytes, CharsetUtil.UTF_8));
     }
 }
