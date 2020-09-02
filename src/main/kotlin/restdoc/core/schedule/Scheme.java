@@ -16,10 +16,21 @@ import java.io.IOException;
  * }
  * <p>
  * }
+ *
+ * @author ubuntu-m
  */
 class Scheme {
+    
+    /**
+     * The first register client info into server center
+     */
+    private static final int REGISTER_TASK = 0;
 
+    /**
+     * The http task execute result
+     */
     private static final int HTTP_TASK_EXECUTE_RESULT = 1;
+
 
     private static ObjectMapper mapper = new ObjectMapper();
 

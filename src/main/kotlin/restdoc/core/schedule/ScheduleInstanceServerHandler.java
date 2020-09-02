@@ -49,8 +49,6 @@ public class ScheduleInstanceServerHandler extends ChannelInboundHandlerAdapter 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         ByteBuf buf = (ByteBuf) msg;
-        CharSequence charSequence = buf.readCharSequence(buf.readableBytes(), CharsetUtil.UTF_8);
-
-        buf.readBytes(buf.readableBytes()).array();
+        CharSequence sequence = buf.readCharSequence(buf.readableBytes(), CharsetUtil.UTF_8);
     }
 }

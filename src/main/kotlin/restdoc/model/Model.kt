@@ -18,7 +18,6 @@ enum class DocType {
     WIKI
 }
 
-
 data class Resource(@Id var id: String?,
                     var tag: String?,
                     var name: String?,

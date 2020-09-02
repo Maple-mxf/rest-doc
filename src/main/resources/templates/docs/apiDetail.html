@@ -87,8 +87,26 @@
                 </tr>
             </table>
         </div>
-        <div class="layui-col-md1">
-            <button class="layui-btn" id="test">调试</button>
+        <div class="layui-col-md3">
+
+            <div style="margin-top: 5%;margin-left: 5%">
+                <div class="layui-inline">
+                    <button class="layui-btn" id="test">调试</button>
+                </div>
+
+                <div class="layui-inline">
+                    <button class="layui-btn layui-btn-primary"
+                            id="copyDocLink">复制访问链接
+                    </button>
+                </div>
+
+                <div class="layui-inline">
+                    <button class="layui-btn layui-btn-danger"
+                            id="delete">删除
+                    </button>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -235,6 +253,36 @@
                 closeBtn: 1,
                 btn: ['关闭'],
             });
+        })
+
+        $("#delete").click(function () {
+            layer.confirm('确山删除文档？删除后不可恢复', {
+                btn: ['确定', '取消']
+            }, function (index, layero) {
+
+                var documentId = $("#documentId").val();
+
+                $.ajax({
+                    type: 'DELETE',
+                    url: '/restdoc/document/' + documentId,
+                    async: false,
+                    success: function (data) {
+                        if (data['code'] === "200") {
+                            layer.msg("操作成功")
+                        } else {
+                            layer.msg(data['message']);
+                        }
+                    },
+                    error: function () {
+                        layer.msg("网络异常")
+                    }
+                });
+
+                layer.close(index)
+            }, function (index) {
+                layer.close(index)
+            });
+
         })
     });
 

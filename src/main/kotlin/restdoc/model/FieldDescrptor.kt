@@ -44,16 +44,3 @@ data class URIVarDescriptor(
         val value: Any,
         val description: String?
 )
-
-
-data class RequestProcessorDescriptor(
-        val group: String = "Default",
-        val name: String,
-        val url: String,
-        val header: List<HeaderFieldDescriptor>,
-        val body: List<BodyFieldDescriptor>?,
-        val parameter: List<ParameterFieldDescriptor>?,
-        val method: HttpMethod,
-        val uriVariables: List<URIVarDescriptor>?,
-        val response: List<BodyFieldDescriptor>
-)

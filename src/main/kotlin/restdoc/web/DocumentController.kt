@@ -52,7 +52,7 @@ class DocumentController {
     lateinit var holderKit: HolderKit
 
     @Autowired
-    lateinit var delete: ExecutorDelegate
+    lateinit var delegate: ExecutorDelegate
 
     @Autowired
     lateinit var redisTemplate: RedisTemplate<String, Any>
@@ -152,7 +152,7 @@ class DocumentController {
         val taskId = IDUtil.id()
 
         try {
-            val executeResult = delete.execute(
+            val executeResult = delegate.execute(
                     url = requestDto.url,
                     method = HttpMethod.valueOf(requestDto.method),
                     headers = requestHeaderDescriptor.map { it.field to (it.value.joinToString(",")) }.toMap(),
@@ -214,4 +214,10 @@ class DocumentController {
         return ok(document.id)
     }
 
+
+    @DeleteMapping("/{id}")
+    fun delete(@PathVariable id: String): Result {
+        documentRepository.deleteById(id)
+        return ok()
+    }
 }
