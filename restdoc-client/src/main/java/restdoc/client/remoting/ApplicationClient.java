@@ -20,9 +20,15 @@ import restdoc.client.RestDocProperties;
  */
 public class ApplicationClient {
 
+    private static Logger log = LoggerFactory.getLogger(ApplicationClient.class);
+
     private final RestDocProperties restDocProperties;
 
-    private static Logger log = LoggerFactory.getLogger(ApplicationClient.class);
+    private final TaskChannelInboundHandlerAdapter taskChannelInboundHandlerAdapter;
+
+    private final RemotingCommandEncoder remotingCommandEncoder;
+
+    private final RemotingCommandDecoder remotingCommandDecoder;
 
     private State state = State.STOPPED;
 
@@ -31,8 +37,14 @@ public class ApplicationClient {
         RUNNING
     }
 
-    public ApplicationClient(RestDocProperties restDocProperties) {
+    public ApplicationClient(RestDocProperties restDocProperties,
+                             TaskChannelInboundHandlerAdapter taskChannelInboundHandlerAdapter,
+                             RemotingCommandEncoder remotingCommandEncoder,
+                             RemotingCommandDecoder remotingCommandDecoder) {
         this.restDocProperties = restDocProperties;
+        this.taskChannelInboundHandlerAdapter = taskChannelInboundHandlerAdapter;
+        this.remotingCommandEncoder = remotingCommandEncoder;
+        this.remotingCommandDecoder = remotingCommandDecoder;
     }
 
     public synchronized void connection() {
@@ -41,9 +53,7 @@ public class ApplicationClient {
                 log.error("ApplicationClient already running");
                 return;
             }
-
             EventLoopGroup workerGroup = new NioEventLoopGroup();
-
             try {
                 Bootstrap b = new Bootstrap(); // (1)
                 b.group(workerGroup); // (2)
@@ -52,7 +62,9 @@ public class ApplicationClient {
                 b.handler(new ChannelInitializer<SocketChannel>() {
                     @Override
                     public void initChannel(SocketChannel ch) {
-
+                        ch.pipeline().addLast(remotingCommandDecoder);
+                        ch.pipeline().addLast(taskChannelInboundHandlerAdapter);
+                        ch.pipeline().addLast(remotingCommandEncoder);
                     }
                 });
 
