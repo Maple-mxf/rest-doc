@@ -11,6 +11,8 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import restdoc.client.RestDocProperties;
+import restdoc.remoting.netty.RemotingCommandDecoder;
+import restdoc.remoting.netty.RemotingCommandEncoder;
 
 
 /**

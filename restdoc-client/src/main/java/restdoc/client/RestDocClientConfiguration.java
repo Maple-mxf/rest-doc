@@ -7,9 +7,9 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import restdoc.client.remoting.ApplicationClient;
-import restdoc.client.remoting.RemotingCommandDecoder;
-import restdoc.client.remoting.RemotingCommandEncoder;
 import restdoc.client.remoting.TaskChannelInboundHandlerAdapter;
+import restdoc.remoting.netty.RemotingCommandDecoder;
+import restdoc.remoting.netty.RemotingCommandEncoder;
 
 @Configuration
 @EnableConfigurationProperties(RestDocProperties.class)

@@ -1,0 +1,16 @@
+package restdoc.remoting.data;
+
+import restdoc.remoting.protocol.RemotingSerializable;
+
+public class HostData extends RemotingSerializable {
+
+    private String host;
+
+    public String getHost() {
+        return host;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
+    }
+}

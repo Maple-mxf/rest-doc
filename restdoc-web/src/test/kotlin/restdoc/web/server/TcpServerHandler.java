@@ -2,7 +2,6 @@ package restdoc.web.server;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.ImmutableMap;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -12,13 +11,14 @@ import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.MessageToByteEncoder;
 import io.netty.util.CharsetUtil;
 import io.netty.util.concurrent.GlobalEventExecutor;
+import restdoc.remoting.data.HostData;
 import restdoc.remoting.protocol.RemotingCommand;
-import restdoc.remoting.protocol.RemotingSerializable;
 import restdoc.remoting.protocol.RemotingSysResponseCode;
 
-import java.util.Map;
+import java.nio.ByteBuffer;
 import java.util.concurrent.Callable;
 
 public class TcpServerHandler extends ChannelInboundHandlerAdapter {
@@ -55,22 +55,30 @@ public class TcpServerHandler extends ChannelInboundHandlerAdapter {
         channels.add(ctx.channel());
         ChannelConfig config = ctx.channel().config();
 
-        Map<ChannelOption<?>, Object> options = config.getOptions();
-        options.forEach((option, value) -> System.err.println(String.format("%s %s %s", option.id(), option.name(), value)));
+//        Map<ChannelOption<?>, Object> options = config.getOptions();
+//        options.forEach((option, value) -> System.err.println(String.format("%s %s %s", option.id(), option.name(), value)));
 
-
-        byte[] bytes = mapper.writeValueAsString(ImmutableMap.of("k", "v"))
-                .getBytes(CharsetUtil.UTF_8);
+        HostData hostData = new HostData();
+        hostData.setHost("hostName");
 
         RemotingCommand remotingCommand = RemotingCommand.createRequestCommand(RemotingSysResponseCode.SUCCESS, () -> {
         });
         remotingCommand.setCode(1);
         remotingCommand.setVersion(1);
-        remotingCommand.setBody(bytes);
+        remotingCommand.setBody(hostData.encode());
 
-        ByteBuf byteBuf = Unpooled.buffer().writeBytes(RemotingSerializable.toJson(remotingCommand).getBytes(CharsetUtil.UTF_8));
-        ctx.channel().writeAndFlush(byteBuf);
+        /*ByteBuf byteBuf = Unpooled.buffer().writeBytes(RemotingSerializable.toJson(remotingCommand).getBytes(CharsetUtil.UTF_8));
+        ctx.channel().writeAndFlush(byteBuf);*/
 
+        ChannelFuture f = ctx.channel().writeAndFlush(remotingCommand);
+
+        f.addListener(future -> {
+            System.err.println(future.isSuccess());
+
+            if (future.cause() != null) {
+                future.cause().printStackTrace();
+            }
+        });
     }
 
     @Override
@@ -105,6 +113,8 @@ public class TcpServerHandler extends ChannelInboundHandlerAdapter {
                         @Override
                         public void initChannel(SocketChannel ch) throws Exception {
                             ch.pipeline().addLast(new TcpServerHandler());
+                            ch.pipeline().addLast(new NettyEncoder());
+
                         }
                     })
                     .option(ChannelOption.SO_BACKLOG, 128)          // (5)
@@ -125,5 +135,22 @@ public class TcpServerHandler extends ChannelInboundHandlerAdapter {
 
     public static void main(String[] args) throws Exception {
         new TcpServerHandler().run();
+    }
+
+    public static class NettyEncoder extends MessageToByteEncoder<RemotingCommand> {
+
+        @Override
+        public void encode(ChannelHandlerContext ctx, RemotingCommand remotingCommand, ByteBuf out) {
+            try {
+                ByteBuffer header = remotingCommand.encodeHeader();
+                out.writeBytes(header);
+                byte[] body = remotingCommand.getBody();
+                if (body != null) {
+                    out.writeBytes(body);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
