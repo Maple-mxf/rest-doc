@@ -1,9 +1,9 @@
 package restdoc.web.web.obj
 
-import restdoc.model.BodyFieldDescriptor
-import restdoc.model.FieldType
-import restdoc.model.HeaderFieldDescriptor
-import restdoc.model.URIVarDescriptor
+import restdoc.web.model.BodyFieldDescriptor
+import restdoc.web.model.FieldType
+import restdoc.web.model.HeaderFieldDescriptor
+import restdoc.web.model.URIVarDescriptor
 import javax.validation.constraints.NotBlank
 
 data class CreateProjectDto(val name: String, val desc: String?)

@@ -8,7 +8,7 @@ import org.springframework.http.RequestEntity
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestTemplate
-import restdoc.model.RequestProcess
+import restdoc.web.model.RequestProcess
 import java.net.URI
 import java.nio.charset.StandardCharsets
 

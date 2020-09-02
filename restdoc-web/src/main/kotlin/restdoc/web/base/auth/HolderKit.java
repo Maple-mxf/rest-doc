@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import restdoc.core.Status;
-import restdoc.model.User;
+import restdoc.web.model.User;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;

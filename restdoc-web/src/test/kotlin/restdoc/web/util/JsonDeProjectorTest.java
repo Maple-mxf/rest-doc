@@ -3,7 +3,7 @@ package restdoc.web.util;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
-import restdoc.model.BodyFieldDescriptor;
+import restdoc.web.model.BodyFieldDescriptor;
 
 import java.io.File;
 import java.io.IOException;

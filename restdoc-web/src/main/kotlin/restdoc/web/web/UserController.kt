@@ -7,20 +7,19 @@ import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.web.bind.annotation.*
-import restdoc.base.auth.HolderKit
-import restdoc.base.auth.Verify
 import restdoc.core.Result
 import restdoc.core.ok
-import restdoc.model.Project
-import restdoc.repository.ProjectRepository
-import restdoc.util.IDUtil
+import restdoc.web.base.auth.HolderKit
+import restdoc.web.model.Project
+import restdoc.web.repository.ProjectRepository
+import restdoc.web.util.IDUtil
 import restdoc.web.web.obj.CreateProjectDto
 import restdoc.web.web.obj.UpdateProjectDto
 import java.util.*
 
 @RestController
 @RequestMapping("/user")
-@Verify
+//@Verify
 class UserController {
 
     @Autowired

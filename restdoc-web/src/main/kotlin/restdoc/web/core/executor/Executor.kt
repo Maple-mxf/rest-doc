@@ -1,4 +1,4 @@
-package restdoc.core.executor
+package restdoc.web.core.executor
 
 import com.fasterxml.jackson.databind.JsonNode
 import org.springframework.beans.factory.annotation.Autowired
@@ -8,9 +8,9 @@ import org.springframework.http.HttpMethod
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestTemplate
-import restdoc.model.BodyFieldDescriptor
-import restdoc.model.ExecuteResult
-import restdoc.util.JsonProjector
+import restdoc.core.executor.Request
+import restdoc.web.model.BodyFieldDescriptor
+import restdoc.web.model.ExecuteResult
 import restdoc.web.util.PathValue
 import java.util.concurrent.ConcurrentHashMap
 

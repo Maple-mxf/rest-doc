@@ -2,7 +2,7 @@ package restdoc.util
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.junit.Test
-import restdoc.model.BodyFieldDescriptor
+import restdoc.web.model.BodyFieldDescriptor
 import java.io.File
 
 

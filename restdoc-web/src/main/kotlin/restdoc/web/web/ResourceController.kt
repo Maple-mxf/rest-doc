@@ -6,13 +6,12 @@ import org.springframework.data.mongodb.core.query.Query
 import org.springframework.web.bind.annotation.*
 import restdoc.core.Result
 import restdoc.core.ok
-import restdoc.model.DocType
-import restdoc.model.Resource
-import restdoc.repository.DocumentRepository
-import restdoc.repository.ResourceRepository
-import restdoc.util.IDUtil
-import restdoc.util.IDUtil.now
-import restdoc.web.obj.*
+import restdoc.web.model.DocType
+import restdoc.web.model.Resource
+import restdoc.web.repository.DocumentRepository
+import restdoc.web.repository.ResourceRepository
+import restdoc.web.util.IDUtil
+import restdoc.web.util.IDUtil.now
 import restdoc.web.web.obj.*
 import javax.validation.Valid
 

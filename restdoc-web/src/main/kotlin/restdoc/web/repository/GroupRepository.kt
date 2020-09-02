@@ -1,8 +1,8 @@
-package restdoc.repository
+package restdoc.web.repository
 
 import org.springframework.stereotype.Repository
-import restdoc.base.mongo.BaseRepository
-import restdoc.model.Group
+import restdoc.web.model.Group
+import restdoc.web.base.mongo.BaseRepository
 
 @Repository
 interface GroupRepository : BaseRepository<Group, String> {

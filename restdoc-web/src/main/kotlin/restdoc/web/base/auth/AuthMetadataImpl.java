@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableSet;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.springframework.data.redis.core.RedisTemplate;
 import restdoc.core.Status;
-import restdoc.model.User;
+import restdoc.web.model.User;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;

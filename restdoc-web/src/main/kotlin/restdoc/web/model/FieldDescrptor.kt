@@ -1,6 +1,6 @@
-package restdoc.model
+package restdoc.web.model
 
-import org.springframework.http.HttpMethod
+import restdoc.model.FieldType
 
 data class HeaderFieldDescriptor(
         val field: String,

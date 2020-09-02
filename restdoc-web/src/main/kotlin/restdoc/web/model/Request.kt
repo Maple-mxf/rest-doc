@@ -1,4 +1,4 @@
-package restdoc.model
+package restdoc.web.model
 
 import org.springframework.http.HttpMethod
 

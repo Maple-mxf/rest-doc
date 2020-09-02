@@ -55,11 +55,11 @@ public class TcpServerHandler extends ChannelInboundHandlerAdapter {
 
         ChannelMetadata metadata = ctx.channel().metadata();
 
-        ctx.channel().remoteAddress().
+        ctx.channel().remoteAddress();
 
-        InetAddress address = socketAddress.getAddress();
+      /*  InetAddress address = socketAddress.getAddress();
         String hostString = socketAddress.getHostString();
-        System.err.println(address);
+        System.err.println(address);*/
 
        /* final ByteBuf time = ctx.alloc().buffer(4);           // (2)
         time.writeInt((int) (System.currentTimeMillis() / 1000L + 2208988800L));

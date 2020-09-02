@@ -1,4 +1,4 @@
-package restdoc.core.config
+package restdoc.web.core.config
 
 import org.hibernate.validator.HibernateValidator
 import org.springframework.beans.factory.annotation.Autowired
@@ -10,9 +10,9 @@ import org.springframework.web.client.RestTemplate
 import org.springframework.web.servlet.config.annotation.CorsRegistry
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
-import restdoc.base.auth.AuthContext
-import restdoc.base.auth.AuthMetadataImpl
-import restdoc.base.auth.AuthenticationInterceptor
+import restdoc.web.base.auth.AuthContext
+import restdoc.web.base.auth.AuthMetadataImpl
+import restdoc.web.base.auth.AuthenticationInterceptor
 import javax.validation.Validation
 import javax.validation.Validator
 import javax.validation.ValidatorFactory

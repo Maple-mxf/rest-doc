@@ -19,10 +19,10 @@ import restdoc.core.Result
 import restdoc.core.Status
 import restdoc.core.failure
 import restdoc.core.ok
-import restdoc.model.Document
-import restdoc.model.BodyFieldDescriptor
-import restdoc.model.ProjectConfig
-import restdoc.model.RequestProcess
+import restdoc.web.model.BodyFieldDescriptor
+import restdoc.web.model.Document
+import restdoc.web.model.ProjectConfig
+import restdoc.web.model.RequestProcess
 import restdoc.web.util.Client
 
 @Controller

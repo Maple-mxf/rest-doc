@@ -10,8 +10,8 @@ import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
 import restdoc.core.Result
 import restdoc.core.ok
-import restdoc.model.Document
-import restdoc.util.JsonDeProjector
+import restdoc.web.model.Document
+import restdoc.web.util.JsonDeProjector
 
 @Controller
 @Deprecated(message = "")

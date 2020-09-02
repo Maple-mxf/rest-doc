@@ -11,7 +11,7 @@ import io.netty.util.concurrent.GlobalEventExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import restdoc.model.ApplicationInstance;
+import restdoc.web.model.ApplicationInstance;
 
 import java.util.Collection;
 import java.util.Collections;

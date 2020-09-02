@@ -1,4 +1,4 @@
-package restdoc.model
+package restdoc.web.model
 
 import com.fasterxml.jackson.databind.JsonNode
 import org.springframework.data.annotation.Id

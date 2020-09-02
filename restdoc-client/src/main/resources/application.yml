@@ -1,0 +1,4 @@
+restdoc:
+  serverIp: 127.0.0.1
+  serverPort: 4321
+  serviceName: RPCName

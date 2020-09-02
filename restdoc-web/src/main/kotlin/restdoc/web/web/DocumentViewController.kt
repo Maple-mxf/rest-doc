@@ -1,7 +1,6 @@
 package restdoc.web.web
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.google.common.base.Suppliers.ofInstance
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.stereotype.Controller
@@ -9,11 +8,10 @@ import org.springframework.ui.Model
 import org.springframework.ui.set
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
-import restdoc.core.Status
-import restdoc.model.DocType
-import restdoc.model.Document
-import restdoc.repository.DocumentRepository
-import restdoc.repository.ResourceRepository
+import restdoc.web.model.DocType
+import restdoc.web.model.Document
+import restdoc.web.repository.DocumentRepository
+import restdoc.web.repository.ResourceRepository
 
 @Controller
 class DocumentViewController {

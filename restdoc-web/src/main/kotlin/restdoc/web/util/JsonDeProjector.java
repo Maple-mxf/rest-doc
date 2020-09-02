@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.*;
 import restdoc.core.Status;
-import restdoc.model.BodyFieldDescriptor;
-import restdoc.model.FieldType;
+import restdoc.web.model.BodyFieldDescriptor;
+import restdoc.web.model.FieldType;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -40,7 +40,7 @@ public class JsonDeProjector {
     /**
      * DSL Intermediate
      */
-    private static class Node {
+    static class Node {
         public String path, field;
         public FieldType type, parentType;
         public transient List<Node> children;

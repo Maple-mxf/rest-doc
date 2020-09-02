@@ -11,20 +11,20 @@ import org.springframework.data.mongodb.core.query.Query
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.http.HttpMethod
 import org.springframework.web.bind.annotation.*
-import restdoc.base.auth.HolderKit
 import restdoc.core.Result
 import restdoc.core.Status
-import restdoc.core.executor.ExecutorDelegate
 import restdoc.core.failure
 import restdoc.core.ok
-import restdoc.model.DocType
-import restdoc.model.Document
-import restdoc.model.ExecuteResult
-import restdoc.model.Project
-import restdoc.repository.DocumentRepository
-import restdoc.repository.ProjectRepository
-import restdoc.util.IDUtil
-import restdoc.util.JsonDeProjector
+import restdoc.web.base.auth.HolderKit
+import restdoc.web.core.executor.ExecutorDelegate
+import restdoc.web.model.DocType
+import restdoc.web.model.Document
+import restdoc.web.model.ExecuteResult
+import restdoc.web.model.Project
+import restdoc.web.repository.DocumentRepository
+import restdoc.web.repository.ProjectRepository
+import restdoc.web.util.IDUtil
+import restdoc.web.util.JsonDeProjector
 import restdoc.web.web.obj.CreateUpdateWikiDto
 import restdoc.web.web.obj.RequestDto
 import java.util.*
@@ -80,7 +80,7 @@ class DocumentController {
 
         // Save An Api Project Document
         val document = Document(
-                id = IDUtil.id(),
+                id = restdoc.web.util.IDUtil.id(),
                 name = requestDto.name,
                 projectId = requestDto.projectId,
                 resource = requestDto.resource,

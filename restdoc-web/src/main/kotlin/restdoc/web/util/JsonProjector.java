@@ -8,7 +8,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
 import restdoc.core.Status;
-import restdoc.model.FieldType;
+import restdoc.web.model.FieldType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
