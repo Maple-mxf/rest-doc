@@ -37,9 +37,7 @@ public class ScheduleServerController implements CommandLineRunner {
     private static Logger log = LoggerFactory.getLogger(ScheduleServerController.class);
 
     private final NettyRemotingServer remotingServer;
-
-    private final PostHttpTaskExecuteResultProcessor postHttpTaskExecuteResultProcessor;
-
+    
     private final Thread thread;
 
     private final ClientManager clientManager;
@@ -81,12 +79,12 @@ public class ScheduleServerController implements CommandLineRunner {
 
         this.thread = new Thread(ScheduleServerController.this.remotingServer::start);
         this.clientManager = clientManager;
-        this.postHttpTaskExecuteResultProcessor = new PostHttpTaskExecuteResultProcessor(this);
+        // this.postHttpTaskExecuteResultProcessor = new PostHttpTaskExecuteResultProcessor(this);
     }
 
     private void initialize() {
-        this.remotingServer.registerProcessor(RequestCode.POST_EXECUTE_RESULT,
-                postHttpTaskExecuteResultProcessor, null);
+        /*this.remotingServer.registerProcessor(RequestCode.POST_EXECUTE_RESULT,
+                postHttpTaskExecuteResultProcessor, null);*/
     }
 
     @Override
