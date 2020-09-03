@@ -1,4 +1,4 @@
-package restdoc.core
+package restdoc.web.core
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.io.Resource

@@ -8,8 +8,8 @@ import org.springframework.data.mongodb.core.query.Query
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
-import restdoc.core.Result
-import restdoc.core.ok
+import restdoc.web.core.Result
+import restdoc.web.core.ok
 import restdoc.web.model.Document
 import restdoc.web.util.JsonDeProjector
 

@@ -5,7 +5,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import restdoc.core.Status;
+import restdoc.web.core.Status;
 import restdoc.web.model.User;
 
 import javax.servlet.http.HttpServletRequest;

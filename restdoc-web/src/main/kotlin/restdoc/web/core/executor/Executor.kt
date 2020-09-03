@@ -8,7 +8,6 @@ import org.springframework.http.HttpMethod
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestTemplate
-import restdoc.core.executor.Request
 import restdoc.web.model.BodyFieldDescriptor
 import restdoc.web.model.ExecuteResult
 import restdoc.web.util.JsonProjector

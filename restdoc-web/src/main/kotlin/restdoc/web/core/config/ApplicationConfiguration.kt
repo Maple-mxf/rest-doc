@@ -10,8 +10,6 @@ import org.springframework.web.client.RestTemplate
 import org.springframework.web.servlet.config.annotation.CorsRegistry
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
-import restdoc.remoting.netty.RemotingCommandDecoder
-import restdoc.remoting.netty.RemotingCommandEncoder
 import restdoc.web.base.auth.AuthContext
 import restdoc.web.base.auth.AuthMetadataImpl
 import restdoc.web.base.auth.AuthenticationInterceptor
@@ -36,15 +34,6 @@ open class ApplicationConfiguration : WebMvcConfigurer {
     @Bean
     open fun restClient(): RestTemplate = RestTemplate()
 
-    @Bean
-    open fun remotingCommandDecoder(): RemotingCommandDecoder {
-        return RemotingCommandDecoder()
-    }
-
-    @Bean
-    open fun remotingCommandEncoder(): RemotingCommandEncoder {
-        return RemotingCommandEncoder()
-    }
 
     @Bean
     open fun authenticationInterceptor(): AuthenticationInterceptor {

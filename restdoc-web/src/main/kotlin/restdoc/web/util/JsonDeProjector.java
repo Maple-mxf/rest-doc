@@ -4,7 +4,7 @@ package restdoc.web.util;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.*;
-import restdoc.core.Status;
+import restdoc.web.core.Status;
 import restdoc.web.model.BodyFieldDescriptor;
 import restdoc.web.model.FieldType;
 

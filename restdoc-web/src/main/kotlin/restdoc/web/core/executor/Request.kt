@@ -1,4 +1,4 @@
-package restdoc.core.executor
+package restdoc.web.core.executor
 
 import com.fasterxml.jackson.databind.JsonNode
 import org.springframework.http.HttpMethod

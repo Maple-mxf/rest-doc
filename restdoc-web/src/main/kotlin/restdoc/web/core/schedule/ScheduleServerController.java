@@ -6,8 +6,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-import restdoc.core.ServiceException;
-import restdoc.core.Status;
+import restdoc.web.core.ServiceException;
+import restdoc.web.core.Status;
 import restdoc.remoting.ChannelEventListener;
 import restdoc.remoting.ClientChannelInfo;
 import restdoc.remoting.common.RequestCode;
@@ -111,7 +111,7 @@ public class ScheduleServerController implements CommandLineRunner {
         ClientChannelInfo clientChannelInfo = this.clientManager.findClient(clientId);
         RemotingCommand response = remotingServer.invokeSync(clientChannelInfo.getChannel(), request,
                 this.httpTaskExecuteTimeout);
-        
+
         if (response.getCode() == RemotingSysResponseCode.SUCCESS) {
 
             PostHttpTaskExecuteResultRequestBody responseBody = RemotingSerializable.decode(response.getBody(),

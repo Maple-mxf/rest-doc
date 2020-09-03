@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
-import restdoc.core.Status;
+import restdoc.web.core.Status;
 import restdoc.web.model.FieldType;
 
 import java.util.ArrayList;
@@ -24,7 +24,7 @@ import java.util.stream.Stream;
 import static java.lang.Integer.parseInt;
 import static java.util.regex.Pattern.compile;
 import static java.util.stream.Collectors.toList;
-import static restdoc.core.StandardKt.throwError;
+import static restdoc.web.core.StandardKt.throwError;
 
 /**
  * <p>The JsonProjector provided project the flatten json descriptor to json object</p>

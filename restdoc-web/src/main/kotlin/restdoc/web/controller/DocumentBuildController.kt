@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
-import restdoc.core.Result
-import restdoc.core.Status
-import restdoc.core.failure
-import restdoc.core.ok
+import restdoc.web.core.Result
+import restdoc.web.core.Status
+import restdoc.web.core.failure
+import restdoc.web.core.ok
 import restdoc.web.model.BodyFieldDescriptor
 import restdoc.web.model.Document
 import restdoc.web.model.ProjectConfig

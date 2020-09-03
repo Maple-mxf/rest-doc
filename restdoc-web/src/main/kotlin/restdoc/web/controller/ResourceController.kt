@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.web.bind.annotation.*
-import restdoc.core.Result
-import restdoc.core.ok
+import restdoc.web.core.Result
+import restdoc.web.core.ok
 import restdoc.web.model.DocType
 import restdoc.web.model.Resource
 import restdoc.web.repository.DocumentRepository

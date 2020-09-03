@@ -1,4 +1,4 @@
-package restdoc.core
+package restdoc.web.core
 
 /**
  *

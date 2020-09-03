@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.web.bind.annotation.*
-import restdoc.core.Result
-import restdoc.core.ok
+import restdoc.web.core.Result
+import restdoc.web.core.ok
 import restdoc.web.base.auth.HolderKit
 import restdoc.web.model.Project
 import restdoc.web.repository.ProjectRepository
