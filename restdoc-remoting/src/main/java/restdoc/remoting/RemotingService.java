@@ -2,7 +2,7 @@ package restdoc.remoting;
 
 public interface RemotingService {
     
-    void start();
+    void start() throws InterruptedException;
 
     void shutdown();
 

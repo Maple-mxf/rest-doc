@@ -1,18 +1,12 @@
 package restdoc.client.remoting;
 
-import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.EventLoopGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.SocketChannel;
-import io.netty.channel.socket.nio.NioSocketChannel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import restdoc.client.RestDocProperties;
-import restdoc.remoting.netty.RemotingCommandDecoder;
-import restdoc.remoting.netty.RemotingCommandEncoder;
+import restdoc.remoting.common.RequestCode;
+import restdoc.remoting.netty.NettyClientConfig;
+import restdoc.remoting.netty.NettyRemotingClient;
 
 
 /**
@@ -24,29 +18,26 @@ public class ApplicationClient {
 
     private static Logger log = LoggerFactory.getLogger(ApplicationClient.class);
 
-    private final RestDocProperties restDocProperties;
-
-    private final TaskChannelInboundHandlerAdapter taskChannelInboundHandlerAdapter;
-
-    private final RemotingCommandEncoder remotingCommandEncoder;
-
-    private final RemotingCommandDecoder remotingCommandDecoder;
-
-    private State state = State.STOPPED;
+    private volatile State state = State.STOPPED;
 
     private enum State {
         STOPPED,
         RUNNING
     }
 
-    public ApplicationClient(RestDocProperties restDocProperties,
-                             TaskChannelInboundHandlerAdapter taskChannelInboundHandlerAdapter,
-                             RemotingCommandEncoder remotingCommandEncoder,
-                             RemotingCommandDecoder remotingCommandDecoder) {
-        this.restDocProperties = restDocProperties;
-        this.taskChannelInboundHandlerAdapter = taskChannelInboundHandlerAdapter;
-        this.remotingCommandEncoder = remotingCommandEncoder;
-        this.remotingCommandDecoder = remotingCommandDecoder;
+    private NettyRemotingClient remotingClient;
+
+    @Autowired
+    public ApplicationClient(RestDocProperties restDocProperties,  HttpTaskRequestProcessor httpTaskRequestProcessor ) {
+
+        NettyClientConfig config = new NettyClientConfig();
+        config.setUseTLS(false);
+        config.setHost(restDocProperties.getServerIp());
+        config.setPort(restDocProperties.getServerPort());
+
+        this.remotingClient = new NettyRemotingClient(config);
+        this.remotingClient.registerProcessor(RequestCode.SUBMIT_HTTP_PROCESS,
+                httpTaskRequestProcessor, null);
     }
 
     public synchronized void connection() {
@@ -55,35 +46,16 @@ public class ApplicationClient {
                 log.error("ApplicationClient already running");
                 return;
             }
-            EventLoopGroup workerGroup = new NioEventLoopGroup();
-            try {
-                Bootstrap b = new Bootstrap(); // (1)
-                b.group(workerGroup); // (2)
-                b.channel(NioSocketChannel.class); // (3)
-                b.option(ChannelOption.SO_KEEPALIVE, true); // (4)
-                b.handler(new ChannelInitializer<SocketChannel>() {
-                    @Override
-                    public void initChannel(SocketChannel ch) {
-                        ch.pipeline().addLast(remotingCommandDecoder);
-                        ch.pipeline().addLast(taskChannelInboundHandlerAdapter);
-                        ch.pipeline().addLast(remotingCommandEncoder);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        remotingClient.start();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
-                });
-
-                // Start the client.
-                ChannelFuture f = b.connect(restDocProperties.getServerIp(),
-                        restDocProperties.getServerPort()).sync();
-
-                // Wait until the connection is closed.
-                f.channel().closeFuture().sync();
-
-                this.state = State.RUNNING;
-
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } finally {
-                workerGroup.shutdownGracefully();
-            }
+                }
+            }).start();
         }
     }
 }

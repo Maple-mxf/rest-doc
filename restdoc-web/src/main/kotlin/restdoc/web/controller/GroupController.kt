@@ -1,4 +1,4 @@
-package restdoc.web.web
+package restdoc.web.controller
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Sort.Order.desc
@@ -10,23 +10,24 @@ import org.springframework.web.bind.annotation.*
 import restdoc.core.Result
 import restdoc.core.ok
 import restdoc.web.base.auth.HolderKit
+import restdoc.web.base.auth.Verify
+import restdoc.web.controller.obj.CreateProjectDto
+import restdoc.web.controller.obj.UpdateProjectDto
 import restdoc.web.model.Project
-import restdoc.web.repository.ProjectRepository
+import restdoc.web.repository.GroupRepository
 import restdoc.web.util.IDUtil
-import restdoc.web.web.obj.CreateProjectDto
-import restdoc.web.web.obj.UpdateProjectDto
 import java.util.*
 
 @RestController
-@RequestMapping("/user/view")
-//@Verify
-class UserViewController {
+@RequestMapping("/group")
+@Verify
+class GroupController {
 
     @Autowired
     lateinit var mongoTemplate: MongoTemplate
 
     @Autowired
-    lateinit var projectRepository: ProjectRepository
+    lateinit var groupRepository: GroupRepository
 
     @Autowired
     lateinit var holderKit: HolderKit
@@ -35,7 +36,7 @@ class UserViewController {
     fun list(): Result {
         val query = Query().addCriteria(Criteria("teamId").`is`(holderKit.user.teamId))
         query.with(by(desc("createTime")))
-        return ok(projectRepository.list(query))
+        return ok(groupRepository.list(query))
     }
 
     @GetMapping("/{id}")
@@ -55,12 +56,12 @@ class UserViewController {
 
     @PatchMapping("")
     fun update(@RequestBody dto: UpdateProjectDto): Result {
-        projectRepository.update(Project(
+        /*groupRepository.update(Gr(
                 id = dto.id,
                 name = dto.name,
                 createTime = null,
-                projectId = null,
-                desc = dto.desc))
+                teamId = null,
+                desc = dto.desc))*/
         return ok()
     }
 }

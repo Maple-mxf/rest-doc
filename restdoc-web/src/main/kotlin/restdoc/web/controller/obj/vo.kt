@@ -1,4 +1,4 @@
-package restdoc.web.web.obj
+package restdoc.web.controller.obj
 
 
 val ROOT_NAV: NavNode = NavNode(

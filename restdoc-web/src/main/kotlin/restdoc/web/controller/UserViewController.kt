@@ -1,4 +1,4 @@
-package restdoc.web.web
+package restdoc.web.controller
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Sort.Order.desc
@@ -10,18 +10,17 @@ import org.springframework.web.bind.annotation.*
 import restdoc.core.Result
 import restdoc.core.ok
 import restdoc.web.base.auth.HolderKit
-import restdoc.web.base.auth.Verify
+import restdoc.web.controller.obj.CreateProjectDto
+import restdoc.web.controller.obj.UpdateProjectDto
 import restdoc.web.model.Project
 import restdoc.web.repository.ProjectRepository
 import restdoc.web.util.IDUtil
-import restdoc.web.web.obj.CreateProjectDto
-import restdoc.web.web.obj.UpdateProjectDto
 import java.util.*
 
 @RestController
-@RequestMapping("/team")
-@Verify
-class TeamController {
+@RequestMapping("/user/view")
+//@Verify
+class UserViewController {
 
     @Autowired
     lateinit var mongoTemplate: MongoTemplate

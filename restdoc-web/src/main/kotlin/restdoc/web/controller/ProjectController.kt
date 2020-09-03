@@ -1,10 +1,7 @@
-package restdoc.web.web
+package restdoc.web.controller
 
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.domain.Sort.Order.desc
-import org.springframework.data.domain.Sort.by
 import org.springframework.data.mongodb.core.MongoTemplate
-import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.web.bind.annotation.*
 import restdoc.core.Result
@@ -13,14 +10,14 @@ import restdoc.web.base.auth.HolderKit
 import restdoc.web.model.Project
 import restdoc.web.repository.ProjectRepository
 import restdoc.web.util.IDUtil
-import restdoc.web.web.obj.CreateProjectDto
-import restdoc.web.web.obj.UpdateProjectDto
+import restdoc.web.controller.obj.CreateProjectDto
+import restdoc.web.controller.obj.UpdateProjectDto
 import java.util.*
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/project")
 //@Verify
-class UserController {
+class ProjectController {
 
     @Autowired
     lateinit var mongoTemplate: MongoTemplate
@@ -31,11 +28,11 @@ class UserController {
     @Autowired
     lateinit var holderKit: HolderKit
 
-    @GetMapping("")
+    @GetMapping("/list")
     fun list(): Result {
-        val query = Query().addCriteria(Criteria("teamId").`is`(holderKit.user.teamId))
-        query.with(by(desc("createTime")))
-        return ok(projectRepository.list(query))
+        /*val query = Query().addCriteria(Criteria("teamId").`is`(holderKit.user.teamId))
+        query.with(by(desc("createTime")))*/
+        return ok(projectRepository.list(Query()))
     }
 
     @GetMapping("/{id}")
@@ -43,12 +40,13 @@ class UserController {
 
     @PostMapping("")
     fun create(@RequestBody dto: CreateProjectDto): Result {
-
-        val project = Project(id = IDUtil.id(),
+        val project = Project(
+                id = IDUtil.id(),
                 name = dto.name,
                 createTime = Date().time,
-                projectId = holderKit.user.teamId,
-                desc = dto.desc)
+                projectId = "DefaultTeam",
+                desc = dto.desc
+        )
         mongoTemplate.save(project)
         return ok()
     }

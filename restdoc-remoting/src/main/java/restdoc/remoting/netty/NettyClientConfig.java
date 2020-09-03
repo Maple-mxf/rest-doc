@@ -17,6 +17,10 @@
 package restdoc.remoting.netty;
 
 public class NettyClientConfig {
+
+    private String host;
+    private int port;
+
     /**
      * Worker thread number
      */
@@ -134,5 +138,21 @@ public class NettyClientConfig {
 
     public void setUseTLS(boolean useTLS) {
         this.useTLS = useTLS;
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
     }
 }

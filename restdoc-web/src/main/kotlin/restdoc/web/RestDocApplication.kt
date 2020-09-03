@@ -1,4 +1,4 @@
-package restdoc.restdoc.web
+package restdoc.web
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.EnableConfigurationProperties

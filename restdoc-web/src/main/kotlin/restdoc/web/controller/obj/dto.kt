@@ -1,4 +1,4 @@
-package restdoc.web.web.obj
+package restdoc.web.controller.obj
 
 import restdoc.web.model.BodyFieldDescriptor
 import restdoc.web.model.FieldType

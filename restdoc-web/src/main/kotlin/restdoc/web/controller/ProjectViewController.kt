@@ -1,4 +1,4 @@
-package restdoc.web.web
+package restdoc.web.controller
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.mongodb.core.MongoTemplate

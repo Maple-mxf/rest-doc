@@ -11,6 +11,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
+@Deprecated
 public class ClientManager implements CommandLineRunner {
 
     private final Map<String, ClientChannelInfo> clients = new ConcurrentHashMap<>();
@@ -50,6 +51,6 @@ public class ClientManager implements CommandLineRunner {
                     e.printStackTrace();
                 }
             }
-        }, 1000L);
+        }, 1000L,5000L);
     }
 }

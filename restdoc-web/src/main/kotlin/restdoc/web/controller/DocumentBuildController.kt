@@ -1,4 +1,4 @@
-package restdoc.web.web
+package restdoc.web.controller
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper

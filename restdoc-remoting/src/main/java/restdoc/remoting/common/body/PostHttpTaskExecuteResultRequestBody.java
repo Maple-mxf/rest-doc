@@ -11,7 +11,7 @@ public class PostHttpTaskExecuteResultRequestBody extends RemotingSerializable {
 
     private int status;
 
-    private Map<String, Object> responseHeader;
+    private Map<String, String> responseHeader;
 
     private Object responseBody;
 
@@ -23,11 +23,11 @@ public class PostHttpTaskExecuteResultRequestBody extends RemotingSerializable {
         this.status = status;
     }
 
-    public Map<String, Object> getResponseHeader() {
+    public Map<String, String> getResponseHeader() {
         return responseHeader;
     }
 
-    public void setResponseHeader(Map<String, Object> responseHeader) {
+    public void setResponseHeader(Map<String, String> responseHeader) {
         this.responseHeader = responseHeader;
     }
 

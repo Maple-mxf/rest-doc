@@ -1,4 +1,4 @@
-package restdoc.web.web
+package restdoc.web.controller
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -16,6 +16,8 @@ import restdoc.core.Status
 import restdoc.core.failure
 import restdoc.core.ok
 import restdoc.web.base.auth.HolderKit
+import restdoc.web.controller.obj.CreateUpdateWikiDto
+import restdoc.web.controller.obj.RequestDto
 import restdoc.web.core.executor.ExecutorDelegate
 import restdoc.web.model.DocType
 import restdoc.web.model.Document
@@ -25,8 +27,6 @@ import restdoc.web.repository.DocumentRepository
 import restdoc.web.repository.ProjectRepository
 import restdoc.web.util.IDUtil
 import restdoc.web.util.JsonDeProjector
-import restdoc.web.web.obj.CreateUpdateWikiDto
-import restdoc.web.web.obj.RequestDto
 import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.validation.Valid

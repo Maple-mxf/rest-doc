@@ -1,4 +1,4 @@
-package restdoc.web.web
+package restdoc.web.controller
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.mongodb.core.query.Criteria
@@ -12,7 +12,7 @@ import restdoc.web.repository.DocumentRepository
 import restdoc.web.repository.ResourceRepository
 import restdoc.web.util.IDUtil
 import restdoc.web.util.IDUtil.now
-import restdoc.web.web.obj.*
+import restdoc.web.controller.obj.*
 import javax.validation.Valid
 
 @RestController

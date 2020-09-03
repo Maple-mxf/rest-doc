@@ -37,7 +37,7 @@ public class ScheduleServerController implements CommandLineRunner {
     private static Logger log = LoggerFactory.getLogger(ScheduleServerController.class);
 
     private final NettyRemotingServer remotingServer;
-    
+
     private final Thread thread;
 
     private final ClientManager clientManager;
@@ -111,7 +111,7 @@ public class ScheduleServerController implements CommandLineRunner {
         ClientChannelInfo clientChannelInfo = this.clientManager.findClient(clientId);
         RemotingCommand response = remotingServer.invokeSync(clientChannelInfo.getChannel(), request,
                 this.httpTaskExecuteTimeout);
-
+        
         if (response.getCode() == RemotingSysResponseCode.SUCCESS) {
 
             PostHttpTaskExecuteResultRequestBody responseBody = RemotingSerializable.decode(response.getBody(),

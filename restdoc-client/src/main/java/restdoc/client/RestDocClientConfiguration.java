@@ -1,15 +1,17 @@
 package restdoc.client;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
+import org.springframework.web.client.RestTemplate;
+import restdoc.client.executor.HttpTaskExecutor;
 import restdoc.client.remoting.ApplicationClient;
-import restdoc.client.remoting.TaskChannelInboundHandlerAdapter;
-import restdoc.remoting.netty.RemotingCommandDecoder;
-import restdoc.remoting.netty.RemotingCommandEncoder;
+import restdoc.client.remoting.HttpTaskRequestProcessor;
 
 @Configuration
 @EnableConfigurationProperties(RestDocProperties.class)
@@ -25,33 +27,29 @@ public class RestDocClientConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public ApplicationClient applicationClient(TaskChannelInboundHandlerAdapter taskChannelInboundHandlerAdapter,
-                                               RemotingCommandDecoder remotingCommandDecoder,
-                                               RemotingCommandEncoder remotingCommandEncoder) {
-        ApplicationClient client = new ApplicationClient(
-                this.restDocProperties,
-                taskChannelInboundHandlerAdapter,
-                remotingCommandEncoder,
-                remotingCommandDecoder);
-        new Thread(client::connection).start();
-        return client;
+    public ApplicationClient applicationClient(RestDocProperties restDocProperties,
+                                               HttpTaskRequestProcessor httpTaskRequestProcessor) {
+        ApplicationClient applicationClient = new ApplicationClient(restDocProperties, httpTaskRequestProcessor);
+        applicationClient.connection();
+        return applicationClient;
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public TaskChannelInboundHandlerAdapter taskChannelInboundHandlerAdapter() {
-        return new TaskChannelInboundHandlerAdapter();
+    public HttpTaskExecutor httpTaskExecutor(RestTemplate restTemplate, Environment environment) {
+        return new HttpTaskExecutor(restTemplate, environment);
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public RemotingCommandDecoder remotingCommandDecoder() {
-        return new RemotingCommandDecoder();
+    public HttpTaskRequestProcessor httpTaskRequestProcessor(ObjectMapper mapper,
+                                                             HttpTaskExecutor httpTaskExecutor) {
+        return new HttpTaskRequestProcessor(mapper, httpTaskExecutor);
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public RemotingCommandEncoder remotingCommandEncoder() {
-        return new RemotingCommandEncoder();
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
     }
 }

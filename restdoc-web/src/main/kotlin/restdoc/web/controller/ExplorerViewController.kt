@@ -1,4 +1,4 @@
-package restdoc.web.web
+package restdoc.web.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.beans.factory.annotation.Autowired

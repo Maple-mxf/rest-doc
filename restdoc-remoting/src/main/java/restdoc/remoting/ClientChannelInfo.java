@@ -19,12 +19,15 @@ package restdoc.remoting;
 import io.netty.channel.Channel;
 import restdoc.remoting.protocol.LanguageCode;
 
+import java.net.InetSocketAddress;
+
 public class ClientChannelInfo {
     private final Channel channel;
     private final String clientId;
     private final LanguageCode language;
     private final int version;
     private volatile long lastUpdateTimestamp = System.currentTimeMillis();
+    private String hostName;
 
     public ClientChannelInfo(Channel channel) {
         this(channel, null, null, 0);
@@ -35,7 +38,11 @@ public class ClientChannelInfo {
         this.clientId = clientId;
         this.language = language;
         this.version = version;
+
+        InetSocketAddress address = (InetSocketAddress) channel.remoteAddress();
+        this.hostName = address.getHostName();
     }
+
 
     public Channel getChannel() {
         return channel;
@@ -59,6 +66,14 @@ public class ClientChannelInfo {
 
     public void setLastUpdateTimestamp(long lastUpdateTimestamp) {
         this.lastUpdateTimestamp = lastUpdateTimestamp;
+    }
+
+    public String getHostName() {
+        return hostName;
+    }
+
+    public void setHostName(String hostName) {
+        this.hostName = hostName;
     }
 
     @Override
@@ -92,9 +107,21 @@ public class ClientChannelInfo {
         return true;
     }
 
-    @Override
+   /* @Override
     public String toString() {
         return "ClientChannelInfo [channel=" + channel + ", clientId=" + clientId + ", language=" + language
-            + ", version=" + version + ", lastUpdateTimestamp=" + lastUpdateTimestamp + "]";
+                + ", version=" + version + ", lastUpdateTimestamp=" + lastUpdateTimestamp + "]";
+    }*/
+
+    @Override
+    public String toString() {
+        return "ClientChannelInfo [" +
+                "channel=" + channel +
+                ", clientId='" + clientId + '\'' +
+                ", language=" + language +
+                ", version=" + version +
+                ", lastUpdateTimestamp=" + lastUpdateTimestamp +
+                ", hostName='" + hostName + '\'' +
+                ']';
     }
 }
