@@ -1,5 +1,5 @@
 restdoc:
-  serverIp: 127.0.0.1
+  serverIp: 114.67.246.62
   serverPort: 4321
   serviceName: RPCName
 server:
