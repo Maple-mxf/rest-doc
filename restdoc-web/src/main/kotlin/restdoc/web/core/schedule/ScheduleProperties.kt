@@ -1,4 +1,4 @@
-package restdoc.core.schedule
+package restdoc.web.core.schedule
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.ConstructorBinding

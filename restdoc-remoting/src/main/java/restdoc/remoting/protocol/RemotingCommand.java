@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.StringUtils;
 import restdoc.remoting.CommandCustomHeader;
 import restdoc.remoting.annotation.NotNull;
-import restdoc.remoting.exception.RemotingCommandException;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;

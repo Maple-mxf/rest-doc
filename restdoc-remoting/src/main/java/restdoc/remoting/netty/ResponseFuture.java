@@ -1,10 +1,10 @@
 package restdoc.remoting.netty;
 
+import io.netty.channel.Channel;
 import restdoc.remoting.InvokeCallback;
 import restdoc.remoting.common.SemaphoreReleaseOnlyOnce;
 import restdoc.remoting.protocol.RemotingCommand;
 
-import java.nio.channels.Channel;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;

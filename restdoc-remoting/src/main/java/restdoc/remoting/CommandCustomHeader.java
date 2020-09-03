@@ -1,7 +1,7 @@
 package restdoc.remoting;
 
-import restdoc.remoting.exception.RemotingCommandException;
 
+import restdoc.remoting.exception.RemotingCommandException;
 
 /**
  * CommandCustomHeader provided setup custom header
