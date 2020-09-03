@@ -4,6 +4,7 @@ package restdoc.web.core.schedule;
 /**
  * @author ubuntu-m
  */
+@Deprecated
 public interface Consumer<T> {
 
     /**

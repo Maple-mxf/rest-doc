@@ -2,6 +2,7 @@ package restdoc.remoting.data;
 
 import restdoc.remoting.protocol.RemotingSerializable;
 
+@Deprecated
 public class HostData extends RemotingSerializable {
 
     private String host;

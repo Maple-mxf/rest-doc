@@ -32,6 +32,7 @@ import java.util.Collections;
  *
  * @author ubuntu-m
  */
+@Deprecated
 @Component
 public class ScheduleInstanceServerHandler extends ChannelInboundHandlerAdapter {
 

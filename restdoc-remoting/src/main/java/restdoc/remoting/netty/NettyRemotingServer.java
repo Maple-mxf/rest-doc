@@ -175,7 +175,7 @@ public class NettyRemotingServer extends NettyRemotingAbstract implements Remoti
                         .channel(useEpoll() ? EpollServerSocketChannel.class : NioServerSocketChannel.class)
                         .option(ChannelOption.SO_BACKLOG, 1024)
                         .option(ChannelOption.SO_REUSEADDR, true)
-                        .option(ChannelOption.SO_KEEPALIVE, true)
+                        .option(ChannelOption.SO_KEEPALIVE, false)
                         .childOption(ChannelOption.TCP_NODELAY, true)
                         .childOption(ChannelOption.SO_SNDBUF, nettyServerConfig.getServerSocketSndBufSize())
                         .childOption(ChannelOption.SO_RCVBUF, nettyServerConfig.getServerSocketRcvBufSize())
