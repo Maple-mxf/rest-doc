@@ -53,4 +53,8 @@ public class ClientManager implements CommandLineRunner {
             }
         }, 1000L,5000L);
     }
+
+    public Map<String, ClientChannelInfo> getClients() {
+        return clients;
+    }
 }

@@ -14,6 +14,8 @@ data class UpdateProjectDto(val id: String, val name: String, val desc: String)
 data class RequestDto(
         val projectId: String,
         var documentId: String?,
+        var executeMode: String?,
+        var remoteAddress: String?,
         var url: String,
         val name: String?,
         val description: String?,

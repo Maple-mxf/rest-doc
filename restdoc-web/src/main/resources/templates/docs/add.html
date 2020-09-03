@@ -298,9 +298,11 @@
 
         form.verify({
             url: function (value, item) {
-                if (!new RegExp("^(http(s?)\\:\\/\\/)?[0-9a-zA-Z]([-.\\w]*[0-9a-zA-Z])*(:(0-9)*)*(\\/?)([a-zA-Z0-9\\-\\.\\?\\,\\'\\/\\\\\\+&amp;%$#_]*)?$").test(value)) {
+                /*if (!new RegExp("^(http(s?)\\:\\/\\/)?[0-9a-zA-Z]([-.\\w]*[0-9a-zA-Z])*(:(0-9)*)*(\\/?)([a-zA-Z0-9\\-\\.\\?\\,\\'\\/\\\\\\+&amp;%$#_]*)?$").test(value)) {
                     return "URL格式不正确";
-                }
+                }*/
+
+                if (value === "") return "URL格式不正确";
             },
             type: function (value, item) {
                 if (value === "NON")
@@ -498,73 +500,86 @@
 
             return false;
         });
+
         form.on('submit(execute)', function (data) {
 
-            var index = layer.load(1);
-
-            // $("#test-result").slideDown();
-
             var map = getFormData(data.field);
-            map['projectId'] = $("#projectId").val();
 
-            var httpTaskId = null;
+            layer.open({
+                type: 2,
+                title: '请选择运行服务实例',
+                content: '/restdoc/serviceClient/view/list',
+                area: ['600px', '400px'],
+                btn: ['确定', '取消'],
+                yes: function (index, dom) {
+                    var res = window["layui-layer-iframe" + index].getCheckData();
+                    map["executeMode"] = "remoteAddress";
 
-            $('pre').html("Http Task Executing; Please waiting...\n")
+                    console.info(res);
 
-            $.ajax({
-                type: 'POST',
-                dataType: 'JSON',
-                contentType: 'application/json;charset=utf-8',
-                url: '/restdoc/document/httpTask/submit',
-                data: JSON.stringify(map),
-                async: false,
-                success: function (data) {
-                    if (data['code'] === "200") {
-                        if (data['data'] != null) {
-                            httpTaskId = data['data'];
-                            layer.msg('执行成功')
-                        } else {
-                            layer.msg("任务提交失败")
+                    map["remoteAddress"] = res[0]['remoteAddress'];
+
+                    map['projectId'] = $("#projectId").val();
+
+                    var httpTaskId = null;
+
+                    $('pre').html("Http Task Executing; Please waiting...\n");
+
+                    $.ajax({
+                        type: 'POST',
+                        dataType: 'JSON',
+                        contentType: 'application/json;charset=utf-8',
+                        url: '/restdoc/document/httpTask/submit',
+                        data: JSON.stringify(map),
+                        async: false,
+                        success: function (data) {
+                            if (data['code'] === "200") {
+                                if (data['data'] != null) {
+                                    httpTaskId = data['data'];
+                                    layer.msg('执行成功')
+                                } else {
+                                    layer.msg("任务提交失败")
+                                }
+                            } else {
+                                layer.msg(data['message'])
+                            }
+
+                        },
+                        error: function () {
+                            layer.msg("网络异常")
                         }
-                    } else {
-                        layer.msg(data['message'])
+                    });
+
+                    if (httpTaskId != null) {
+                        var responseBody = null;
+                        for (let i = 0; i < 100; i++) {
+                            var executeResult = getExecuteResult(httpTaskId);
+                            globalExecuteResult = executeResult;
+
+                            responseBody = executeResult['data']['body']
+
+                            if (executeResult['code'] === "200") {
+                                $("pre").append("url : " + executeResult['data']['url'] + '\n')
+                                $("pre").append("status code : " + executeResult['data']['status'] + '\n\n')
+                                $("pre").append("request header : \n" + formatJson(executeResult['data']['requestHeader']) + '\n\n')
+                                $("pre").append("request param : \n" + formatJson(executeResult['data']['content']) + '\n\n')
+                                $("pre").append("response header : \n" + formatJson(executeResult['data']['responseHeader']) + '\n\n')
+                                $("pre").append("response body : \n" + formatJson(executeResult['data']['body']))
+                                break;
+                            } else {
+                                console.info(data)
+                            }
+                        }
+
+                        if (responseBody != null) {
+                            completeExecuteCallback(JSON.stringify(responseBody))
+                        }
+                        $('pre').append("<br>Execute Complete")
                     }
 
-                },
-                error: function () {
-                    layer.msg("网络异常")
+                    layer.close(index)
                 }
             });
-
-            if (httpTaskId != null) {
-                var responseBody = null;
-                for (let i = 0; i < 100; i++) {
-                    var executeResult = getExecuteResult(httpTaskId);
-                    globalExecuteResult = executeResult;
-
-                    responseBody = executeResult['data']['body']
-
-                    if (executeResult['code'] === "200") {
-                        $("pre").append("url : " + executeResult['data']['url'] + '\n')
-                        $("pre").append("status code : " + executeResult['data']['status'] + '\n\n')
-                        $("pre").append("request header : \n" + formatJson(executeResult['data']['requestHeader']) + '\n\n')
-                        $("pre").append("request param : \n" + formatJson(executeResult['data']['content']) + '\n\n')
-                        $("pre").append("response header : \n" + formatJson(executeResult['data']['responseHeader']) + '\n\n')
-                        $("pre").append("response body : \n" + formatJson(executeResult['data']['body']))
-                        break;
-                    } else {
-                        console.info(data)
-                    }
-                }
-
-                if (responseBody != null) {
-                    completeExecuteCallback(JSON.stringify(responseBody))
-                }
-                $('pre').append("<br>Execute Complete")
-            }
-
-            layer.close(index);
-
             return false;
         });
 

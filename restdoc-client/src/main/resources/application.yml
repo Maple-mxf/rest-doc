@@ -4,3 +4,5 @@ restdoc:
   serviceName: RPCName
 server:
   port: 5543
+  servlet:
+    context-path: /restdocclient

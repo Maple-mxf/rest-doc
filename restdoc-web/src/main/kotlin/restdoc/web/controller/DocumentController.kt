@@ -15,10 +15,12 @@ import restdoc.core.Result
 import restdoc.core.Status
 import restdoc.core.failure
 import restdoc.core.ok
+import restdoc.remoting.common.body.SubmitHttpTaskRequestBody
 import restdoc.web.base.auth.HolderKit
 import restdoc.web.controller.obj.CreateUpdateWikiDto
 import restdoc.web.controller.obj.RequestDto
 import restdoc.web.core.executor.ExecutorDelegate
+import restdoc.web.core.schedule.ScheduleServerController
 import restdoc.web.model.DocType
 import restdoc.web.model.Document
 import restdoc.web.model.ExecuteResult
@@ -27,6 +29,8 @@ import restdoc.web.repository.DocumentRepository
 import restdoc.web.repository.ProjectRepository
 import restdoc.web.util.IDUtil
 import restdoc.web.util.JsonDeProjector
+import restdoc.web.util.JsonProjector
+import restdoc.web.util.PathValue
 import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.validation.Valid
@@ -142,12 +146,70 @@ class DocumentController {
 
     private val present: String = "Default"
 
+    @Autowired
+    lateinit var scheduleServerController: ScheduleServerController
+
     @PostMapping("/httpTask/submit")
     fun submitHttpTask(@RequestBody @Valid requestDto: RequestDto): Result {
 
+        if (requestDto.remoteAddress != null) {
+            return serviceClientExecuteTask(requestDto = requestDto)
+        } else {
+            return innerExecuteTask(requestDto = requestDto)
+        }
+    }
+
+    private fun serviceClientExecuteTask(requestDto: RequestDto): Result {
+        val taskId = IDUtil.id()
+
+        val requestHeaderDescriptor = requestDto.mapToHeaderDescriptor()
+        val requestBodyDescriptor = requestDto.mapToRequestDescriptor()
+
+        val content = JsonProjector(requestBodyDescriptor.map { PathValue(it.path, it.value) })
+                .project()
+
+        val body = SubmitHttpTaskRequestBody()
+
+        val header = requestHeaderDescriptor.map { it.field to (it.value.joinToString(",")) }.toMap()
+
+        body.url = requestDto.url
+        body.header = header
+        body.method = HttpMethod.valueOf(requestDto.method).toString()
+        body.body = null
+        body.uriVar = mutableMapOf()
+
+        val taskData = scheduleServerController.syncSubmitRemoteHttpTask(
+                requestDto.remoteAddress,
+                taskId,
+                body
+        )
+        try {
+
+            val jsonNode = mapper.convertValue(taskData.value, JsonNode::class.java)
+
+            val executeResult = ExecuteResult(
+                    status = taskData.status,
+                    method = body.method,
+                    requestHeader = header,
+                    responseHeader = mapOf(),
+                    content = mapper.createObjectNode(),
+                    url = body.url,
+                    body = jsonNode)
+
+            redisTemplate.opsForValue().set(taskId, executeResult)
+            redisTemplate.expire(taskId, 1000, TimeUnit.SECONDS)
+        } catch (e: Throwable) {
+            return failure(Status.BAD_REQUEST, e.message.toString())
+        }
+        return ok(taskId)
+    }
+
+
+    private fun innerExecuteTask(requestDto: RequestDto): Result {
         requestDto.autocomplete()
         val requestHeaderDescriptor = requestDto.mapToHeaderDescriptor()
         val requestBodyDescriptor = requestDto.mapToRequestDescriptor()
+
 
         val taskId = IDUtil.id()
 
@@ -166,6 +228,7 @@ class DocumentController {
         }
         return ok(taskId)
     }
+
 
     @GetMapping("/httpTask/{taskId}")
     fun execute(@PathVariable taskId: String): Result {

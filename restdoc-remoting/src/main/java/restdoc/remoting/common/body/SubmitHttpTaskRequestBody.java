@@ -1,5 +1,6 @@
 package restdoc.remoting.common.body;
 
+import restdoc.remoting.annotation.NotNull;
 import restdoc.remoting.annotation.Nullable;
 import restdoc.remoting.protocol.RemotingSerializable;
 
@@ -9,6 +10,7 @@ public class SubmitHttpTaskRequestBody extends RemotingSerializable {
 
     private String url;
 
+    @NotNull
     private String method;
 
     private Map<String, String> header;

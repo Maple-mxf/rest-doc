@@ -28,7 +28,7 @@ public class PostHttpTaskExecuteResultProcessor extends AsyncNettyRequestProcess
                 PostHttpTaskExecuteResultRequestBody.class);
 
         int httpStatus = body.getStatus();
-        Map<String, Object> httpResponseHeader = body.getResponseHeader();
+        Map<String, String > httpResponseHeader = body.getResponseHeader();
         Object responseBody = body.getResponseBody();
 
         return RemotingCommand.createResponseCommand(RemotingSysResponseCode.SUCCESS, null);

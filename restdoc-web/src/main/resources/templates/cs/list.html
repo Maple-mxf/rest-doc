@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}"/>
+    <link rel="stylesheet" th:href="@{/admin/css/pearForm.css}"/>
+
+    <style type="text/css">
+        body {
+            background-color: #F2F2F2;
+        }
+    </style>
+</head>
+<body>
+
+<div class="layui-container">
+    <table class="layui-hide" id="test" lay-filter="test"></table>
+</div>
+
+<script th:src="@{/layui/layui.js}"></script>
+<script th:src="@{/admin/js/jquery.js}"></script>
+<script th:src="@{/admin/js/util.js}"></script>
+<script type="text/javascript" th:inline="javascript">
+
+
+    var tb = null;
+    layui.use('table', function () {
+        var table = layui.table;
+
+        table.render({
+            elem: '#test'
+            , url: '/restdoc/serviceClient/list'
+            , toolbar: '#toolbarDemo'
+            , cols: [
+                [
+                    {
+                        type: 'radio'
+                    }
+                    ,
+                    {
+                        field: 'remoteAddress', width: 200, title: '服务远程地址', sort: true
+                    }
+                    ,
+                    {
+                        field: 'hostName', width: 200, title: '服务主机名称'
+                    }
+                ]
+            ]
+
+            , page: true
+        });
+
+        tb = table;
+    });
+
+    function getCheckData() {
+        var checkStatus = tb.checkStatus("test"); //获取选中行状态
+        return checkStatus.data;
+    }
+
+</script>
+</body>
+</html>

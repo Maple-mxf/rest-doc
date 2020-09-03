@@ -44,7 +44,7 @@ public class HttpTaskExecutor {
     private String autocompleteURL(String originURL) {
         if (originURL.startsWith("http") || originURL.startsWith("https")) return originURL;
         if (originURL.startsWith(contextPath)) {
-            return String.format("http://127.0.0.1:%d%s", port, contextPath);
+            return String.format("http://127.0.0.1:%d%s", port, originURL);
         } else {
             if (originURL.startsWith("/")) {
                 return String.format("http://127.0.0.1:%d%s%s", port, contextPath, originURL);
