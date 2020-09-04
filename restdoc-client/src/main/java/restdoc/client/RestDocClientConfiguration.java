@@ -52,4 +52,10 @@ public class RestDocClientConfiguration {
     public RestTemplate restTemplate() {
         return new RestTemplate();
     }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public EndpointsListener endpointsListener(){
+        return new EndpointsListener();
+    }
 }
