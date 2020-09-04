@@ -34,7 +34,7 @@ public class ResponseFuture {
         this.once = once;
     }
 
-    public void executeInvokeCallback() {
+    public void executeInvokeCallback() throws InterruptedException {
         if (invokeCallback != null) {
             if (this.executeCallbackOnlyOnce.compareAndSet(false, true)) {
                 invokeCallback.operationComplete(this);

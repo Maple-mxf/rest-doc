@@ -308,7 +308,6 @@ public class NettyRemotingServer extends NettyRemotingAbstract implements Remoti
         return channelEventListener;
     }
 
-
     @Override
     public ExecutorService getCallbackExecutor() {
         return this.publicExecutor;
@@ -433,7 +432,6 @@ public class NettyRemotingServer extends NettyRemotingAbstract implements Remoti
 
         @Override
         public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
-
             // Not Handler
 
             /*if (evt instanceof IdleStateEvent) {

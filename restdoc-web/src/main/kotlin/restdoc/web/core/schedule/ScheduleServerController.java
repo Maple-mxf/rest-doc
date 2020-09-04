@@ -6,8 +6,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-import restdoc.web.core.ServiceException;
-import restdoc.web.core.Status;
 import restdoc.remoting.ChannelEventListener;
 import restdoc.remoting.ClientChannelInfo;
 import restdoc.remoting.common.RequestCode;
@@ -24,6 +22,8 @@ import restdoc.remoting.protocol.LanguageCode;
 import restdoc.remoting.protocol.RemotingCommand;
 import restdoc.remoting.protocol.RemotingSerializable;
 import restdoc.remoting.protocol.RemotingSysResponseCode;
+import restdoc.web.core.ServiceException;
+import restdoc.web.core.Status;
 
 
 /**
@@ -43,7 +43,7 @@ public class ScheduleServerController implements CommandLineRunner {
     private final ClientManager clientManager;
 
     private final long httpTaskExecuteTimeout = 32 << 9;
-
+    
     @Autowired
     public ScheduleServerController(ScheduleProperties scheduleProperties,
                                     ClientManager clientManager
@@ -54,6 +54,7 @@ public class ScheduleServerController implements CommandLineRunner {
         ChannelEventListener eventListener = new ChannelEventListener() {
             @Override
             public void onChannelConnect(String remoteAddr, Channel channel) {
+
                 ScheduleServerController.this.clientManager.registerClient(
                         remoteAddr,
                         new ClientChannelInfo(channel, remoteAddr, LanguageCode.JAVA, 1));
@@ -74,17 +75,14 @@ public class ScheduleServerController implements CommandLineRunner {
             }
         };
 
-        this.remotingServer = new NettyRemotingServer(config, eventListener);
-
-
+        this.remotingServer = new NettyRemotingServer(config/*, eventListener*/);
         this.thread = new Thread(ScheduleServerController.this.remotingServer::start);
         this.clientManager = clientManager;
-        // this.postHttpTaskExecuteResultProcessor = new PostHttpTaskExecuteResultProcessor(this);
     }
 
     private void initialize() {
-        /*this.remotingServer.registerProcessor(RequestCode.POST_EXECUTE_RESULT,
-                postHttpTaskExecuteResultProcessor, null);*/
+        this.remotingServer.registerProcessor(RequestCode.REPORT_CLIENT_INFO,
+                new ClientInfoCollectorProcessor(clientManager), null);
     }
 
     @Override

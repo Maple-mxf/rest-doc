@@ -28,6 +28,7 @@ public class ClientChannelInfo {
     private final int version;
     private volatile long lastUpdateTimestamp = System.currentTimeMillis();
     private String hostName;
+    private String osname;
 
     public ClientChannelInfo(Channel channel) {
         this(channel, null, null, 0);
@@ -74,6 +75,14 @@ public class ClientChannelInfo {
 
     public void setHostName(String hostName) {
         this.hostName = hostName;
+    }
+
+    public String getOsname() {
+        return osname;
+    }
+
+    public void setOsname(String osname) {
+        this.osname = osname;
     }
 
     @Override

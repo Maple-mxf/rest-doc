@@ -1,6 +1,7 @@
 package restdoc.remoting.netty;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
 import restdoc.remoting.protocol.RemotingCommand;
@@ -15,6 +16,7 @@ import java.nio.ByteBuffer;
  *
  * @author ubuntu-m
  */
+@ChannelHandler.Sharable
 public class RemotingCommandEncoder extends MessageToByteEncoder<RemotingCommand> {
 
     @Override

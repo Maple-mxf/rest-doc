@@ -14,4 +14,9 @@ public interface RequestCode {
      * Return the http request execute result
      */
     int POST_EXECUTE_RESULT = 1;
+
+    /**
+     *
+     */
+    int REPORT_CLIENT_INFO = 2;
 }
