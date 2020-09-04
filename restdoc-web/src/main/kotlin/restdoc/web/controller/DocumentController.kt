@@ -11,16 +11,16 @@ import org.springframework.data.mongodb.core.query.Query
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.http.HttpMethod
 import org.springframework.web.bind.annotation.*
-import restdoc.web.core.Result
-import restdoc.web.core.Status
-import restdoc.web.core.failure
-import restdoc.web.core.ok
 import restdoc.remoting.common.body.SubmitHttpTaskRequestBody
 import restdoc.web.base.auth.HolderKit
 import restdoc.web.controller.obj.CreateUpdateWikiDto
 import restdoc.web.controller.obj.RequestDto
+import restdoc.web.core.Result
+import restdoc.web.core.Status
 import restdoc.web.core.executor.ExecutorDelegate
-import restdoc.web.core.schedule.ScheduleServerController
+import restdoc.web.core.failure
+import restdoc.web.core.ok
+import restdoc.web.core.schedule.ScheduleController
 import restdoc.web.model.DocType
 import restdoc.web.model.Document
 import restdoc.web.model.ExecuteResult
@@ -146,8 +146,7 @@ class DocumentController {
 
     private val present: String = "Default"
 
-    @Autowired
-    lateinit var scheduleServerController: ScheduleServerController
+    @Autowired lateinit var scheduleController: ScheduleController
 
     @PostMapping("/httpTask/submit")
     fun submitHttpTask(@RequestBody @Valid requestDto: RequestDto): Result {
@@ -178,14 +177,14 @@ class DocumentController {
         body.body = null
         body.uriVar = mutableMapOf()
 
-        val taskData = scheduleServerController.syncSubmitRemoteHttpTask(
+        val taskData = scheduleController.syncSubmitRemoteHttpTask(
                 requestDto.remoteAddress,
                 taskId,
                 body
         )
         try {
 
-            val jsonNode = mapper.convertValue(taskData.value, JsonNode::class.java)
+            val jsonNode = mapper.convertValue(taskData!!.value, JsonNode::class.java)
 
             val executeResult = ExecuteResult(
                     status = taskData.status,

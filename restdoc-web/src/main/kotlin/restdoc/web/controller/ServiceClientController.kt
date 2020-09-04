@@ -3,18 +3,16 @@ package restdoc.web.controller
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
-import restdoc.web.core.schedule.ClientManager
+import restdoc.web.core.schedule.ClientChannelManager
 
 @RestController
 class ServiceClientController {
 
-    @Autowired
-    lateinit var clientManager: ClientManager
+    @Autowired lateinit var clientChannelManager: ClientChannelManager
 
-    @GetMapping("/serviceClient/list")
-    fun list(): Any {
+    @GetMapping("/serviceClient/list") fun list(): Any {
 
-        val services = clientManager.clients.map {
+        val services = clientChannelManager.clients.map {
             mapOf(
                     "remoteAddress" to it.key,
                     "hostname" to it.value.hostname,
@@ -25,7 +23,7 @@ class ServiceClientController {
 
         val res = mutableMapOf<String, Any>()
         res["code"] = 0
-        res["count"] = clientManager.clients.size
+        res["count"] = clientChannelManager.clients.size
         res["msg"] = ""
         res["data"] = services
 

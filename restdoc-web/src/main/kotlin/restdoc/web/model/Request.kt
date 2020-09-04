@@ -9,5 +9,3 @@ data class Request(
         val body: Any?,
         val uriVar: Map<String, Any>?
 )
-
-//data class Response()
