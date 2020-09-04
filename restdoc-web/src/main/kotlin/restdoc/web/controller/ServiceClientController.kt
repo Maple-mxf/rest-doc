@@ -17,7 +17,8 @@ class ServiceClientController {
         val services = clientManager.clients.map {
             mapOf(
                     "remoteAddress" to it.key,
-                    "hostName" to it.value.hostName
+                    "hostname" to it.value.hostname,
+                    "osname" to it.value.osname
             )
         }
                 .toList()

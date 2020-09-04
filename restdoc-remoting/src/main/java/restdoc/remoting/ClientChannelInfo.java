@@ -27,7 +27,7 @@ public class ClientChannelInfo {
     private final LanguageCode language;
     private final int version;
     private volatile long lastUpdateTimestamp = System.currentTimeMillis();
-    private String hostName;
+    private String hostname;
     private String osname;
 
     public ClientChannelInfo(Channel channel) {
@@ -41,7 +41,7 @@ public class ClientChannelInfo {
         this.version = version;
 
         InetSocketAddress address = (InetSocketAddress) channel.remoteAddress();
-        this.hostName = address.getHostName();
+        this.hostname = address.getHostName();
     }
 
 
@@ -69,12 +69,12 @@ public class ClientChannelInfo {
         this.lastUpdateTimestamp = lastUpdateTimestamp;
     }
 
-    public String getHostName() {
-        return hostName;
+    public String getHostname() {
+        return hostname;
     }
 
-    public void setHostName(String hostName) {
-        this.hostName = hostName;
+    public void setHostname(String hostname) {
+        this.hostname = hostname;
     }
 
     public String getOsname() {
@@ -130,7 +130,7 @@ public class ClientChannelInfo {
                 ", language=" + language +
                 ", version=" + version +
                 ", lastUpdateTimestamp=" + lastUpdateTimestamp +
-                ", hostName='" + hostName + '\'' +
+                ", hostName='" + hostname + '\'' +
                 ']';
     }
 }

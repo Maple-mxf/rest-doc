@@ -31,7 +31,7 @@ public class ClientInfoCollectorProcessor implements NettyRequestProcessor {
         InetSocketAddress address = (InetSocketAddress) ctx.channel().remoteAddress();
 
         ClientChannelInfo clientChannelInfo = new ClientChannelInfo(ctx.channel(), address.getAddress().getHostAddress(), LanguageCode.JAVA, 1);
-        clientChannelInfo.setHostName(body.getHostname());
+        clientChannelInfo.setHostname(body.getHostname());
         clientChannelInfo.setOsname(body.getOsname());
 
         clientManager.registerClient(clientChannelInfo.getClientId(), clientChannelInfo);
