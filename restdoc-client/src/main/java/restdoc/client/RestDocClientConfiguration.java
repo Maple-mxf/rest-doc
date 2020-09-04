@@ -1,6 +1,5 @@
 package restdoc.client;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -17,13 +16,7 @@ import restdoc.client.remoting.HttpTaskRequestProcessor;
 @EnableConfigurationProperties(RestDocProperties.class)
 public class RestDocClientConfiguration {
 
-    private final RestDocProperties restDocProperties;
-
     private static Logger log = LoggerFactory.getLogger(RestDocClientConfiguration.class);
-
-    public RestDocClientConfiguration(RestDocProperties restDocProperties) {
-        this.restDocProperties = restDocProperties;
-    }
 
     @Bean
     @ConditionalOnMissingBean
@@ -42,9 +35,8 @@ public class RestDocClientConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public HttpTaskRequestProcessor httpTaskRequestProcessor(ObjectMapper mapper,
-                                                             HttpTaskExecutor httpTaskExecutor) {
-        return new HttpTaskRequestProcessor(mapper, httpTaskExecutor);
+    public HttpTaskRequestProcessor httpTaskRequestProcessor(HttpTaskExecutor httpTaskExecutor) {
+        return new HttpTaskRequestProcessor(httpTaskExecutor);
     }
 
     @Bean
@@ -55,7 +47,7 @@ public class RestDocClientConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public EndpointsListener endpointsListener(){
+    public EndpointsListener endpointsListener() {
         return new EndpointsListener();
     }
 }

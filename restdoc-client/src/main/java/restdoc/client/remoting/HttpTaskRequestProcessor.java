@@ -1,6 +1,5 @@
 package restdoc.client.remoting;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.netty.channel.ChannelHandlerContext;
 import org.springframework.http.ResponseEntity;
 import restdoc.client.executor.HttpTaskExecutor;
@@ -20,13 +19,10 @@ import java.util.stream.Collectors;
 
 public class HttpTaskRequestProcessor implements NettyRequestProcessor {
 
-    private final ObjectMapper mapper;
     private final HttpTaskExecutor httpTaskExecutor;
 
 
-    public HttpTaskRequestProcessor(ObjectMapper mapper,
-                                    HttpTaskExecutor httpTaskExecutor) {
-        this.mapper = mapper;
+    public HttpTaskRequestProcessor(HttpTaskExecutor httpTaskExecutor) {
         this.httpTaskExecutor = httpTaskExecutor;
     }
 
