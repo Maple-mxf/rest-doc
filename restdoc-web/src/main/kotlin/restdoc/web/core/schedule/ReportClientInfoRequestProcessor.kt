@@ -12,7 +12,7 @@ import restdoc.remoting.protocol.RemotingSysResponseCode
 import java.net.InetSocketAddress
 
 @Component
-class ReportClientInfoRequestProcessor(private val clientManager: ClientManager) : NettyRequestProcessor {
+class ReportClientInfoRequestProcessor(private val clientManager: ClientChannelManager) : NettyRequestProcessor {
 
     override fun rejectRequest(): Boolean {
         return false

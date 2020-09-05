@@ -29,14 +29,14 @@ data class Resource(@Id var id: String?,
                     var createBy: String?
 )
 
-@Deprecated(message = "")
 @Document(collection = "restdoc_project")
 data class Project(
         @Id val id: String,
         val name: String,
         val desc: String?,
         val createTime: Long?,
-        var projectId: String?
+        var projectId: String?,
+        val accessPwd: String? = null
 )
 
 @Document(collection = "restdoc_group")

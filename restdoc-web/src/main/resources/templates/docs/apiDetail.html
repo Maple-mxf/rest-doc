@@ -56,6 +56,7 @@
 <body>
 
 <input id="documentId" type="hidden" th:value="${document.id}">
+<input id="projectId" type="hidden" th:value="${projectId}">
 
 <div class="layui-container">
 
@@ -88,10 +89,10 @@
             </table>
         </div>
         <div class="layui-col-md3">
-
             <div style="margin-top: 5%;margin-left: 5%">
                 <div class="layui-inline">
-                    <button class="layui-btn" id="test">去调试</button>
+                    <a th:href="@{'/'+${projectId}+'/document/view/'+${document.id}+'/test'}" class="layui-btn"
+                       target="_blank">去调试</a>
                 </div>
 
                 <div class="layui-inline">
@@ -99,9 +100,7 @@
                             id="copyDocLink">复制访问链接
                     </button>
                 </div>
-
             </div>
-
         </div>
     </div>
 
@@ -239,7 +238,7 @@
         var docId = $("#documentId").val()
 
         $("#test").click(function () {
-            layer.open({
+            /*layer.open({
                 title: 'API Explorer',
                 area: ['900px', '600px'],
                 scrollbar: false,
@@ -247,7 +246,9 @@
                 content: '/restdoc/explorer/view/' + docId + '/test',
                 closeBtn: 1,
                 btn: ['关闭'],
-            });
+            });*/
+
+
         })
 
         $("#delete").click(function () {

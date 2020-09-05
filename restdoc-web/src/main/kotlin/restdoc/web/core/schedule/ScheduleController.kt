@@ -27,7 +27,8 @@ import restdoc.web.core.Status
  */
 @Component
 class ScheduleController(val scheduleProperties: ScheduleProperties,
-                         val clientManager: ClientManager) : CommandLineRunner {
+                         val clientManager: ClientChannelManager,
+                         val reportClientInfoRequestProcessor: ReportClientInfoRequestProcessor) : CommandLineRunner {
 
     private val log: Logger = LoggerFactory.getLogger(ScheduleController::class.java)
 
@@ -45,8 +46,7 @@ class ScheduleController(val scheduleProperties: ScheduleProperties,
         }
 
     fun initialize() {
-        this.remotingServer.registerProcessor(RequestCode.REPORT_CLIENT_INFO,
-                ReportClientInfoRequestProcessor(clientManager), null);
+        this.remotingServer.registerProcessor(RequestCode.REPORT_CLIENT_INFO, reportClientInfoRequestProcessor, null);
     }
 
     override fun run(vararg args: String?) {
@@ -54,7 +54,10 @@ class ScheduleController(val scheduleProperties: ScheduleProperties,
         log.info("ScheduleController started")
     }
 
-    @Throws(InterruptedException::class, RemotingTimeoutException::class, RemotingSendRequestException::class, RemotingCommandException::class)
+    @Throws(InterruptedException::class,
+            RemotingTimeoutException::class,
+            RemotingSendRequestException::class,
+            RemotingCommandException::class)
     fun syncSubmitRemoteHttpTask(clientId: String?,
                                  taskId: String?,
                                  body: SubmitHttpTaskRequestBody): HttpTaskData? {
@@ -64,7 +67,7 @@ class ScheduleController(val scheduleProperties: ScheduleProperties,
         val request = RemotingCommand.createRequestCommand(RequestCode.SUBMIT_HTTP_PROCESS, header)
         request.body = body.encode()
         val clientChannelInfo = clientManager.findClient(clientId)
-        val response = remotingServer.invokeSync(clientChannelInfo.channel, request,
+        val response = remotingServer.invokeSync(clientChannelInfo!!.channel, request,
                 this.httpTaskExecuteTimeout)
 
         return if (response.code == RemotingSysResponseCode.SUCCESS) {

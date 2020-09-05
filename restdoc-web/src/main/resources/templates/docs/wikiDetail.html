@@ -25,13 +25,33 @@
             font-family: 'Roboto', sans-serif;
             font-size: 14px;
         }
-
     </style>
 
 </head>
 
 <body>
-<div class="layui-container detail-body layui-text easyeditor-content" style="margin-top: 10px" th:utext="${document.content}">
+
+<div class="layui-container">
+
+    <div class="layui-row" style="margin-top: 10px">
+
+        <div style="font-size: 20px" class="layui-col-md7" th:text="${document.name}">
+        </div>
+
+        <div class="layui-col-md1">
+            <div class="layui-inline" style="margin-left: 20%">
+                <button class="layui-btn layui-btn-primary"
+                        id="copyDocLink">复制访问链接
+                </button>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+<div class="layui-container detail-body layui-text easyeditor-content" style="margin-top: 10px"
+     th:utext="${document.content}">
 </div>
 
 <script th:src="@{/layui/layui.js}"></script>

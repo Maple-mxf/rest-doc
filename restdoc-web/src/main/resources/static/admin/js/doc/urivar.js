@@ -1,4 +1,4 @@
-var oneuriline = "            <div class=\"layui-form-item one-request-header-line\" id=\"first-pathvar-field\">\n" +
+var oneuriline = "            <div class=\"layui-form-item one-uri-header-line\" id=\"first-pathvar-field\">\n" +
     "                <div class=\"layui-inline\">\n" +
     "                    <div class=\"layui-input-inline\">\n" +
     "                        <input type=\"text\" name=\"uriField\" placeholder=\"Key\" autocomplete=\"off\"\n" +

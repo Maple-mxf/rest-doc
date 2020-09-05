@@ -66,8 +66,8 @@ class DocumentViewController {
         return "docs/add"
     }
 
-    @GetMapping("/document/{documentId}/view")
-    fun getApi(@PathVariable documentId: String, model: Model): String {
+    @GetMapping("/{projectId}/document/{documentId}/view")
+    fun getApi(@PathVariable projectId: String, @PathVariable documentId: String, model: Model): String {
         model.set("documentId", documentId)
 
         val document: Document = documentRepository.findById(documentId)
@@ -79,8 +79,9 @@ class DocumentViewController {
                 .orElse(null)
                 ?: return "docs/resourceDetail"
 
-        model.addAttribute("resource",resource)
+        model.addAttribute("resource", resource)
         model.addAttribute("document", document)
+        model.addAttribute("projectId", projectId)
         model.addAttribute("sample", mapper.writeValueAsString(document.executeResult))
 
         if (DocType.API == document.docType) {
@@ -90,5 +91,18 @@ class DocumentViewController {
         } else {
             return "docs/resourceDetail"
         }
+    }
+
+    @GetMapping("/{projectId}/document/view/{id}/test")
+    fun testApi(@PathVariable projectId: String, @PathVariable id: String, model: Model): String {
+
+        val document: Document = documentRepository.findById(id)
+                .orElse(null)
+                ?: return "view/error/500"
+
+        model.addAttribute("initDocument", document)
+        model.addAttribute("projectId", projectId)
+
+        return "docs/add"
     }
 }

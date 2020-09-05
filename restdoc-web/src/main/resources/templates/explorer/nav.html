@@ -91,7 +91,7 @@
             , edit: ['update', 'del']
             , click: function (obj) {
                 if (obj.data.type === "WIKI" || obj.data.type === "API") {
-                    $("#docContentFrame").attr("src", '/restdoc/document/' + obj.data.id + '/view');
+                    $("#docContentFrame").attr("src", '/restdoc/'+projectId+'/document/' + obj.data.id + '/view');
                 }
             }
             , operate: function (obj) {
@@ -124,8 +124,8 @@
             $.ajax({
                 type: 'PATCH',
                 url: url,
-                contentType:'application/json;charset=utf-8',
-                dataType:"JSON",
+                contentType: 'application/json;charset=utf-8',
+                dataType: "JSON",
                 data: JSON.stringify(body),
                 async: false,
                 success: function (data) {
