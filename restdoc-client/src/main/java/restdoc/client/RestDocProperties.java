@@ -9,7 +9,7 @@ public class RestDocProperties {
 
     private int serverPort;
 
-    private String serviceName;
+    private String service;
 
     public String getServerIp() {
         return serverIp;
@@ -27,11 +27,11 @@ public class RestDocProperties {
         this.serverPort = serverPort;
     }
 
-    public String getServiceName() {
-        return serviceName;
+    public String getService() {
+        return service;
     }
 
-    public void setServiceName(String serviceName) {
-        this.serviceName = serviceName;
+    public void setService(String service) {
+        this.service = service;
     }
 }

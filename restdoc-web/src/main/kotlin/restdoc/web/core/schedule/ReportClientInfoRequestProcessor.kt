@@ -23,9 +23,15 @@ class ReportClientInfoRequestProcessor(private val clientManager: ClientChannelM
 
         val address = ctx.channel().remoteAddress() as InetSocketAddress
 
-        val clientChannelInfo = ClientChannelInfo(ctx.channel(), address.address.hostAddress, LanguageCode.JAVA, 1)
+        val clientChannelInfo = ClientChannelInfo(
+                ctx.channel(),
+                address.address.hostAddress,
+                LanguageCode.JAVA,
+                1)
+
         clientChannelInfo.hostname = body.hostname
         clientChannelInfo.osname = body.osname
+        clientChannelInfo.service = body.service
 
         clientManager.registerClient(clientChannelInfo.clientId, clientChannelInfo)
 

@@ -29,6 +29,7 @@ public class ClientChannelInfo {
     private volatile long lastUpdateTimestamp = System.currentTimeMillis();
     private String hostname;
     private String osname;
+    private String service;
 
     public ClientChannelInfo(Channel channel) {
         this(channel, null, null, 0);
@@ -124,13 +125,23 @@ public class ClientChannelInfo {
 
     @Override
     public String toString() {
-        return "ClientChannelInfo [" +
+        return "ClientChannelInfo{" +
                 "channel=" + channel +
                 ", clientId='" + clientId + '\'' +
                 ", language=" + language +
                 ", version=" + version +
                 ", lastUpdateTimestamp=" + lastUpdateTimestamp +
-                ", hostName='" + hostname + '\'' +
-                ']';
+                ", hostname='" + hostname + '\'' +
+                ", osname='" + osname + '\'' +
+                ", service='" + service + '\'' +
+                '}';
+    }
+
+    public String getService() {
+        return service;
+    }
+
+    public void setService(String service) {
+        this.service = service;
     }
 }

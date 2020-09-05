@@ -1,9 +1,10 @@
 restdoc:
-#  serverIp: 114.67.246.62
+  #  serverIp: 114.67.246.62
   serverIp: 127.0.0.1
   serverPort: 4321
   serviceName: RPCName
+  service: Mall-Service
 server:
-  port: 5543
+  port: 5545
   servlet:
     context-path: /restdocclient

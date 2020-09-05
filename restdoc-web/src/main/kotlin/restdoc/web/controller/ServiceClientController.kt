@@ -8,15 +8,18 @@ import restdoc.web.core.schedule.ClientChannelManager
 @RestController
 class ServiceClientController {
 
-    @Autowired lateinit var clientChannelManager: ClientChannelManager
+    @Autowired
+    lateinit var clientChannelManager: ClientChannelManager
 
-    @GetMapping("/serviceClient/list") fun list(): Any {
+    @GetMapping("/serviceClient/list")
+    fun list(): Any {
 
         val services = clientChannelManager.clients.map {
             mapOf(
                     "remoteAddress" to it.key,
                     "hostname" to it.value.hostname,
-                    "osname" to it.value.osname
+                    "osname" to it.value.osname,
+                    "service" to it.value.service
             )
         }
                 .toList()

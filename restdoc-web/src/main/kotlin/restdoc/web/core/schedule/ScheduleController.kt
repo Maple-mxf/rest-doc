@@ -2,6 +2,7 @@ package restdoc.web.core.schedule
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.CommandLineRunner
 import org.springframework.stereotype.Component
 import restdoc.remoting.common.RequestCode
@@ -26,9 +27,7 @@ import restdoc.web.core.Status
  * @author ubuntu-m
  */
 @Component
-class ScheduleController(val scheduleProperties: ScheduleProperties,
-                         val clientManager: ClientChannelManager,
-                         val reportClientInfoRequestProcessor: ReportClientInfoRequestProcessor) : CommandLineRunner {
+class ScheduleController : CommandLineRunner {
 
     private val log: Logger = LoggerFactory.getLogger(ScheduleController::class.java)
 
@@ -38,19 +37,36 @@ class ScheduleController(val scheduleProperties: ScheduleProperties,
         this.remotingServer.start()
     })
 
-    private val remotingServer: NettyRemotingServer
-        get() {
-            val nettyServerConfig = NettyServerConfig()
-            nettyServerConfig.listenPort = scheduleProperties.port
-            return NettyRemotingServer(nettyServerConfig)
-        }
+    private val scheduleProperties: ScheduleProperties
+    private val clientManager: ClientChannelManager
+    private val reportClientInfoRequestProcessor: ReportClientInfoRequestProcessor
+
+    private val remotingServer: NettyRemotingServer;
+
+    @Autowired
+    constructor(scheduleProperties: ScheduleProperties,
+                clientManager: ClientChannelManager,
+                reportClientInfoRequestProcessor: ReportClientInfoRequestProcessor) {
+
+        this.scheduleProperties = scheduleProperties
+        this.clientManager = clientManager
+        this.reportClientInfoRequestProcessor = reportClientInfoRequestProcessor
+
+        val config = NettyServerConfig()
+        config.listenPort = scheduleProperties.port
+        remotingServer = NettyRemotingServer(config)
+    }
+
 
     fun initialize() {
         this.remotingServer.registerProcessor(RequestCode.REPORT_CLIENT_INFO, reportClientInfoRequestProcessor, null);
     }
 
     override fun run(vararg args: String?) {
+        this.initialize()
+
         this.thread.start()
+
         log.info("ScheduleController started")
     }
 
@@ -67,6 +83,7 @@ class ScheduleController(val scheduleProperties: ScheduleProperties,
         val request = RemotingCommand.createRequestCommand(RequestCode.SUBMIT_HTTP_PROCESS, header)
         request.body = body.encode()
         val clientChannelInfo = clientManager.findClient(clientId)
+
         val response = remotingServer.invokeSync(clientChannelInfo!!.channel, request,
                 this.httpTaskExecuteTimeout)
 

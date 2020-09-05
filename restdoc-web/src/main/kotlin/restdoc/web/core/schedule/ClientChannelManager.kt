@@ -18,7 +18,7 @@ class ClientChannelManager(var mapper: ObjectMapper) : CommandLineRunner {
     val clients: ConcurrentHashMap<String, ClientChannelInfo> = ConcurrentHashMap()
 
     fun registerClient(id: String, clientChannelInfo: ClientChannelInfo?) {
-        clients.putIfAbsent(id, clientChannelInfo!!)
+        clients.put(id, clientChannelInfo!!)
     }
 
     fun unregisterClient(id: String) {

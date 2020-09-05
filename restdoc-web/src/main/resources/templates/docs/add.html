@@ -75,7 +75,7 @@
                                 <option value="OPTION">OPTION</option>
                             </select>
                         </div>
-                        <label class="layui-form-label">http://</label>
+                        <!--                        <label class="layui-form-label">http://</label>-->
                         <div class="layui-input-inline">
                             <input id="url" type="text" name="url"
                                    placeholder="127.0.0.1:8080/springboot/{resource}/{id}"
@@ -84,9 +84,14 @@
                                    class="layui-input">
                         </div>
 
-                        <button class="layui-btn" style="margin-left: 25%;float: left" lay-submit lay-filter="execute">
-                            调试
+                        <button class="layui-btn" style="margin-left: 20%;float: left" lay-submit
+                                lay-filter="rpcExecute">
+                            RPC远程调试
                         </button>
+                        <button class="layui-btn" lay-submit lay-filter="execute">
+                            外网调试
+                        </button>
+
                         <button class="layui-btn" style="margin-left: 10px;float: left" lay-submit lay-filter="save">
                             保存文档
                         </button>
@@ -504,28 +509,20 @@
             return false;
         });
 
-        form.on('submit(execute)', function (data) {
-
+        form.on('submit(rpcExecute)', function (data) {
             var map = getFormData(data.field);
-
             layer.open({
                 type: 2,
                 title: '请选择运行服务实例',
                 content: '/restdoc/serviceClient/view/list',
-                area: ['600px', '400px'],
+                area: ['1000px', '800px'],
                 btn: ['确定', '取消'],
                 yes: function (index, dom) {
                     var res = window["layui-layer-iframe" + index].getCheckData();
                     map["executeMode"] = "remoteAddress";
-
-                    console.info(res);
-
                     map["remoteAddress"] = res[0]['remoteAddress'];
-
                     map['projectId'] = $("#projectId").val();
-
                     var httpTaskId = null;
-
                     $('pre').html("Http Task Executing; Please waiting...\n");
 
                     $.ajax({

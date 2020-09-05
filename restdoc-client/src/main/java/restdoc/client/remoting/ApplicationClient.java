@@ -54,6 +54,7 @@ public class ApplicationClient {
                 ReportClientInfoRequestBody body = new ReportClientInfoRequestBody();
                 body.setOsname(System.getProperty("os.name"));
                 body.setHostname(RemotingUtil.getHostname());
+                body.setService(restDocProperties.getService());
                 request.setBody(body.encode());
 
                 ApplicationClient.this.remotingClient.invokeAsync(
