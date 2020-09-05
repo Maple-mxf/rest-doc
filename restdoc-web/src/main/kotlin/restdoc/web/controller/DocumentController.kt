@@ -8,6 +8,7 @@ import org.springframework.data.domain.Sort.by
 import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
+import org.springframework.data.mongodb.core.query.Update
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.http.HttpMethod
 import org.springframework.web.bind.annotation.*
@@ -15,6 +16,7 @@ import restdoc.remoting.common.body.SubmitHttpTaskRequestBody
 import restdoc.web.base.auth.HolderKit
 import restdoc.web.controller.obj.CreateUpdateWikiDto
 import restdoc.web.controller.obj.RequestDto
+import restdoc.web.controller.obj.UpdateNodeDto
 import restdoc.web.core.Result
 import restdoc.web.core.Status
 import restdoc.web.core.executor.ExecutorDelegate
@@ -146,7 +148,8 @@ class DocumentController {
 
     private val present: String = "Default"
 
-    @Autowired lateinit var scheduleController: ScheduleController
+    @Autowired
+    lateinit var scheduleController: ScheduleController
 
     @PostMapping("/httpTask/submit")
     fun submitHttpTask(@RequestBody @Valid requestDto: RequestDto): Result {
@@ -276,10 +279,16 @@ class DocumentController {
         return ok(document.id)
     }
 
-
     @DeleteMapping("/{id}")
     fun delete(@PathVariable id: String): Result {
         documentRepository.deleteById(id)
+        return ok()
+    }
+
+    @PatchMapping("/{id}")
+    fun patch(@PathVariable id: String, @RequestBody @Valid dto: UpdateNodeDto): Result {
+        val updateResult = documentRepository.update(Query().addCriteria(Criteria("_id").`is`(id)),
+                Update().set("name", dto.name))
         return ok()
     }
 }

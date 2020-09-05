@@ -5,14 +5,12 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.boot.CommandLineRunner
-import org.springframework.boot.context.properties.ConstructorBinding
 import org.springframework.stereotype.Component
 import restdoc.remoting.ClientChannelInfo
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
 @Component
-@ConstructorBinding
 class ClientChannelManager(var mapper: ObjectMapper) : CommandLineRunner {
 
     private val log: Logger = LoggerFactory.getLogger(ClientChannelManager::class.java)

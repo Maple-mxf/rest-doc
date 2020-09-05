@@ -148,3 +148,5 @@ data class CreateUpdateWikiDto(
         val name: String,
         val tableContent: Any
 )
+
+data class UpdateNodeDto(@NotBlank(message = "名称不可为空") val name: String)

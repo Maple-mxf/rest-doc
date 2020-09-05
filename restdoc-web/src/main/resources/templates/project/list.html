@@ -2,13 +2,15 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>项目列表</title>
     <link rel="stylesheet" th:href="@{/layui/css/layui.css}"/>
-    <link rel="stylesheet" th:href="@{/admin/css/pearForm.css}"/>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/admin/css/fangge-style.css}"/>
+    <link rel="stylesheet" th:href="@{/admin/css/doc-common.css}"/>
 
     <style type="text/css">
         body {
-            background-color: #F2F2F2;
+            background-color:#F0F0F0;
         }
 
         .project-item :hover {
@@ -18,8 +20,8 @@
     </style>
 </head>
 <body>
-<div th:replace="nav::nav"></div>
-<div style="padding: 20px; " class="layui-container">
+<div th:include="nav::nav"></div>
+<div class="layui-container" style="margin-top: 10px;">
     <div class="layui-row">
         <div class="layui-row layui-col-space20 layui-col-md-offset3">
             <div class="layui-col-md2">
@@ -56,7 +58,7 @@
 
                     if (desc == null) desc = "";
                     var createTime = formatTimestamp(result[key].createTime);
-                    var html = "        <div id='" + projectId + "' class=\"layui-col-md3 project-item\" onclick='clickProject(this)'>\n" +
+                    var html = "        <div id='" + projectId + "' ondblclick='clickProject(this)' class=\"layui-col-md3 project-item\">\n" +
                         "            <div class=\"layui-card\">\n" +
                         "                <div class=\"layui-card-header\">" + name + "</div>\n" +
                         "                <div class=\"layui-card-body\">\n" +
@@ -80,11 +82,11 @@
         var layer = layui.layer;
         var $ = layui.jquery;
         lay = layui.layer;
+
     });
 
     function clickProject(obj) {
-        console.info(obj)
-        var id = obj.id
+        var id = obj.id;
         lay.open({
             title: 'Project Detail',
             area: ['800px', '500px'],

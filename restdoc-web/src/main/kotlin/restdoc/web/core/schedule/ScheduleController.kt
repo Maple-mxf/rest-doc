@@ -3,7 +3,6 @@ package restdoc.web.core.schedule
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.boot.CommandLineRunner
-import org.springframework.boot.context.properties.ConstructorBinding
 import org.springframework.stereotype.Component
 import restdoc.remoting.common.RequestCode
 import restdoc.remoting.common.body.PostHttpTaskExecuteResultRequestBody
@@ -26,7 +25,6 @@ import restdoc.web.core.Status
  *
  * @author ubuntu-m
  */
-@ConstructorBinding
 @Component
 class ScheduleController(val scheduleProperties: ScheduleProperties,
                          val clientManager: ClientManager) : CommandLineRunner {

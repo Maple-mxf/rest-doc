@@ -1,7 +1,6 @@
 package restdoc.web.core.schedule
 
 import io.netty.channel.ChannelHandlerContext
-import org.springframework.boot.context.properties.ConstructorBinding
 import org.springframework.stereotype.Component
 import restdoc.remoting.ClientChannelInfo
 import restdoc.remoting.common.body.ReportClientInfoRequestBody
@@ -13,7 +12,6 @@ import restdoc.remoting.protocol.RemotingSysResponseCode
 import java.net.InetSocketAddress
 
 @Component
-@ConstructorBinding
 class ReportClientInfoRequestProcessor(private val clientManager: ClientManager) : NettyRequestProcessor {
 
     override fun rejectRequest(): Boolean {

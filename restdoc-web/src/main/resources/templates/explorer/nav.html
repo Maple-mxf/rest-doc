@@ -10,15 +10,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/admin/css/fangge-style.css}"/>
     <link rel="stylesheet" th:href="@{/admin/css/doc-common.css}"/>
-    <link rel="stylesheet" th:href="@{/admin/css/pear-tree/dtree.css}"/>
     <style>
         #tableContents {
             border-top: 3px solid #009688;
             margin-top: 40px;
-        }
-
-        #test1 {
-            margin-top: 20px;
         }
     </style>
 </head>
@@ -64,13 +59,11 @@
         'util',
         'layer',
         'element',
-        'dtree',
         'jquery',
         'tree'], function () {
         var tree = layui.tree;
         var $ = layui.jquery;
         var layer = layui.layer;
-        var dtree = layui.dtree;
 
         var treeData = null;
         var projectId = $("#projectId").val();
@@ -81,7 +74,8 @@
             async: false,
             success: function (data) {
                 if (data['code'] === "200") {
-                    treeData = data['data'][0].children;
+                    // treeData = data['data'][0].children;
+                    treeData = data['data']
                 } else {
                     layer.msg(data['message']);
                 }
@@ -91,26 +85,79 @@
             }
         });
 
-        dtree.render({
-            elem: "#navTableOfContent",
-            // dataStyle: "layuiStyle",
-            // dataFormat: "list",
-            data: treeData,
-        });
+        tree.render({
+            elem: '#navTableOfContent'
+            , data: treeData
+            , edit: ['update', 'del']
+            , click: function (obj) {
+                if (obj.data.type === "WIKI" || obj.data.type === "API") {
+                    $("#docContentFrame").attr("src", '/restdoc/document/' + obj.data.id + '/view');
+                }
+            }
+            , operate: function (obj) {
+                var type = obj.type;
+                var data = obj.data;
 
-        // 点击节点触发回调，其中obj内包含丰富的数据，打开浏览器F12查看！
-        dtree.on("node('navTableOfContent')", function (obj) {
+                if (type == 'del') {
+                    if (data.type == 'WIKI' || data.type == 'API') {
+                        deleteTreeNode('/restdoc/document/' + data.id)
+                    } else {
+                        deleteTreeNode('/restdoc/resource/' + data.id)
+                    }
+                } else if (type == 'update') {
+                    var body = {"name": data.title};
 
-            console.info(obj);
+                    console.info(body);
 
-            /*if (obj.data.type === "WIKI" || obj.data.type === "API") {
-                $("#docContentFrame").attr("src", '/restdoc/document/' + obj.data.id + '/view');
-            }*/
+                    console.info(data)
 
-            if (obj.param.leaf) {
-                $("#docContentFrame").attr("src", '/restdoc/document/' + obj.param.nodeId + '/view');
+                    if (data.type == 'WIKI' || data.type == 'API') {
+                        editTreeNode('/restdoc/document/' + data.id, body)
+                    } else {
+                        editTreeNode('/restdoc/resource/' + data.id, body)
+                    }
+                }
             }
         });
+
+        function editTreeNode(url, body) {
+            $.ajax({
+                type: 'PATCH',
+                url: url,
+                contentType:'application/json;charset=utf-8',
+                dataType:"JSON",
+                data: JSON.stringify(body),
+                async: false,
+                success: function (data) {
+                    if (data['code'] === "200") {
+                        layer.msg("操作成功")
+                    } else {
+                        layer.msg(data['message']);
+                    }
+                },
+                error: function () {
+                    layer.msg("网络异常")
+                }
+            });
+        }
+
+        function deleteTreeNode(url) {
+            $.ajax({
+                type: "DELETE",
+                url: url,
+                async: false,
+                success: function (data) {
+                    if (data['code'] === "200") {
+                        layer.msg("操作成功")
+                    } else {
+                        layer.msg(data['message']);
+                    }
+                },
+                error: function () {
+                    layer.msg("网络异常")
+                }
+            });
+        }
 
 
         $('#createTableContentBtn').click(function (event) {
