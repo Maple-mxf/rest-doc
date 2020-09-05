@@ -19,4 +19,9 @@ public interface RequestCode {
      *
      */
     int REPORT_CLIENT_INFO = 2;
+
+    /**
+     *
+     */
+    int GET_EMPTY_API_TEMPLATES = 3;
 }

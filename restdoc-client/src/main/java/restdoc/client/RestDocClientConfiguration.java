@@ -11,6 +11,7 @@ import org.springframework.web.client.RestTemplate;
 import restdoc.client.executor.HttpTaskExecutor;
 import restdoc.client.remoting.ApplicationClient;
 import restdoc.client.remoting.HttpTaskRequestProcessor;
+import restdoc.client.remoting.PostEmptyApiTemplateRequestProcessor;
 
 @Configuration
 @EnableConfigurationProperties(RestDocProperties.class)
@@ -21,8 +22,14 @@ public class RestDocClientConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public ApplicationClient applicationClient(RestDocProperties restDocProperties,
-                                               HttpTaskRequestProcessor httpTaskRequestProcessor) {
-        ApplicationClient applicationClient = new ApplicationClient(restDocProperties, httpTaskRequestProcessor);
+                                               HttpTaskRequestProcessor httpTaskRequestProcessor,
+                                               PostEmptyApiTemplateRequestProcessor postEmptyApiTemplateRequestProcessor
+                                               ) {
+        ApplicationClient applicationClient = new ApplicationClient(
+                restDocProperties,
+                httpTaskRequestProcessor,
+                postEmptyApiTemplateRequestProcessor);
+
         applicationClient.connection();
         return applicationClient;
     }
@@ -49,5 +56,11 @@ public class RestDocClientConfiguration {
     @ConditionalOnMissingBean
     public EndpointsListener endpointsListener() {
         return new EndpointsListener();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public PostEmptyApiTemplateRequestProcessor postEmptyApiTemplateRequestProcessor() {
+        return new PostEmptyApiTemplateRequestProcessor();
     }
 }

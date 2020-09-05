@@ -6,10 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.CommandLineRunner
 import org.springframework.stereotype.Component
 import restdoc.remoting.common.RequestCode
+import restdoc.remoting.common.body.GetClientApiListRequestBody
 import restdoc.remoting.common.body.PostHttpTaskExecuteResultRequestBody
 import restdoc.remoting.common.body.SubmitHttpTaskRequestBody
 import restdoc.remoting.common.header.PostHttpTaskExecuteResultRequestHeader
 import restdoc.remoting.common.header.SubmitHttpTaskRequestHeader
+import restdoc.remoting.data.ApiEmptyTemplate
 import restdoc.remoting.exception.RemotingCommandException
 import restdoc.remoting.exception.RemotingSendRequestException
 import restdoc.remoting.exception.RemotingTimeoutException
@@ -98,6 +100,25 @@ class ScheduleController : CommandLineRunner {
                     responseBody.responseHeader,
                     responseBody.responseBody,
                     responseHeader.taskId)
+        } else {
+            throw ServiceException(response.remark, Status.INTERNAL_SERVER_ERROR)
+        }
+    }
+
+    fun syncGetEmptyApiTemplates(clientId: String?,
+                                 taskId: String?,
+                                 body: GetClientApiListRequestBody): List<ApiEmptyTemplate> {
+
+        val request = RemotingCommand.createRequestCommand(RequestCode.GET_EMPTY_API_TEMPLATES, null)
+
+        val clientChannelInfo = clientManager.findClient(clientId)
+
+        val response = remotingServer.invokeSync(clientChannelInfo!!.channel, request,
+                this.httpTaskExecuteTimeout)
+
+        return if (response.code == RemotingSysResponseCode.SUCCESS) {
+            RemotingSerializable.decode(response.body,
+                    List::class.java) as List<ApiEmptyTemplate>
         } else {
             throw ServiceException(response.remark, Status.INTERNAL_SERVER_ERROR)
         }

@@ -29,6 +29,10 @@ public class ApplicationClient {
 
     private volatile State state = State.STOPPED;
 
+    private final HttpTaskRequestProcessor httpTaskRequestProcessor;
+
+    private final PostEmptyApiTemplateRequestProcessor postEmptyApiTemplateRequestProcessor;
+
     private enum State {
         STOPPED,
         RUNNING
@@ -37,7 +41,9 @@ public class ApplicationClient {
     private NettyRemotingClient remotingClient;
 
     @Autowired
-    public ApplicationClient(RestDocProperties restDocProperties, HttpTaskRequestProcessor httpTaskRequestProcessor) {
+    public ApplicationClient(RestDocProperties restDocProperties,
+                             HttpTaskRequestProcessor httpTaskRequestProcessor,
+                             PostEmptyApiTemplateRequestProcessor postEmptyApiTemplateRequestProcessor) {
 
         NettyClientConfig config = new NettyClientConfig();
         config.setUseTLS(false);
@@ -80,10 +86,22 @@ public class ApplicationClient {
             }
         };
 
+        this.postEmptyApiTemplateRequestProcessor = postEmptyApiTemplateRequestProcessor;
+        this.httpTaskRequestProcessor = httpTaskRequestProcessor;
         this.remotingClient = new NettyRemotingClient(config, eventListener);
+
+        this.init();
+    }
+
+    private void init() {
+        
+        // Register the given http task request processor
         this.remotingClient.registerProcessor(RequestCode.SUBMIT_HTTP_PROCESS,
                 httpTaskRequestProcessor, null);
 
+        // Register the given api empty template request processor
+        this.remotingClient.registerProcessor(RequestCode.GET_EMPTY_API_TEMPLATES,
+                postEmptyApiTemplateRequestProcessor, null);
     }
 
     public synchronized void connection() {

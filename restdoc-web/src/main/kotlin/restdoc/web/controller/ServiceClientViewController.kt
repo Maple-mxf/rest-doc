@@ -10,4 +10,10 @@ class ServiceClientViewController {
     fun list(): String {
         return "cs/list"
     }
+
+
+    @GetMapping("/serviceClient/view/index")
+    fun index(): String {
+        return "cs/index"
+    }
 }

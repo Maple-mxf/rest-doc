@@ -88,11 +88,10 @@
                                 lay-filter="rpcExecute">
                             RPC远程调试
                         </button>
-                        <button class="layui-btn" lay-submit lay-filter="execute">
+                        <button class="layui-btn" style="margin-left: 10px;float: left" lay-submit lay-filter="execute">
                             外网调试
                         </button>
-
-                        <button class="layui-btn" style="margin-left: 10px;float: left" lay-submit lay-filter="save">
+                        <button class="layui-btn"  lay-submit lay-filter="save">
                             保存文档
                         </button>
                     </div>
@@ -582,6 +581,69 @@
             });
             return false;
         });
+        form.on('submit(execute)', function (data) {
+            var map = getFormData(data.field);
+
+            map['projectId'] = $("#projectId").val();
+            var httpTaskId = null;
+            $('pre').html("Http Task Executing; Please waiting...\n");
+
+            $.ajax({
+                type: 'POST',
+                dataType: 'JSON',
+                contentType: 'application/json;charset=utf-8',
+                url: '/restdoc/document/httpTask/submit',
+                data: JSON.stringify(map),
+                async: false,
+                success: function (data) {
+                    if (data['code'] === "200") {
+                        if (data['data'] != null) {
+                            httpTaskId = data['data'];
+                            layer.msg('执行成功')
+                        } else {
+                            layer.msg("任务提交失败")
+                        }
+                    } else {
+                        layer.msg(data['message'])
+                    }
+
+                },
+                error: function () {
+                    layer.msg("网络异常")
+                }
+            });
+
+            if (httpTaskId != null) {
+                var responseBody = null;
+                for (let i = 0; i < 100; i++) {
+                    var executeResult = getExecuteResult(httpTaskId);
+                    globalExecuteResult = executeResult;
+
+                    responseBody = executeResult['data']['body']
+
+                    if (executeResult['code'] === "200") {
+                        $("pre").append("url : " + executeResult['data']['url'] + '\n')
+                        $("pre").append("status code : " + executeResult['data']['status'] + '\n\n')
+                        $("pre").append("request header : \n" + formatJson(executeResult['data']['requestHeader']) + '\n\n')
+                        $("pre").append("request param : \n" + formatJson(executeResult['data']['content']) + '\n\n')
+                        $("pre").append("response header : \n" + formatJson(executeResult['data']['responseHeader']) + '\n\n')
+                        $("pre").append("response body : \n" + formatJson(executeResult['data']['body']))
+                        break;
+                    } else {
+                        console.info(data)
+                    }
+                }
+
+                if (responseBody != null) {
+                    completeExecuteCallback(JSON.stringify(responseBody))
+                }
+                $('pre').append("<br>Execute Complete")
+            }
+
+            return false;
+        });
+
+
 
         function completeExecuteCallback(body) {
             $("#response-fieldset").addClass("layui-show");

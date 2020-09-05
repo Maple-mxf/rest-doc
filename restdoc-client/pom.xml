@@ -11,6 +11,8 @@
 
     <artifactId>restdoc-client</artifactId>
 
+    <packaging>jar</packaging>
+
 
     <dependencies>
         <dependency>

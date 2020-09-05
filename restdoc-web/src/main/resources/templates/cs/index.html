@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>微服务实例</title>
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}"/>
+    <link rel="stylesheet" th:href="@{/admin/css/pearForm.css}"/>
+
+    <style type="text/css">
+
+        body {
+            /*margin: 10px;*/
+            background-color: whitesmoke;
+            font-family: 'Roboto', sans-serif;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+<div th:include="nav::nav"></div>
+<div class="layui-container">
+    <table class="layui-hide" style="font-family: Roboto,serif;font-size: 15px" id="test" lay-filter="test"></table>
+</div>
+
+<script th:src="@{/layui/layui.js}"></script>
+<script th:src="@{/admin/js/jquery.js}"></script>
+<script th:src="@{/admin/js/util.js}"></script>
+<script type="text/javascript" th:inline="javascript">
+
+
+    var tb = null;
+    layui.use('table', function () {
+        var table = layui.table;
+
+        table.render({
+            elem: '#test'
+            , url: '/restdoc/serviceClient/list'
+            , toolbar: false
+            ,size:'lg'
+            , cols: [
+                [
+                    {
+                        field: 'service', width: 250, title: '服务名称', sort: true
+                    }
+                    ,
+                    {
+                        field: 'remoteAddress', width: 250, title: '服务远程地址', sort: true
+                    }
+                    ,
+                    {
+                        field: 'osname', width: 250, title: '运行平台'
+                    }
+                    ,
+                    {
+                        field: 'hostname', width: 250, title: '计算机名称'
+                    }
+                ]
+            ]
+
+        });
+
+        tb = table;
+    });
+
+    $("#serviceClientNav").addClass("layui-this")
+
+</script>
+</body>
+</html>
