@@ -60,7 +60,7 @@ public class RestDocClientConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public PostEmptyApiTemplateRequestProcessor postEmptyApiTemplateRequestProcessor() {
-        return new PostEmptyApiTemplateRequestProcessor();
+    public PostEmptyApiTemplateRequestProcessor postEmptyApiTemplateRequestProcessor(EndpointsListener endpointsListener) {
+        return new PostEmptyApiTemplateRequestProcessor(endpointsListener);
     }
 }
