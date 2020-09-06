@@ -8,6 +8,5 @@ public class RestDocClientApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(RestDocClientApplication.class);
-
     }
 }

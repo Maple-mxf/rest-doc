@@ -1,17 +1,20 @@
 package restdoc.client;
 
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 public class EchoController {
 
-    @GetMapping(value = "/echo", produces = MediaType.APPLICATION_JSON_VALUE)
-    Object echo() {
+    @GetMapping(value = "/echo/{var}", produces = MediaType.APPLICATION_JSON_VALUE)
+    Object echo(@PathVariable String var,
+                @RequestParam String param,
+                @RequestBody Map<String, Object> body
+    ) {
         HashMap<Object, Object> map = new HashMap<>();
         map.put("serviceName", "restdoc-starter");
         map.put("time", new Date().getTime());

@@ -6,5 +6,5 @@ restdoc:
   service: Mall-Service
 server:
   port: 5545
-  servlet:
-    context-path: /restdocclient
+#  servlet:
+#    context-path: /restdocclient

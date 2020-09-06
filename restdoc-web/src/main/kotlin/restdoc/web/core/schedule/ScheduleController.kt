@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.CommandLineRunner
 import org.springframework.stereotype.Component
 import restdoc.remoting.common.RequestCode
-import restdoc.remoting.common.body.GetClientApiListRequestBody
 import restdoc.remoting.common.body.PostHttpTaskExecuteResultRequestBody
 import restdoc.remoting.common.body.SubmitHttpTaskRequestBody
 import restdoc.remoting.common.header.PostHttpTaskExecuteResultRequestHeader
@@ -105,9 +104,7 @@ class ScheduleController : CommandLineRunner {
         }
     }
 
-    fun syncGetEmptyApiTemplates(clientId: String?,
-                                 taskId: String?,
-                                 body: GetClientApiListRequestBody): List<ApiEmptyTemplate> {
+    fun syncGetEmptyApiTemplates(clientId: String?): List<ApiEmptyTemplate> {
 
         val request = RemotingCommand.createRequestCommand(RequestCode.GET_EMPTY_API_TEMPLATES, null)
 

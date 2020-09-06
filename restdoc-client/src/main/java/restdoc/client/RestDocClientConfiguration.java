@@ -54,8 +54,8 @@ public class RestDocClientConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public EndpointsListener endpointsListener() {
-        return new EndpointsListener();
+    public EndpointsListener endpointsListener(Environment environment) {
+        return new EndpointsListener(environment);
     }
 
     @Bean

@@ -8,15 +8,6 @@ data class HeaderFieldDescriptor(
         val optional: Boolean = false
 )
 
-data class ParameterFieldDescriptor(
-        val field: String,
-        val value: Any,
-        val description: String?,
-        val type: FieldType = FieldType.OBJECT,
-        val optional: Boolean = true,
-        val defaultValue: Any?
-)
-
 data class BodyFieldDescriptor(
         var path: String,
         val value: Any?,

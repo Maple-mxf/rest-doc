@@ -47,6 +47,9 @@ data class Group(
         val createTime: Long
 )
 
+/**
+ * @sample HttpHeaders
+ */
 @Document(collection = "restdoc_document")
 data class Document(
         @Id var id: String?,
@@ -62,6 +65,7 @@ data class Document(
         val uriVariables: List<URIVarDescriptor>?,
         val executeResult: Map<String, Any?>? = null,
         val content: String? = null,
+        var responseHeaderDescriptor: List<HeaderFieldDescriptor>? = null,
         val docType: DocType = DocType.API
 )
 

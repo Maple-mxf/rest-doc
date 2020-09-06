@@ -1,6 +1,8 @@
 package restdoc.remoting.data;
 
 
+import java.util.Arrays;
+
 public class ApiEmptyTemplate {
 
     private String[] supportMethod;
@@ -12,6 +14,16 @@ public class ApiEmptyTemplate {
 
     private String function;
 
+    private String[] consumer;
+
+    private String[] produces;
+
+    private String[] uriVarField;
+
+    /**
+     * Bean type name
+     */
+    private String controller;
 
     public String getPattern() {
         return pattern;
@@ -43,5 +55,51 @@ public class ApiEmptyTemplate {
 
     public void setSupportMethod(String[] supportMethod) {
         this.supportMethod = supportMethod;
+    }
+
+    public String getController() {
+        return controller;
+    }
+
+    public void setController(String controller) {
+        this.controller = controller;
+    }
+
+    public String[] getProduces() {
+        return produces;
+    }
+
+    public void setProduces(String[] produces) {
+        this.produces = produces;
+    }
+
+    public String[] getConsumer() {
+        return consumer;
+    }
+
+    public void setConsumer(String[] consumer) {
+        this.consumer = consumer;
+    }
+
+    public String[] getUriVarField() {
+        return uriVarField;
+    }
+
+    public void setUriVarField(String[] uriVarField) {
+        this.uriVarField = uriVarField;
+    }
+
+    @Override
+    public String toString() {
+        return "ApiEmptyTemplate{" +
+                "supportMethod=" + Arrays.toString(supportMethod) +
+                ", pattern='" + pattern + '\'' +
+                ", requireBody=" + requireBody +
+                ", function='" + function + '\'' +
+                ", consumer=" + Arrays.toString(consumer) +
+                ", produces=" + Arrays.toString(produces) +
+                ", uriVarField=" + Arrays.toString(uriVarField) +
+                ", controller='" + controller + '\'' +
+                '}';
     }
 }
