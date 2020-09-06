@@ -3,13 +3,19 @@ package restdoc.web.controller
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpMethod
 import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
+import restdoc.web.controller.obj.SyncApiEmptyTemplateDto
 import restdoc.web.core.ok
 import restdoc.web.core.schedule.ClientChannelManager
 import restdoc.web.core.schedule.ScheduleController
 import restdoc.web.model.Document
+import restdoc.web.model.Project
 import restdoc.web.model.Resource
+import restdoc.web.model.URIVarDescriptor
+import restdoc.web.repository.DocumentRepository
+import restdoc.web.repository.ProjectRepository
 import restdoc.web.repository.ResourceRepository
 import restdoc.web.util.IDUtil
 import restdoc.web.util.IDUtil.now
@@ -25,6 +31,12 @@ class ServiceClientController {
 
     @Autowired
     lateinit var resourceRepository: ResourceRepository
+
+    @Autowired
+    lateinit var documentRepository: DocumentRepository
+
+    @Autowired
+    lateinit var projectRepository: ProjectRepository
 
     @GetMapping("/serviceClient/list")
     fun list(): Any {
@@ -48,19 +60,49 @@ class ServiceClientController {
         return res
     }
 
-    @GetMapping("/{projectId}/serviceClient/{id}/syncApiEmptyTemplate")
-    fun syncClientApiEmptyTemplate(@PathVariable id: String, @PathVariable projectId: String): Any {
+    @PostMapping("/serviceClient/apiEmptyTemplate/sync")
+    fun syncClientApiEmptyTemplateToExistProject(
+            @RequestBody dto: SyncApiEmptyTemplateDto
+    ): Any {
+
+        val project = Project(
+                id = IDUtil.id(),
+                name = dto.name!!,
+                desc = dto.name,
+                createTime = now(),
+                accessPwd = null)
+
+        val resourceKeyDocumentMap = syncApiEmptyTemplates(dto.clientId, project.id)
+
+        resourceRepository.saveAll(resourceKeyDocumentMap.keys)
+        documentRepository.saveAll(resourceKeyDocumentMap.values.flatten())
+
+        projectRepository.save(project)
+
+        return ok(project.id)
+    }
+
+    @PostMapping("/{projectId}/serviceClient/apiEmptyTemplate/sync")
+    fun syncClientApiEmptyTemplate(@RequestBody dto: SyncApiEmptyTemplateDto): Any {
+
+        val resourceKeyDocumentMap = syncApiEmptyTemplates(dto.clientId, dto.projectId!!)
+
+        resourceRepository.saveAll(resourceKeyDocumentMap.keys)
+        documentRepository.saveAll(resourceKeyDocumentMap.values.flatten())
+
+        return ok(dto.projectId)
+    }
+
+    private fun syncApiEmptyTemplates(clientId: String, projectId: String): Map<Resource, List<Document>> {
 
         // Invoke remote client api info
-        val emptyApiTemplates = scheduleController.syncGetEmptyApiTemplates(id)
+        val emptyApiTemplates = scheduleController.syncGetEmptyApiTemplates(clientId)
 
         val pid = "root"
 
-        // Map to resources
-
-
-        // Group by resource
-        emptyApiTemplates.groupBy { it.controller }
+        return emptyApiTemplates
+                // Group by resource
+                .groupBy { it.controller }
                 .map {
 
                     // Map key to resource
@@ -75,25 +117,27 @@ class ServiceClientController {
                     )
 
                     // Map value to document
-                    it.value.map {
+                    val documents = it.value.map { template ->
+
+                        val uriVarDescriptors = template.uriVarFields.map { uriField ->
+                            URIVarDescriptor(uriField, null, null)
+                        }
+
                         Document(id = IDUtil.id(),
                                 projectId = projectId,
-                                name = it.function,
+                                name = template.function,
                                 resource = resource.id!!,
-                                url = it.pattern,
-                                description = String.format("%s:%s", it.controller, it.function),
+                                url = template.pattern,
+                                description = String.format("%s:%s", template.controller, template.function),
                                 requestHeaderDescriptor = mutableListOf(),
                                 requestBodyDescriptor = mutableListOf(),
                                 responseBodyDescriptors = mutableListOf(),
-                                method = HttpMethod.valueOf(it.supportMethod[0]),
-                                uriVariables =null
+                                method = HttpMethod.valueOf(template.supportMethod[0]),
+                                uriVarDescriptors = uriVarDescriptors
                         )
                     }
+                    resource to documents
                 }
-
-
-
-
-        return ok()
+                .toMap()
     }
 }

@@ -44,7 +44,6 @@ class ProjectController {
                 id = IDUtil.id(),
                 name = dto.name,
                 createTime = Date().time,
-                projectId = "DefaultTeam",
                 desc = dto.desc
         )
         mongoTemplate.save(project)
@@ -57,7 +56,6 @@ class ProjectController {
                 id = dto.id,
                 name = dto.name,
                 createTime = null,
-                projectId = null,
                 desc = dto.desc))
         return ok()
     }

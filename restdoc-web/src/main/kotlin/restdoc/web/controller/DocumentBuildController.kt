@@ -79,7 +79,7 @@ class DocumentBuildController(
                 header = header,
                 body = body,
                 method = document.method,
-                uriVariables = document.uriVariables?.map { it.field to "${it.value}" }?.toMap(),
+                uriVariables = document.uriVarDescriptors?.map { it.field to "${it.value}" }?.toMap(),
                 parameterizedTypeReference = ParameterizedTypeReference.forType(JsonNode::class.java))
 
         // Invoke Api

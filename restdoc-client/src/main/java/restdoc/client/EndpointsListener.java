@@ -83,7 +83,7 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
                                         .map(MimeType::getType)
                                         .toArray(String[]::new));
 
-                                emptyTemplate.setUriVarField(Arrays.stream(pattern.split("/"))
+                                emptyTemplate.setUriVarFields(Arrays.stream(pattern.split("/"))
                                         .filter(snippet -> snippet.matches("^[\\{][a-zA-Z]+[0-9A-Za-z]*[\\}]$"))
                                         .map(snippet -> snippet.replaceFirst("\\{", "")
                                                 .replaceAll("\\}", ""))

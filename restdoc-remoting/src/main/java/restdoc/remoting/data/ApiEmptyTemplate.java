@@ -18,7 +18,7 @@ public class ApiEmptyTemplate {
 
     private String[] produces;
 
-    private String[] uriVarField;
+    private String[] uriVarFields;
 
     /**
      * Bean type name
@@ -81,12 +81,12 @@ public class ApiEmptyTemplate {
         this.consumer = consumer;
     }
 
-    public String[] getUriVarField() {
-        return uriVarField;
+    public String[] getUriVarFields() {
+        return uriVarFields;
     }
 
-    public void setUriVarField(String[] uriVarField) {
-        this.uriVarField = uriVarField;
+    public void setUriVarFields(String[] uriVarFields) {
+        this.uriVarFields = uriVarFields;
     }
 
     @Override
@@ -98,7 +98,7 @@ public class ApiEmptyTemplate {
                 ", function='" + function + '\'' +
                 ", consumer=" + Arrays.toString(consumer) +
                 ", produces=" + Arrays.toString(produces) +
-                ", uriVarField=" + Arrays.toString(uriVarField) +
+                ", uriVarField=" + Arrays.toString(uriVarFields) +
                 ", controller='" + controller + '\'' +
                 '}';
     }

@@ -7,11 +7,11 @@ import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.web.bind.annotation.*
-import restdoc.web.core.Result
-import restdoc.web.core.ok
 import restdoc.web.base.auth.HolderKit
 import restdoc.web.controller.obj.CreateProjectDto
 import restdoc.web.controller.obj.UpdateProjectDto
+import restdoc.web.core.Result
+import restdoc.web.core.ok
 import restdoc.web.model.Project
 import restdoc.web.repository.ProjectRepository
 import restdoc.web.util.IDUtil
@@ -47,7 +47,6 @@ class UserViewController {
         val project = Project(id = IDUtil.id(),
                 name = dto.name,
                 createTime = Date().time,
-                projectId = holderKit.user.teamId,
                 desc = dto.desc)
         mongoTemplate.save(project)
         return ok()
@@ -59,7 +58,6 @@ class UserViewController {
                 id = dto.id,
                 name = dto.name,
                 createTime = null,
-                projectId = null,
                 desc = dto.desc))
         return ok()
     }

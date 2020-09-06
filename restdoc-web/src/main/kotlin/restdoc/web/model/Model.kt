@@ -35,7 +35,6 @@ data class Project(
         val name: String,
         val desc: String?,
         val createTime: Long?,
-        var projectId: String?,
         val accessPwd: String? = null
 )
 
@@ -62,7 +61,7 @@ data class Document(
         var requestBodyDescriptor: List<BodyFieldDescriptor>?,
         var responseBodyDescriptors: List<BodyFieldDescriptor>?,
         val method: HttpMethod = HttpMethod.GET,
-        val uriVariables: List<URIVarDescriptor>?,
+        val uriVarDescriptors: List<URIVarDescriptor>?,
         val executeResult: Map<String, Any?>? = null,
         val content: String? = null,
         var responseHeaderDescriptor: List<HeaderFieldDescriptor>? = null,

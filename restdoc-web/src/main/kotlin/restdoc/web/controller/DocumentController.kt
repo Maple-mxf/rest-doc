@@ -96,7 +96,7 @@ class DocumentController {
                 responseBodyDescriptors = responseBodyDescriptor,
                 method = HttpMethod.valueOf(requestDto.method),
                 description = requestDto.description,
-                uriVariables = uriVarDescriptor,
+                uriVarDescriptors = uriVarDescriptor,
                 executeResult = requestDto.executeResult,
                 docType = DocType.API)
 
@@ -127,7 +127,7 @@ class DocumentController {
                 requestBodyDescriptor = requestBodyDescriptor,
                 responseBodyDescriptors = responseBodyDescriptor,
                 method = HttpMethod.valueOf(requestDto.method),
-                uriVariables = uriVarDescriptor,
+                uriVarDescriptors = uriVarDescriptor,
                 executeResult = requestDto.executeResult)
 
         val updateResult = documentRepository.update(document)
@@ -265,7 +265,7 @@ class DocumentController {
                 requestHeaderDescriptor = null,
                 requestBodyDescriptor = null,
                 responseBodyDescriptors = null,
-                uriVariables = null,
+                uriVarDescriptors = null,
                 content = dto.content,
                 docType = DocType.WIKI
         )
