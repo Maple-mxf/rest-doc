@@ -1,4 +1,4 @@
-package restdoc.client;
+package restdoc.client.context;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,10 +57,13 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
                             .filter(pattern -> !"/error".equals(pattern))
                             .map(pattern -> String.join("", contextPath, pattern))
                             .map(pattern -> {
-                                ApiEmptyTemplate emptyTemplate = new ApiEmptyTemplate();
-                                emptyTemplate.setSupportMethod(requestMappingInfo.getPatternsCondition().getPatterns()
-                                        .toArray(new String[0]));
 
+                                ApiEmptyTemplate emptyTemplate = new ApiEmptyTemplate();
+                                emptyTemplate.setSupportMethod(requestMappingInfo.getMethodsCondition()
+                                        .getMethods()
+                                        .stream()
+                                        .map(Enum::name)
+                                        .toArray(String[]::new));
                                 emptyTemplate.setFunction(handlerMethod.toString());
                                 emptyTemplate.setPattern(pattern);
                                 emptyTemplate.setController(handlerMethod.getBeanType().toString());

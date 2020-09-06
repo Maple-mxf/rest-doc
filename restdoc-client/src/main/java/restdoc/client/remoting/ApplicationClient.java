@@ -4,7 +4,7 @@ import io.netty.channel.Channel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import restdoc.client.RestDocProperties;
+import restdoc.client.config.RestDocProperties;
 import restdoc.remoting.ChannelEventListener;
 import restdoc.remoting.common.RemotingUtil;
 import restdoc.remoting.common.RequestCode;

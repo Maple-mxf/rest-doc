@@ -1,4 +1,4 @@
-package restdoc.client;
+package restdoc.client.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.web.client.RestTemplate;
+import restdoc.client.context.EndpointsListener;
 import restdoc.client.executor.HttpTaskExecutor;
 import restdoc.client.remoting.ApplicationClient;
 import restdoc.client.remoting.HttpTaskRequestProcessor;

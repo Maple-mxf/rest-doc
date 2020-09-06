@@ -132,12 +132,18 @@ class ServiceClientController {
                                 requestHeaderDescriptor = mutableListOf(),
                                 requestBodyDescriptor = mutableListOf(),
                                 responseBodyDescriptors = mutableListOf(),
-                                method = HttpMethod.valueOf(template.supportMethod[0]),
+                                method = method(template.supportMethod.map { HttpMethod.valueOf(it) }),
                                 uriVarDescriptors = uriVarDescriptors
                         )
                     }
                     resource to documents
                 }
                 .toMap()
+    }
+
+    private fun method(methods: Collection<HttpMethod>): HttpMethod {
+        if (methods.isEmpty()) return HttpMethod.GET
+        if (methods.size == 1) return methods.toTypedArray()[0]
+        return if (methods.contains(HttpMethod.GET)) HttpMethod.GET else HttpMethod.POST
     }
 }

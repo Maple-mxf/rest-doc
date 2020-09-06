@@ -2,7 +2,7 @@ package restdoc.client.remoting;
 
 import io.netty.channel.ChannelHandlerContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import restdoc.client.EndpointsListener;
+import restdoc.client.context.EndpointsListener;
 import restdoc.remoting.common.body.GetClientApiListRequestBody;
 import restdoc.remoting.netty.NettyRequestProcessor;
 import restdoc.remoting.protocol.RemotingCommand;
