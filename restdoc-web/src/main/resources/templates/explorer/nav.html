@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>文档中心</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <!--    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">-->
     <link rel="stylesheet" th:href="@{/layui/css/layui.css}"/>
@@ -10,12 +10,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/admin/css/fangge-style.css}"/>
     <link rel="stylesheet" th:href="@{/admin/css/doc-common.css}"/>
-    <style>
-        #tableContents {
-            border-top: 3px solid #009688;
-            margin-top: 40px;
-        }
-    </style>
 </head>
 <body>
 <div th:include="nav::nav"></div>
@@ -24,24 +18,20 @@
 
 <div class="layui-fluid layui-bg-gray">
 
-    <div class="layui-col-md2" id="tableContents">
-        <div style="margin-top: 10px">
+    <div id="tableContents" style="display: none">
+        <div>
+            <button class="layui-btn" id="createTableContentBtn">创建目录</button>
 
             <a th:href="@{'/'+${projectId}+'/document/view/api/add'}" class="layui-btn layui-btn-primary"
                target="_blank">创建REST doc</a>
             <a th:href="@{'/'+${projectId}+'/document/view/wiki/add'}" class="layui-btn layui-btn-primary"
                target="_blank">创建WIKI</a>
-        </div>
 
-        <fieldset class="layui-elem-field site-demo-button" style="margin-top: 10px;">
-            <legend>目录</legend>
-            <div>
-                <button class="layui-btn" id="createTableContentBtn">创建目录</button>
-            </div>
-            <div id="navTableOfContent" style="font-size: 14px"></div>
-        </fieldset>
+        </div>
+        <div id="navTableOfContent" style="font-size: 14px"></div>
+
     </div>
-    <div class="layui-col-md9" id="docContent">
+    <div class="layui-col-md10" id="docContent">
         <iframe src="" id="docContentFrame" frameborder="0" style="width: 100%;height: 900px"></iframe>
     </div>
 </div>
@@ -82,6 +72,20 @@
             },
             error: function () {
                 layer.msg("网络异常")
+            }
+        });
+
+        layer.open({
+            type: 1,
+            title:'文档目录',
+            content: $('#tableContents'),
+            shadeClose:true,
+            shade: 0,
+            offset: 'rt',
+            area: ['400px', '900px']
+            ,zIndex: layer.zIndex //重点1
+            ,success: function(layero){
+                layer.setTop(layero); //重点2
             }
         });
 
