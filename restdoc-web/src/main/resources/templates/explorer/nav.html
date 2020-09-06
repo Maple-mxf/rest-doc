@@ -77,17 +77,21 @@
 
         layer.open({
             type: 1,
-            title:'文档目录',
+            title: '文档目录',
             content: $('#tableContents'),
-            shadeClose:true,
+            shadeClose: true,
             shade: 0,
             offset: 'rb',
-            area: ['400px', '900px']
-            ,zIndex: layer.zIndex //重点1
-            ,success: function(layero){
-                layer.setTop(layero); //重点2
-            }
-        });
+            closeBtn: 0,
+            area: ['400px', '900px'],
+            zIndex: layer.zIndex
+            , success:
+
+                function (layero) {
+                    layer.setTop(layero); //重点2
+                }
+        })
+        ;
 
         tree.render({
             elem: '#navTableOfContent'
@@ -95,7 +99,7 @@
             , edit: ['update', 'del']
             , click: function (obj) {
                 if (obj.data.type === "WIKI" || obj.data.type === "API") {
-                    $("#docContentFrame").attr("src", '/restdoc/'+projectId+'/document/' + obj.data.id + '/view');
+                    $("#docContentFrame").attr("src", '/restdoc/' + projectId + '/document/' + obj.data.id + '/view');
                 }
             }
             , operate: function (obj) {
