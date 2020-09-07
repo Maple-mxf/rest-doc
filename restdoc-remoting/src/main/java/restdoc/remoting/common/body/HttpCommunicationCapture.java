@@ -11,7 +11,7 @@ public class HttpCommunicationCapture extends RemotingSerializable {
 
     private int status;
 
-    private org.springframework.http.HttpMethod method;
+    private HttpMethod method;
 
     private String url, completeUrl;
 
@@ -45,7 +45,7 @@ public class HttpCommunicationCapture extends RemotingSerializable {
         this.status = status;
     }
 
-    public org.springframework.http.HttpMethod  getMethod() {
+    public HttpMethod  getMethod() {
         return method;
     }
 

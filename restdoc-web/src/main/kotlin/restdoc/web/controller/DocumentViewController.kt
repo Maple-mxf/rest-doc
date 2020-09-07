@@ -2,7 +2,6 @@ package restdoc.web.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.ui.set
@@ -17,9 +16,6 @@ import restdoc.web.repository.ResourceRepository
 class DocumentViewController {
 
     @Autowired
-    lateinit var redisTemplate: RedisTemplate<String, Any>
-
-    @Autowired
     lateinit var documentRepository: DocumentRepository
 
     @Autowired
@@ -28,11 +24,16 @@ class DocumentViewController {
     @Autowired
     lateinit var mapper: ObjectMapper
 
+    // Router
     @GetMapping("/{projectId}/document/view/list/")
-    fun list(@PathVariable projectId: String, model: Model): String {
-        model.set("projectId", projectId)
-        return "docs/list"
-    }
+    fun list(@PathVariable projectId: String, model: Model): String = listView(projectId, model)
+
+    // Handler Lambda Expression
+    val listView: ((String, Model) -> String) =
+            { projectId, model ->
+                model.addAttribute("projectId", projectId)
+                "docs/list"
+            }
 
     @GetMapping("/{id}")
     fun get(): String {

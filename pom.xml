@@ -12,6 +12,8 @@
         <module>restdoc-web</module>
         <module>restdoc-client</module>
         <module>restdoc-remoting</module>
+        <module>restdoc-dubbo-client</module>
+        <module>restdoc-springcloud-client</module>
     </modules>
 
     <parent>

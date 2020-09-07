@@ -14,7 +14,6 @@ public class HttpTaskRequestProcessor implements NettyRequestProcessor {
 
     private final HttpTaskExecutor httpTaskExecutor;
 
-
     public HttpTaskRequestProcessor(HttpTaskExecutor httpTaskExecutor) {
         this.httpTaskExecutor = httpTaskExecutor;
     }

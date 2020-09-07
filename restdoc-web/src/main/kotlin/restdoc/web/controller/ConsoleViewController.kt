@@ -45,6 +45,9 @@ class ConsoleViewController {
                                 icon = "layui-icon layui-icon-console")
                 )))
 
+        // Type
+        val type = { i: Int -> i + 1 }
+
         //
         return menus
     }

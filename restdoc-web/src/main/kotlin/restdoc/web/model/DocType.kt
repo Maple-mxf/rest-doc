@@ -1,7 +1,7 @@
 package restdoc.web.model
 
-enum class DocType {
 
+enum class DocType {
     API,
     WIKI
 }
