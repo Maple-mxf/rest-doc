@@ -7,9 +7,7 @@ import org.springframework.boot.CommandLineRunner
 import org.springframework.stereotype.Component
 import restdoc.remoting.common.RequestCode
 import restdoc.remoting.common.body.GetClientApiListRequestBody
-import restdoc.remoting.common.body.PostHttpTaskExecuteResultRequestBody
-import restdoc.remoting.common.body.SubmitHttpTaskRequestBody
-import restdoc.remoting.common.header.PostHttpTaskExecuteResultRequestHeader
+import restdoc.remoting.common.body.HttpCommunicationCapture
 import restdoc.remoting.common.header.SubmitHttpTaskRequestHeader
 import restdoc.remoting.data.ApiEmptyTemplate
 import restdoc.remoting.exception.RemotingCommandException
@@ -78,12 +76,12 @@ class ScheduleController : CommandLineRunner {
             RemotingCommandException::class)
     fun syncSubmitRemoteHttpTask(clientId: String?,
                                  taskId: String?,
-                                 body: SubmitHttpTaskRequestBody): HttpTaskData? {
+                                 capture: HttpCommunicationCapture): HttpCommunicationCapture {
 
         val header = SubmitHttpTaskRequestHeader()
         header.taskId = taskId
         val request = RemotingCommand.createRequestCommand(RequestCode.SUBMIT_HTTP_PROCESS, header)
-        request.body = body.encode()
+        request.body = capture.encode()
         val clientChannelInfo = clientManager.findClient(clientId)
 
         val response = remotingServer.invokeSync(clientChannelInfo!!.channel, request,
@@ -91,15 +89,9 @@ class ScheduleController : CommandLineRunner {
 
         return if (response.code == RemotingSysResponseCode.SUCCESS) {
             val responseBody = RemotingSerializable.decode(response.body,
-                    PostHttpTaskExecuteResultRequestBody::class.java)
-            val responseHeader = response.decodeCommandCustomHeader(PostHttpTaskExecuteResultRequestHeader::class.java)
-                    as PostHttpTaskExecuteResultRequestHeader
+                    HttpCommunicationCapture::class.java)
 
-            HttpTaskData(
-                    responseBody.status,
-                    responseBody.responseHeader,
-                    responseBody.responseBody,
-                    responseHeader.taskId)
+            responseBody
         } else {
             throw ServiceException(response.remark, Status.INTERNAL_SERVER_ERROR)
         }

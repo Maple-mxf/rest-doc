@@ -103,11 +103,20 @@ enum class AccountStatus {
     NORMAL, FREEZE
 }
 
+
+@Deprecated(message = "")
 data class ExecuteResult(
         var status: Int, var url: String,
         var method: String,
         var requestHeader: Map<String, Any>,
         var responseHeader: Map<String, Any>,
+
+        // request body
         var content: JsonNode?,
-        var body: JsonNode?
+
+        // response body
+        var body: JsonNode?,
+
+        //
+        var uriVariable: Map<String, String>? = null
 )

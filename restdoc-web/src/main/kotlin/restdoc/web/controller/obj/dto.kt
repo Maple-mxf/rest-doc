@@ -4,12 +4,12 @@ import restdoc.web.model.BodyFieldDescriptor
 import restdoc.web.model.FieldType
 import restdoc.web.model.HeaderFieldDescriptor
 import restdoc.web.model.URIVarDescriptor
+import java.net.URI
 import javax.validation.constraints.NotBlank
 
 data class CreateProjectDto(val name: String, val desc: String?)
 
 data class UpdateProjectDto(val id: String, val name: String, val desc: String)
-
 
 data class RequestDto(
         val projectId: String,
@@ -27,17 +27,18 @@ data class RequestDto(
         val uriFields: List<UriVarFieldDto>?,
         val executeResult: Map<String, Any>? = null) {
 
-    fun autocomplete() {
-        if (!this.url.startsWith("http") &&
-                !this.url.startsWith("https")) {
-            this.url = String.format("%s%s", "http://", this.url)
+    fun lookupPath(): String {
+        return if (this.url.contains("http(s)?")) {
+            URI(url).rawPath
+        } else {
+            url
         }
     }
 
     fun mapToHeaderDescriptor(): List<HeaderFieldDescriptor> {
 
-        if (!(headers == null || this.headers.isEmpty())) {
-            return headers
+        return if (!(headers == null || this.headers.isEmpty())) {
+            headers
                     .filter { it.headerKey.isNotBlank() }
                     .map {
                         HeaderFieldDescriptor(
@@ -46,13 +47,12 @@ data class RequestDto(
                                 description = it.headerDescription,
                                 optional = it.headerConstraint)
                     }
-        }
-        return mutableListOf()
+        } else mutableListOf()
     }
 
     fun mapToRequestDescriptor(): List<BodyFieldDescriptor> {
-        if (!(requestFields == null || this.requestFields.isEmpty())) {
-            return requestFields
+        return if (!(requestFields == null || this.requestFields.isEmpty())) {
+            requestFields
                     .filter { it.requestFieldPath.isNotBlank() }
                     .map {
                         BodyFieldDescriptor(
@@ -64,13 +64,12 @@ data class RequestDto(
                                 defaultValue = null
                         )
                     }
-        }
-        return mutableListOf()
+        } else mutableListOf()
     }
 
     fun mapToResponseDescriptor(): List<BodyFieldDescriptor> {
-        if (!(responseFields == null || this.responseFields.isEmpty())) {
-            return responseFields
+        return if (!(responseFields == null || this.responseFields.isEmpty())) {
+            responseFields
                     .filter { it.responseFieldPath.isNotBlank() }
                     .map {
                         BodyFieldDescriptor(
@@ -82,21 +81,19 @@ data class RequestDto(
                                 defaultValue = null
                         )
                     }
-        }
-        return mutableListOf()
+        } else mutableListOf()
     }
 
     fun mapToURIVarDescriptor(): List<URIVarDescriptor> {
-        if (this.uriFields != null && !uriFields.isEmpty()) {
-            return uriFields.filter { it.field != null && it.field.isNotEmpty() }
+        return if (this.uriFields != null && !uriFields.isEmpty()) {
+            uriFields.filter { it.field != null && it.field.isNotEmpty() }
                     .map {
                         URIVarDescriptor(
                                 field = it.field.toString(),
                                 value = it.value.toString(),
                                 description = it.desc)
                     }
-        }
-        return mutableListOf()
+        } else mutableListOf()
     }
 }
 

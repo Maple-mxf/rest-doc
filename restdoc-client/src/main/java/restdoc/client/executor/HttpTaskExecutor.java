@@ -2,11 +2,9 @@ package restdoc.client.executor;
 
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
-import restdoc.remoting.common.body.SubmitHttpTaskRequestBody;
+import restdoc.remoting.common.body.HttpCommunicationCapture;
 
 import java.util.Map;
 import java.util.Objects;
@@ -25,21 +23,15 @@ public class HttpTaskExecutor {
         contextPath = environment.getProperty("server.servlet.context-path");
     }
 
-    public ResponseEntity<Object> execute(SubmitHttpTaskRequestBody submitHttpTaskRequestBody) {
+    public ResponseEntity<Object> execute(HttpCommunicationCapture capture) {
+        String url = this.autocompleteURL(capture.getUrl());
+        capture.setCompleteUrl(url);
+        HttpEntity<Map<String, Object>> httpEntity =
+                new HttpEntity<>(capture.getRequestBody(), capture.getRequestHeaders());
 
-        String url = this.autocompleteURL(submitHttpTaskRequestBody.getUrl());
-        HttpMethod method = HttpMethod.resolve(submitHttpTaskRequestBody.getMethod().toUpperCase());
-        HttpHeaders headers = constructHeaders(submitHttpTaskRequestBody.getHeader());
-        HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>(submitHttpTaskRequestBody.getBody(), headers);
-
-        return restTemplate.exchange(url, method, httpEntity, Object.class, submitHttpTaskRequestBody.getUriVar());
+        return restTemplate.exchange(url, capture.getMethod(), httpEntity, Object.class, capture.getUriVariables());
     }
 
-    private HttpHeaders constructHeaders(Map<String, String> header) {
-        HttpHeaders httpHeaders = new HttpHeaders();
-        header.forEach(httpHeaders::add);
-        return httpHeaders;
-    }
 
     private String autocompleteURL(String originURL) {
         if (originURL.startsWith("http") || originURL.startsWith("https")) return originURL;

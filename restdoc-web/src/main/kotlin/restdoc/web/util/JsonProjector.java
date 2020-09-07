@@ -130,6 +130,10 @@ public class JsonProjector {
         return this.buildForJsonNode();
     }
 
+    public Map<String, Object> projectToMap() {
+        return mapper.convertValue(this.project(), Map.class);
+    }
+
     /**
      * Resolve the given path values
      *
@@ -209,8 +213,7 @@ public class JsonProjector {
                                                 new PathValue(arr.get(i), e.getValue())
 
                                 );
-                    }
-                    else {
+                    } else {
                         return Stream.of(e);
                     }
                 })
@@ -285,8 +288,7 @@ public class JsonProjector {
             if (children.isEmpty()) {
                 if (dn instanceof ObjectNode) {
                     ((ObjectNode) dn).putPOJO(lastField, pn.getValue());
-                }
-                else if (dn instanceof ArrayNode) {
+                } else if (dn instanceof ArrayNode) {
                     Matcher matcher = ARRAY_PATTERN.matcher(lastField);
                     if (matcher.find()) {
                         String field = matcher.group(1);
@@ -294,12 +296,10 @@ public class JsonProjector {
                         int lastIndex = indexes.get(indexes.size() - 1);
                         ((ArrayNode) dn).insertPOJO(lastIndex, pn.getValue());
                     }
-                }
-                else {
+                } else {
                     throwError(Status.INTERNAL_SERVER_ERROR);
                 }
-            }
-            else {
+            } else {
                 FieldType pnType = FieldType.OBJECT;
 
                 if (children.stream().allMatch(node -> node.getPath().matches(String.format("^%s\\[\\d*\\]$", escape(pn.getPath()))))) {
@@ -311,14 +311,12 @@ public class JsonProjector {
                         ObjectNode on = mapper.createObjectNode();
                         ((ObjectNode) dn).putPOJO(lastField, on);
                         dn = on;
-                    }
-                    else {
+                    } else {
                         ArrayNode an = mapper.createArrayNode();
                         ((ObjectNode) dn).putPOJO(lastField, an);
                         dn = an;
                     }
-                }
-                else if (dn instanceof ArrayNode) {
+                } else if (dn instanceof ArrayNode) {
                     Matcher matcher = ARRAY_PATTERN.matcher(lastField);
                     if (matcher.find()) {
                         String field = matcher.group(1);
@@ -329,14 +327,12 @@ public class JsonProjector {
                             ObjectNode on = mapper.createObjectNode();
                             ((ArrayNode) dn).insertPOJO(lastIndex, on);
                             dn = on;
-                        }
-                        else {
+                        } else {
                             ArrayNode an = mapper.createArrayNode();
                             ((ArrayNode) dn).insertPOJO(lastIndex, an);
                             dn = an;
                         }
-                    }
-                    else {
+                    } else {
                         throwError(Status.INTERNAL_SERVER_ERROR);
                     }
                 }

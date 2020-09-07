@@ -3,18 +3,11 @@ package restdoc.client.remoting;
 import io.netty.channel.ChannelHandlerContext;
 import org.springframework.http.ResponseEntity;
 import restdoc.client.executor.HttpTaskExecutor;
-import restdoc.remoting.CommandCustomHeader;
-import restdoc.remoting.common.body.PostHttpTaskExecuteResultRequestBody;
-import restdoc.remoting.common.body.SubmitHttpTaskRequestBody;
-import restdoc.remoting.common.header.SubmitHttpTaskRequestHeader;
+import restdoc.remoting.common.body.HttpCommunicationCapture;
 import restdoc.remoting.netty.NettyRequestProcessor;
 import restdoc.remoting.protocol.RemotingCommand;
 import restdoc.remoting.protocol.RemotingSerializable;
 import restdoc.remoting.protocol.RemotingSysResponseCode;
-
-import java.util.AbstractMap;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 
 public class HttpTaskRequestProcessor implements NettyRequestProcessor {
@@ -30,29 +23,19 @@ public class HttpTaskRequestProcessor implements NettyRequestProcessor {
     public RemotingCommand processRequest(ChannelHandlerContext ctx,
                                           RemotingCommand request) throws Exception {
 
-        SubmitHttpTaskRequestBody requestBody = RemotingSerializable.decode(request.getBody(),
-                SubmitHttpTaskRequestBody.class);
+        HttpCommunicationCapture capture = RemotingSerializable.decode(request.getBody(),
+                HttpCommunicationCapture.class);
 
-        CommandCustomHeader requestHeader = request.decodeCommandCustomHeader(SubmitHttpTaskRequestHeader.class);
+        ResponseEntity<Object> responseEntity = httpTaskExecutor.execute(capture);
+        capture.setStatus(responseEntity.getStatusCodeValue());
+        capture.setResponseHeader(responseEntity.getHeaders());
 
-        ResponseEntity<Object> responseEntity = httpTaskExecutor.execute(requestBody);
-
-        Map<String, String> responseHeader = responseEntity.getHeaders()
-                .entrySet()
-                .stream()
-                .map(t -> new AbstractMap.SimpleEntry<>(t.getKey(), String.join(",", t.getValue())))
-                .collect(Collectors.toMap(AbstractMap.SimpleEntry::getKey, AbstractMap.SimpleEntry::getValue));
-
-        PostHttpTaskExecuteResultRequestBody body
-                = new PostHttpTaskExecuteResultRequestBody();
-
-        body.setStatus(responseEntity.getStatusCodeValue());
-        body.setResponseHeader(responseHeader);
-        body.setResponseBody(responseEntity.getBody());
+        if (responseEntity.hasBody()) {
+            capture.setResponseBody(responseEntity.getBody());
+        }
 
         RemotingCommand response = RemotingCommand.createResponseCommand(RemotingSysResponseCode.SUCCESS, "success");
-        response.setBody(body.encode());
-        response.writeCustomHeader(requestHeader);
+        response.setBody(capture.encode());
 
         return response;
     }

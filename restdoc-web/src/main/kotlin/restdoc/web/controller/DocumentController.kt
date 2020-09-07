@@ -10,9 +10,10 @@ import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.data.mongodb.core.query.Update
 import org.springframework.data.redis.core.RedisTemplate
+import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
 import org.springframework.web.bind.annotation.*
-import restdoc.remoting.common.body.SubmitHttpTaskRequestBody
+import restdoc.remoting.common.body.HttpCommunicationCapture
 import restdoc.web.base.auth.HolderKit
 import restdoc.web.controller.obj.CreateUpdateWikiDto
 import restdoc.web.controller.obj.RequestDto
@@ -25,7 +26,6 @@ import restdoc.web.core.ok
 import restdoc.web.core.schedule.ScheduleController
 import restdoc.web.model.DocType
 import restdoc.web.model.Document
-import restdoc.web.model.ExecuteResult
 import restdoc.web.model.Project
 import restdoc.web.repository.DocumentRepository
 import restdoc.web.repository.ProjectRepository
@@ -78,15 +78,15 @@ class DocumentController {
 
     @PostMapping("")
     fun create(@RequestBody @Valid requestDto: RequestDto): Result {
-        requestDto.autocomplete()
+
+        requestDto.url = requestDto.lookupPath()
         val requestHeaderDescriptor = requestDto.mapToHeaderDescriptor()
         val requestBodyDescriptor = requestDto.mapToRequestDescriptor()
         val responseBodyDescriptor = requestDto.mapToResponseDescriptor()
         val uriVarDescriptor = requestDto.mapToURIVarDescriptor()
 
-        // Save An Api Project Document
         val document = Document(
-                id = restdoc.web.util.IDUtil.id(),
+                id = IDUtil.id(),
                 name = requestDto.name,
                 projectId = requestDto.projectId,
                 resource = requestDto.resource,
@@ -110,7 +110,7 @@ class DocumentController {
 
         if (requestDto.documentId == null) return failure(Status.INVALID_REQUEST, "缺少ID参数")
 
-        requestDto.autocomplete()
+        requestDto.url = requestDto.lookupPath()
         val requestHeaderDescriptor = requestDto.mapToHeaderDescriptor()
         val requestBodyDescriptor = requestDto.mapToRequestDescriptor()
         val responseBodyDescriptor = requestDto.mapToResponseDescriptor()
@@ -131,8 +131,6 @@ class DocumentController {
                 executeResult = requestDto.executeResult)
 
         val updateResult = documentRepository.update(document)
-
-        println(updateResult)
 
         return ok(document.id)
     }
@@ -155,48 +153,47 @@ class DocumentController {
     fun submitHttpTask(@RequestBody @Valid requestDto: RequestDto): Result {
 
         if (requestDto.remoteAddress != null) {
-            return serviceClientExecuteTask(requestDto = requestDto)
+            return serviceClientExecuteTask(dto = requestDto)
         } else {
             return innerExecuteTask(requestDto = requestDto)
         }
     }
 
-    private fun serviceClientExecuteTask(requestDto: RequestDto): Result {
+    private fun serviceClientExecuteTask(dto: RequestDto): Result {
         val taskId = IDUtil.id()
 
-        val requestHeaderDescriptor = requestDto.mapToHeaderDescriptor()
-        val requestBodyDescriptor = requestDto.mapToRequestDescriptor()
+        val requestHeaderDescriptor = dto.mapToHeaderDescriptor()
+        val requestBodyDescriptor = dto.mapToRequestDescriptor()
+        val uriVarDescriptor = dto.mapToURIVarDescriptor()
 
-        val content = JsonProjector(requestBodyDescriptor.map { PathValue(it.path, it.value) })
-                .project()
+        val capture = HttpCommunicationCapture()
 
-        val body = SubmitHttpTaskRequestBody()
-
-        val header = requestHeaderDescriptor.map { it.field to (it.value.joinToString(",")) }.toMap()
-
-        body.url = requestDto.url
-        body.header = header
-        body.method = HttpMethod.valueOf(requestDto.method).toString()
-        body.body = null
-        body.uriVar = mutableMapOf()
-
-        val taskData = scheduleController.syncSubmitRemoteHttpTask(
-                requestDto.remoteAddress,
-                taskId,
-                body
-        )
         try {
+            capture.url = dto.lookupPath()
+        } catch (e: Exception) {
+            Status.BAD_REQUEST.error("请求路径必须不能携带任何ip和协议")
+        }
+        capture.method = HttpMethod.valueOf(dto.method)
+        val requestHeaders = HttpHeaders()
+        requestHeaderDescriptor.forEach { requestHeaders.addAll(it.field, it.value) }
+        capture.requestHeaders = requestHeaders
 
-            val jsonNode = mapper.convertValue(taskData!!.value, JsonNode::class.java)
+        if (capture.method.equals(HttpMethod.GET)) {
+            capture.queryParam = requestBodyDescriptor.map { it.path to it.value.toString() }.toMap().toMutableMap()
+        } else {
+            capture.requestBody = JsonProjector(requestBodyDescriptor.map { PathValue(it.path, it.value) }).projectToMap()
+        }
 
-            val executeResult = ExecuteResult(
-                    status = taskData.status,
-                    method = body.method,
-                    requestHeader = header,
-                    responseHeader = mapOf(),
-                    content = mapper.createObjectNode(),
-                    url = body.url,
-                    body = jsonNode)
+        capture.uriVariables = uriVarDescriptor
+                .map { it.field to it.value.toString() }
+                .toMap()
+                .toMutableMap()
+
+        try {
+            val executeResult = scheduleController.syncSubmitRemoteHttpTask(
+                    dto.remoteAddress,
+                    taskId,
+                    capture)
 
             redisTemplate.opsForValue().set(taskId, executeResult)
             redisTemplate.expire(taskId, 1000, TimeUnit.SECONDS)
@@ -207,11 +204,15 @@ class DocumentController {
     }
 
 
+    /**
+     * @sample Throwable
+     */
     private fun innerExecuteTask(requestDto: RequestDto): Result {
-        requestDto.autocomplete()
+
+        requestDto.url = requestDto.lookupPath()
+
         val requestHeaderDescriptor = requestDto.mapToHeaderDescriptor()
         val requestBodyDescriptor = requestDto.mapToRequestDescriptor()
-
 
         val taskId = IDUtil.id()
 
@@ -237,14 +238,8 @@ class DocumentController {
         val result = redisTemplate.opsForValue().get(taskId) ?: return failure(Status.INVALID_REQUEST, "请刷新页面重试")
 
         val map = result as LinkedHashMap<String, Any>
-        val executeResult = mapper.convertValue(map, ExecuteResult::class.java)
-        val responseHeader = executeResult.responseHeader
-                .map {
-                    val value: List<Any> = it.value as List<Any>
-                    it.key to value.joinToString(",")
-                }
-                .toMap()
-        executeResult.responseHeader = responseHeader
+        val executeResult = mapper.convertValue(map, HttpCommunicationCapture::class.java)
+
         return ok(executeResult)
     }
 
