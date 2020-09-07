@@ -1,61 +1,5 @@
 [
   {
-    "path": "id",
-    "value": "722767794763993088",
-    "description": null,
-    "type": "STRING",
-    "optional": false,
-    "defaultValue": "722767794763993088"
-  },
-  {
-    "path": "summary",
-    "value": "关于两会期间的会议精神转发",
-    "description": null,
-    "type": "STRING",
-    "optional": false,
-    "defaultValue": "关于两会期间的会议精神转发"
-  },
-  {
-    "path": "attachments[0].name",
-    "value": "微信图片_20200602183335.png",
-    "description": null,
-    "type": "STRING",
-    "optional": false,
-    "defaultValue": "微信图片_20200602183335.png"
-  },
-  {
-    "path": "attachments[0].url",
-    "value": "https://cloudonsitefile.oss-cn-beijing.aliyuncs.com/20961/微信图片_20200602183335.png",
-    "description": null,
-    "type": "STRING",
-    "optional": false,
-    "defaultValue": "https://cloudonsitefile.oss-cn-beijing.aliyuncs.com/20961/微信图片_20200602183335.png"
-  },
-  {
-    "path": "scheduled",
-    "value": true,
-    "description": null,
-    "type": "BOOLEAN",
-    "optional": false,
-    "defaultValue": true
-  },
-  {
-    "path": "scheduledTime",
-    "value": 1592453020626,
-    "description": null,
-    "type": "NUMBER",
-    "optional": false,
-    "defaultValue": 1592453020626
-  },
-  {
-    "path": "content",
-    "value": "<p>....</p>",
-    "description": null,
-    "type": "STRING",
-    "optional": false,
-    "defaultValue": "<p>....</p>"
-  },
-  {
     "path": "recipients.member[0].firmId",
     "value": "168498749354",
     "description": null,
@@ -65,46 +9,6 @@
   },
   {
     "path": "recipients.member[0].allCheck",
-    "value": false,
-    "description": null,
-    "type": "BOOLEAN",
-    "optional": false,
-    "defaultValue": false
-  },
-  {
-    "path": "recipients.member[0].groups[0].groupId",
-    "value": "groupId",
-    "description": null,
-    "type": "STRING",
-    "optional": false,
-    "defaultValue": "groupId"
-  },
-  {
-    "path": "recipients.inner[0].firmId",
-    "value": "168498749354",
-    "description": null,
-    "type": "STRING",
-    "optional": false,
-    "defaultValue": "168498749354"
-  },
-  {
-    "path": "recipients.inner[0].allCheck",
-    "value": false,
-    "description": null,
-    "type": "BOOLEAN",
-    "optional": false,
-    "defaultValue": false
-  },
-  {
-    "path": "recipients.inner[0].groups[0].groupId",
-    "value": "groupId",
-    "description": null,
-    "type": "STRING",
-    "optional": false,
-    "defaultValue": "groupId"
-  },
-  {
-    "path": "validateOnly",
     "value": false,
     "description": null,
     "type": "BOOLEAN",
