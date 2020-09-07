@@ -13,11 +13,6 @@ data class ProjectConfig(
         val testURIPrefix: String
 )
 
-enum class DocType {
-    API,
-    WIKI
-}
-
 data class Resource(@Id var id: String?,
                     var tag: String?,
                     var name: String?,
@@ -98,11 +93,6 @@ data class User(
         var status: AccountStatus = AccountStatus.NORMAL,
         var teamId: String
 )
-
-enum class AccountStatus {
-    NORMAL, FREEZE
-}
-
 
 @Deprecated(message = "")
 data class ExecuteResult(

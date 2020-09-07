@@ -12,6 +12,7 @@ import org.springframework.data.mongodb.core.query.Update
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
+import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 import restdoc.remoting.common.body.HttpCommunicationCapture
 import restdoc.web.base.auth.HolderKit
@@ -20,12 +21,12 @@ import restdoc.web.controller.obj.RequestDto
 import restdoc.web.controller.obj.UpdateNodeDto
 import restdoc.web.core.Result
 import restdoc.web.core.Status
-import restdoc.web.core.executor.ExecutorDelegate
 import restdoc.web.core.failure
 import restdoc.web.core.ok
 import restdoc.web.core.schedule.ScheduleController
 import restdoc.web.model.DocType
 import restdoc.web.model.Document
+import restdoc.web.model.HttpTaskExecutor
 import restdoc.web.model.Project
 import restdoc.web.repository.DocumentRepository
 import restdoc.web.repository.ProjectRepository
@@ -58,13 +59,13 @@ class DocumentController {
     lateinit var holderKit: HolderKit
 
     @Autowired
-    lateinit var delegate: ExecutorDelegate
-
-    @Autowired
     lateinit var redisTemplate: RedisTemplate<String, Any>
 
     @Autowired
     lateinit var mapper: ObjectMapper
+
+    @Autowired
+    lateinit var httpTaskExecutor: HttpTaskExecutor
 
     @GetMapping("/list/{projectId}")
     fun list(@PathVariable projectId: String): Result {
@@ -150,16 +151,15 @@ class DocumentController {
     lateinit var scheduleController: ScheduleController
 
     @PostMapping("/httpTask/submit")
-    fun submitHttpTask(@RequestBody @Valid requestDto: RequestDto): Result {
-
-        if (requestDto.remoteAddress != null) {
-            return serviceClientExecuteTask(dto = requestDto)
+    fun submitHttpTask(@RequestBody @Valid dto: RequestDto): Result {
+        return if (dto.remoteAddress != null) {
+            rpcExecuteTask(dto)
         } else {
-            return innerExecuteTask(requestDto = requestDto)
+            outExecuteTask(dto)
         }
     }
 
-    private fun serviceClientExecuteTask(dto: RequestDto): Result {
+    private fun rpcExecuteTask(dto: RequestDto): Result {
         val taskId = IDUtil.id()
 
         val requestHeaderDescriptor = dto.mapToHeaderDescriptor()
@@ -207,24 +207,51 @@ class DocumentController {
     /**
      * @sample Throwable
      */
-    private fun innerExecuteTask(requestDto: RequestDto): Result {
+    private fun outExecuteTask(dto: RequestDto): Result {
 
-        requestDto.url = requestDto.lookupPath()
-
-        val requestHeaderDescriptor = requestDto.mapToHeaderDescriptor()
-        val requestBodyDescriptor = requestDto.mapToRequestDescriptor()
+        val requestHeaderDescriptor = dto.mapToHeaderDescriptor()
+        val requestBodyDescriptor = dto.mapToRequestDescriptor()
+        val uriVarDescriptor = dto.mapToURIVarDescriptor()
 
         val taskId = IDUtil.id()
 
+        val capture = HttpCommunicationCapture()
         try {
-            val executeResult = delegate.execute(
-                    url = requestDto.url,
-                    method = HttpMethod.valueOf(requestDto.method),
-                    headers = requestHeaderDescriptor.map { it.field to (it.value.joinToString(",")) }.toMap(),
-                    descriptors = requestBodyDescriptor,
-                    uriVar = mapOf())
+            capture.url = dto.lookupPath()
+        } catch (e: Exception) {
+            Status.BAD_REQUEST.error("必须携带http协议或者https协议")
+        }
 
-            redisTemplate.opsForValue().set(taskId, executeResult)
+        capture.method = HttpMethod.valueOf(dto.method)
+
+        val requestHeaders = HttpHeaders()
+        requestHeaderDescriptor.forEach { requestHeaders.addAll(it.field, it.value) }
+        capture.requestHeaders = requestHeaders
+
+        if (capture.method.equals(HttpMethod.GET)) {
+            capture.queryParam = requestBodyDescriptor.map { it.path to it.value.toString() }.toMap().toMutableMap()
+        } else {
+            capture.requestBody = JsonProjector(requestBodyDescriptor.map { PathValue(it.path, it.value) }).projectToMap()
+        }
+
+        capture.uriVariables = uriVarDescriptor
+                .map { it.field to it.value.toString() }
+                .toMap()
+                .toMutableMap()
+        try {
+
+            val responseEntity = httpTaskExecutor.execute(capture)
+
+            if (responseEntity == null) {
+                capture.status = HttpStatus.NOT_FOUND.value()
+            } else {
+                capture.status = responseEntity.statusCodeValue
+                if (responseEntity.hasBody()) capture.responseBody = responseEntity.body
+                capture.responseHeader = responseEntity.headers
+                capture.responseContentType = capture.responseHeader.contentType
+            }
+
+            redisTemplate.opsForValue().set(taskId, capture)
             redisTemplate.expire(taskId, 1000, TimeUnit.SECONDS)
         } catch (e: Throwable) {
             return failure(Status.BAD_REQUEST, e.message.toString())
