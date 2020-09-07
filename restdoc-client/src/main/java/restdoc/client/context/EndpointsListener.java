@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * 导入客户端所有的API 并且生成文档
+ * The EndpointsListener provided report client api list info to server
  */
 public class EndpointsListener implements ApplicationListener<ContextRefreshedEvent> {
 
