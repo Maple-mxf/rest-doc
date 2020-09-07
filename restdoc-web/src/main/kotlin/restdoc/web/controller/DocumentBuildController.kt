@@ -20,17 +20,12 @@ import restdoc.web.core.Status
 import restdoc.web.core.failure
 import restdoc.web.core.ok
 import restdoc.web.model.BodyFieldDescriptor
-import restdoc.web.model.Document
-import restdoc.web.model.ProjectConfig
-import restdoc.web.model.RequestProcess
-import restdoc.web.util.Client
 
 @Controller
 @Deprecated(message = "")
 @RequestMapping("/docsBuilder")
 class DocumentBuildController(
         @Autowired val mongoTemplate: MongoTemplate,
-        @Autowired val client: Client,
         @Autowired val mapper: ObjectMapper
 ) {
 
@@ -53,49 +48,8 @@ class DocumentBuildController(
     @GetMapping("/add_view1")
     fun addView1(model: Model): String = "add1"
 
-    /**
-     * Save api field info and record http response result
-     * @sample restdoc.Client.process
-     */
-    @PostMapping("/saveAndExecute/")
-    @Deprecated(message = "")
-    fun saveAndExecute(@RequestBody document: Document): Result {
 
-        // Get project config
-        val projectConfig: ProjectConfig = mongoTemplate.findOne(
-                Query().addCriteria(Criteria.where("projectId").`is`(document.projectId)),
-                ProjectConfig::class.java) ?: return failure(Status.BAD_REQUEST)
 
-        // Create Header Or Default
-        val header: Map<String, List<String>> = document.requestHeaderDescriptor?.map { it.field to it.value }?.toMap()
-                ?: defaultHeader
-
-        // Convert Flatten Data Fields
-        val body = document.requestBodyDescriptor?.let { this.flattenToTree(it) }
-
-        // Build Request Processor
-        val requestProcess = RequestProcess<JsonNode>(
-                url = "${projectConfig.testURIPrefix}${document.url}",
-                header = header,
-                body = body,
-                method = document.method,
-                uriVariables = document.uriVarDescriptors?.map { it.field to "${it.value}" }?.toMap(),
-                parameterizedTypeReference = ParameterizedTypeReference.forType(JsonNode::class.java))
-
-        // Invoke Api
-        val responseEntity = client.process(requestProcess)
-
-        // Expect Response
-//        val expectResponse = this.expectResponse(responseEntity, apiDocument.expectResponseHeaders, apiDocument.expectResponseBody)
-
-        // Save given the api document
-        mongoTemplate.save(document)
-
-        // Invoke the api
-        // client.process()
-
-        return ok()
-    }
 
 
     /**
