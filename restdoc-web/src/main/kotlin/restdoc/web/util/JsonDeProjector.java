@@ -73,7 +73,7 @@ public class JsonDeProjector {
         } catch (Throwable e) {
         }
 
-        // 3 return
+        // 3 End Return
         return this.descriptors;
     }
 
@@ -84,8 +84,8 @@ public class JsonDeProjector {
                         node.path.replaceFirst("root\\.", ""), node.value,
                         null, node.type,
                         false, node.value))
-                .filter(d -> !d.getType().equals(FieldType.ARRAY)
-                        && !d.getType().equals(FieldType.OBJECT))
+                /*.filter(d -> !d.getType().equals(FieldType.ARRAY)
+                        && !d.getType().equals(FieldType.OBJECT))*/
                 .collect(Collectors.toList());
 
         this.descriptors.addAll(descriptors);

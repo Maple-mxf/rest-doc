@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
 import restdoc.web.core.Status;
 import restdoc.web.model.FieldType;
@@ -231,10 +230,13 @@ public class JsonProjector {
      */
     @VisibleForTesting
     protected void buildForTreeNode(List<PathValue> pathValues) {
+        this.nodes.addAll(pathValues.stream()
+                .map(pv -> new Node(pv.getPath(), pv.getValue(), FieldType.OBJECT, new ArrayList<>()))
+                .collect(toList()));
 
-        this.nodes.addAll(FluentIterable.from(pathValues)
-                .transform(pv -> new Node(pv.getPath(), pv.getValue(), FieldType.OBJECT, new ArrayList<>()))
-                .toList());
+        try {
+            System.err.println(mapper.writeValueAsString(nodes));
+        }catch (Throwable e){}
 
         // Find First level node
         List<Node> parentNodes = nodes.stream()

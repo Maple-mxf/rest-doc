@@ -1,0 +1,18 @@
+{
+  "recipients": {
+    "member": [
+      {
+        "firmId": "168498749354",
+        "allCheck": false,
+        "groups": [
+          {
+            "groupId": "groupId",
+            "members": [],
+            "receiver": [],
+            "excludes": []
+          }
+        ]
+      }
+    ]
+  }
+}

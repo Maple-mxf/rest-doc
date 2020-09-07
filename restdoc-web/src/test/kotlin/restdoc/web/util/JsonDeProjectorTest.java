@@ -15,7 +15,7 @@ public class JsonDeProjectorTest {
     public void testDeProject() throws IOException {
 
         JsonNode jsonNode = mapper.readValue(
-                new File("C:\\Users\\mxf\\IdeaProjects\\rest-doc\\src\\test\\kotlin\\sample.json"),
+                new File("D:\\jw\\rest-doc\\restdoc-web\\src\\test\\kotlin\\restdoc\\web\\util\\deproject\\sample.json"),
                 JsonNode.class);
 
         List<BodyFieldDescriptor> descriptors = new JsonDeProjector(jsonNode).deProject();

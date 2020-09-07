@@ -1,24 +1,11 @@
 {
-  "summary": "关于两会期间的会议精神转发",
-  "scheduledTime": 1592453020626,
-  "attachments": [
-    {
-      "name": "微信图片_20200602183335.png",
-      "url": "https://cloudonsitefile.oss-cn-beijing.aliyuncs.com/20961/微信图片_20200602183335.png"
-    }
-  ],
-  "scheduled": true,
-  "groups": [
-    null
-  ],
-  "inner": [
-    null
-  ],
-  "content": "<p>....</p>",
-  "validateOnly": false,
-  "recipients": null,
+  "recipients": {
+    "member": null
+  },
   "member": [
     null
   ],
-  "id": "722767794763993088"
+  "groups": [
+    null
+  ]
 }
