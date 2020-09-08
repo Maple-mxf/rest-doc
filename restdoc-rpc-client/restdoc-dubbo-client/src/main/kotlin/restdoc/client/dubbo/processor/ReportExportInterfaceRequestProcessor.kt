@@ -2,31 +2,27 @@ package restdoc.client.dubbo.processor
 
 import io.netty.channel.ChannelHandlerContext
 import restdoc.client.dubbo.DubboContextHolder
+import restdoc.remoting.common.RequestCode
 import restdoc.remoting.common.body.ClientExportInterfacesBody
 import restdoc.remoting.netty.NettyRequestProcessor
 import restdoc.remoting.protocol.RemotingCommand
-import kotlin.reflect.KClass
 
 class ReportExportInterfaceRequestProcessor(private val dubboContextHolder: DubboContextHolder) : NettyRequestProcessor {
 
-    override fun rejectRequest(): Boolean {
-        return false
-    }
+    override fun rejectRequest(): Boolean = false
 
     override fun processRequest(ctx: ChannelHandlerContext?, request: RemotingCommand?): RemotingCommand {
-
-        //
-        dubboContextHolder.exportInterfaces
+        val body = ClientExportInterfacesBody()
+        body.exportInterfaces = dubboContextHolder.exportInterfaces
                 .map {
-                    val body = ClientExportInterfacesBody()
+
+                    it.value.
 
                     val exportInterface = ClientExportInterfacesBody.ExportInterface()
-
                     exportInterface.name = it.value.beanName
 
-
                     val exportMethods = it.value.exportedUrls
-                            .map { uri ->
+                            .flatMap { uri ->
                                 val methodsName = uri.getParameter("methods", "").split(",")
 
                                 methodsName.map { methodName ->
@@ -38,6 +34,9 @@ class ReportExportInterfaceRequestProcessor(private val dubboContextHolder: Dubb
                             }.toMutableList()
 
                     exportInterface.exportMethods = exportMethods
-                }
+                    it.key to exportInterface
+                }.toMap().toMutableMap()
+
+        return RemotingCommand.createRequestCommand(RequestCode.SUBMIT_HTTP_PROCESS, null)
     }
 }

@@ -8,11 +8,13 @@ public interface RequestCode {
     /**
      * Client execute http request task
      */
+    @Deprecated
     int SUBMIT_HTTP_PROCESS = 0;
 
     /**
      * Return the http request execute result
      */
+    @Deprecated
     int POST_EXECUTE_RESULT = 1;
 
     /**
