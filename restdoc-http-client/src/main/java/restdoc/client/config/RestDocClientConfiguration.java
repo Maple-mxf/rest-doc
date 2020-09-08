@@ -9,8 +9,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.web.client.RestTemplate;
 import restdoc.client.context.EndpointsListener;
-import restdoc.client.executor.HttpTaskExecutor;
-import restdoc.client.remoting.ApplicationClient;
+import restdoc.client.invoke.HttpInvoker;
+import restdoc.client.remoting.HttpApplicationAgent;
 import restdoc.client.remoting.HttpTaskRequestProcessor;
 import restdoc.client.remoting.PostEmptyApiTemplateRequestProcessor;
 
@@ -22,29 +22,29 @@ public class RestDocClientConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public ApplicationClient applicationClient(RestDocProperties restDocProperties,
-                                               HttpTaskRequestProcessor httpTaskRequestProcessor,
-                                               PostEmptyApiTemplateRequestProcessor postEmptyApiTemplateRequestProcessor
+    public HttpApplicationAgent applicationClient(RestDocProperties restDocProperties,
+                                                  HttpTaskRequestProcessor httpTaskRequestProcessor,
+                                                  PostEmptyApiTemplateRequestProcessor postEmptyApiTemplateRequestProcessor
                                                ) {
-        ApplicationClient applicationClient = new ApplicationClient(
+        HttpApplicationAgent httpApplicationAgent = new HttpApplicationAgent(
                 restDocProperties,
                 httpTaskRequestProcessor,
                 postEmptyApiTemplateRequestProcessor);
 
-        applicationClient.connection();
-        return applicationClient;
+        httpApplicationAgent.connection();
+        return httpApplicationAgent;
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public HttpTaskExecutor httpTaskExecutor(RestTemplate restTemplate, Environment environment) {
-        return new HttpTaskExecutor(restTemplate, environment);
+    public HttpInvoker httpTaskExecutor(RestTemplate restTemplate, Environment environment) {
+        return new HttpInvoker(restTemplate, environment);
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public HttpTaskRequestProcessor httpTaskRequestProcessor(HttpTaskExecutor httpTaskExecutor) {
-        return new HttpTaskRequestProcessor(httpTaskExecutor);
+    public HttpTaskRequestProcessor httpTaskRequestProcessor(HttpInvoker httpInvoker) {
+        return new HttpTaskRequestProcessor(httpInvoker);
     }
 
     @Bean

@@ -1,4 +1,4 @@
-package restdoc.client.executor;
+package restdoc.client.invoke;
 
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
@@ -9,7 +9,7 @@ import restdoc.remoting.common.body.HttpCommunicationCapture;
 import java.util.Map;
 import java.util.Objects;
 
-public class HttpTaskExecutor {
+public class HttpInvoker {
 
     private final RestTemplate restTemplate;
 
@@ -17,7 +17,7 @@ public class HttpTaskExecutor {
 
     private final String contextPath;
 
-    public HttpTaskExecutor(RestTemplate restTemplate, Environment environment) {
+    public HttpInvoker(RestTemplate restTemplate, Environment environment) {
         this.restTemplate = restTemplate;
         port = Integer.parseInt(Objects.requireNonNull(environment.getProperty("server.port")));
         contextPath = environment.getProperty("server.servlet.context-path");

@@ -23,9 +23,9 @@ import restdoc.remoting.protocol.RemotingCommand;
  * <p>
  * Establish channel
  */
-public class ApplicationClient {
+public class HttpApplicationAgent {
 
-    private static Logger log = LoggerFactory.getLogger(ApplicationClient.class);
+    private static Logger log = LoggerFactory.getLogger(HttpApplicationAgent.class);
 
     private volatile State state = State.STOPPED;
 
@@ -41,9 +41,9 @@ public class ApplicationClient {
     private NettyRemotingClient remotingClient;
 
     @Autowired
-    public ApplicationClient(RestDocProperties restDocProperties,
-                             HttpTaskRequestProcessor httpTaskRequestProcessor,
-                             PostEmptyApiTemplateRequestProcessor postEmptyApiTemplateRequestProcessor) {
+    public HttpApplicationAgent(RestDocProperties restDocProperties,
+                                HttpTaskRequestProcessor httpTaskRequestProcessor,
+                                PostEmptyApiTemplateRequestProcessor postEmptyApiTemplateRequestProcessor) {
 
         NettyClientConfig config = new NettyClientConfig();
         config.setUseTLS(false);
@@ -63,7 +63,7 @@ public class ApplicationClient {
                 body.setService(restDocProperties.getService());
                 request.setBody(body.encode());
 
-                ApplicationClient.this.remotingClient.invokeAsync(
+                HttpApplicationAgent.this.remotingClient.invokeAsync(
                         remoteAddr,
                         request,
                         3000L,
