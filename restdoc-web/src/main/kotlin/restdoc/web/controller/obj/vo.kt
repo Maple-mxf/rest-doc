@@ -12,7 +12,7 @@ val ROOT_NAV: NavNode = NavNode(
 
 
 fun findChild(parentNode: NavNode, navNodes: List<NavNode>) {
-    val children: MutableList<NavNode> = navNodes.filter { it.pid.equals(parentNode.id) }.toMutableList()
+    val children: MutableList<NavNode> = navNodes.filter { it.pid == parentNode.id }.toMutableList()
     parentNode.children = children
     for (child in children) {
         findChild(child, navNodes)
