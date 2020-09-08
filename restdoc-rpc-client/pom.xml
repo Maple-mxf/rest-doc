@@ -9,7 +9,11 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>restdoc-dubbo-client</artifactId>
+    <artifactId>restdoc-rpc-client</artifactId>
+    <packaging>pom</packaging>
+    <modules>
+        <module>restdoc-dubbo-client</module>
+    </modules>
 
 
 </project>

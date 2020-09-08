@@ -10,10 +10,9 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>restdoc-web</module>
-        <module>restdoc-client</module>
+        <module>restdoc-http-client</module>
         <module>restdoc-remoting</module>
-        <module>restdoc-dubbo-client</module>
-        <module>restdoc-springcloud-client</module>
+        <module>restdoc-rpc-client</module>
     </modules>
 
     <parent>
