@@ -7,7 +7,7 @@ import restdoc.remoting.protocol.RemotingSerializable;
 
 import java.util.Map;
 
-public class HttpCommunicationCapture extends RemotingSerializable {
+public class HttpCommunicationCaptureBody extends RemotingSerializable {
 
     private int status;
 

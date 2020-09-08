@@ -2,7 +2,7 @@ package restdoc.remoting.common.body;
 
 import restdoc.remoting.protocol.RemotingSerializable;
 
-public class ReportClientInfoRequestBody extends RemotingSerializable {
+public class ClientInfoBody extends RemotingSerializable {
     private String osname;
 
     private String service;

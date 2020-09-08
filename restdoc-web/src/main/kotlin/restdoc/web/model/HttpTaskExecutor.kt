@@ -5,7 +5,7 @@ import org.springframework.http.HttpEntity
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestTemplate
-import restdoc.remoting.common.body.HttpCommunicationCapture
+import restdoc.remoting.common.body.HttpCommunicationCaptureBody
 
 @Component
 class HttpTaskExecutor {
@@ -13,7 +13,7 @@ class HttpTaskExecutor {
     @Autowired
     private lateinit var restTemplate: RestTemplate
 
-    fun execute(capture: HttpCommunicationCapture): ResponseEntity<Any?>? {
+    fun execute(capture: HttpCommunicationCaptureBody): ResponseEntity<Any?>? {
         val httpEntity = HttpEntity(capture.requestBody, capture.requestHeaders)
         return restTemplate.exchange(capture.url, capture.method, httpEntity, Any::class.java, capture.uriVariables)
     }

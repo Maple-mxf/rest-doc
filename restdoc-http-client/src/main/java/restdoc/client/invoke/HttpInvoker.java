@@ -4,7 +4,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
-import restdoc.remoting.common.body.HttpCommunicationCapture;
+import restdoc.remoting.common.body.HttpCommunicationCaptureBody;
 
 import java.util.Map;
 import java.util.Objects;
@@ -23,7 +23,7 @@ public class HttpInvoker {
         contextPath = environment.getProperty("server.servlet.context-path");
     }
 
-    public ResponseEntity<Object> execute(HttpCommunicationCapture capture) {
+    public ResponseEntity<Object> execute(HttpCommunicationCaptureBody capture) {
         String url = this.autocompleteURL(capture.getUrl());
         capture.setCompleteUrl(url);
         HttpEntity<Map<String, Object>> httpEntity =

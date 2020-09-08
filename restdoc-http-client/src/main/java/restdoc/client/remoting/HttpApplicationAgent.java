@@ -8,7 +8,7 @@ import restdoc.client.config.RestDocProperties;
 import restdoc.remoting.ChannelEventListener;
 import restdoc.remoting.common.RemotingUtil;
 import restdoc.remoting.common.RequestCode;
-import restdoc.remoting.common.body.ReportClientInfoRequestBody;
+import restdoc.remoting.common.body.ClientInfoBody;
 import restdoc.remoting.exception.RemotingConnectException;
 import restdoc.remoting.exception.RemotingSendRequestException;
 import restdoc.remoting.exception.RemotingTimeoutException;
@@ -57,7 +57,7 @@ public class HttpApplicationAgent {
                     RemotingSendRequestException, RemotingTimeoutException, RemotingTooMuchRequestException, RemotingConnectException {
 
                 RemotingCommand request = RemotingCommand.createRequestCommand(RequestCode.REPORT_CLIENT_INFO, null);
-                ReportClientInfoRequestBody body = new ReportClientInfoRequestBody();
+                ClientInfoBody body = new ClientInfoBody();
                 body.setOsname(System.getProperty("os.name"));
                 body.setHostname(RemotingUtil.getHostname());
                 body.setService(restDocProperties.getService());

@@ -3,7 +3,7 @@ package restdoc.client.remoting;
 import io.netty.channel.ChannelHandlerContext;
 import org.springframework.http.ResponseEntity;
 import restdoc.client.invoke.HttpInvoker;
-import restdoc.remoting.common.body.HttpCommunicationCapture;
+import restdoc.remoting.common.body.HttpCommunicationCaptureBody;
 import restdoc.remoting.netty.NettyRequestProcessor;
 import restdoc.remoting.protocol.RemotingCommand;
 import restdoc.remoting.protocol.RemotingSerializable;
@@ -22,8 +22,8 @@ public class HttpTaskRequestProcessor implements NettyRequestProcessor {
     public RemotingCommand processRequest(ChannelHandlerContext ctx,
                                           RemotingCommand request) throws Exception {
 
-        HttpCommunicationCapture capture = RemotingSerializable.decode(request.getBody(),
-                HttpCommunicationCapture.class);
+        HttpCommunicationCaptureBody capture = RemotingSerializable.decode(request.getBody(),
+                HttpCommunicationCaptureBody.class);
 
         ResponseEntity<Object> responseEntity = httpInvoker.execute(capture);
         capture.setStatus(responseEntity.getStatusCodeValue());

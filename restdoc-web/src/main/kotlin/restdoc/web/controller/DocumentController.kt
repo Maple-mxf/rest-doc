@@ -14,7 +14,7 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
-import restdoc.remoting.common.body.HttpCommunicationCapture
+import restdoc.remoting.common.body.HttpCommunicationCaptureBody
 import restdoc.web.base.auth.HolderKit
 import restdoc.web.controller.obj.CreateUpdateWikiDto
 import restdoc.web.controller.obj.RequestDto
@@ -166,7 +166,7 @@ class DocumentController {
         val requestBodyDescriptor = dto.mapToRequestDescriptor()
         val uriVarDescriptor = dto.mapToURIVarDescriptor()
 
-        val capture = HttpCommunicationCapture()
+        val capture = HttpCommunicationCaptureBody()
 
         try {
             capture.url = dto.lookupPath()
@@ -215,7 +215,7 @@ class DocumentController {
 
         val taskId = IDUtil.id()
 
-        val capture = HttpCommunicationCapture()
+        val capture = HttpCommunicationCaptureBody()
         try {
             capture.url = dto.lookupPath()
         } catch (e: Exception) {
@@ -265,7 +265,7 @@ class DocumentController {
         val result = redisTemplate.opsForValue().get(taskId) ?: return failure(Status.INVALID_REQUEST, "请刷新页面重试")
 
         val map = result as LinkedHashMap<String, Any>
-        val executeResult = mapper.convertValue(map, HttpCommunicationCapture::class.java)
+        val executeResult = mapper.convertValue(map, HttpCommunicationCaptureBody::class.java)
 
         return ok(executeResult)
     }

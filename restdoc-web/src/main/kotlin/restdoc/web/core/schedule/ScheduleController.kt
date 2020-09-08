@@ -7,7 +7,7 @@ import org.springframework.boot.CommandLineRunner
 import org.springframework.stereotype.Component
 import restdoc.remoting.common.RequestCode
 import restdoc.remoting.common.body.GetClientApiListRequestBody
-import restdoc.remoting.common.body.HttpCommunicationCapture
+import restdoc.remoting.common.body.HttpCommunicationCaptureBody
 import restdoc.remoting.common.header.SubmitHttpTaskRequestHeader
 import restdoc.remoting.data.ApiEmptyTemplate
 import restdoc.remoting.exception.RemotingCommandException
@@ -76,7 +76,7 @@ class ScheduleController : CommandLineRunner {
             RemotingCommandException::class)
     fun syncSubmitRemoteHttpTask(clientId: String?,
                                  taskId: String?,
-                                 capture: HttpCommunicationCapture): HttpCommunicationCapture {
+                                 capture: HttpCommunicationCaptureBody): HttpCommunicationCaptureBody {
 
         val header = SubmitHttpTaskRequestHeader()
         header.taskId = taskId
@@ -89,7 +89,7 @@ class ScheduleController : CommandLineRunner {
 
         return if (response.code == RemotingSysResponseCode.SUCCESS) {
             val responseBody = RemotingSerializable.decode(response.body,
-                    HttpCommunicationCapture::class.java)
+                    HttpCommunicationCaptureBody::class.java)
 
             responseBody
         } else {
