@@ -4,6 +4,9 @@ import io.netty.channel.Channel
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory
 import restdoc.client.api.Agent
 import restdoc.client.api.Status
+import restdoc.remoting.RemotingClient
+import restdoc.remoting.netty.NettyClientConfig
+import restdoc.remoting.netty.NettyRemotingClient
 import restdoc.remoting.netty.ResponseFuture
 import restdoc.remoting.protocol.RemotingCommand
 
@@ -14,16 +17,19 @@ class DubboApplicationAgent : Agent {
 
     private val beanFactory: ConfigurableListableBeanFactory
 
+    private val remotingClient: RemotingClient
+
     constructor(beanFactory: ConfigurableListableBeanFactory) {
         this.beanFactory = beanFactory
+        val config = NettyClientConfig()
+        this.remotingClient = NettyRemotingClient(config)
     }
 
     override fun start() {
-        TODO("")
+        remotingClient.start()
     }
 
     override fun handler(): RemotingCommand {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun getClientStatus(): Status {
@@ -35,11 +41,10 @@ class DubboApplicationAgent : Agent {
     }
 
     override fun disconnect() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        remotingClient.shutdown()
     }
 
     override fun syncInvoke(cmd: RemotingCommand, channel: Channel) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun asyncInvoke(cmd: RemotingCommand, channel: Channel, future: ResponseFuture) {

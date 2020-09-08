@@ -33,7 +33,6 @@ class ReportExposedInterfaceRequestProcessor(private val dubboContextHolder: Dub
                                 mh.isGeneric
                         )
                     }
-
                     it.key to exposedInterface
                 }.toMap().toMutableMap()
 
