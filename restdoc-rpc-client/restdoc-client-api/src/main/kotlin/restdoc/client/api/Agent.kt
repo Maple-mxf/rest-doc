@@ -1,8 +1,6 @@
 package restdoc.client.api
 
-import io.netty.channel.Channel
-import restdoc.remoting.netty.ResponseFuture
-import restdoc.remoting.protocol.RemotingCommand
+import restdoc.remoting.RemotingClient
 
 
 /**
@@ -11,14 +9,14 @@ import restdoc.remoting.protocol.RemotingCommand
 interface Agent {
 
     /**
+     * Get remoting client
+     */
+    fun getRemotingClient(): RemotingClient
+
+    /**
      * Start client channel
      */
     fun start()
-
-    /**
-     * Handler the server given request
-     */
-    fun handler(): RemotingCommand
 
     /**
      * Get client server status
@@ -26,22 +24,24 @@ interface Agent {
     fun getClientStatus(): Status
 
     /**
-     * Connect to server
-     */
-    fun connect()
-
-    /**
      * Disconnect from server
      */
     fun disconnect()
 
     /**
-     * Sync invoke server
+     * Get ServerRemoteAddress
      */
-    fun syncInvoke(cmd: RemotingCommand, channel: Channel)
+    fun getServerRemoteAddress(): String
+
 
     /**
-     * Async invoke server
+     * Invoke Task
      */
-    fun asyncInvoke(cmd: RemotingCommand, channel: Channel, future: ResponseFuture)
+    @Throws(exceptionClasses = [NoSuchElementException::class])
+    fun invoke(taskId: String):InvokeResult
+
+    /**
+     *
+     */
+    fun addTask(task: RemotingTask)
 }

@@ -5,14 +5,11 @@ import restdoc.client.dubbo.DubboContextHolder
 import restdoc.client.dubbo.model.ServiceDescriptor
 import restdoc.remoting.common.RequestCode
 import restdoc.remoting.common.body.ClientExposedInterfacesBody
-import restdoc.remoting.netty.NettyRequestProcessor
 import restdoc.remoting.protocol.RemotingCommand
 
-class ReportExposedInterfaceRequestProcessor(private val dubboContextHolder: DubboContextHolder) : NettyRequestProcessor {
+class ReportExposedInterfaceRequestProcessor(private val dubboContextHolder: DubboContextHolder) {
 
-    override fun rejectRequest(): Boolean = false
-
-    override fun processRequest(ctx: ChannelHandlerContext?, request: RemotingCommand?): RemotingCommand {
+    fun processRequest(ctx: ChannelHandlerContext?, request: RemotingCommand?): RemotingCommand {
         val body = ClientExposedInterfacesBody()
         body.exposedInterfaces = dubboContextHolder.exportInterfaces
                 .map {
