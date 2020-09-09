@@ -1,4 +1,4 @@
-package restdoc.client.dubbo.test;
+package restdoc.client.dubbo.test.service;
 
 public interface EchoService {
 

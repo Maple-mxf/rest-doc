@@ -13,6 +13,7 @@
         <module>restdoc-http-client</module>
         <module>restdoc-remoting</module>
         <module>restdoc-rpc-client</module>
+        <module>restdoc-client-test</module>
     </modules>
 
     <parent>

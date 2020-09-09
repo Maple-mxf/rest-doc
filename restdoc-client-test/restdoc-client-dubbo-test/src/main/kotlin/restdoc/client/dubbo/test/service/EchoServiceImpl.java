@@ -1,4 +1,4 @@
-package restdoc.client.dubbo.test;
+package restdoc.client.dubbo.test.service;
 
 import org.apache.dubbo.config.annotation.Service;
 import org.springframework.stereotype.Component;
