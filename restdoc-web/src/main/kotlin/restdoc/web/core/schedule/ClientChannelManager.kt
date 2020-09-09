@@ -6,7 +6,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.boot.CommandLineRunner
 import org.springframework.stereotype.Component
-import restdoc.remoting.ClientChannelInfo
+import restdoc.remoting.common.ApplicationClientInfo
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
@@ -15,21 +15,21 @@ class ClientChannelManager(var mapper: ObjectMapper) : CommandLineRunner {
 
     private val log: Logger = LoggerFactory.getLogger(ClientChannelManager::class.java)
 
-    val clients: ConcurrentHashMap<String, ClientChannelInfo> = ConcurrentHashMap()
+    val clients: ConcurrentHashMap<String, ApplicationClientInfo> = ConcurrentHashMap()
 
-    fun registerClient(id: String, clientChannelInfo: ClientChannelInfo?) {
-        clients.put(id, clientChannelInfo!!)
+    fun registerClient(id: String, applicationClientInfo: ApplicationClientInfo?) {
+        clients.put(id, applicationClientInfo!!)
     }
 
     fun unregisterClient(id: String) {
         clients.remove(id)
     }
 
-    fun findClient(id: String?): ClientChannelInfo? {
+    fun findClient(id: String?): ApplicationClientInfo? {
         return clients[id]
     }
 
-    fun list(): List<ClientChannelInfo?>{
+    fun list(): List<ApplicationClientInfo?>{
         return ArrayList(clients.values)
     }
 

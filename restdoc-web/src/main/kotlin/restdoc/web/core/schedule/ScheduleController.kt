@@ -6,10 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.CommandLineRunner
 import org.springframework.stereotype.Component
 import restdoc.remoting.common.RequestCode
-import restdoc.remoting.common.body.GetClientApiListRequestBody
+import restdoc.remoting.common.RestWebAPI
 import restdoc.remoting.common.body.HttpCommunicationCaptureBody
+import restdoc.remoting.common.body.RestWebExposedAPIBody
 import restdoc.remoting.common.header.SubmitHttpTaskRequestHeader
-import restdoc.remoting.data.ApiEmptyTemplate
 import restdoc.remoting.exception.RemotingCommandException
 import restdoc.remoting.exception.RemotingSendRequestException
 import restdoc.remoting.exception.RemotingTimeoutException
@@ -20,7 +20,8 @@ import restdoc.remoting.protocol.RemotingSerializable
 import restdoc.remoting.protocol.RemotingSysResponseCode
 import restdoc.web.core.ServiceException
 import restdoc.web.core.Status
-import restdoc.web.core.schedule.processor.ClientInfoRequestProcessor
+import restdoc.web.core.schedule.processor.ApplicationAPIRequestProcessor
+import restdoc.web.core.schedule.processor.ApplicationClientRequestProcessor
 
 /**
  * ScheduleServer provided the tcp server dashboard
@@ -30,7 +31,9 @@ import restdoc.web.core.schedule.processor.ClientInfoRequestProcessor
 @Component
 class ScheduleController @Autowired constructor(scheduleProperties: ScheduleProperties,
                                                 private val clientManager: ClientChannelManager,
-                                                private val clientInfoRequestProcessor: ClientInfoRequestProcessor) : CommandLineRunner {
+                                                private val applicationClientRequestProcessor: ApplicationClientRequestProcessor,
+                                                private val applicationAPIRequestProcessor: ApplicationAPIRequestProcessor
+) : CommandLineRunner {
 
     private val log: Logger = LoggerFactory.getLogger(ScheduleController::class.java)
 
@@ -49,7 +52,8 @@ class ScheduleController @Autowired constructor(scheduleProperties: ScheduleProp
     }
 
     fun initialize() {
-        this.remotingServer.registerProcessor(RequestCode.REPORT_CLIENT_INFO, clientInfoRequestProcessor, null);
+        this.remotingServer.registerProcessor(RequestCode.REPORT_CLIENT_INFO, applicationClientRequestProcessor, null)
+        this.remotingServer.registerProcessor(RequestCode.REPORT_EXPOSED_API, applicationAPIRequestProcessor, null)
     }
 
     override fun run(vararg args: String?) {
@@ -87,7 +91,7 @@ class ScheduleController @Autowired constructor(scheduleProperties: ScheduleProp
         }
     }
 
-    fun syncGetEmptyApiTemplates(clientId: String?): List<ApiEmptyTemplate> {
+    fun syncGetEmptyApiTemplates(clientId: String?): List<RestWebAPI> {
 
         val request = RemotingCommand.createRequestCommand(RequestCode.GET_EMPTY_API_TEMPLATES, null)
 
@@ -98,7 +102,7 @@ class ScheduleController @Autowired constructor(scheduleProperties: ScheduleProp
 
         return if (response.code == RemotingSysResponseCode.SUCCESS) {
             (RemotingSerializable.decode(response.body,
-                    GetClientApiListRequestBody::class.java) as GetClientApiListRequestBody).apiEmptyTemplates
+                    RestWebExposedAPIBody::class.java) as RestWebExposedAPIBody).apiList
         } else {
             throw ServiceException(response.remark, Status.INTERNAL_SERVER_ERROR)
         }

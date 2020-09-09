@@ -1,9 +1,9 @@
-package restdoc.remoting.data;
+package restdoc.remoting.common;
 
 
 import java.util.Arrays;
 
-public class ApiEmptyTemplate {
+public class RestWebAPI implements ExposedAPI {
 
     private String[] supportMethod;
 
@@ -101,5 +101,10 @@ public class ApiEmptyTemplate {
                 ", uriVarField=" + Arrays.toString(uriVarFields) +
                 ", controller='" + controller + '\'' +
                 '}';
+    }
+
+    @Override
+    public String uniqueKey() {
+        return controller + function;
     }
 }

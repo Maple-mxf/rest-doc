@@ -14,7 +14,6 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.MessageToByteEncoder;
 import io.netty.util.CharsetUtil;
 import io.netty.util.concurrent.GlobalEventExecutor;
-import restdoc.remoting.data.HostData;
 import restdoc.remoting.protocol.RemotingCommand;
 import restdoc.remoting.protocol.RemotingSysResponseCode;
 

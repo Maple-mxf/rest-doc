@@ -3,7 +3,7 @@ package restdoc.client.remoting;
 import io.netty.channel.ChannelHandlerContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import restdoc.client.context.EndpointsListener;
-import restdoc.remoting.common.body.GetClientApiListRequestBody;
+import restdoc.remoting.common.body.RestWebExposedAPIBody;
 import restdoc.remoting.netty.NettyRequestProcessor;
 import restdoc.remoting.protocol.RemotingCommand;
 import restdoc.remoting.protocol.RemotingSysResponseCode;
@@ -23,8 +23,8 @@ public class PostEmptyApiTemplateRequestProcessor implements NettyRequestProcess
         RemotingCommand response = RemotingCommand.createResponseCommand(RemotingSysResponseCode.SUCCESS,
                 "OK");
 
-        GetClientApiListRequestBody body = new GetClientApiListRequestBody();
-        body.setApiEmptyTemplates(endpointsListener.getEmptyApiTemplates());
+        RestWebExposedAPIBody body = new RestWebExposedAPIBody();
+        body.setApiList(endpointsListener.getEmptyApiTemplates());
 
         response.setBody(body.encode());
 

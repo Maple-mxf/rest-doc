@@ -1,4 +1,4 @@
-package restdoc.remoting.data;
+package restdoc.web.server;
 
 import restdoc.remoting.protocol.RemotingSerializable;
 

@@ -1,53 +1,38 @@
-package restdoc.remoting.common.body;
-
-import restdoc.remoting.protocol.RemotingSerializable;
+package restdoc.remoting.common;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.List;
-import java.util.Map;
 
-/**
- * ReportClientExportInterfacesBody
- */
-public class ClientExposedInterfacesBody extends RemotingSerializable {
+public class DubboAPI implements ExposedAPI {
 
-    private Map<String, ExposedInterface> exposedInterfaces;
+    private String name;
+    private List<ExposedMethod> exposedMethods;
+    private String uniqueKey;
 
-    public Map<String, ExposedInterface> getExposedInterfaces() {
-        return exposedInterfaces;
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public List<ExposedMethod> getExposedMethods() {
+        return exposedMethods;
+    }
+
+    public void setExposedMethods(List<ExposedMethod> exposedMethods) {
+        this.exposedMethods = exposedMethods;
+    }
+
+    public void setUniqueKey(String uniqueKey) {
+        this.uniqueKey = uniqueKey;
     }
 
     @Override
-    public String toString() {
-        return "ReportClientExportInterfacesBody{" +
-                "exportInterfaces=" + exposedInterfaces +
-                '}';
-    }
-
-    public void setExposedInterfaces(Map<String, ExposedInterface> exposedInterfaces) {
-        this.exposedInterfaces = exposedInterfaces;
-    }
-
-    public static class ExposedInterface {
-        private String name;
-        private List<ExposedMethod> exposedMethods;
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public List<ExposedMethod> getExposedMethods() {
-            return exposedMethods;
-        }
-
-        public void setExposedMethods(List<ExposedMethod> exposedMethods) {
-            this.exposedMethods = exposedMethods;
-        }
+    public String uniqueKey() {
+        return uniqueKey;
     }
 
     public static class ExposedMethod {

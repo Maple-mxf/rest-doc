@@ -10,8 +10,9 @@ import org.springframework.context.annotation.Import
 import restdoc.client.api.*
 import restdoc.client.dubbo.model.ServiceDescriptor
 import restdoc.remoting.InvokeCallback
+import restdoc.remoting.common.DubboAPI
 import restdoc.remoting.common.RequestCode
-import restdoc.remoting.common.body.ClientExposedInterfacesBody
+import restdoc.remoting.common.body.DubboExposedAPIBody
 import restdoc.remoting.protocol.RemotingCommand
 
 @Configuration
@@ -46,17 +47,17 @@ open class DubboAgentClientConfiguration : CommandLineRunner {
     }
 
     private fun genReportExposedInterfacesTask(): RemotingTask {
-        val body = ClientExposedInterfacesBody()
+        val body = DubboExposedAPIBody()
 
         val beansOfType = beanFactory.getBeansOfType(ServiceBean::class.java)
-        body.exposedInterfaces = beansOfType.toMap().map {
-            val exposedInterface = ClientExposedInterfacesBody.ExposedInterface()
-            exposedInterface.name = it.value.beanName
+        body.apiList = beansOfType.toMap().map {
+            val dubboAPI = DubboAPI()
+            dubboAPI.name = it.value.beanName
 
             val sd = ServiceDescriptor(it.value.interfaceClass)
 
-            exposedInterface.exposedMethods = sd.allMethods.map { mh ->
-                ClientExposedInterfacesBody.ExposedMethod(
+            dubboAPI.exposedMethods = sd.allMethods.map { mh ->
+                DubboAPI.ExposedMethod(
                         mh.method,
                         mh.paramDesc,
                         mh.compatibleParamSignatures,
@@ -67,10 +68,10 @@ open class DubboAgentClientConfiguration : CommandLineRunner {
                         mh.isGeneric
                 )
             }
-            it.key to exposedInterface
-        }.toMap().toMutableMap()
+            dubboAPI
+        }
 
-        val request = RemotingCommand.createRequestCommand(RequestCode.REPORT_EXPOSED_INTERFACES, null)
+        val request = RemotingCommand.createRequestCommand(RequestCode.REPORT_EXPOSED_API, null)
         request.body = body.encode()
 
         return RemotingTask(

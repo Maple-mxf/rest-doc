@@ -10,7 +10,7 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.condition.MediaTypeExpression;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
-import restdoc.remoting.data.ApiEmptyTemplate;
+import restdoc.remoting.common.RestWebAPI;
 
 import java.util.Arrays;
 import java.util.List;
@@ -24,7 +24,7 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
 
     private static Logger log = LoggerFactory.getLogger(EndpointsListener.class);
 
-    private List<ApiEmptyTemplate> emptyApiTemplates;
+    private List<RestWebAPI> emptyApiTemplates;
 
     private final Environment environment;
 
@@ -58,7 +58,7 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
                             .map(pattern -> String.join("", contextPath, pattern))
                             .map(pattern -> {
 
-                                ApiEmptyTemplate emptyTemplate = new ApiEmptyTemplate();
+                                RestWebAPI emptyTemplate = new RestWebAPI();
                                 emptyTemplate.setSupportMethod(requestMappingInfo.getMethodsCondition()
                                         .getMethods()
                                         .stream()
@@ -99,7 +99,7 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
         log.info("RESTDOC-CLIENT collect api empty templates {} ", emptyApiTemplates);
     }
 
-    public List<ApiEmptyTemplate> getEmptyApiTemplates() {
+    public List<RestWebAPI> getEmptyApiTemplates() {
         return emptyApiTemplates;
     }
 }

@@ -30,5 +30,5 @@ public interface RequestCode {
     /**
      *
      */
-    int REPORT_EXPOSED_INTERFACES = 4;
+    int REPORT_EXPOSED_API = 4;
 }

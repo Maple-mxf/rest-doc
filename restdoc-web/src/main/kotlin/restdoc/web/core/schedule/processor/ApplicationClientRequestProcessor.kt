@@ -2,7 +2,7 @@ package restdoc.web.core.schedule.processor
 
 import io.netty.channel.ChannelHandlerContext
 import org.springframework.stereotype.Component
-import restdoc.remoting.ClientChannelInfo
+import restdoc.remoting.common.ApplicationClientInfo
 import restdoc.remoting.common.body.ClientInfoBody
 import restdoc.remoting.netty.NettyRequestProcessor
 import restdoc.remoting.protocol.LanguageCode
@@ -12,8 +12,12 @@ import restdoc.remoting.protocol.RemotingSysResponseCode
 import restdoc.web.core.schedule.ClientChannelManager
 import java.net.InetSocketAddress
 
+
+/**
+ * ApplicationClientRequestProcessor
+ */
 @Component
-class ClientInfoRequestProcessor(private val clientManager: ClientChannelManager) : NettyRequestProcessor {
+class ApplicationClientRequestProcessor(private val clientManager: ClientChannelManager) : NettyRequestProcessor {
 
     override fun rejectRequest(): Boolean {
         return false
@@ -24,9 +28,9 @@ class ClientInfoRequestProcessor(private val clientManager: ClientChannelManager
 
         val address = ctx.channel().remoteAddress() as InetSocketAddress
 
-        val clientChannelInfo = ClientChannelInfo(
+        val clientChannelInfo = ApplicationClientInfo(
                 ctx.channel(),
-                address.address.hostAddress,
+                "tcp://${address.address.hostAddress}:${address.port}",
                 LanguageCode.JAVA,
                 1)
 
