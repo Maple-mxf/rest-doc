@@ -1,6 +1,7 @@
 package restdoc.client.api
 
 import restdoc.remoting.RemotingClient
+import restdoc.remoting.netty.NettyRequestProcessor
 
 
 /**
@@ -38,10 +39,15 @@ interface Agent {
      * Invoke Task
      */
     @Throws(exceptionClasses = [NoSuchElementException::class])
-    fun invoke(taskId: String):InvokeResult
+    fun invoke(taskId: String): InvokeResult
 
     /**
      *
      */
     fun addTask(task: RemotingTask)
+
+    /**
+     *
+     */
+    fun addHandler(code: Int, handler: NettyRequestProcessor)
 }

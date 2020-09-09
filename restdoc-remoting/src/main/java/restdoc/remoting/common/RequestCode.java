@@ -31,4 +31,9 @@ public interface RequestCode {
      *
      */
     int REPORT_EXPOSED_API = 4;
+
+    /**
+     *
+     */
+    int INVOKE_API = 5;
 }

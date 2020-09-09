@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnClass
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
 import restdoc.client.api.*
+import restdoc.client.dubbo.handler.DubboInvokerAPIHandler
 import restdoc.client.dubbo.model.ServiceDescriptor
 import restdoc.remoting.InvokeCallback
 import restdoc.remoting.common.ApplicationType
@@ -19,7 +20,7 @@ import restdoc.remoting.common.body.DubboExposedAPIBody
 import restdoc.remoting.protocol.RemotingCommand
 
 @Configuration
-@Import(AgentConfiguration::class)
+@Import(AgentConfiguration::class, DubboInvokerImpl::class, DubboInvokerAPIHandler::class)
 @ConditionalOnClass(value = [AgentConfiguration::class])
 open class DubboAgentClientConfiguration : CommandLineRunner {
 
@@ -28,6 +29,9 @@ open class DubboAgentClientConfiguration : CommandLineRunner {
 
     @Autowired
     lateinit var agentConfigurationProperties: AgentConfigurationProperties
+
+    @Autowired
+    lateinit var dubboInvokerAPIHandler: DubboInvokerAPIHandler
 
     @Autowired
     lateinit var agentImpl: AgentImpl
@@ -39,9 +43,18 @@ open class DubboAgentClientConfiguration : CommandLineRunner {
         // 2 Start client agent
         agentImpl.start()
 
-        // 3 Invoke report client exposed task
+        // 3 Registry client request handler
+        registryHandler()
+
+        // 4 Invoke report client exposed task
         agentImpl.invoke(reportExposedInterfacesTask)
         agentImpl.invoke(reportClientInfoTask)
+    }
+
+    private fun registryHandler() {
+
+        // 1 Add invoke api handler
+        agentImpl.addHandler(RequestCode.INVOKE_API, dubboInvokerAPIHandler)
     }
 
     private fun registryTask() {

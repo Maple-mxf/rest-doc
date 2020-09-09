@@ -3,6 +3,7 @@ package restdoc.client.api
 import restdoc.remoting.RemotingClient
 import restdoc.remoting.netty.NettyClientConfig
 import restdoc.remoting.netty.NettyRemotingClient
+import restdoc.remoting.netty.NettyRequestProcessor
 import java.util.concurrent.CopyOnWriteArrayList
 
 /**
@@ -45,6 +46,10 @@ class AgentImpl(private val agentConfigurationProperties: AgentConfigurationProp
 
     override fun getServerRemoteAddress(): String {
         return this.agentConfigurationProperties.host + ":" + this.agentConfigurationProperties.port
+    }
+
+    override fun addHandler(code: Int, handler: NettyRequestProcessor) {
+        remotingClient.registerProcessor(code, handler, null)
     }
 
     @Throws(exceptionClasses = [NoSuchElementException::class])
