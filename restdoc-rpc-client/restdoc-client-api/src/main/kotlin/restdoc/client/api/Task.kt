@@ -4,6 +4,8 @@ import restdoc.remoting.InvokeCallback
 import restdoc.remoting.protocol.RemotingCommand
 
 enum class RemotingTaskType {
+    /**
+     */
     ONE_WAY,
     SYNC,
     ASYNC

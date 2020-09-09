@@ -7,6 +7,7 @@ import restdoc.remoting.common.RequestCode
 import restdoc.remoting.common.body.ClientExposedInterfacesBody
 import restdoc.remoting.protocol.RemotingCommand
 
+@Deprecated(message = "")
 class ReportExposedInterfaceRequestProcessor(private val dubboContextHolder: DubboContextHolder) {
 
     fun processRequest(ctx: ChannelHandlerContext?, request: RemotingCommand?): RemotingCommand {

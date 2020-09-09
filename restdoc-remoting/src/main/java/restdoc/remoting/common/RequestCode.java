@@ -26,4 +26,9 @@ public interface RequestCode {
      *
      */
     int GET_EMPTY_API_TEMPLATES = 3;
+
+    /**
+     *
+     */
+    int REPORT_EXPOSED_INTERFACES = 4;
 }
