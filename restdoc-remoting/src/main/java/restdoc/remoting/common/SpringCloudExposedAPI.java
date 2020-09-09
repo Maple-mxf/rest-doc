@@ -1,6 +1,9 @@
 package restdoc.remoting.common;
 
-public class SpringCloudAPI implements ExposedAPI {
+/**
+ * SSL context
+ */
+public class SpringCloudExposedAPI implements ExposedAPI {
 
     @Override
     public String uniqueKey() {

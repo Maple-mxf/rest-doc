@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.CommandLineRunner
 import org.springframework.stereotype.Component
 import restdoc.remoting.common.RequestCode
-import restdoc.remoting.common.RestWebAPI
+import restdoc.remoting.common.RestWebExposedAPI
 import restdoc.remoting.common.body.HttpCommunicationCaptureBody
 import restdoc.remoting.common.body.RestWebExposedAPIBody
 import restdoc.remoting.common.header.SubmitHttpTaskRequestHeader
@@ -91,7 +91,7 @@ class ScheduleController @Autowired constructor(scheduleProperties: ScheduleProp
         }
     }
 
-    fun syncGetEmptyApiTemplates(clientId: String?): List<RestWebAPI> {
+    fun syncGetEmptyApiTemplates(clientId: String?): List<RestWebExposedAPI> {
 
         val request = RemotingCommand.createRequestCommand(RequestCode.GET_EMPTY_API_TEMPLATES, null)
 

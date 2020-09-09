@@ -3,7 +3,7 @@ package restdoc.remoting.common;
 
 import java.util.Arrays;
 
-public class RestWebAPI implements ExposedAPI {
+public class RestWebExposedAPI implements ExposedAPI {
 
     private String[] supportMethod;
 

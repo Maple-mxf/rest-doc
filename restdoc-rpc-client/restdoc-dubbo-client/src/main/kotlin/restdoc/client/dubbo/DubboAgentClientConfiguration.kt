@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Import
 import restdoc.client.api.*
 import restdoc.client.dubbo.model.ServiceDescriptor
 import restdoc.remoting.InvokeCallback
-import restdoc.remoting.common.DubboAPI
+import restdoc.remoting.common.DubboExposedAPI
 import restdoc.remoting.common.RequestCode
 import restdoc.remoting.common.body.DubboExposedAPIBody
 import restdoc.remoting.protocol.RemotingCommand
@@ -51,13 +51,13 @@ open class DubboAgentClientConfiguration : CommandLineRunner {
 
         val beansOfType = beanFactory.getBeansOfType(ServiceBean::class.java)
         body.apiList = beansOfType.toMap().map {
-            val dubboAPI = DubboAPI()
+            val dubboAPI = DubboExposedAPI()
             dubboAPI.name = it.value.beanName
 
             val sd = ServiceDescriptor(it.value.interfaceClass)
 
             dubboAPI.exposedMethods = sd.allMethods.map { mh ->
-                DubboAPI.ExposedMethod(
+                DubboExposedAPI.ExposedMethod(
                         mh.method,
                         mh.paramDesc,
                         mh.compatibleParamSignatures,

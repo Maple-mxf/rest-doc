@@ -12,28 +12,28 @@ class ExposedAPIManager {
     /**
      * Key is service name
      */
-    private val restWebExposedAPI: MutableMap<APIKey, List<RestWebAPI>> = ConcurrentHashMap()
+    private val restWebExposedExposedAPI: MutableMap<APIKey, List<RestWebExposedAPI>> = ConcurrentHashMap()
 
     /**
      *
      */
-    private val dubboExposedAPI: MutableMap<APIKey, List<DubboAPI>> = ConcurrentHashMap()
+    private val dubboExposedExposedAPI: MutableMap<APIKey, List<DubboExposedAPI>> = ConcurrentHashMap()
 
     /**
      *
      */
-    private val springcloudExposedAPI: MutableMap<APIKey, List<SpringCloudAPI>> = ConcurrentHashMap()
+    private val springcloudExposedExposedAPI: MutableMap<APIKey, List<SpringCloudExposedAPI>> = ConcurrentHashMap()
 
     fun registerAPI(type: ApplicationType, serviceAddress: String, service: String, apiList: List<ExposedAPI>) {
         when (type) {
             ApplicationType.DUBBO -> {
-                dubboExposedAPI.putIfAbsent(APIKey(address = serviceAddress, service = service), apiList as List<DubboAPI>)
+                dubboExposedExposedAPI.putIfAbsent(APIKey(address = serviceAddress, service = service), apiList as List<DubboExposedAPI>)
             }
             ApplicationType.REST_WEB -> {
-                restWebExposedAPI.putIfAbsent(APIKey(address = serviceAddress, service = service), apiList as List<RestWebAPI>)
+                restWebExposedExposedAPI.putIfAbsent(APIKey(address = serviceAddress, service = service), apiList as List<RestWebExposedAPI>)
             }
             ApplicationType.SPRINGCLOUD -> {
-                springcloudExposedAPI.putIfAbsent(APIKey(address = serviceAddress, service = service), apiList as List<SpringCloudAPI>)
+                springcloudExposedExposedAPI.putIfAbsent(APIKey(address = serviceAddress, service = service), apiList as List<SpringCloudExposedAPI>)
             }
         }
     }
@@ -41,20 +41,20 @@ class ExposedAPIManager {
     fun listByAddress(type: ApplicationType, address: String): List<ExposedAPI> {
         return when (type) {
             ApplicationType.DUBBO -> {
-                dubboExposedAPI
+                dubboExposedExposedAPI
                         .filter { it.key.address == address }
                         .flatMap { it.value }
                         .toList()
             }
             ApplicationType.REST_WEB -> {
-                restWebExposedAPI
+                restWebExposedExposedAPI
                         .filter { it.key.address == address }
                         .flatMap { it.value }
                         .toList()
             }
 
             ApplicationType.SPRINGCLOUD -> {
-                springcloudExposedAPI
+                springcloudExposedExposedAPI
                         .filter { it.key.address == address }
                         .flatMap { it.value }
                         .toList()

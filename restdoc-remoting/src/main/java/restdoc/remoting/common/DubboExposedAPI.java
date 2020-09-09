@@ -4,7 +4,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.List;
 
-public class DubboAPI implements ExposedAPI {
+public class DubboExposedAPI implements ExposedAPI {
 
     private String name;
     private List<ExposedMethod> exposedMethods;
