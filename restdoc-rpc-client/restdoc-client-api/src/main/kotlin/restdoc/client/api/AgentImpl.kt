@@ -8,7 +8,7 @@ import java.util.concurrent.CopyOnWriteArrayList
 /**
  * The Agent interface implement
  */
-class AgentImpl(val agentConfigurationProperties: AgentConfigurationProperties) : Agent {
+class AgentImpl(private val agentConfigurationProperties: AgentConfigurationProperties) : Agent {
 
     private val remotingClient: NettyRemotingClient
 

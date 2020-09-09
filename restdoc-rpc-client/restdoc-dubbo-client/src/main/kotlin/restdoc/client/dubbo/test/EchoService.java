@@ -2,5 +2,5 @@ package restdoc.client.dubbo.test;
 
 public interface EchoService {
 
-    void echo();
+    void echo(String a);
 }

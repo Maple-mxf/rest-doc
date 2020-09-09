@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Import
 import restdoc.client.api.*
 import restdoc.client.dubbo.model.ServiceDescriptor
 import restdoc.remoting.InvokeCallback
+import restdoc.remoting.common.ApplicationType
 import restdoc.remoting.common.DubboExposedAPI
 import restdoc.remoting.common.RemotingUtil
 import restdoc.remoting.common.RequestCode
@@ -65,7 +66,7 @@ open class DubboAgentClientConfiguration : CommandLineRunner {
                 taskId = reportClientInfoTask,
                 type = RemotingTaskType.SYNC,
                 request = request,
-                timeoutMills = 10000L,
+                timeoutMills = 1000000L,
                 invokeCallback = InvokeCallback { })
     }
 
@@ -80,28 +81,29 @@ open class DubboAgentClientConfiguration : CommandLineRunner {
             val sd = ServiceDescriptor(it.value.interfaceClass)
 
             dubboAPI.exposedMethods = sd.allMethods.map { mh ->
-                DubboExposedAPI.ExposedMethod(
-                        mh.method,
+                val exposedMethod = DubboExposedAPI.ExposedMethod(
                         mh.paramDesc,
                         mh.compatibleParamSignatures,
-                        mh.parameterClasses,
-                        mh.returnClass,
-                        mh.returnTypes,
+                        mh.parameterClasses.map { it.name }.toTypedArray(),
+                        mh.returnClass.name,
+                        mh.returnTypes.map { it.typeName }.toTypedArray(),
                         mh.methodName,
                         mh.isGeneric
                 )
+                exposedMethod
             }
             dubboAPI
         }
 
         val request = RemotingCommand.createRequestCommand(RequestCode.REPORT_EXPOSED_API, null)
+        body.service = ApplicationType.DUBBO.name
         request.body = body.encode()
 
         return RemotingTask(
                 taskId = reportExposedInterfacesTask,
                 type = RemotingTaskType.SYNC,
                 request = request,
-                timeoutMills = 10000L,
+                timeoutMills = 1000000L,
                 invokeCallback = InvokeCallback { })
     }
 }

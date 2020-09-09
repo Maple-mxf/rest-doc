@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 public class EchoServiceImpl implements EchoService {
 
     @Override
-    public void echo() {
+    public void echo(String a) {
         System.err.println("hello world");
     }
 }

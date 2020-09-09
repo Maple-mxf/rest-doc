@@ -1,7 +1,5 @@
 package restdoc.remoting.common;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.Type;
 import java.util.List;
 
 public class DubboExposedAPI implements ExposedAPI {
@@ -36,22 +34,21 @@ public class DubboExposedAPI implements ExposedAPI {
     }
 
     public static class ExposedMethod {
-        private transient Method method;
         private String paramDesc;
         private String[] compatibleParamSignatures;
-        private Class<?>[] parameterClasses;
-        private Class<?> returnClass;
-        private Type[] returnTypes;
+        private String[] parameterClasses;
+        private String returnClass;
+        private String[] returnTypes;
         private String methodName;
         private boolean generic;
 
         public ExposedMethod() {
         }
 
-        public ExposedMethod(Method method, String paramDesc, String[] compatibleParamSignatures,
-                             Class<?>[] parameterClasses, Class<?> returnClass,
-                             Type[] returnTypes, String methodName, boolean generic) {
-            this.method = method;
+        public ExposedMethod(String paramDesc, String[] compatibleParamSignatures,
+                             String[] parameterClasses, String returnClass,
+                             String[] returnTypes, String methodName, boolean generic) {
+
             this.paramDesc = paramDesc;
             this.compatibleParamSignatures = compatibleParamSignatures;
             this.parameterClasses = parameterClasses;
@@ -59,10 +56,6 @@ public class DubboExposedAPI implements ExposedAPI {
             this.returnTypes = returnTypes;
             this.methodName = methodName;
             this.generic = generic;
-        }
-
-        public Method getMethod() {
-            return method;
         }
 
         public String getParamDesc() {
@@ -73,16 +66,44 @@ public class DubboExposedAPI implements ExposedAPI {
             return compatibleParamSignatures;
         }
 
-        public Class<?>[] getParameterClasses() {
+        public void setParamDesc(String paramDesc) {
+            this.paramDesc = paramDesc;
+        }
+
+        public void setCompatibleParamSignatures(String[] compatibleParamSignatures) {
+            this.compatibleParamSignatures = compatibleParamSignatures;
+        }
+
+        public String[] getParameterClasses() {
             return parameterClasses;
         }
 
-        public Class<?> getReturnClass() {
+        public void setParameterClasses(String[] parameterClasses) {
+            this.parameterClasses = parameterClasses;
+        }
+
+        public String getReturnClass() {
             return returnClass;
         }
 
-        public Type[] getReturnTypes() {
+        public void setReturnClass(String returnClass) {
+            this.returnClass = returnClass;
+        }
+
+        public String[] getReturnTypes() {
             return returnTypes;
+        }
+
+        public void setReturnTypes(String[] returnTypes) {
+            this.returnTypes = returnTypes;
+        }
+
+        public void setMethodName(String methodName) {
+            this.methodName = methodName;
+        }
+
+        public void setGeneric(boolean generic) {
+            this.generic = generic;
         }
 
         public String getMethodName() {
