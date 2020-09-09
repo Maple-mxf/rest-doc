@@ -10,6 +10,7 @@ import restdoc.remoting.protocol.RemotingSerializable;
 import restdoc.remoting.protocol.RemotingSysResponseCode;
 
 
+@Deprecated
 public class HttpTaskRequestProcessor implements NettyRequestProcessor {
 
     private final HttpInvoker httpInvoker;

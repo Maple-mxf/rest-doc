@@ -1,4 +1,4 @@
-package restdoc.web.core.schedule
+package restdoc.web.core.schedule.processor
 
 import io.netty.channel.ChannelHandlerContext
 import org.springframework.stereotype.Component
@@ -9,10 +9,11 @@ import restdoc.remoting.protocol.LanguageCode
 import restdoc.remoting.protocol.RemotingCommand
 import restdoc.remoting.protocol.RemotingSerializable
 import restdoc.remoting.protocol.RemotingSysResponseCode
+import restdoc.web.core.schedule.ClientChannelManager
 import java.net.InetSocketAddress
 
 @Component
-class ReportClientInfoRequestProcessor(private val clientManager: ClientChannelManager) : NettyRequestProcessor {
+class ClientInfoRequestProcessor(private val clientManager: ClientChannelManager) : NettyRequestProcessor {
 
     override fun rejectRequest(): Boolean {
         return false

@@ -20,6 +20,7 @@ import restdoc.remoting.protocol.RemotingSerializable
 import restdoc.remoting.protocol.RemotingSysResponseCode
 import restdoc.web.core.ServiceException
 import restdoc.web.core.Status
+import restdoc.web.core.schedule.processor.ClientInfoRequestProcessor
 
 /**
  * ScheduleServer provided the tcp server dashboard
@@ -27,7 +28,9 @@ import restdoc.web.core.Status
  * @author ubuntu-m
  */
 @Component
-class ScheduleController : CommandLineRunner {
+class ScheduleController @Autowired constructor(scheduleProperties: ScheduleProperties,
+                                                private val clientManager: ClientChannelManager,
+                                                private val clientInfoRequestProcessor: ClientInfoRequestProcessor) : CommandLineRunner {
 
     private val log: Logger = LoggerFactory.getLogger(ScheduleController::class.java)
 
@@ -37,29 +40,16 @@ class ScheduleController : CommandLineRunner {
         this.remotingServer.start()
     })
 
-    private val scheduleProperties: ScheduleProperties
-    private val clientManager: ClientChannelManager
-    private val reportClientInfoRequestProcessor: ReportClientInfoRequestProcessor
-
     private val remotingServer: NettyRemotingServer;
 
-    @Autowired
-    constructor(scheduleProperties: ScheduleProperties,
-                clientManager: ClientChannelManager,
-                reportClientInfoRequestProcessor: ReportClientInfoRequestProcessor) {
-
-        this.scheduleProperties = scheduleProperties
-        this.clientManager = clientManager
-        this.reportClientInfoRequestProcessor = reportClientInfoRequestProcessor
-
+    init {
         val config = NettyServerConfig()
         config.listenPort = scheduleProperties.port
         remotingServer = NettyRemotingServer(config)
     }
 
-
     fun initialize() {
-        this.remotingServer.registerProcessor(RequestCode.REPORT_CLIENT_INFO, reportClientInfoRequestProcessor, null);
+        this.remotingServer.registerProcessor(RequestCode.REPORT_CLIENT_INFO, clientInfoRequestProcessor, null);
     }
 
     override fun run(vararg args: String?) {

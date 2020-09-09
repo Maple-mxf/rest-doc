@@ -8,6 +8,7 @@ import restdoc.remoting.netty.NettyRequestProcessor;
 import restdoc.remoting.protocol.RemotingCommand;
 import restdoc.remoting.protocol.RemotingSysResponseCode;
 
+@Deprecated
 public class PostEmptyApiTemplateRequestProcessor implements NettyRequestProcessor {
 
     private final EndpointsListener endpointsListener;

@@ -23,6 +23,7 @@ import restdoc.remoting.protocol.RemotingCommand;
  * <p>
  * Establish channel
  */
+@Deprecated
 public class HttpApplicationAgent {
 
     private static Logger log = LoggerFactory.getLogger(HttpApplicationAgent.class);
