@@ -11,17 +11,22 @@ import restdoc.client.api.*
 import restdoc.client.dubbo.model.ServiceDescriptor
 import restdoc.remoting.InvokeCallback
 import restdoc.remoting.common.DubboExposedAPI
+import restdoc.remoting.common.RemotingUtil
 import restdoc.remoting.common.RequestCode
+import restdoc.remoting.common.body.ClientInfoBody
 import restdoc.remoting.common.body.DubboExposedAPIBody
 import restdoc.remoting.protocol.RemotingCommand
 
 @Configuration
-@Import(AgentConfigurationProperties::class, AgentConfiguration::class)
+@Import(AgentConfiguration::class)
 @ConditionalOnClass(value = [AgentConfiguration::class])
 open class DubboAgentClientConfiguration : CommandLineRunner {
 
     @Autowired
     lateinit var beanFactory: ConfigurableListableBeanFactory
+
+    @Autowired
+    lateinit var agentConfigurationProperties: AgentConfigurationProperties
 
     @Autowired
     lateinit var agentImpl: AgentImpl
@@ -35,18 +40,36 @@ open class DubboAgentClientConfiguration : CommandLineRunner {
 
         // 3 Invoke report client exposed task
         agentImpl.invoke(reportExposedInterfacesTask)
+        agentImpl.invoke(reportClientInfoTask)
     }
 
     private fun registryTask() {
 
         // 1 Generate report dubbo application exposed interfaces
-        agentImpl.addTask(genReportExposedInterfacesTask())
+        agentImpl.addTask(reportExposedInterfacesTask())
 
         // 2 Generate report client info interfaces
-
+        agentImpl.addTask(reportClientInfoTask())
     }
 
-    private fun genReportExposedInterfacesTask(): RemotingTask {
+    private fun reportClientInfoTask(): RemotingTask {
+        val body = ClientInfoBody()
+        body.osname = System.getProperty("os.name")
+        body.hostname = RemotingUtil.getHostname()
+        body.service = agentConfigurationProperties.service
+
+        val request = RemotingCommand.createRequestCommand(RequestCode.REPORT_CLIENT_INFO, null)
+        request.body = body.encode()
+
+        return RemotingTask(
+                taskId = reportClientInfoTask,
+                type = RemotingTaskType.SYNC,
+                request = request,
+                timeoutMills = 10000L,
+                invokeCallback = InvokeCallback { })
+    }
+
+    private fun reportExposedInterfacesTask(): RemotingTask {
         val body = DubboExposedAPIBody()
 
         val beansOfType = beanFactory.getBeansOfType(ServiceBean::class.java)

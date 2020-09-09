@@ -6,4 +6,4 @@ import org.springframework.boot.context.properties.ConstructorBinding
 
 @ConstructorBinding
 @ConfigurationProperties(prefix = "restdoc")
-data class AgentConfigurationProperties(val host: String, val port: Int, val applicationName: String)
+data class AgentConfigurationProperties(val host: String, val port: Int, val service: String)

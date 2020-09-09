@@ -362,6 +362,10 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
         }
     }
 
+    public ConcurrentMap<String, ChannelWrapper> getChannelTables() {
+        return channelTables;
+    }
+
     private Channel getAndCreateChannel(final String addr) throws RemotingConnectException, InterruptedException {
         if (null == addr) {
             return getAndCreateNameserverChannel();
@@ -663,5 +667,6 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
             }
         }
     }
+
 
 }

@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-@EnableConfigurationProperties(AgentConfigurationProperties::class)
+@EnableConfigurationProperties(value = [AgentConfigurationProperties::class])
 open class AgentConfiguration {
 
     @Bean

@@ -6,7 +6,6 @@ import restdoc.remoting.common.ApplicationType
 import restdoc.remoting.common.body.DubboExposedAPIBody
 import restdoc.remoting.common.body.RestWebExposedAPIBody
 import restdoc.remoting.common.body.SpringCloudExposeAPIBody
-import restdoc.remoting.common.header.ExposedAPIHeader
 import restdoc.remoting.netty.NettyRequestProcessor
 import restdoc.remoting.protocol.RemotingCommand
 import restdoc.remoting.protocol.RemotingSerializable
@@ -23,13 +22,13 @@ class ApplicationAPIRequestProcessor(private val exposedAPIManager: ExposedAPIMa
     override fun rejectRequest(): Boolean = false
 
     override fun processRequest(ctx: ChannelHandlerContext, request: RemotingCommand): RemotingCommand {
-        val header = request.readCustomHeader() as ExposedAPIHeader
 
         val remoteAddress: InetSocketAddress = ctx.channel().remoteAddress() as InetSocketAddress
         val serviceAddress = "tcp://${remoteAddress.address.hostAddress}:${remoteAddress.port}"
 
+        val on = RemotingSerializable.decode(request.body, com.fasterxml.jackson.databind.node.ObjectNode::class.java)
 
-        when (header.applicationType) {
+        when (ApplicationType.valueOf(on.get("applicationType").asText())) {
             ApplicationType.SPRINGCLOUD -> {
                 val body = RemotingSerializable.decode(request.body, SpringCloudExposeAPIBody::class.java)
                 exposedAPIManager.registerAPI(ApplicationType.SPRINGCLOUD, serviceAddress, body.service, body.apiList)

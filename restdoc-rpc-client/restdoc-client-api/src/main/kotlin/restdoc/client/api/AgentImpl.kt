@@ -8,9 +8,9 @@ import java.util.concurrent.CopyOnWriteArrayList
 /**
  * The Agent interface implement
  */
-class AgentImpl(agentConfigurationProperties: AgentConfigurationProperties) : Agent {
+class AgentImpl(val agentConfigurationProperties: AgentConfigurationProperties) : Agent {
 
-    private val remotingClient: RemotingClient
+    private val remotingClient: NettyRemotingClient
 
     private var status: Status = Status.STARTED
 
@@ -44,7 +44,7 @@ class AgentImpl(agentConfigurationProperties: AgentConfigurationProperties) : Ag
     }
 
     override fun getServerRemoteAddress(): String {
-        return remotingClient.nameServerAddressList[0]
+        return this.agentConfigurationProperties.host + ":" + this.agentConfigurationProperties.port
     }
 
     @Throws(exceptionClasses = [NoSuchElementException::class])

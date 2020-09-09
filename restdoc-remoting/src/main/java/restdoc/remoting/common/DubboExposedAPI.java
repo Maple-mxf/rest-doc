@@ -36,14 +36,17 @@ public class DubboExposedAPI implements ExposedAPI {
     }
 
     public static class ExposedMethod {
-        private final transient Method method;
-        private final String paramDesc;
-        private final String[] compatibleParamSignatures;
-        private final Class<?>[] parameterClasses;
-        private final Class<?> returnClass;
-        private final Type[] returnTypes;
-        private final String methodName;
-        private final boolean generic;
+        private transient Method method;
+        private String paramDesc;
+        private String[] compatibleParamSignatures;
+        private Class<?>[] parameterClasses;
+        private Class<?> returnClass;
+        private Type[] returnTypes;
+        private String methodName;
+        private boolean generic;
+
+        public ExposedMethod() {
+        }
 
         public ExposedMethod(Method method, String paramDesc, String[] compatibleParamSignatures,
                              Class<?>[] parameterClasses, Class<?> returnClass,
