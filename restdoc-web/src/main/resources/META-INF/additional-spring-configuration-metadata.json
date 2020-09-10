@@ -1,0 +1,9 @@
+{
+  "properties": [
+    {
+      "name": "restdoc.schedule.port",
+      "type": "java.lang.String",
+      "description": "Description for restdoc.schedule.port."
+    }
+  ]
+}

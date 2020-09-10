@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>微服务实例</title>
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}"/>
+    <link rel="stylesheet" th:href="@{/admin/css/pearForm.css}"/>
+
+    <style type="text/css">
+        body {
+            /*margin: 10px;*/
+            background-color: whitesmoke;
+            font-family: 'Roboto', sans-serif;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+<div th:include="nav::nav"></div>
+<div class="layui-fluid layui-bg-gray">
+
+    <div id="tableContents" style="display: none">
+        <div id="navTableOfContent" style="font-size: 14px"></div>
+    </div>
+
+    <div class="layui-col-md10" id="docContent">
+        <iframe src="" id="docContentFrame" frameborder="0" style="width: 100%;height: 900px"></iframe>
+    </div>
+
+</div>
+
+<script th:src="@{/layui/layui.js}"></script>
+<script th:src="@{/admin/js/jquery.js}"></script>
+<script th:src="@{/admin/js/util.js}"></script>
+<script th:inline="javascript">
+
+    $("#microservice").addClass("layui-this");
+
+    var service = [[${service}]];
+    var ap = [[${ap}]];
+
+    layui.config({
+        base: '/restdoc/layui/lay/extends/'
+    }).use([
+        'util',
+        'layer',
+        'element',
+        'jquery',
+        'tree'], function () {
+        var tree = layui.tree;
+        var $ = layui.jquery;
+        var layer = layui.layer;
+
+        var treeData = null;
+        var projectId = $("#projectId").val();
+
+        $.ajax({
+            type: 'GET',
+            url: '/restdoc/microservice/' + service + '/exposedapi?ap=' + ap,
+            async: false,
+            success: function (data) {
+                if (data['code'] === "200") {
+                    treeData = data['data']
+                } else {
+                    layer.msg(data['message']);
+                }
+            },
+            error: function () {
+                layer.msg("网络异常")
+            }
+        });
+
+        layer.open({
+            type: 1,
+            title: '服务目录',
+            content: $('#tableContents'),
+            shadeClose: true,
+            shade: 0,
+            offset: 'rb',
+            closeBtn: 0,
+            area: ['600px', '900px'],
+            zIndex: layer.zIndex
+            , success:
+
+                function (layero) {
+                    layer.setTop(layero); //重点2
+                }
+        });
+
+        console.info(treeData)
+
+        tree.render({
+            elem: '#navTableOfContent'
+            , data: treeData
+            , edit: ['update', 'del']
+            , click: function (obj) {
+                if (obj.data.type === "API") {
+                    $("#docContentFrame").attr("src", '/restdoc/microservice/' + service + '/view/document/' + obj.data.id);
+                }
+            }
+            , operate: function (obj) {
+                var type = obj.type;
+                var data = obj.data;
+
+                if (type == 'del') {
+                    if (data.type == 'WIKI' || data.type == 'API') {
+                        deleteTreeNode('/restdoc/document/' + data.id)
+                    } else {
+                        deleteTreeNode('/restdoc/resource/' + data.id)
+                    }
+                } else if (type == 'update') {
+                    var body = {"name": data.title};
+
+                    console.info(body);
+
+                    console.info(data)
+
+                    if (data.type == 'WIKI' || data.type == 'API') {
+                        editTreeNode('/restdoc/document/' + data.id, body)
+                    } else {
+                        editTreeNode('/restdoc/resource/' + data.id, body)
+                    }
+                }
+            }
+        });
+
+        function editTreeNode(url, body) {
+            $.ajax({
+                type: 'PATCH',
+                url: url,
+                contentType: 'application/json;charset=utf-8',
+                dataType: "JSON",
+                data: JSON.stringify(body),
+                async: false,
+                success: function (data) {
+                    if (data['code'] === "200") {
+                        layer.msg("操作成功")
+                    } else {
+                        layer.msg(data['message']);
+                    }
+                },
+                error: function () {
+                    layer.msg("网络异常")
+                }
+            });
+        }
+
+        function deleteTreeNode(url) {
+            $.ajax({
+                type: "DELETE",
+                url: url,
+                async: false,
+                success: function (data) {
+                    if (data['code'] === "200") {
+                        layer.msg("操作成功")
+                    } else {
+                        layer.msg(data['message']);
+                    }
+                },
+                error: function () {
+                    layer.msg("网络异常")
+                }
+            });
+        }
+    });
+</script>
+</body>
+</html>

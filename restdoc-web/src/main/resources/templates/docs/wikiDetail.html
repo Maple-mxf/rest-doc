@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--Import materialize.css-->
+    <link type="text/css" rel="stylesheet" th:href="@{/admin/css/doc-font.css}"/>
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}"/>
+    <link rel="stylesheet" th:href="@{/admin/css/pearForm.css}"/>
+    <link rel="stylesheet" th:href="@{/admin/css/easyeditor.css}"/>
+    <link rel="stylesheet" th:href="@{/admin/css/fangge-style.css}"/>
+    <link rel="stylesheet" th:href="@{/admin/css/doc-common.css}"/>
+
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <style>
+        body {
+            background-color: whitesmoke;
+            font-family: 'Roboto', sans-serif;
+            font-size: 14px;
+        }
+
+        cite {
+            font-family: 'Roboto', sans-serif;
+            font-size: 14px;
+        }
+    </style>
+
+</head>
+
+<body>
+
+<div class="layui-container">
+
+    <div class="layui-row" style="margin-top: 10px">
+
+        <div style="font-size: 20px" class="layui-col-md7" th:text="${document.name}">
+        </div>
+
+        <div class="layui-col-md1">
+            <div class="layui-inline" style="margin-left: 20%">
+                <button class="layui-btn layui-btn-primary"
+                        id="copyDocLink">复制访问链接
+                </button>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+<div class="layui-container detail-body layui-text easyeditor-content" style="margin-top: 10px"
+     th:utext="${document.content}">
+</div>
+
+<script th:src="@{/layui/layui.js}"></script>
+<script th:src="@{/admin/js/jquery.js}"></script>
+<script th:src="@{/admin/js/marked.min.js}"></script>
+</body>
+</html>

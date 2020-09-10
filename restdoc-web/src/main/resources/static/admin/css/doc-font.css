@@ -1,0 +1,10 @@
+@font-face {
+    font-family: "JetBrains Mono";
+    src: url('../../font/JetBrainsMono-Regular.woff');
+}
+
+
+@font-face {
+    font-family: "Roboto";
+    src: url('../../font/Roboto-Regular.ttf');
+}
