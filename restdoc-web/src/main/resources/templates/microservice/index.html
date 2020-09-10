@@ -40,26 +40,35 @@
         table.render({
             elem: '#test'
             , url: '/restdoc/serviceClient/list'
-            , toolbar: "#toolbar"
+            // , toolbar: "#toolbar"
             , size: 'lg'
             , cols: [
                 [
                     {type: 'checkbox', fixed: 'left'}
+
                     ,
                     {
-                        field: 'service', width: 250, title: '服务名称', sort: true
+                        field: 'applicationType', width: 150, title: '应用类型', sort: true
                     }
                     ,
                     {
-                        field: 'remoteAddress', width: 250, title: '服务远程地址', sort: true
+                        field: 'service', width: 150, title: '服务名称', sort: true
                     }
                     ,
                     {
-                        field: 'osname', width: 250, title: '运行平台'
+                        field: 'serializationProtocol', width: 150, title: '序列化协议', sort: true
                     }
                     ,
                     {
-                        field: 'hostname', width: 250, title: '计算机名称'
+                        field: 'remoteAddress', width: 200, title: '服务远程地址', sort: true
+                    }
+                    ,
+                    {
+                        field: 'osname', width: 150, title: '运行平台'
+                    }
+                    ,
+                    {
+                        field: 'hostname', width: 200, title: '计算机名称'
                     }
                 ]
             ]

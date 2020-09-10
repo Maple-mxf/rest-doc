@@ -1,5 +1,6 @@
 package restdoc.remoting.common.body;
 
+import restdoc.remoting.common.ApplicationType;
 import restdoc.remoting.protocol.RemotingSerializable;
 
 public class ClientInfoBody extends RemotingSerializable {
@@ -8,6 +9,26 @@ public class ClientInfoBody extends RemotingSerializable {
     private String service;
 
     private String hostname;
+
+    private ApplicationType applicationType;
+
+    private String serializationProtocol;
+
+    public String getSerializationProtocol() {
+        return serializationProtocol;
+    }
+
+    public void setSerializationProtocol(String serializationProtocol) {
+        this.serializationProtocol = serializationProtocol;
+    }
+
+    public ApplicationType getApplicationType() {
+        return applicationType;
+    }
+
+    public void setApplicationType(ApplicationType applicationType) {
+        this.applicationType = applicationType;
+    }
 
     public String getService() {
         return service;

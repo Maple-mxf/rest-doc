@@ -46,7 +46,9 @@ class ServiceClientController {
                     "remoteAddress" to it.key,
                     "hostname" to it.value.hostname,
                     "osname" to it.value.osname,
-                    "service" to it.value.service
+                    "service" to it.value.service,
+                    "applicationType" to it.value.applicationType,
+                    "serializationProtocol" to it.value.serializationProtocol
             )
         }
                 .toList()

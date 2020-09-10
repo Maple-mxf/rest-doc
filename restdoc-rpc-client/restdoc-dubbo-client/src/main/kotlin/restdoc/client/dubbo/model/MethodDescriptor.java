@@ -3,7 +3,9 @@ package restdoc.client.dubbo.model;
 import org.apache.dubbo.common.utils.ReflectUtils;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.lang.reflect.Type;
+import java.util.Arrays;
 import java.util.stream.Stream;
 
 import static org.apache.dubbo.rpc.Constants.$INVOKE;
@@ -19,6 +21,7 @@ public class MethodDescriptor {
     private final String paramDesc;
     // duplicate filed as paramDesc, but with different format.
     private final String[] compatibleParamSignatures;
+    private final String[] parameterNames;
     private final Class<?>[] parameterClasses;
     private final Class<?> returnClass;
     private final Type[] returnTypes;
@@ -36,9 +39,14 @@ public class MethodDescriptor {
                 .toArray(String[]::new);
         this.methodName = method.getName();
         this.generic = (methodName.equals($INVOKE) || methodName.equals($INVOKE_ASYNC)) && parameterClasses.length == 3;
+
+        Parameter[] parameters = method.getParameters();
+        parameterNames = Arrays.stream(parameters).map(Parameter::getName).toArray(String[]::new);
+
+        System.err.println(parameterNames);
     }
 
-    public boolean matchParams (String params) {
+    public boolean matchParams(String params) {
         return paramDesc.equalsIgnoreCase(params);
     }
 
@@ -74,4 +82,7 @@ public class MethodDescriptor {
         return generic;
     }
 
+    public String[] getParameterNames() {
+        return parameterNames;
+    }
 }

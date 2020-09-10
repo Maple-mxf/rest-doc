@@ -16,6 +16,7 @@ public class ApplicationClientInfo {
     private String osname;
     private String service;
     private ApplicationType applicationType = ApplicationType.REST_WEB;
+    private String serializationProtocol;
 
     public ApplicationClientInfo(Channel channel) {
         this(channel, null, null, 0);
@@ -88,6 +89,14 @@ public class ApplicationClientInfo {
         this.service = service;
     }
 
+    public String getSerializationProtocol() {
+        return serializationProtocol;
+    }
+
+    public void setSerializationProtocol(String serializationProtocol) {
+        this.serializationProtocol = serializationProtocol;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -101,17 +110,18 @@ public class ApplicationClientInfo {
                 Objects.equals(hostname, that.hostname) &&
                 Objects.equals(osname, that.osname) &&
                 Objects.equals(service, that.service) &&
-                applicationType == that.applicationType;
+                applicationType == that.applicationType &&
+                Objects.equals(serializationProtocol, that.serializationProtocol);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(channel, clientId, language, version, lastUpdateTimestamp, hostname, osname, service, applicationType);
+        return Objects.hash(channel, clientId, language, version, lastUpdateTimestamp, hostname, osname, service, applicationType, serializationProtocol);
     }
 
     @Override
     public String toString() {
-        return "ApplicationClientInfo[" +
+        return "ApplicationClientInfo{" +
                 "channel=" + channel +
                 ", clientId='" + clientId + '\'' +
                 ", language=" + language +
@@ -121,6 +131,7 @@ public class ApplicationClientInfo {
                 ", osname='" + osname + '\'' +
                 ", service='" + service + '\'' +
                 ", applicationType=" + applicationType +
-                ']';
+                ", serializationProtocol='" + serializationProtocol + '\'' +
+                '}';
     }
 }

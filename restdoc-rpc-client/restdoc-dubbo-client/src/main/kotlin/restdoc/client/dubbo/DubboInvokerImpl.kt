@@ -8,6 +8,8 @@ import restdoc.client.api.model.InvocationResult
 
 /**
  * Dubbo invoker impl
+ *
+ * @sample org.apache.dubbo.rpc.RpcInvocation
  */
 @Component
 class DubboInvokerImpl(private val beanFactory: ConfigurableListableBeanFactory) : Invoker<DubboInvocation, Any> {
@@ -15,11 +17,11 @@ class DubboInvokerImpl(private val beanFactory: ConfigurableListableBeanFactory)
     override fun invoke(t: DubboInvocation): InvocationResult<Any> {
         val bean = beanFactory.getBean(t.refName)
 
-        val paramTypes = t.parameterTypeNames
-                .map { Class.forName(it.key) }
+        val paramTypes = t.parameters
+                .map { Class.forName(it.className) }
                 .toTypedArray()
 
-        val params = t.parameterTypeNames
+        val params = t.parameters
                 .map { it.value }
                 .toTypedArray()
 

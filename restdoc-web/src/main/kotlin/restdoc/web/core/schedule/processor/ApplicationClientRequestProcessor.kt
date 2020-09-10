@@ -37,6 +37,8 @@ class ApplicationClientRequestProcessor(private val clientManager: ClientChannel
         clientChannelInfo.hostname = body.hostname
         clientChannelInfo.osname = body.osname
         clientChannelInfo.service = body.service
+        clientChannelInfo.serializationProtocol = body.serializationProtocol
+        clientChannelInfo.applicationType = body.applicationType
 
         clientManager.registerClient(clientChannelInfo.clientId, clientChannelInfo)
 

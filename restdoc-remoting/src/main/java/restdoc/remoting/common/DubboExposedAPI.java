@@ -41,12 +41,13 @@ public class DubboExposedAPI implements ExposedAPI {
         private String[] returnTypes;
         private String methodName;
         private boolean generic;
+        private String[] parameterNames;
 
         public ExposedMethod() {
         }
 
         public ExposedMethod(String paramDesc, String[] compatibleParamSignatures,
-                             String[] parameterClasses, String returnClass,
+                             String[] parameterClasses,String[] parameterNames, String returnClass,
                              String[] returnTypes, String methodName, boolean generic) {
 
             this.paramDesc = paramDesc;
@@ -56,6 +57,7 @@ public class DubboExposedAPI implements ExposedAPI {
             this.returnTypes = returnTypes;
             this.methodName = methodName;
             this.generic = generic;
+            this.parameterNames =parameterNames;
         }
 
         public String getParamDesc() {
@@ -112,6 +114,14 @@ public class DubboExposedAPI implements ExposedAPI {
 
         public boolean isGeneric() {
             return generic;
+        }
+
+        public String[] getParameterNames() {
+            return parameterNames;
+        }
+
+        public void setParameterNames(String[] parameterNames) {
+            this.parameterNames = parameterNames;
         }
     }
 }

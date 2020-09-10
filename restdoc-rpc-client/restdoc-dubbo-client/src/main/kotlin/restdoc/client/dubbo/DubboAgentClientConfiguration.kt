@@ -1,5 +1,7 @@
 package restdoc.client.dubbo
 
+import org.apache.dubbo.config.ProtocolConfig
+import org.apache.dubbo.config.context.ConfigManager
 import org.apache.dubbo.config.spring.ServiceBean
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory
@@ -7,6 +9,7 @@ import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
+import org.springframework.util.CollectionUtils
 import restdoc.client.api.*
 import restdoc.client.dubbo.handler.DubboInvokerAPIHandler
 import restdoc.client.dubbo.model.ServiceDescriptor
@@ -59,18 +62,31 @@ open class DubboAgentClientConfiguration : CommandLineRunner {
 
     private fun registryTask() {
 
-        // 1 Generate report dubbo application exposed interfaces
-        agentImpl.addTask(reportExposedInterfacesTask())
-
-        // 2 Generate report client info interfaces
+        // 1 Generate report client info interfaces
         agentImpl.addTask(reportClientInfoTask())
+
+        // 2 Generate report dubbo application exposed interfaces
+        agentImpl.addTask(reportExposedInterfacesTask())
     }
 
     private fun reportClientInfoTask(): RemotingTask {
+        var serializationProtocol = "dubbo"
+
+        try {
+            val beansOfType = beanFactory.getBeansOfType(ServiceBean::class.java)
+            if (!CollectionUtils.isEmpty(beansOfType)) {
+                val protocol: ProtocolConfig? = beansOfType.entries.first().value.protocol
+                if (protocol != null) serializationProtocol = protocol.name
+            }
+        } catch (ignore: Throwable) {
+        }
+
         val body = ClientInfoBody()
         body.osname = System.getProperty("os.name")
         body.hostname = RemotingUtil.getHostname()
-        body.service = agentConfigurationProperties.service
+        body.service = ConfigManager.getInstance().application.map { it.name }.orElse(agentConfigurationProperties.service)
+        body.applicationType = ApplicationType.DUBBO
+        body.serializationProtocol = serializationProtocol
 
         val request = RemotingCommand.createRequestCommand(RequestCode.REPORT_CLIENT_INFO, null)
         request.body = body.encode()
@@ -98,6 +114,7 @@ open class DubboAgentClientConfiguration : CommandLineRunner {
                         mh.paramDesc,
                         mh.compatibleParamSignatures,
                         mh.parameterClasses.map { it.name }.toTypedArray(),
+                        mh.parameterNames,
                         mh.returnClass.name,
                         mh.returnTypes.map { it.typeName }.toTypedArray(),
                         mh.methodName,
