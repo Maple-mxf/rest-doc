@@ -22,6 +22,7 @@ import restdoc.web.core.ServiceException
 import restdoc.web.core.Status
 import restdoc.web.core.schedule.processor.ApplicationAPIRequestProcessor
 import restdoc.web.core.schedule.processor.ApplicationClientRequestProcessor
+import java.util.concurrent.CopyOnWriteArrayList
 
 /**
  * ScheduleServer provided the tcp server dashboard
@@ -36,6 +37,8 @@ class ScheduleController @Autowired constructor(scheduleProperties: ScheduleProp
 ) : CommandLineRunner {
 
     private val log: Logger = LoggerFactory.getLogger(ScheduleController::class.java)
+
+    private val remotingTasks: CopyOnWriteArrayList<RemotingTask> = CopyOnWriteArrayList()
 
     private val httpTaskExecuteTimeout = (32 shl 9).toLong()
 
@@ -64,6 +67,29 @@ class ScheduleController @Autowired constructor(scheduleProperties: ScheduleProp
         log.info("ScheduleController started")
     }
 
+
+    fun executeRemotingTask(clientId: String,  remotingTask: RemotingTask): RemotingTaskExecuteResult {
+        val clientChannelInfo = clientManager.findClientByRemoteAddress(clientId)
+        val channel = clientChannelInfo!!.channel
+
+        return when (remotingTask.type) {
+            RemotingTaskType.ASYNC -> {
+                remotingServer.invokeAsync(channel, remotingTask.request, remotingTask.timeoutMills, remotingTask.invokeCallback)
+                RemotingTaskExecuteResult(true, null)
+            }
+            RemotingTaskType.ONE_WAY -> {
+                remotingServer.invokeOneway(channel, remotingTask.request, remotingTask.timeoutMills)
+                RemotingTaskExecuteResult(true, null)
+            }
+
+            RemotingTaskType.SYNC -> {
+                val response = remotingServer.invokeSync(channel, remotingTask.request, remotingTask.timeoutMills)
+                RemotingTaskExecuteResult(true, response)
+            }
+        }
+    }
+
+    @Deprecated(message = "")
     @Throws(InterruptedException::class,
             RemotingTimeoutException::class,
             RemotingSendRequestException::class,
@@ -91,10 +117,10 @@ class ScheduleController @Autowired constructor(scheduleProperties: ScheduleProp
         }
     }
 
+    @Deprecated(message = "")
     fun syncGetEmptyApiTemplates(clientId: String?): List<RestWebExposedAPI> {
 
         val request = RemotingCommand.createRequestCommand(RequestCode.GET_EMPTY_API_TEMPLATES, null)
-
         val clientChannelInfo = clientManager.findClient(clientId)
 
         val response = remotingServer.invokeSync(clientChannelInfo!!.channel, request,
@@ -107,4 +133,5 @@ class ScheduleController @Autowired constructor(scheduleProperties: ScheduleProp
             throw ServiceException(response.remark, Status.INTERNAL_SERVER_ERROR)
         }
     }
+
 }

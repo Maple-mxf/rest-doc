@@ -7,9 +7,18 @@ public class DubboExposedAPI implements ExposedAPI {
     private String name;
     private List<ExposedMethod> exposedMethods;
     private String uniqueKey;
+    private String refName;
 
     public String getName() {
         return name;
+    }
+
+    public String getRefName() {
+        return refName;
+    }
+
+    public void setRefName(String refName) {
+        this.refName = refName;
     }
 
     public void setName(String name) {

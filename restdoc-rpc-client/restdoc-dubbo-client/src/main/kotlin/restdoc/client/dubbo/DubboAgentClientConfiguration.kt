@@ -23,7 +23,7 @@ import restdoc.remoting.common.body.DubboExposedAPIBody
 import restdoc.remoting.protocol.RemotingCommand
 
 @Configuration
-@Import(AgentConfiguration::class, DubboInvokerImpl::class, DubboInvokerAPIHandler::class)
+@Import(AgentConfiguration::class, DubboInvokerImpl::class, DubboInvokerAPIHandler::class, DubboRefBeanManager::class)
 @ConditionalOnClass(value = [AgentConfiguration::class])
 open class DubboAgentClientConfiguration : CommandLineRunner {
 
@@ -35,6 +35,9 @@ open class DubboAgentClientConfiguration : CommandLineRunner {
 
     @Autowired
     lateinit var dubboInvokerAPIHandler: DubboInvokerAPIHandler
+
+    @Autowired
+    lateinit var dubboRefBeanManager: DubboRefBeanManager
 
     @Autowired
     lateinit var agentImpl: AgentImpl
@@ -104,8 +107,12 @@ open class DubboAgentClientConfiguration : CommandLineRunner {
 
         val beansOfType = beanFactory.getBeansOfType(ServiceBean::class.java)
         body.apiList = beansOfType.toMap().map {
+
+            dubboRefBeanManager.addRefBean(it.value.ref.javaClass.name, it.value.ref)
+
             val dubboAPI = DubboExposedAPI()
             dubboAPI.name = it.value.beanName
+            dubboAPI.refName = it.value.ref.javaClass.name
 
             val sd = ServiceDescriptor(it.value.interfaceClass)
 

@@ -7,38 +7,39 @@ import java.util.concurrent.ConcurrentHashMap
 @Component
 class ExposedAPIManager {
 
-    inner class APIKey(val address: String, val service: String)
+    inner class APIContext(val address: String, val service: String)
 
     /**
      * Key is service name
      */
-    private val restWebExposedExposedAPI: MutableMap<APIKey, List<RestWebExposedAPI>> = ConcurrentHashMap()
+    private val restWebExposedExposedAPI: MutableMap<APIContext, List<RestWebExposedAPI>> = ConcurrentHashMap()
 
     /**
      *
      */
-    private val dubboExposedExposedAPI: MutableMap<APIKey, List<DubboExposedAPI>> = ConcurrentHashMap()
+    public val dubboExposedExposedAPI: MutableMap<APIContext, List<DubboExposedAPI>> = ConcurrentHashMap()
 
     /**
      *
      */
-    private val springcloudExposedExposedAPI: MutableMap<APIKey, List<SpringCloudExposedAPI>> = ConcurrentHashMap()
+    private val springcloudExposedExposedAPI: MutableMap<APIContext, List<SpringCloudExposedAPI>> = ConcurrentHashMap()
 
     fun registerAPI(type: ApplicationType, serviceAddress: String, service: String, apiList: List<ExposedAPI>) {
         when (type) {
             ApplicationType.DUBBO -> {
-                dubboExposedExposedAPI.putIfAbsent(APIKey(address = serviceAddress, service = service), apiList as List<DubboExposedAPI>)
+                dubboExposedExposedAPI.putIfAbsent(APIContext(address = serviceAddress, service = service), apiList as List<DubboExposedAPI>)
             }
             ApplicationType.REST_WEB -> {
-                restWebExposedExposedAPI.putIfAbsent(APIKey(address = serviceAddress, service = service), apiList as List<RestWebExposedAPI>)
+                restWebExposedExposedAPI.putIfAbsent(APIContext(address = serviceAddress, service = service), apiList as List<RestWebExposedAPI>)
             }
             ApplicationType.SPRINGCLOUD -> {
-                springcloudExposedExposedAPI.putIfAbsent(APIKey(address = serviceAddress, service = service), apiList as List<SpringCloudExposedAPI>)
+                springcloudExposedExposedAPI.putIfAbsent(APIContext(address = serviceAddress, service = service), apiList as List<SpringCloudExposedAPI>)
             }
         }
     }
 
 
+    @Deprecated(message = "")
     fun listBy(type: ApplicationType, service: String): List<ExposedAPI> {
         return when (type) {
             ApplicationType.DUBBO -> {

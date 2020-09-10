@@ -1,6 +1,5 @@
 package restdoc.client.dubbo
 
-import org.springframework.beans.factory.config.ConfigurableListableBeanFactory
 import org.springframework.stereotype.Component
 import restdoc.client.api.Invoker
 import restdoc.client.api.model.DubboInvocation
@@ -12,10 +11,10 @@ import restdoc.client.api.model.InvocationResult
  * @sample org.apache.dubbo.rpc.RpcInvocation
  */
 @Component
-class DubboInvokerImpl(private val beanFactory: ConfigurableListableBeanFactory) : Invoker<DubboInvocation, Any> {
+class DubboInvokerImpl(private val beanManager: DubboRefBeanManager) : Invoker<DubboInvocation, Any> {
 
     override fun invoke(t: DubboInvocation): InvocationResult<Any> {
-        val bean = beanFactory.getBean(t.refName)
+        val bean = beanManager.getRefBean(t.refName)
 
         val paramTypes = t.parameters
                 .map { Class.forName(it.className) }
