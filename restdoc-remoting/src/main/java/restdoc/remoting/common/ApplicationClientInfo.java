@@ -5,8 +5,10 @@ import restdoc.remoting.protocol.LanguageCode;
 
 import java.net.InetSocketAddress;
 import java.util.Objects;
+import java.util.UUID;
 
 public class ApplicationClientInfo {
+    private final String id;
     private final Channel channel;
     private final String clientId;
     private final LanguageCode language;
@@ -23,6 +25,7 @@ public class ApplicationClientInfo {
     }
 
     public ApplicationClientInfo(Channel channel, String clientId, LanguageCode language, int version) {
+        id = UUID.randomUUID().toString().replaceAll("-", "");
         this.channel = channel;
         this.clientId = clientId;
         this.language = language;
@@ -31,7 +34,6 @@ public class ApplicationClientInfo {
         InetSocketAddress address = (InetSocketAddress) channel.remoteAddress();
         this.hostname = address.getHostName();
     }
-
 
     public Channel getChannel() {
         return channel;
@@ -133,5 +135,9 @@ public class ApplicationClientInfo {
                 ", applicationType=" + applicationType +
                 ", serializationProtocol='" + serializationProtocol + '\'' +
                 '}';
+    }
+
+    public String getId() {
+        return id;
     }
 }

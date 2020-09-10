@@ -38,24 +38,25 @@ class ExposedAPIManager {
         }
     }
 
-    fun listByAddress(type: ApplicationType, address: String): List<ExposedAPI> {
+
+    fun listBy(type: ApplicationType, service: String): List<ExposedAPI> {
         return when (type) {
             ApplicationType.DUBBO -> {
                 dubboExposedExposedAPI
-                        .filter { it.key.address == address }
+                        .filter { it.key.service == service }
                         .flatMap { it.value }
                         .toList()
             }
             ApplicationType.REST_WEB -> {
                 restWebExposedExposedAPI
-                        .filter { it.key.address == address }
+                        .filter { it.key.service == service }
                         .flatMap { it.value }
                         .toList()
             }
 
             ApplicationType.SPRINGCLOUD -> {
                 springcloudExposedExposedAPI
-                        .filter { it.key.address == address }
+                        .filter { it.key.service == service }
                         .flatMap { it.value }
                         .toList()
             }

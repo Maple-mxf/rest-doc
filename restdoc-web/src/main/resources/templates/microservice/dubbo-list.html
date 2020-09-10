@@ -2,44 +2,42 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>文档中心</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <!--    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">-->
+    <title>微服务实例</title>
     <link rel="stylesheet" th:href="@{/layui/css/layui.css}"/>
     <link rel="stylesheet" th:href="@{/admin/css/pearForm.css}"/>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/admin/css/fangge-style.css}"/>
-    <link rel="stylesheet" th:href="@{/admin/css/doc-common.css}"/>
+
+    <style type="text/css">
+        body {
+            /*margin: 10px;*/
+            background-color: whitesmoke;
+            font-family: 'Roboto', sans-serif;
+            font-size: 14px;
+        }
+    </style>
 </head>
 <body>
 <div th:include="nav::nav"></div>
-
-<input type="hidden" id="projectId" th:value="${projectId}">
-
 <div class="layui-fluid layui-bg-gray">
 
     <div id="tableContents" style="display: none">
-        <div>
-            <button class="layui-btn" id="createTableContentBtn">创建目录</button>
-
-            <a th:href="@{'/'+${projectId}+'/document/view/api/add'}" class="layui-btn layui-btn-primary"
-               target="_blank">创建REST doc</a>
-            <a th:href="@{'/'+${projectId}+'/document/view/wiki/add'}" class="layui-btn layui-btn-primary"
-               target="_blank">创建WIKI</a>
-        </div>
         <div id="navTableOfContent" style="font-size: 14px"></div>
     </div>
+
     <div class="layui-col-md10" id="docContent">
         <iframe src="" id="docContentFrame" frameborder="0" style="width: 100%;height: 900px"></iframe>
     </div>
+
 </div>
+
 <script th:src="@{/layui/layui.js}"></script>
 <script th:src="@{/admin/js/jquery.js}"></script>
 <script th:src="@{/admin/js/util.js}"></script>
+<script th:inline="javascript">
 
-<script>
+    $("#microservice").addClass("layui-this");
 
-    $("#projectNav").addClass("layui-this");
+    var service = [[${service}]];
+    var ap = [[${ap}]];
 
     layui.config({
         base: '/restdoc/layui/lay/extends/'
@@ -58,11 +56,10 @@
 
         $.ajax({
             type: 'GET',
-            url: '/restdoc/' + projectId + '/resource/tree',
+            url: '/restdoc/microservice/' + service + '/exposedapi?ap=' + ap,
             async: false,
             success: function (data) {
                 if (data['code'] === "200") {
-                    // treeData = data['data'][0].children;
                     treeData = data['data']
                 } else {
                     layer.msg(data['message']);
@@ -75,29 +72,30 @@
 
         layer.open({
             type: 1,
-            title: '文档目录',
+            title: '服务目录',
             content: $('#tableContents'),
             shadeClose: true,
             shade: 0,
             offset: 'rb',
             closeBtn: 0,
-            area: ['400px', '900px'],
+            area: ['600px', '900px'],
             zIndex: layer.zIndex
             , success:
 
                 function (layero) {
                     layer.setTop(layero); //重点2
                 }
-        })
-        ;
+        });
+
+        console.info(treeData)
 
         tree.render({
             elem: '#navTableOfContent'
             , data: treeData
             , edit: ['update', 'del']
             , click: function (obj) {
-                if (obj.data.type === "WIKI" || obj.data.type === "API") {
-                    $("#docContentFrame").attr("src", '/restdoc/' + projectId + '/document/' + obj.data.id + '/view');
+                if (obj.data.type === "API") {
+                    $("#docContentFrame").attr("src", '/restdoc/microservice/' + service + '/view/document/' + obj.data.id);
                 }
             }
             , operate: function (obj) {
@@ -164,45 +162,6 @@
                 }
             });
         }
-
-
-        $('#createTableContentBtn').click(function (event) {
-            var projectId = $('#projectId').val();
-            layer.open({
-                type: 2,
-                title: "创建目录/资源",
-                content: ['/restdoc/' + projectId + '/resource/view/add', 'no'],
-                area: ['800px', '500px'],
-                btn: ['保存', '取消'],
-                yes: function (index, layerDoc) {
-                    var res = window["layui-layer-iframe" + index].getResourceData();
-                    let name = res['name'], tag = res['tag'], pid = res['pid'];
-                    console.info(res)
-
-                    if (name == '' || tag == '' || pid == '') {
-                        layer.msg("请填写信息");
-                    } else {
-                        $.ajax({
-                            type: 'POST',
-                            url: '/restdoc/' + projectId + '/resource',
-                            data: JSON.stringify(res),
-                            contentType: 'application/json;charset=utf-8',
-                            async: false,
-                            success: function (data) {
-                                if (data['code'] === "200") {
-                                    layer.close(index);
-                                } else {
-                                    layer.msg(data['message']);
-                                }
-                            },
-                            error: function () {
-                                layer.msg("网络异常");
-                            }
-                        });
-                    }
-                }
-            });
-        });
     });
 </script>
 </body>

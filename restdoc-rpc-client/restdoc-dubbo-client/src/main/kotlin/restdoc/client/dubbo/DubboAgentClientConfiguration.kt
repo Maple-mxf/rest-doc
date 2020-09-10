@@ -126,7 +126,7 @@ open class DubboAgentClientConfiguration : CommandLineRunner {
         }
 
         val request = RemotingCommand.createRequestCommand(RequestCode.REPORT_EXPOSED_API, null)
-        body.service = ApplicationType.DUBBO.name
+        body.service = ConfigManager.getInstance().application.map { it.name }.orElse(agentConfigurationProperties.service)
         request.body = body.encode()
 
         return RemotingTask(

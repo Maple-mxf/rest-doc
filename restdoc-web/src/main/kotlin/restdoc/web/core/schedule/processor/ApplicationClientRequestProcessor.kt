@@ -40,7 +40,7 @@ class ApplicationClientRequestProcessor(private val clientManager: ClientChannel
         clientChannelInfo.serializationProtocol = body.serializationProtocol
         clientChannelInfo.applicationType = body.applicationType
 
-        clientManager.registerClient(clientChannelInfo.clientId, clientChannelInfo)
+        clientManager.registerClient(clientChannelInfo.id, clientChannelInfo)
 
         return RemotingCommand.createResponseCommand(RemotingSysResponseCode.SUCCESS, null)
     }

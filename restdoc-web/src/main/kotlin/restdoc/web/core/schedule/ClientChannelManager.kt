@@ -1,6 +1,5 @@
 package restdoc.web.core.schedule
 
-import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -38,7 +37,7 @@ class ClientChannelManager(var mapper: ObjectMapper) : CommandLineRunner {
             override fun run() {
                 try {
                     log.info("clients: {} ", mapper.writeValueAsString(clients))
-                } catch (e: JsonProcessingException) {
+                } catch (e: Throwable) {
                     e.printStackTrace()
                 }
             }

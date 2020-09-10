@@ -43,7 +43,8 @@ class ServiceClientController {
 
         val services = clientChannelManager.clients.map {
             mapOf(
-                    "remoteAddress" to it.key,
+                    "id" to it.value.id,
+                    "remoteAddress" to it.value.clientId,
                     "hostname" to it.value.hostname,
                     "osname" to it.value.osname,
                     "service" to it.value.service,

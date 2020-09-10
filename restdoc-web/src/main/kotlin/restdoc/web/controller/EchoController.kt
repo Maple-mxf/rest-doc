@@ -19,12 +19,6 @@ class EchoController {
         return "login"
     }
 
-    // http://732200850369286144.tformal.onepushing.com/p?nodeId=732200866127286272
-
-
-    // http://732200850369286144.tformal.onepushing.com/js/chunk-vendors.68048db9.js
-    // http://740101574658887680.tformal.onepushing.com/js/chunk-vendors.c06c8233.js
-
     @GetMapping("/render")
     @ResponseBody
     fun render(response: HttpServletResponse,request: HttpServletRequest): String {

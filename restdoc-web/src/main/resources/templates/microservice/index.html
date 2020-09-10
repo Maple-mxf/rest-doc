@@ -20,11 +20,16 @@
 <div th:include="nav::nav"></div>
 <div class="layui-container">
 
-    <script type="text/html" id="toolbar">
+    <!--<script type="text/html" id="toolbar">
         <div class="layui-btn-container">
             <button class="layui-btn" lay-event="importServiceApiTemplateAndCreateProject">导入服务API并创建项目</button>
             <button class="layui-btn" lay-event="importServiceApiTemplateToExistProject">导入服务API到已创建项目</button>
         </div>
+    </script>-->
+
+    <script type="text/html" id="barDemo">
+        <a class="layui-btn layui-btn-xs" href='/restdoc/microservice/view/{{d.id}}/list?ap={{d.applicationType}}'
+           lay-event="viewService">文档中心</a>
     </script>
 
     <table class="layui-hide" style="font-family: Roboto,serif;font-size: 15px" id="test" lay-filter="test"></table>
@@ -34,19 +39,18 @@
 <script th:src="@{/admin/js/jquery.js}"></script>
 <script th:src="@{/admin/js/util.js}"></script>
 <script type="text/javascript" th:inline="javascript">
-    layui.use('table', function () {
+    layui.use(['table', 'layer'], function () {
         var table = layui.table;
+        var layer = layui.layer;
 
         table.render({
             elem: '#test'
             , url: '/restdoc/serviceClient/list'
             // , toolbar: "#toolbar"
             , size: 'lg'
+            , width: 1200
             , cols: [
                 [
-                    {type: 'checkbox', fixed: 'left'}
-
-                    ,
                     {
                         field: 'applicationType', width: 150, title: '应用类型', sort: true
                     }
@@ -70,9 +74,21 @@
                     {
                         field: 'hostname', width: 200, title: '计算机名称'
                     }
+                    , {
+                    fixed: 'right', title: '操作', toolbar: '#barDemo', width: 150
+                }
                 ]
             ]
 
+        });
+
+        //监听行工具事件
+        table.on('tool(test)', function (obj) {
+            var data = obj.data;
+            console.log(obj);
+            if (obj.event === 'viewService') {
+                layer.msg("he")
+            }
         });
 
         //头工具栏事件
