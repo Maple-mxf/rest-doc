@@ -41,9 +41,15 @@ layui.define(['jquery', 'layer', 'form', 'element', 'upload', 'code', 'face'], f
                 '<span type="ul" title="无序列表"><i class="layui-icon layui-icon-more-vertical"></i></span>',
                 '<span type="ol" title="有序列表"><i class="layui-icon layui-icon-list"></i></span>',
                 '<span type="table" title="表格"><i class="layui-icon layui-icon-table"></i></span>',
+                // '<span type="strong" title="加粗"><i class="layui-icon layui-icon-fonts-strong"></i></span>',
+                // '<span type="h1" title="h1标题">h1</span>',
+                // '<span type="h2" title="h2标题">h2</span>',
+                // '<span type="h3" title="h3标题">h3</span>',
+                // '<span type="h4" title="h4标题">h4</span>',
                 '<span type="hr" title="分割线">hr</span>', '<div class="fly-right">',
+
                 '<span type="yulan"  title="预览">预览</span>',
-                // '<span type="fullScreen"  title="全屏"><i class="iconfont chengliangyun-md-icon-quanping"></i></span>',
+                '<span type="fullScreen"  title="全屏"><i class="iconfont chengliangyun-md-icon-quanping"></i></span>',
                 '</div>'
             ].join('');
 
@@ -216,6 +222,51 @@ layui.define(['jquery', 'layer', 'form', 'element', 'upload', 'code', 'face'], f
                         }
 
                     },
+                    // 加粗
+                    strong: function (editor) {
+                        layui.focusInsert(editor[0], '**加粗**\n');
+                        if (options.onchangeCallback != null && options.onchangeCallback.length > 0) {
+                            for (let i = 0; i < options.onchangeCallback.length; i++) {
+                                options.onchangeCallback[i]();
+                            }
+                        }
+                    },
+
+                    h1: function (editor) {
+                        layui.focusInsert(editor[0], '#1  ');
+                        if (options.onchangeCallback != null && options.onchangeCallback.length > 0) {
+                            for (let i = 0; i < options.onchangeCallback.length; i++) {
+                                options.onchangeCallback[i]();
+                            }
+                        }
+                    },
+                    h2:function (editor) {
+                        layui.focusInsert(editor[0], '#2  ');
+                        if (options.onchangeCallback != null && options.onchangeCallback.length > 0) {
+                            for (let i = 0; i < options.onchangeCallback.length; i++) {
+                                options.onchangeCallback[i]();
+                            }
+                        }
+                    },
+
+                    h3:function (editor) {
+                        layui.focusInsert(editor[0], '#3  ');
+                        if (options.onchangeCallback != null && options.onchangeCallback.length > 0) {
+                            for (let i = 0; i < options.onchangeCallback.length; i++) {
+                                options.onchangeCallback[i]();
+                            }
+                        }
+                    },
+
+                    h4:function (editor) {
+                        layui.focusInsert(editor[0], '#4   ');
+                        if (options.onchangeCallback != null && options.onchangeCallback.length > 0) {
+                            for (let i = 0; i < options.onchangeCallback.length; i++) {
+                                options.onchangeCallback[i]();
+                            }
+                        }
+                    },
+
                     ul: function (editor) { //插入无序列表
                         layui.focusInsert(editor[0], '\n-  \n-  \n-  \n');
 
@@ -225,7 +276,8 @@ layui.define(['jquery', 'layer', 'form', 'element', 'upload', 'code', 'face'], f
                             }
                         }
 
-                    },
+                    }
+                    ,
                     ol: function (editor) { //插入有序列表
                         layui.focusInsert(editor[0], '\n1. \n2. \n3. \n');
 
@@ -235,7 +287,8 @@ layui.define(['jquery', 'layer', 'form', 'element', 'upload', 'code', 'face'], f
                             }
                         }
 
-                    },
+                    }
+                    ,
                     table: function (editor) {
                         layui.focusInsert(editor[0], '\n表头|表头|表头\n:---:|:--:|:---:\n内容|内容|内容\n');
 
@@ -244,7 +297,8 @@ layui.define(['jquery', 'layer', 'form', 'element', 'upload', 'code', 'face'], f
                                 options.onchangeCallback[i]();
                             }
                         }
-                    },
+                    }
+                    ,
                     fullScreen: function (editor, span) { //全屏
                         $(window).resize(function () { //当浏览器大小变化时
                             //获取浏览器窗口高度
@@ -270,7 +324,8 @@ layui.define(['jquery', 'layer', 'form', 'element', 'upload', 'code', 'face'], f
                             reqFullScreen.call(ele);
                         }
                         ;
-                    },
+                    }
+                    ,
                     exitScreen: function (editor, span) { //退出全屏
                         var othis = $(span);
                         othis.attr("type", "fullScreen");
@@ -288,7 +343,8 @@ layui.define(['jquery', 'layer', 'form', 'element', 'upload', 'code', 'face'], f
                         }
                         //恢复初始高度
                         $(options.elem).css("height", "270px");
-                    },
+                    }
+                    ,
                     // 预览
                     yulan: function (editor, span) {
                         var othis = $(span),
@@ -331,7 +387,11 @@ layui.define(['jquery', 'layer', 'form', 'element', 'upload', 'code', 'face'], f
                         });
 
                     }
-                };
+                    ,
+
+
+                }
+            ;
             layui.use('face', function (face) {
                 options = options || {};
                 easyeditor.faces = face;
@@ -372,13 +432,17 @@ layui.define(['jquery', 'layer', 'form', 'element', 'upload', 'code', 'face'], f
             layui.code(params);
         },
         content: function (content) {
-            content = marked(
-                content
-                    .replace(/  \n/g, "<br>")) //强制换行
+            content = marked(content.replace(/  \n/g, "<br>")) //强制换行
+                .replace(/#1/, "<h1>")
+                .replace(/#2/, "<h2>")
+                .replace(/#3/, "<h3>")
+                .replace(/#4/, "<h4>")
+                .replace(/\*\*/, '<strong>')
                 .replace(/<code>|<\/code>/g, "") //去除代码块内侧的code标签
                 .replace(/<a/g, "<a target='blank' rel='nofollow'") //转义超链接
                 .replace(/<table/g, "<table class='layui-table' ") //表格样式
                 .replace(/<blockquote/g, "<blockquote class='layui-elem-quote layui-text'")
+                .replace(/\*\*/g, "<strong>")
                 .replace(/face\[([^\s\[\]]+?)\]/g, function (face) { //转义表情
                     let alt = face.replace(/^face/g, '');
                     return '<img alt="' + alt + '" title="' + alt + '" src="' + easyeditor.faces[alt] + '">';
