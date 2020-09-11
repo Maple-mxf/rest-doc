@@ -76,21 +76,18 @@ class DocumentViewController {
                 ?: return "docs/resourceDetail"
 
         val resource = resourceRepository.findById(document.resource)
-                .map { it.name }
-                .orElse(null)
-                ?: return "docs/resourceDetail"
 
         model.addAttribute("resource", resource)
         model.addAttribute("document", document)
         model.addAttribute("projectId", projectId)
         model.addAttribute("sample", mapper.writeValueAsString(document.executeResult))
 
-        if (DocType.API == document.docType) {
-            return "docs/apiDetail"
+        return if (DocType.API == document.docType) {
+            "docs/apiDetail"
         } else if (DocType.WIKI == document.docType) {
-            return "docs/wikiDetail"
+            "docs/wikiDetail"
         } else {
-            return "docs/resourceDetail"
+            "docs/resourceDetail"
         }
     }
 
