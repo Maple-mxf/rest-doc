@@ -37,11 +37,15 @@ class KotlinFunctionTest {
         KotlinFunctionTest().receiver(10)
     }
 
-    /**
-     *
-     */
-    fun inner(a: (s: Int, a: Int) -> Double) {
-        val result = a(1, 1)
-        println(result)
+    fun defineFunType0(type: (String) -> String) {
+        // ....
+    }
+
+    fun defineFunType1(type: (input: String) -> String) {
+        // ....
+    }
+
+    fun defineFunType2(type: (input: String) -> Unit) {
+        // ....
     }
 }

@@ -29,6 +29,12 @@ class ClientChannelManager(var mapper: ObjectMapper) : CommandLineRunner {
     }
 
     fun findClientByRemoteAddress(address: String): ApplicationClientInfo? {
+
+        clients.filter { it.value.clientId == address }.forEach{
+            println(it.key)
+        }
+
+
         return clients.filter { it.value.clientId == address }.map { it.value }.first()
     }
 

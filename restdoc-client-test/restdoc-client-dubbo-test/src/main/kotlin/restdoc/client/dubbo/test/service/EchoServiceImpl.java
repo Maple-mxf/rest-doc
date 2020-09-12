@@ -9,6 +9,6 @@ public class EchoServiceImpl implements EchoService {
 
     @Override
     public void echo(String a) {
-        System.err.println("hello world");
+        System.err.println("restdoc.client.dubbo.test.service.EchoService.echo hello world");
     }
 }

@@ -43,13 +43,15 @@ class DubboExposedAPITest {
             for (method in api.exposedMethods) {
                 val request = RemotingCommand.createRequestCommand(RequestCode.INVOKE_API, null)
                 method.parameterClasses = arrayOf(String::class.java.name)
-
-                request.body = DubboInvocation(
-                        methodName = method.methodName,
-                        parameters = listOf(ObjectHolder<Any>(String::class.java.name, "HelloWorld")),
+//                request.body = n
+                val dubboInvocation = DubboInvocation(
+                        method.methodName,
+                        listOf<ObjectHolder<Any>>(ObjectHolder<Any>(String::class.java.name, "HelloWorld")),
                         refName = api.refName,
                         returnType = method.returnClass
-                ).encode()
+                )
+
+                request.body = dubboInvocation.encode()
 
                 val remotingTask = RemotingTask(
                         type = RemotingTaskType.SYNC,
@@ -66,7 +68,6 @@ class DubboExposedAPITest {
                 }
             }
         }
-
         return ok()
     }
 }
