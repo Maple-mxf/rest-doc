@@ -1,17 +1,18 @@
 package restdoc.web.controller
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.PageRequest
 import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.web.bind.annotation.*
+import restdoc.web.base.auth.HolderKit
+import restdoc.web.controller.obj.CreateProjectDto
+import restdoc.web.controller.obj.UpdateProjectDto
 import restdoc.web.core.Result
 import restdoc.web.core.ok
-import restdoc.web.base.auth.HolderKit
 import restdoc.web.model.Project
 import restdoc.web.repository.ProjectRepository
 import restdoc.web.util.IDUtil
-import restdoc.web.controller.obj.CreateProjectDto
-import restdoc.web.controller.obj.UpdateProjectDto
 import java.util.*
 
 @RestController
@@ -28,12 +29,16 @@ class ProjectController {
     @Autowired
     lateinit var holderKit: HolderKit
 
+    /**
+     * Add Search
+     */
     @GetMapping("/list")
-    fun list(): Result {
-        /*val query = Query().addCriteria(Criteria("teamId").`is`(holderKit.user.teamId))
-        query.with(by(desc("createTime")))*/
-        return ok(projectRepository.list(Query()))
+    fun list(@RequestParam(required = false, defaultValue = "0") page: Int,
+             @RequestParam(required = false, defaultValue = "12") size: Int
+    ): Result {
+        return ok(projectRepository.page(Query(), PageRequest.of(page, size)))
     }
+
 
     @GetMapping("/{id}")
     fun get(@PathVariable id: String): Result = ok(mongoTemplate.findById(id, Project::class.java))

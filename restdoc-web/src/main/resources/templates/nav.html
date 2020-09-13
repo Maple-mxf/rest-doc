@@ -15,12 +15,18 @@
         body {
             font-family: Roboto, serif;
         }
+
+        #navigation{
+            font-family: Roboto, serif;
+            font-size: 18px;
+        }
+
     </style>
 </head>
 <body>
 <div class="layui-container" style="width: 100%;height: 100%" th:fragment="nav">
     <div class="layui-row" style="width: 100%">
-        <ul class="layui-nav layui-bg-green" lay-filter="" style="font-size: 17px">
+        <ul class="layui-nav layui-bg-green" id="navigation" lay-filter="" style="font-size: 17px">
             <li class="layui-nav-item">REST Doc</li>
             <li class="layui-nav-item" id="projectNav"><a href="/restdoc/project/view" target="_self">HTTP API项目</a>
             <li class="layui-nav-item" id="rpcProjectNav"><a href="/restdoc/project/view" target="_self">RPC API项目</a>
