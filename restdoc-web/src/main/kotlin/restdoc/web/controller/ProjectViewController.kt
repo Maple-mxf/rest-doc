@@ -28,7 +28,7 @@ class ProjectViewController {
         return "project/detail";
     }
 
-    @GetMapping("/add")
+    @GetMapping("/project/view/add")
     fun create(): String = "project/add"
 
     @GetMapping("/project/{id}/view/update")

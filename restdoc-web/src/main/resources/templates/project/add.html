@@ -24,7 +24,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">名称</label>
             <div class="layui-input-block">
-                <input type="text" name="name" lay-verify="required" placeholder="请输入" autocomplete="off"
+                <input type="text" id="name" name="name" lay-verify="required" placeholder="请输入" autocomplete="off"
                        class="layui-input">
             </div>
         </div>
@@ -32,16 +32,11 @@
         <div class="layui-form-item">
             <label class="layui-form-label">描述</label>
             <div class="layui-input-block">
-                <input type="text" name="desc" placeholder="请输入" autocomplete="off"
+                <input type="text" id="desc" name="desc" placeholder="请输入" autocomplete="off"
                        class="layui-input">
             </div>
         </div>
 
-        <div class="layui-form-item">
-            <div class="layui-input-block">
-                <button class="layui-btn" lay-submit lay-filter="*">创建</button>
-            </div>
-        </div>
     </form>
 </div>
 
@@ -67,10 +62,10 @@
                 data: JSON.stringify(data.field),
                 async: false,
                 success: function (data) {
-                    if (data.code === "200"){
+                    if (data.code === "200") {
                         this.location.href = "/restdoc/project/view";
                         return true;
-                    }else{
+                    } else {
                         layer.msg(data.message);
                         return false;
                     }
@@ -78,6 +73,14 @@
             });
         });
     });
+
+    function getFormData() {
+        return {
+            "name": $("#name").val(),
+            "desc": $("#desc").val()
+        };
+    }
+
 </script>
 </body>
 </html>

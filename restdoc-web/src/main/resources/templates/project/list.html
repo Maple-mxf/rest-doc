@@ -6,6 +6,7 @@
     <link rel="stylesheet" th:href="@{/layui/css/layui.css}"/>
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/admin/css/pearForm.css}"/>
+    <link rel="stylesheet" th:href="@{/admin/css/nav.css}"/>
 
     <style type="text/css">
 
@@ -40,10 +41,11 @@
     <div class="layui-row">
         <div class="layui-row layui-col-space20 layui-col-md-offset3">
             <div class="layui-col-md2">
-                <a th:href="@{/project/view/add}" class="layui-btn">创建项目</a>
+                <a href="javascript:void(0);" id="createProjectBtn" class="layui-btn  layui-btn-primary  layui-btn-lg">创建项目</a>
             </div>
         </div>
     </div>
+    <!--    /project/view/add-->
 
     <div class="layui-row layui-col-space20" id="content">
     </div>
@@ -51,11 +53,11 @@
 
     <div class="layui-row layui-col-space10">
         <div class="layui-inline">
-            <button class="layui-btn layui-btn-primary" id="previousBtn">上一页</button>
+            <button class="layui-btn layui-btn-primary  layui-btn-lg" id="previousBtn">上一页</button>
         </div>
 
         <div class="layui-inline">
-            <button class="layui-btn layui-btn-primary" id="nextBtn">下一页</button>
+            <button class="layui-btn layui-btn-primary  layui-btn-lg" id="nextBtn">下一页</button>
         </div>
     </div>
 
@@ -70,18 +72,13 @@
 <script th:src="@{/admin/js/util.js}"></script>
 <script type="text/javascript" th:inline="javascript">
 
-    layui.use(['element', 'form'], function () {
-        var element = layui.element;
-        var form = layui.form;
-
-    });
 
     function renderPage() {
         requestAndRenderContent();
     }
 
     function init() {
-        $("#previousBtn").attr('disabled', true);
+        disablePrevious();
         $("#page").val(0);
         $("#size").val(12);
         requestAndRenderContent();
@@ -91,7 +88,7 @@
 
     $("#previousBtn").click(function () {
         if (parseInt($('#page').val()) === 0) {
-            $("#previousBtn").attr('disabled', true);
+            disablePrevious();
             return;
         }
         var page = parseInt($("#page").val());
@@ -109,7 +106,7 @@
         console.info(hasNext)
 
         if (!hasNext) {
-            $("#nextBtn").attr('disabled', true);
+            disableNext();
             return;
         }
 
@@ -156,17 +153,17 @@
         var hasPrevious = (page > 0);
 
         if (hasNext && hasPrevious) {
-            $("#previousBtn").attr('disabled', false);
-            $("#nextBtn").attr('disabled', false);
+            undisablePrevious();
+            undisableNext();
         } else if (hasNext && !hasPrevious) {
-            $("#previousBtn").attr('disabled', true);
-            $("#nextBtn").attr('disabled', false);
+            disablePrevious();
+            undisableNext();
         } else if (hasPrevious && !hasNext) {
-            $("#nextBtn").attr('disabled', true);
-            $("#previousBtn").attr('disabled', false);
+            disableNext();
+            undisablePrevious();
         } else {
-            $("#nextBtn").attr('disabled', true);
-            $("#previousBtn").attr('disabled', true);
+            disableNext();
+            disablePrevious();
         }
     }
 
@@ -205,6 +202,42 @@
         var layer = layui.layer;
         var $ = layui.jquery;
         lay = layui.layer;
+
+
+        $('#createProjectBtn').click(function () {
+            layer.open({
+                type: 2,
+                title: '创建项目',
+                area: ['800px', '500px'],
+                scrollbar: false,
+                content: ['/restdoc/project/view/add', 'no'],
+                btn: ['确认创建'],
+                yes: function (index, document) {
+                    var res = window["layui-layer-iframe" + index].getFormData();
+
+                    console.info(res);
+
+                    $.ajax({
+                        type: 'POST',
+                        dataType: 'JSON',
+                        contentType: 'application/json;charset=utf-8',
+                        url: '/restdoc/project',
+                        data: JSON.stringify(res),
+                        async: false,
+                        success: function (data) {
+                            if (data.code === "200") {
+                                layer.msg("创建成功");
+                                renderPage()
+                            } else {
+                                layer.msg(data.message)
+                            }
+                        }
+                    });
+
+                    layer.close(index);
+                }
+            });
+        })
 
     });
 
@@ -287,6 +320,22 @@
     }
 
     $("#projectNav").addClass("layui-this")
+
+    function disableNext() {
+        $("#nextBtn").addClass("layui-btn-disabled")
+    }
+
+    function undisableNext() {
+        $("#nextBtn").removeClass("layui-btn-disabled")
+    }
+
+    function undisablePrevious() {
+        $("#previousBtn").removeClass("layui-btn-disabled")
+    }
+
+    function disablePrevious() {
+        $("#previousBtn").addClass("layui-btn-disabled")
+    }
 
 </script>
 </body>
