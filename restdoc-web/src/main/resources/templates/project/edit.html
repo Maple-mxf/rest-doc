@@ -41,7 +41,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">应用类型</label>
             <div class="layui-input-block">
-                <select name="city" lay-verify="required" id="type" th:selected="${project.type}">
+                <select name="city" lay-verify="required" id="type">
                     <option value="REST_WEB">REST web应用</option>
                     <option value="DUBBO">Dubbo应用</option>
                     <option value="SPRINGCLOUD">SpringCloud应用</option>
@@ -55,6 +55,16 @@
 <script th:src="@{/layui/layui.js}"></script>
 <script th:src="@{/admin/js/jquery.js}"></script>
 <script type="text/javascript" th:inline="javascript">
+
+    var project = [[${project}]];
+
+    if (project.type === 'REST_WEB') {
+        $("#type").find("option[value='REST_WEB']").attr("selected",true);
+    } else if (project.type === 'DUBBO') {
+        $("#type").find("option[value='DUBBO']").attr("selected",true);
+    } else if (project.type === 'SPRINGCLOUD') {
+        $("#type").find("option[value='SPRINGCLOUD']").attr("selected",true);
+    }
 
     layui.use([
         'util', 'layer',
