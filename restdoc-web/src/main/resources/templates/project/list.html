@@ -15,7 +15,6 @@
         }
 
 
-
         body {
             /*margin: 10px;*/
             font-family: 'Roboto', sans-serif;
@@ -28,10 +27,10 @@
         }
 
         .layui-card-header {
-            font-size: 18px;
+            font-size: 16px;
             background-color: #009688;
             color: white;
-            font-family: Roboto,serif;
+            font-family: Roboto, serif;
         }
     </style>
 </head>
@@ -41,7 +40,7 @@
     <div class="layui-row">
         <div class="layui-row layui-col-space20 layui-col-md-offset3">
             <div class="layui-col-md2">
-                <a th:href="@{/project/view/add}" class="layui-btn">创建RestApiDoc项目</a>
+                <a th:href="@{/project/view/add}" class="layui-btn">创建项目</a>
             </div>
         </div>
     </div>
@@ -71,13 +70,24 @@
 <script th:src="@{/admin/js/util.js}"></script>
 <script type="text/javascript" th:inline="javascript">
 
+    layui.use(['element', 'form'], function () {
+        var element = layui.element;
+        var form = layui.form;
+
+    });
+
+    function renderPage() {
+        requestAndRenderContent();
+    }
+
     function init() {
         $("#previousBtn").attr('disabled', true);
+        $("#page").val(0);
+        $("#size").val(12);
         requestAndRenderContent();
     }
 
     init();
-
 
     $("#previousBtn").click(function () {
         if (parseInt($('#page').val()) === 0) {
@@ -166,8 +176,7 @@
 
             var name = content[key].name;
             var desc = content[key].desc;
-            var projectId = content[key].id;
-            projectId = projectId.toString();
+            var projectId = content[key].id.toString();
 
             if (desc == null) desc = "";
             var snippet = "        <div id='" + projectId + "' ondblclick='clickProject(this)' class=\"layui-col-md3 project-item \">\n" +
@@ -175,7 +184,11 @@
                 "                <div class=\"layui-card-header\">" + name + "</div>\n" +
                 "                <div class=\"layui-card-body\">\n" +
                 "                    " + desc + "<br><br>\n" +
-                "        <label style='margin-left: 90%'> <a href='/restdoc/" + projectId + "/document/nav/view'><i class=\"layui-icon layui-icon-next\" style=\"font-size: 22px; color: #1E9FFF;\"></i></a>  \n</label>        </div>\n" +
+
+                "   <label ><a onclick='editProject(\"" + projectId + "\")' title='编辑' href='javascript:void(0);'><i class=\"layui-icon layui-icon-edit\" style=\"font-size: 22px; color: #393D49;\"></i></a></label>     " +
+                "   <label ><a onclick='deleteProject(\"" + projectId + "\")' title='删除' href='javascript:void(0);'><i class=\"layui-icon layui-icon-delete\" style=\"font-size: 22px; color: #393D49;\"></i></a></label>     " +
+                "   <label ><a onclick='projectDetail(\"" + projectId + "\")' title='详情' href='javascript:void(0);'><i class=\"layui-icon layui-icon-list\" style=\"font-size: 22px; color: #393D49;\"></i></a></label>     " +
+                "<label style='margin-left: 50%'> <a title='查看项目文档' href='/restdoc/" + projectId + "/document/nav/view'><i class=\"layui-icon layui-icon-home\" style=\"font-size: 22px; color: #393D49;\"></i></a>  \n</label>        </div>\n" +
                 "            </div>\n" +
                 "        </div>";
 
@@ -195,6 +208,16 @@
 
     });
 
+    function projectDetail(projectId) {
+        lay.open({
+            title: 'Project Detail',
+            area: ['800px', '500px'],
+            scrollbar: false,
+            type: 2,
+            content: '/restdoc/project/' + projectId + '/view'
+        });
+    }
+
     function clickProject(obj) {
         var id = obj.id;
         lay.open({
@@ -203,6 +226,63 @@
             scrollbar: false,
             type: 2,
             content: '/restdoc/project/' + id + '/view'
+        });
+    }
+
+    function editProject(projectId) {
+        layer.open({
+            type: 2,
+            title: '编辑项目',
+            area: ['800px', '500px'],
+            scrollbar: false,
+            content: ['/restdoc/project/' + projectId + '/view/update', 'no'],
+            btn: ['确认修改'],
+            yes: function (index, document) {
+                var res = window["layui-layer-iframe" + index].getFormData();
+
+                console.info(res);
+
+                $.ajax({
+                    type: 'PATCH',
+                    dataType: 'JSON',
+                    contentType: 'application/json;charset=utf-8',
+                    url: '/restdoc/project',
+                    data: JSON.stringify(res),
+                    async: false,
+                    success: function (data) {
+                        if (data.code === "200") {
+                            layer.msg("修改成功");
+                            renderPage()
+                        } else {
+                            layer.msg(data.message)
+                        }
+                    }
+                });
+
+                layer.close(index);
+            }
+        });
+    }
+
+    function deleteProject(projectId) {
+        layer.confirm('确认删除项目？', function (index) {
+
+            $.ajax({
+                type: 'DELETE',
+                url: '/restdoc/project/' + projectId,
+                async: false,
+                success: function (data) {
+                    if (data.code === "200") {
+                        lay.msg("删除成功");
+                        init()
+                    } else {
+                        lay.msg("删除失败")
+                    }
+                }
+            });
+
+
+            layer.close(index);
         });
     }
 

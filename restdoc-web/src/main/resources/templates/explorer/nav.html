@@ -38,7 +38,16 @@
 <script th:src="@{/admin/js/util.js}"></script>
 
 <script>
-    $("#projectNav").addClass("layui-this");
+    // $("#projectNav").addClass("layui-this");
+
+    function initNav() {
+        var lis = $("#navigation").find("li");
+        for (let i = 0; i < lis.length; i++) {
+            $(lis[i]).removeClass("layui-this")
+        }
+    }
+
+    initNav();
 
 
     /**

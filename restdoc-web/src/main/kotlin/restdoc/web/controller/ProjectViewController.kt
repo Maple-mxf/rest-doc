@@ -30,4 +30,11 @@ class ProjectViewController {
 
     @GetMapping("/add")
     fun create(): String = "project/add"
+
+    @GetMapping("/project/{id}/view/update")
+    fun update(@PathVariable id: String, model: Model): String {
+        val project = mongoTemplate.findById(id, Project::class.java)
+        model.addAttribute("project", project)
+        return "project/edit"
+    }
 }
