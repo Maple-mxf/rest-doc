@@ -2,6 +2,7 @@ package restdoc.client.invoke;
 
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import restdoc.remoting.common.body.HttpCommunicationCaptureBody;
@@ -26,8 +27,13 @@ public class HttpInvoker {
     public ResponseEntity<Object> execute(HttpCommunicationCaptureBody capture) {
         String url = this.autocompleteURL(capture.getUrl());
         capture.setCompleteUrl(url);
+
+        HttpHeaders requestHeaders = new HttpHeaders();
+
+        capture.getRequestHeaders().forEach(requestHeaders::put);
+
         HttpEntity<Map<String, Object>> httpEntity =
-                new HttpEntity<>(capture.getRequestBody(), capture.getRequestHeaders());
+                new HttpEntity<>(capture.getRequestBody(), requestHeaders);
 
         return restTemplate.exchange(url, capture.getMethod(), httpEntity, Object.class, capture.getUriVariables());
     }
