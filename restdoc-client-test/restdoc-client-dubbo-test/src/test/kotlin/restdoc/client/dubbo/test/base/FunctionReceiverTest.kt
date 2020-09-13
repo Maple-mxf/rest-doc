@@ -34,9 +34,11 @@ class FunctionReceiverTest {
 
     @Test
     fun anonymousInstanceTypealiasFun1() {
-        val instance: ConvertStringUpper = fun(input: String): String { return  input.toUpperCase() }
+        val instance: ConvertStringUpper = fun(input: String): String { return input.toUpperCase() }
     }
 
+
+    @Deprecated("anonymousInstanceTypealiasFun2 return keywords must be required ")
     @Test
     fun anonymousInstanceTypealiasFun2() {
         val instance: ConvertStringUpper = fun(input: String): String { return input.toUpperCase() }
@@ -65,6 +67,55 @@ class FunctionReceiverTest {
         val collection = listOf("Hello Kotlin", "Hello Java")
         collection.map({ it.toUpperCase() })
     }
+
+    @Test
+    fun trailingLambdas() {
+        val items = listOf<String>("hello", "kotlin")
+        items.fold(0) { acc, e -> acc * e.length }
+    }
+
+    @Test
+    fun implicitSingleParamName() {
+        val lambda: (String) -> String = { it.toUpperCase() }
+    }
+
+    @Test
+    fun returnValueFromLambda() {
+        val items = listOf<String>("hello", "kotlin")
+
+        // Expression1
+        items.map { it.toUpperCase() }
+
+        // Expression1
+        items.map { return@map it.toUpperCase() }
+    }
+
+    @Test
+    fun underscoreVar() {
+        val map = mapOf("key" to "value")
+        map.forEach { (_, v) ->
+            print(v)
+        }
+    }
+
+    data class User(val id: String, val name: String, val age: Int)
+
+    @Test
+    fun destructingComplexParam() {
+        listOf<User>(User(id = "1", name = "Jack", age = 20))
+                .map { (id, name, age) ->
+                    "$id$name$age"
+                }
+    }
+
+    @Test
+    fun wordCount() {
+        val item = listOf("Hello Kotlin", "Hello Java", "Hello Scala")
+        val groupingBy = item.flatMap { it.split(" ") }
+                .groupingBy { it }
+                .eachCount()
+        println(groupingBy)
+    }
 }
 
 class InstanceFunctionByType : (String) -> String {
@@ -74,3 +125,7 @@ class InstanceFunctionByType : (String) -> String {
 }
 
 val FunctionByTypeInstance = InstanceFunctionByType()
+
+
+
+

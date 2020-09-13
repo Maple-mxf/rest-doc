@@ -66,7 +66,7 @@ class ResourceController {
 
         for (navNode in allNode) {
 
-            val childrenDocNode: MutableList<NavNode> = docs.filter { navNode.id.equals(it.resource) }
+            val childrenDocNode: MutableList<NavNode> = docs.filter { navNode.id == it.resource }
                     .map {
                         val node = NavNode(
                                 id = it.id!!,
@@ -92,8 +92,7 @@ class ResourceController {
                 navNode.children = childrenDocNode
             }
         }
-
-        return ok(mutableListOf(ROOT_NAV));
+        return ok(mutableListOf(ROOT_NAV))
     }
 
 

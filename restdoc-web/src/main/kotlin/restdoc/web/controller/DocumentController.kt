@@ -226,7 +226,10 @@ class DocumentController {
 
         val requestHeaders = HttpHeaders()
         requestHeaderDescriptor.forEach { requestHeaders.addAll(it.field, it.value) }
+
         capture.requestHeaders = requestHeaders
+                .map { (k, v) -> k to v }
+                .toMap().toMutableMap()
 
         if (capture.method.equals(HttpMethod.GET)) {
             capture.queryParam = requestBodyDescriptor.map { it.path to it.value.toString() }.toMap().toMutableMap()
@@ -248,7 +251,7 @@ class DocumentController {
                 capture.status = responseEntity.statusCodeValue
                 if (responseEntity.hasBody()) capture.responseBody = responseEntity.body
                 capture.responseHeader = responseEntity.headers
-                capture.responseContentType = capture.responseHeader.contentType
+//                capture.responseContentType = capture.responseHeader.contentType
             }
 
             redisTemplate.opsForValue().set(taskId, capture)
@@ -265,9 +268,7 @@ class DocumentController {
         val result = redisTemplate.opsForValue().get(taskId) ?: return failure(Status.INVALID_REQUEST, "请刷新页面重试")
 
         val map = result as LinkedHashMap<String, Any>
-        val executeResult = mapper.convertValue(map, HttpCommunicationCaptureBody::class.java)
-
-        return ok(executeResult)
+        return ok(map)
     }
 
     @PostMapping("/wiki")

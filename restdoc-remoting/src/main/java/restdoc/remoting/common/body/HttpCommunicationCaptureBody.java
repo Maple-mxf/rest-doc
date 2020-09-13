@@ -2,11 +2,13 @@ package restdoc.remoting.common.body;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
+import org.springframework.util.MultiValueMap;
 import restdoc.remoting.protocol.RemotingSerializable;
 
+import java.util.List;
 import java.util.Map;
 
+@Deprecated
 public class HttpCommunicationCaptureBody extends RemotingSerializable {
 
     private int status;
@@ -15,27 +17,17 @@ public class HttpCommunicationCaptureBody extends RemotingSerializable {
 
     private String url, completeUrl;
 
-    private HttpHeaders requestHeaders;
+    private Map<String, List<String>> requestHeaders;
 
-    private Map<String,String> queryParam;
+    private Map<String, String> queryParam;
 
     private Map<String, Object> requestBody;
 
     private Map<String, String> uriVariables;
 
-    private HttpHeaders responseHeader;
+    private Map<String, List<String>> responseHeader;
 
     private Object responseBody;
-
-    private MediaType responseContentType;
-
-    public MediaType getResponseContentType() {
-        return responseContentType;
-    }
-
-    public void setResponseContentType(MediaType responseContentType) {
-        this.responseContentType = responseContentType;
-    }
 
     public int getStatus() {
         return status;
@@ -45,7 +37,7 @@ public class HttpCommunicationCaptureBody extends RemotingSerializable {
         this.status = status;
     }
 
-    public HttpMethod  getMethod() {
+    public HttpMethod getMethod() {
         return method;
     }
 
@@ -69,9 +61,6 @@ public class HttpCommunicationCaptureBody extends RemotingSerializable {
         this.completeUrl = completeUrl;
     }
 
-    public HttpHeaders getRequestHeaders() {
-        return requestHeaders;
-    }
 
     public void setRequestHeaders(HttpHeaders requestHeaders) {
         this.requestHeaders = requestHeaders;
@@ -93,10 +82,6 @@ public class HttpCommunicationCaptureBody extends RemotingSerializable {
         this.uriVariables = uriVariables;
     }
 
-    public HttpHeaders getResponseHeader() {
-        return responseHeader;
-    }
-
     public void setResponseHeader(HttpHeaders responseHeader) {
         this.responseHeader = responseHeader;
     }
@@ -115,5 +100,29 @@ public class HttpCommunicationCaptureBody extends RemotingSerializable {
 
     public void setQueryParam(Map<String, String> queryParam) {
         this.queryParam = queryParam;
+    }
+
+    public void setRequestHeaders(MultiValueMap<String, String> requestHeaders) {
+        this.requestHeaders = requestHeaders;
+    }
+
+    public Map<String, List<String>> getRequestHeaders() {
+        return requestHeaders;
+    }
+
+    public void setRequestHeaders(Map<String, List<String>> requestHeaders) {
+        this.requestHeaders = requestHeaders;
+    }
+
+    public Map<String, List<String>> getResponseHeader() {
+        return responseHeader;
+    }
+
+    public void setResponseHeader(Map<String, List<String>> responseHeader) {
+        this.responseHeader = responseHeader;
+    }
+
+    public void setResponseHeader(MultiValueMap<String, String> responseHeader) {
+        this.responseHeader = responseHeader;
     }
 }

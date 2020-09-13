@@ -38,7 +38,6 @@
 <script th:src="@{/admin/js/util.js}"></script>
 
 <script>
-
     $("#projectNav").addClass("layui-this");
 
     layui.config({
@@ -84,12 +83,10 @@
             area: ['400px', '900px'],
             zIndex: layer.zIndex
             , success:
-
                 function (layero) {
-                    layer.setTop(layero); //重点2
+                    layer.setTop(layero);
                 }
-        })
-        ;
+        });
 
         tree.render({
             elem: '#navTableOfContent'
@@ -112,11 +109,6 @@
                     }
                 } else if (type == 'update') {
                     var body = {"name": data.title};
-
-                    console.info(body);
-
-                    console.info(data)
-
                     if (data.type == 'WIKI' || data.type == 'API') {
                         editTreeNode('/restdoc/document/' + data.id, body)
                     } else {

@@ -75,7 +75,6 @@
                                 <option value="OPTION">OPTION</option>
                             </select>
                         </div>
-                        <!--                        <label class="layui-form-label">http://</label>-->
                         <div class="layui-input-inline">
                             <input id="url" type="text" name="url"
                                    placeholder="127.0.0.1:8080/springboot/{resource}/{id}"
@@ -901,30 +900,30 @@
     }
 
     function deleteResponseBodyBtn(obj) {
-        var parent = obj.parentNode.parentNode.parentNode
-        var children = obj.parentNode.parentNode
-        parent.removeChild(children)
+        var parent = obj.parentNode.parentNode.parentNode;
+        var children = obj.parentNode.parentNode;
+        parent.removeChild(children);
     }
 
     function deleteRequestBodyBtn(obj) {
-        var parent = obj.parentNode.parentNode.parentNode
-        var children = obj.parentNode.parentNode
-        parent.removeChild(children)
+        var parent = obj.parentNode.parentNode.parentNode;
+        var children = obj.parentNode.parentNode;
+        parent.removeChild(children);
     }
 
     function deleteHeaderFieldLine(obj) {
         console.info(obj.id);
-        console.info(obj.id)
-        var parent = obj.parentNode.parentNode.parentNode
-        var children = obj.parentNode.parentNode
+        console.info(obj.id);
+        var parent = obj.parentNode.parentNode.parentNode;
+        var children = obj.parentNode.parentNode;
         parent.removeChild(children)
     }
 
     function deleteUriVarFieldLine(obj) {
-        console.info(obj.id)
-        var parent = obj.parentNode.parentNode.parentNode
-        var children = obj.parentNode.parentNode
-        parent.removeChild(children)
+        console.info(obj.id);
+        var parent = obj.parentNode.parentNode.parentNode;
+        var children = obj.parentNode.parentNode;
+        parent.removeChild(children);
     }
 
 </script>

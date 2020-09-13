@@ -1,6 +1,7 @@
 package restdoc.client.remoting;
 
 import io.netty.channel.ChannelHandlerContext;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import restdoc.client.invoke.HttpInvoker;
 import restdoc.remoting.common.body.HttpCommunicationCaptureBody;
@@ -28,7 +29,9 @@ public class HttpTaskRequestProcessor implements NettyRequestProcessor {
 
         ResponseEntity<Object> responseEntity = httpInvoker.execute(capture);
         capture.setStatus(responseEntity.getStatusCodeValue());
-        capture.setResponseHeader(responseEntity.getHeaders());
+
+        HttpHeaders responseHeader = responseEntity.getHeaders();
+        capture.setResponseHeader(responseHeader);
 
         if (responseEntity.hasBody()) {
             capture.setResponseBody(responseEntity.getBody());
