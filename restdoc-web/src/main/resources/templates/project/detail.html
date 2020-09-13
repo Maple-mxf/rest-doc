@@ -21,16 +21,16 @@
     </colgroup>
     <tbody>
     <tr>
-        <td>Project Name</td>
+        <td>项目名称</td>
         <td th:text="${project.name}"></td>
     </tr>
     <tr>
-        <td>Project Description</td>
+        <td>项目描述</td>
         <td th:text="${project.desc}"></td>
     </tr>
 
     <tr>
-        <td>Project CreateTime</td>
+        <td>创建时间</td>
         <td th:text="${#dates.format(project.createTime, 'yyyy-MM-dd HH:mm')}"></td>
     </tr>
     </tbody>

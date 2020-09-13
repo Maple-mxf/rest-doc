@@ -16,11 +16,7 @@
 
 <div class="layui-container">
 
-    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-        <legend>编辑项目</legend>
-    </fieldset>
-
-    <form class="layui-form" action="/restdoc/project/view">
+    <form class="layui-form layui-form-pane" action="/restdoc/project/view">
 
         <input type="hidden" th:value="${project.id}" id="id">
 
@@ -41,7 +37,19 @@
                        class="layui-input">
             </div>
         </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">应用类型</label>
+            <div class="layui-input-block">
+                <select name="city" lay-verify="required" id="type" th:selected="${project.type}">
+                    <option value="REST_WEB">REST web应用</option>
+                    <option value="DUBBO">Dubbo应用</option>
+                    <option value="SPRINGCLOUD">SpringCloud应用</option>
+                </select>
+            </div>
+        </div>
     </form>
+
 </div>
 
 <script th:src="@{/layui/layui.js}"></script>
@@ -82,7 +90,8 @@
         return {
             "id": $("#id").val(),
             "name": $("#name").val(),
-            "desc": $("#desc").val()
+            "desc": $("#desc").val(),
+            "type": $("#type option:selected").val()
         };
     }
 

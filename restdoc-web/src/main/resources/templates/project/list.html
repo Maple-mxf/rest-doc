@@ -11,7 +11,6 @@
     <style type="text/css">
 
         .project-item :hover {
-            /*background: #5FB878;*/
             cursor: pointer;
         }
 
@@ -33,6 +32,7 @@
             color: white;
             font-family: Roboto, serif;
         }
+
     </style>
 </head>
 <body>
@@ -51,7 +51,7 @@
     </div>
 
 
-    <div class="layui-row layui-col-space10">
+    <div class="layui-row layui-col-space12">
         <div class="layui-inline">
             <button class="layui-btn layui-btn-primary  layui-btn-lg" id="previousBtn">上一页</button>
         </div>
@@ -169,26 +169,48 @@
 
     function renderProjectContent(content) {
         var html = "";
-        for (var key in content) {
 
+
+        /*var i = 0;
+
+        var prefix = "<div class='layui-row '>";
+        var suffix = "</div>";*/
+
+        for (var key in content) {
             var name = content[key].name;
             var desc = content[key].desc;
             var projectId = content[key].id.toString();
+            var type = content[key].type;
+
+            if (desc != null && desc.length > 15) {
+                desc = desc.slice(0, 15) + "..."
+            }
+
 
             if (desc == null) desc = "";
-            var snippet = "        <div id='" + projectId + "' ondblclick='clickProject(this)' class=\"layui-col-md3 project-item \">\n" +
+            var snippet = " </div>   <div id='" + projectId + "' ondblclick='clickProject(this)' class=\"layui-col-md3 project-item \">\n" +
                 "            <div class=\"layui-card project-block\">\n" +
                 "                <div class=\"layui-card-header\">" + name + "</div>\n" +
-                "                <div class=\"layui-card-body\">\n" +
-                "                    " + desc + "<br><br>\n" +
 
+                "                <div class=\"layui-card-body\">" + desc +
+                "  <br><br>  <span class=\"layui-badge layui-bg-cyan\">" + type + "</span>\n     " +
                 "   <label ><a onclick='editProject(\"" + projectId + "\")' title='编辑' href='javascript:void(0);'><i class=\"layui-icon layui-icon-edit\" style=\"font-size: 22px; color: #393D49;\"></i></a></label>     " +
                 "   <label ><a onclick='deleteProject(\"" + projectId + "\")' title='删除' href='javascript:void(0);'><i class=\"layui-icon layui-icon-delete\" style=\"font-size: 22px; color: #393D49;\"></i></a></label>     " +
                 "   <label ><a onclick='projectDetail(\"" + projectId + "\")' title='详情' href='javascript:void(0);'><i class=\"layui-icon layui-icon-list\" style=\"font-size: 22px; color: #393D49;\"></i></a></label>     " +
-                "<label style='margin-left: 50%'> <a title='查看项目文档' href='/restdoc/" + projectId + "/document/nav/view'><i class=\"layui-icon layui-icon-home\" style=\"font-size: 22px; color: #393D49;\"></i></a>  \n</label>        </div>\n" +
+                "<label> <a title='查看项目文档' href='/restdoc/" + projectId + "/document/nav/view'><i class=\"layui-icon layui-icon-home\" style=\"font-size: 22px; color: #393D49;\"></i></a>  \n</label>        </div>\n" +
                 "            </div>\n" +
                 "        </div>";
 
+            /*if (i === 0) {
+                html = html + prefix + snippet;
+                ++i;
+            } else if (i === 3) {
+                html = html + snippet + suffix;
+                i = 0;
+            } else {
+                html = html + snippet;
+                ++i;
+            }*/
             html = html + snippet;
         }
 
@@ -214,9 +236,6 @@
                 btn: ['确认创建'],
                 yes: function (index, document) {
                     var res = window["layui-layer-iframe" + index].getFormData();
-
-                    console.info(res);
-
                     $.ajax({
                         type: 'POST',
                         dataType: 'JSON',
@@ -299,7 +318,6 @@
 
     function deleteProject(projectId) {
         layer.confirm('确认删除项目？', function (index) {
-
             $.ajax({
                 type: 'DELETE',
                 url: '/restdoc/project/' + projectId,
@@ -313,8 +331,6 @@
                     }
                 }
             });
-
-
             layer.close(index);
         });
     }
