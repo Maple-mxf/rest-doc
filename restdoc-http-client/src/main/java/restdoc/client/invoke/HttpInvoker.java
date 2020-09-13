@@ -30,7 +30,7 @@ public class HttpInvoker {
 
         HttpHeaders requestHeaders = new HttpHeaders();
 
-        capture.getRequestHeaders().forEach(requestHeaders::put);
+        capture.getRequestHeader().forEach(requestHeaders::put);
 
         HttpEntity<Map<String, Object>> httpEntity =
                 new HttpEntity<>(capture.getRequestBody(), requestHeaders);

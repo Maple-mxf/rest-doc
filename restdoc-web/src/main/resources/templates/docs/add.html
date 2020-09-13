@@ -618,15 +618,15 @@
                     var executeResult = getExecuteResult(httpTaskId);
                     globalExecuteResult = executeResult;
 
-                    responseBody = executeResult['data']['body']
+                    responseBody = executeResult['data']['responseBody'];
 
                     if (executeResult['code'] === "200") {
                         $("pre").append("url : " + executeResult['data']['url'] + '\n')
                         $("pre").append("status code : " + executeResult['data']['status'] + '\n\n')
-                        $("pre").append("request header : \n" + formatJson(executeResult['data']['requestHeader']) + '\n\n')
-                        $("pre").append("request param : \n" + formatJson(executeResult['data']['content']) + '\n\n')
+                        $("pre").append("request header : \n" + formatJson(executeResult['data']['requestHeaders']) + '\n\n')
+                        $("pre").append("request param : \n" + formatJson(executeResult['data']['requestBody']) + '\n\n')
                         $("pre").append("response header : \n" + formatJson(executeResult['data']['responseHeader']) + '\n\n')
-                        $("pre").append("response body : \n" + formatJson(executeResult['data']['body']))
+                        $("pre").append("response body : \n" + formatJson(executeResult['data']['responseBody']))
                         break;
                     } else {
                         console.info(data)
@@ -646,8 +646,6 @@
 
         function completeExecuteCallback(body) {
             $("#response-fieldset").addClass("layui-show");
-            form.render();
-
             $.ajax({
                 type: 'POST',
                 dataType: 'JSON',
@@ -687,6 +685,9 @@
                     layer.msg("JSON格式错误")
                 }
             });
+
+            form.render();
+            element.render('collapse');
         }
 
         function getExecuteResult(taskId) {

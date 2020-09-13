@@ -18,7 +18,7 @@ class HttpTaskExecutor {
 
         val requestHeaders = HttpHeaders()
 
-        capture.requestHeaders.forEach { (k, v) ->
+        capture.requestHeader.forEach { (k, v) ->
             requestHeaders.addAll(k, v)
         }
 

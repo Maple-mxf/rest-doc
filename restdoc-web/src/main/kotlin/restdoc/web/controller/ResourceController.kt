@@ -50,11 +50,10 @@ class ResourceController {
                     children = null,
                     pid = it.pid!!)
         }
+
         findChild(ROOT_NAV, navNodes)
 
-        if (onlyResource) {
-            return ok(mutableListOf(ROOT_NAV));
-        }
+        if (onlyResource) return ok(mutableListOf(ROOT_NAV))
 
         val allNode = mutableListOf<NavNode>()
         allNode.add(ROOT_NAV)
@@ -65,8 +64,8 @@ class ResourceController {
         val docs = documentRepository.list(Query(Criteria("resource").`in`(nodeIds)))
 
         for (navNode in allNode) {
-
-            val childrenDocNode: MutableList<NavNode> = docs.filter { navNode.id == it.resource }
+            val childrenDocNode: MutableList<NavNode> = docs
+                    .filter { navNode.id == it.resource }
                     .map {
                         val node = NavNode(
                                 id = it.id!!,
@@ -78,16 +77,12 @@ class ResourceController {
                                 spread = true,
                                 checked = false)
 
-                        if (DocType.API == it.docType) {
-                            node.type = NodeType.API
-                        } else {
-                            node.type = NodeType.WIKI
-                        }
+                        node.type = if (DocType.API == it.docType) NodeType.API else NodeType.WIKI
                         node
                     }.toMutableList()
 
             if (navNode.children != null) {
-                navNode.children!!.addAll(childrenDocNode);
+                navNode.children!!.addAll(childrenDocNode)
             } else {
                 navNode.children = childrenDocNode
             }

@@ -1,11 +1,150 @@
-{
-  "recipients": {
-    "member": null
-  },
-  "member": [
-    null
-  ],
-  "groups": [
-    null
-  ]
-}
+[
+  {
+    "id": "root",
+    "title": "一级目录",
+    "field": "title",
+    "children": [
+      {
+        "id": "749206799571226624",
+        "title": "用户",
+        "field": "name",
+        "children": [
+          {
+            "id": "751737222062936064",
+            "title": "获取设置",
+            "field": "",
+            "children": [],
+            "href": null,
+            "pid": "749206799571226624",
+            "spread": true,
+            "checked": false,
+            "disabled": false,
+            "type": "API"
+          },
+          {
+            "id": "754555475936153600",
+            "title": "获取设置",
+            "field": "",
+            "children": [],
+            "href": null,
+            "pid": "749206799571226624",
+            "spread": true,
+            "checked": false,
+            "disabled": false,
+            "type": "API"
+          }
+        ],
+        "href": null,
+        "pid": "root",
+        "spread": true,
+        "checked": false,
+        "disabled": false,
+        "type": "RESOURCE"
+      },
+      {
+        "id": "749217825591136256",
+        "title": "邮箱",
+        "field": "name",
+        "children": [
+          {
+            "id": "750580819516461056",
+            "title": "获取验证码",
+            "field": "",
+            "children": [],
+            "href": null,
+            "pid": "749217825591136256",
+            "spread": true,
+            "checked": false,
+            "disabled": false,
+            "type": "WIKI"
+          }
+        ],
+        "href": null,
+        "pid": "root",
+        "spread": true,
+        "checked": false,
+        "disabled": false,
+        "type": "RESOURCE"
+      },
+      {
+        "id": "749217957623631872",
+        "title": "设置",
+        "field": "name",
+        "children": [
+          {
+            "id": "750204938671362048",
+            "title": "获取设置",
+            "field": "",
+            "children": [],
+            "href": null,
+            "pid": "749217957623631872",
+            "spread": true,
+            "checked": false,
+            "disabled": false,
+            "type": "API"
+          }
+        ],
+        "href": null,
+        "pid": "root",
+        "spread": true,
+        "checked": false,
+        "disabled": false,
+        "type": "RESOURCE"
+      },
+      {
+        "id": "753821137955196928",
+        "title": "Kotlin之美",
+        "field": "",
+        "children": [],
+        "href": null,
+        "pid": "root",
+        "spread": true,
+        "checked": false,
+        "disabled": false,
+        "type": "WIKI"
+      },
+      {
+        "id": "753821516558241792",
+        "title": "Kotlin之美",
+        "field": "",
+        "children": [],
+        "href": null,
+        "pid": "root",
+        "spread": true,
+        "checked": false,
+        "disabled": false,
+        "type": "WIKI"
+      },
+      {
+        "id": "753825401528127488",
+        "title": "测试界面",
+        "field": "",
+        "children": [],
+        "href": null,
+        "pid": "root",
+        "spread": true,
+        "checked": false,
+        "disabled": false,
+        "type": "WIKI"
+      },
+      {
+        "id": "753928561085124608",
+        "title": "Test",
+        "field": "",
+        "children": [],
+        "href": null,
+        "pid": "root",
+        "spread": true,
+        "checked": false,
+        "disabled": false,
+        "type": "WIKI"
+      }
+    ],
+    "href": null,
+    "pid": "0",
+    "spread": true,
+    "checked": true,
+    "disabled": false,
+    "type": "RESOURCE"
+  }
+]

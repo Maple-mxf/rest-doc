@@ -8,6 +8,9 @@ import restdoc.remoting.protocol.RemotingSerializable;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * HttpCommunicationCaptureBody
+ */
 @Deprecated
 public class HttpCommunicationCaptureBody extends RemotingSerializable {
 
@@ -17,8 +20,9 @@ public class HttpCommunicationCaptureBody extends RemotingSerializable {
 
     private String url, completeUrl;
 
-    private Map<String, List<String>> requestHeaders;
+    private Map<String, List<String>> requestHeader;
 
+    @Deprecated
     private Map<String, String> queryParam;
 
     private Map<String, Object> requestBody;
@@ -62,8 +66,8 @@ public class HttpCommunicationCaptureBody extends RemotingSerializable {
     }
 
 
-    public void setRequestHeaders(HttpHeaders requestHeaders) {
-        this.requestHeaders = requestHeaders;
+    public void setRequestHeader(HttpHeaders requestHeader) {
+        this.requestHeader = requestHeader;
     }
 
     public Map<String, Object> getRequestBody() {
@@ -103,15 +107,15 @@ public class HttpCommunicationCaptureBody extends RemotingSerializable {
     }
 
     public void setRequestHeaders(MultiValueMap<String, String> requestHeaders) {
-        this.requestHeaders = requestHeaders;
+        this.requestHeader = requestHeaders;
     }
 
-    public Map<String, List<String>> getRequestHeaders() {
-        return requestHeaders;
+    public Map<String, List<String>> getRequestHeader() {
+        return requestHeader;
     }
 
     public void setRequestHeaders(Map<String, List<String>> requestHeaders) {
-        this.requestHeaders = requestHeaders;
+        this.requestHeader = requestHeaders;
     }
 
     public Map<String, List<String>> getResponseHeader() {
@@ -124,5 +128,9 @@ public class HttpCommunicationCaptureBody extends RemotingSerializable {
 
     public void setResponseHeader(MultiValueMap<String, String> responseHeader) {
         this.responseHeader = responseHeader;
+    }
+
+    public void setRequestHeader(Map<String, List<String>> requestHeader) {
+        this.requestHeader = requestHeader;
     }
 }

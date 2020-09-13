@@ -176,7 +176,7 @@ class DocumentController {
         capture.method = HttpMethod.valueOf(dto.method)
         val requestHeaders = HttpHeaders()
         requestHeaderDescriptor.forEach { requestHeaders.addAll(it.field, it.value) }
-        capture.requestHeaders = requestHeaders
+        capture.requestHeader = requestHeaders
 
         if (capture.method.equals(HttpMethod.GET)) {
             capture.queryParam = requestBodyDescriptor.map { it.path to it.value.toString() }.toMap().toMutableMap()
@@ -227,7 +227,7 @@ class DocumentController {
         val requestHeaders = HttpHeaders()
         requestHeaderDescriptor.forEach { requestHeaders.addAll(it.field, it.value) }
 
-        capture.requestHeaders = requestHeaders
+        capture.requestHeader = requestHeaders
                 .map { (k, v) -> k to v }
                 .toMap().toMutableMap()
 
