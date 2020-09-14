@@ -1,5 +1,7 @@
 package restdoc.client.api
 
+import io.netty.channel.Channel
+import restdoc.remoting.ChannelEventListener
 import restdoc.remoting.RemotingClient
 import restdoc.remoting.netty.NettyClientConfig
 import restdoc.remoting.netty.NettyRemotingClient
@@ -21,7 +23,18 @@ class AgentImpl(private val agentConfigurationProperties: AgentConfigurationProp
         val config = NettyClientConfig()
         config.host = agentConfigurationProperties.host
         config.port = agentConfigurationProperties.port
-        this.remotingClient = NettyRemotingClient(config)
+
+
+        val channelEventListener = object : ChannelEventListener {
+            override fun onChannelConnect(remoteAddr: String?, channel: Channel) {}
+            override fun onChannelException(remoteAddr: String?, channel: Channel) {}
+            override fun onChannelIdle(remoteAddr: String?, channel: Channel) {}
+            override fun onChannelClose(remoteAddr: String?, channel: Channel) {
+                reconnect()
+            }
+        }
+
+        this.remotingClient = NettyRemotingClient(config, channelEventListener)
     }
 
     override fun addTask(task: RemotingTask) {
@@ -45,6 +58,7 @@ class AgentImpl(private val agentConfigurationProperties: AgentConfigurationProp
     }
 
     override fun reconnect() {
+        remotingClient.start()
     }
 
     override fun getServerRemoteAddress(): String {

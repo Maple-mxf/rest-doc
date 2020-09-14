@@ -8,10 +8,7 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.concurrent.DefaultEventExecutorGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import restdoc.remoting.ChannelEventListener;
-import restdoc.remoting.InvokeCallback;
-import restdoc.remoting.RPCHook;
-import restdoc.remoting.RemotingClient;
+import restdoc.remoting.*;
 import restdoc.remoting.common.Pair;
 import restdoc.remoting.common.RemotingHelper;
 import restdoc.remoting.common.RemotingUtil;
@@ -57,6 +54,8 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
     private ExecutorService callbackExecutor;
     private final ChannelEventListener channelEventListener;
     private DefaultEventExecutorGroup defaultEventExecutorGroup;
+    private Bootstrap handler;
+    private volatile Status status = Status.STOPPED;
 
     public NettyRemotingClient(final NettyClientConfig nettyClientConfig) {
         this(nettyClientConfig, null);
@@ -102,16 +101,7 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
                 throw new RuntimeException("Failed to create SSLContext", e);
             }
         }
-    }
 
-    private static int initValueIndex() {
-        Random r = new Random();
-
-        return Math.abs(r.nextInt() % 999) % 999;
-    }
-
-    @Override
-    public void start() throws InterruptedException {
         this.defaultEventExecutorGroup = new DefaultEventExecutorGroup(
                 nettyClientConfig.getClientWorkerThreads(),
                 new ThreadFactory() {
@@ -124,7 +114,7 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
                     }
                 });
 
-        Bootstrap handler = this.bootstrap.group(this.eventLoopGroupWorker).channel(NioSocketChannel.class)
+        handler = this.bootstrap.group(this.eventLoopGroupWorker).channel(NioSocketChannel.class)
                 .option(ChannelOption.TCP_NODELAY, true)
                 .option(ChannelOption.SO_KEEPALIVE, true)
                 .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, nettyClientConfig.getConnectTimeoutMillis())
@@ -132,7 +122,7 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
                 .option(ChannelOption.SO_RCVBUF, nettyClientConfig.getClientSocketRcvBufSize())
                 .handler(new ChannelInitializer<SocketChannel>() {
                     @Override
-                    public void initChannel(SocketChannel ch) throws Exception {
+                    public void initChannel(SocketChannel ch) {
                         ChannelPipeline pipeline = ch.pipeline();
                         if (nettyClientConfig.isUseTLS()) {
                             if (null != sslContext) {
@@ -151,25 +141,65 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
                                 new NettyClientHandler());
                     }
                 });
+    }
 
-        // start channel
-        ChannelFuture future = handler.connect(nettyClientConfig.getHost(),
-                nettyClientConfig.getPort()).sync();
+    private static int initValueIndex() {
+        Random r = new Random();
 
-        this.timer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                try {
-                    NettyRemotingClient.this.scanResponseTable();
-                } catch (Throwable e) {
-                    log.error("scanResponseTable exception", e);
-                }
+        return Math.abs(r.nextInt() % 999) % 999;
+    }
+
+    @Override
+    public void start() {
+
+        synchronized (this) {
+            this.status = Status.STARTING;
+
+            if (this.status != Status.STOPPED) {
+                log.error("NettyRemotingClient not stopped; Please Stop it ; ");
+                return;
             }
-        }, 1000 * 3, 1000);
+            
+            try {
+                ChannelFuture future = handler.connect(
+                        nettyClientConfig.getHost(),
+                        nettyClientConfig.getPort())
+                        .sync();
 
-        if (this.channelEventListener != null) {
-            this.nettyEventExecutor.start();
+                this.timer.scheduleAtFixedRate(new TimerTask() {
+                    @Override
+                    public void run() {
+                        try {
+                            NettyRemotingClient.this.scanResponseTable();
+                        } catch (Throwable e) {
+                            log.error("scanResponseTable exception", e);
+                        }
+                    }
+                }, 1000 * 3, 1000);
+
+                if (this.channelEventListener != null) {
+                    this.nettyEventExecutor.start();
+                }
+
+                this.status = Status.STARTED;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                this.status = Status.STOPPED;
+            }
         }
+    }
+
+    @Override
+    public void restart() throws InterruptedException {
+        synchronized (this) {
+
+        }
+    }
+
+    @Override
+    public Status getStatus() {
+        return this.status;
     }
 
     @Override
