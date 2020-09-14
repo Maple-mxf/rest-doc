@@ -101,10 +101,9 @@ class DocumentController {
 
         if (historyAddressNumber > 10) {
             // delete old
-            val query = Query().addCriteria(Criteria("documentId").`is`(documentId))
-            query.with(by(asc("createTime")))
-            query.limit(1)
-            mongoTemplate.remove(query, HistoryAddress::class.java)
+            mongoTemplate.remove(
+                    Query().addCriteria(Criteria("documentId").`is`(documentId)).with(by(asc("createTime"))).limit(1),
+                    HistoryAddress::class.java)
         } else {
             mongoTemplate.save(ha)
         }
