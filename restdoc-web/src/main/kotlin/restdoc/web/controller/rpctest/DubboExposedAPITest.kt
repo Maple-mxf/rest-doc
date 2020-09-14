@@ -27,6 +27,7 @@ class DubboExposedAPITest {
     @Autowired
     lateinit var scheduleController: ScheduleController
 
+
     @GetMapping("/invokeSimpleDubboAPI")
     fun invokeSimpleDubboAPI(): Any {
         val apiList = exposedAPIManager.listBy(ApplicationType.DUBBO, "echo-service-provider") as List<DubboExposedAPI>
