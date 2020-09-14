@@ -15,6 +15,7 @@
         <module>restdoc-dubbo-client</module>
         <module>restdoc-client-api</module>
         <module>restdoc-springcloud-client</module>
+        <module>restdoc-restweb-client</module>
     </modules>
 
 
