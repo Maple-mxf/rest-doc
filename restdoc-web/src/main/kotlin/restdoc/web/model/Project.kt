@@ -48,3 +48,12 @@ enum class ProjectType {
     DUBBO,
     SPRINGCLOUD
 }
+
+
+@Document(collection = "restdoc_project_config")
+data class ProjectConfig(
+        @Id var id: String,
+        val projectId: String,
+        val testURIPrefix: String
+)
+

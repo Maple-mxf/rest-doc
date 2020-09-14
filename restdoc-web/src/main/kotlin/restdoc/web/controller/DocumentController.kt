@@ -34,6 +34,7 @@ import restdoc.web.util.IDUtil
 import restdoc.web.util.JsonDeProjector
 import restdoc.web.util.JsonProjector
 import restdoc.web.util.PathValue
+import java.net.URI
 import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.validation.Valid
@@ -67,6 +68,9 @@ class DocumentController {
     @Autowired
     lateinit var httpTaskExecutor: HttpTaskExecutor
 
+    private val urlRegex: Regex =
+            Regex("")
+
     @GetMapping("/list/{projectId}")
     fun list(@PathVariable projectId: String): Result {
         val query = Query().addCriteria(Criteria("projectId").`is`(projectId))
@@ -77,28 +81,40 @@ class DocumentController {
     @GetMapping("/{id}")
     fun get(@PathVariable id: String): Result = ok(mongoTemplate.findById(id, Project::class.java))
 
-    @PostMapping("")
-    fun create(@RequestBody @Valid requestDto: RequestDto): Result {
+    private fun extractRawPath(url: String): String {
+        return when {
+            url.startsWith("http") -> URI(url).rawPath
+            url.matches(Regex("^([/][a-zA-Z0-9])+[/]?$")) -> url
+            else -> {
+                val arr = url.split(delimiters = *arrayOf("/"))
+                if (arr.size == 1) arr[0]
+                else "/" + arr.subList(1, arr.size).joinToString(separator = "/")
+            }
+        }
+    }
 
-        requestDto.url = requestDto.lookupPath()
-        val requestHeaderDescriptor = requestDto.mapToHeaderDescriptor()
-        val requestBodyDescriptor = requestDto.mapToRequestDescriptor()
-        val responseBodyDescriptor = requestDto.mapToResponseDescriptor()
-        val uriVarDescriptor = requestDto.mapToURIVarDescriptor()
+    @PostMapping("")
+    fun create(@RequestBody @Valid dto: RequestDto): Result {
+
+        dto.url = dto.lookupPath()
+        val requestHeaderDescriptor = dto.mapToHeaderDescriptor()
+        val requestBodyDescriptor = dto.mapToRequestDescriptor()
+        val responseBodyDescriptor = dto.mapToResponseDescriptor()
+        val uriVarDescriptor = dto.mapToURIVarDescriptor()
 
         val document = Document(
                 id = IDUtil.id(),
-                name = requestDto.name,
-                projectId = requestDto.projectId,
-                resource = requestDto.resource,
-                url = requestDto.url,
+                name = dto.name,
+                projectId = dto.projectId,
+                resource = dto.resource,
+                url = extractRawPath(dto.url),
                 requestHeaderDescriptor = requestHeaderDescriptor,
                 requestBodyDescriptor = requestBodyDescriptor,
                 responseBodyDescriptors = responseBodyDescriptor,
-                method = HttpMethod.valueOf(requestDto.method),
-                description = requestDto.description,
+                method = HttpMethod.valueOf(dto.method),
+                description = dto.description,
                 uriVarDescriptors = uriVarDescriptor,
-                executeResult = requestDto.executeResult,
+                executeResult = dto.executeResult,
                 docType = DocType.API)
 
         documentRepository.save(document)
@@ -107,29 +123,29 @@ class DocumentController {
     }
 
     @PutMapping("")
-    fun patch(@RequestBody @Valid requestDto: RequestDto): Result {
+    fun patch(@RequestBody @Valid dto: RequestDto): Result {
 
-        if (requestDto.documentId == null) return failure(Status.INVALID_REQUEST, "缺少ID参数")
+        if (dto.documentId == null) return failure(Status.INVALID_REQUEST, "缺少ID参数")
 
-        requestDto.url = requestDto.lookupPath()
-        val requestHeaderDescriptor = requestDto.mapToHeaderDescriptor()
-        val requestBodyDescriptor = requestDto.mapToRequestDescriptor()
-        val responseBodyDescriptor = requestDto.mapToResponseDescriptor()
-        val uriVarDescriptor = requestDto.mapToURIVarDescriptor()
+        dto.url = dto.lookupPath()
+        val requestHeaderDescriptor = dto.mapToHeaderDescriptor()
+        val requestBodyDescriptor = dto.mapToRequestDescriptor()
+        val responseBodyDescriptor = dto.mapToResponseDescriptor()
+        val uriVarDescriptor = dto.mapToURIVarDescriptor()
 
         // Save An Api Project Document
         val document = Document(
-                id = requestDto.documentId,
-                name = requestDto.name,
+                id = dto.documentId,
+                name = dto.name,
                 projectId = present,
-                resource = requestDto.resource,
-                url = requestDto.url,
+                resource = dto.resource,
+                url = extractRawPath(dto.url),
                 requestHeaderDescriptor = requestHeaderDescriptor,
                 requestBodyDescriptor = requestBodyDescriptor,
                 responseBodyDescriptors = responseBodyDescriptor,
-                method = HttpMethod.valueOf(requestDto.method),
+                method = HttpMethod.valueOf(dto.method),
                 uriVarDescriptors = uriVarDescriptor,
-                executeResult = requestDto.executeResult)
+                executeResult = dto.executeResult)
 
         val updateResult = documentRepository.update(document)
 

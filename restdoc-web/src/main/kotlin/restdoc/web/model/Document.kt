@@ -1,6 +1,7 @@
 package restdoc.web.model
 
 import org.springframework.data.annotation.Id
+import org.springframework.data.mongodb.core.index.HashIndexed
 import org.springframework.data.mongodb.core.mapping.Document
 import org.springframework.http.HttpMethod
 import restdoc.web.util.FieldType
@@ -31,7 +32,8 @@ data class Document(
  * API test uri history
  */
 @Document(collection = "restdoc_test_history_address")
-data class HistoryAddress(val id: String, val address: String, val createTime: Long)
+data class HistoryAddress(@Id val id: String, val address: String,
+                          @HashIndexed val documentId: String, val createTime: Long)
 
 
 data class HeaderFieldDescriptor(
@@ -67,3 +69,8 @@ data class URIVarDescriptor(
         val value: Any?,
         val description: String?
 )
+
+/**
+ * 测试用例记录
+ */
+data class TestCaseLog(val id: String);
