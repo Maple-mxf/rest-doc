@@ -30,27 +30,29 @@ open class RestDocClientConfiguration {
         return httpApplicationAgent
     }
 
-    @Bean @ConditionalOnMissingBean open fun httpTaskExecutor(restTemplate: RestTemplate, environment: Environment): HttpInvoker {
+    @Bean @ConditionalOnMissingBean
+    open fun httpTaskExecutor(restTemplate: RestTemplate, environment: Environment): HttpInvoker {
         return HttpInvoker(restTemplate, environment)
     }
 
-    @Bean @ConditionalOnMissingBean open fun httpTaskRequestProcessor(httpInvoker: HttpInvoker?): HttpTaskRequestProcessor {
+    @Bean @ConditionalOnMissingBean
+    open fun httpTaskRequestProcessor(httpInvoker: HttpInvoker?): HttpTaskRequestProcessor {
         return HttpTaskRequestProcessor(httpInvoker)
     }
 
-    @Bean @ConditionalOnMissingBean open fun restTemplate(): RestTemplate {
+    @Bean @ConditionalOnMissingBean
+    open fun restTemplate(): RestTemplate {
         return RestTemplate()
     }
 
-    @Bean @ConditionalOnMissingBean open fun endpointsListener(environment: Environment?): EndpointsListener {
+    @Bean @ConditionalOnMissingBean
+    open fun endpointsListener(environment: Environment?): EndpointsListener {
         return EndpointsListener(environment)
     }
 
-    @Bean @ConditionalOnMissingBean open fun postEmptyApiTemplateRequestProcessor(endpointsListener: EndpointsListener): PostEmptyApiTemplateRequestProcessor {
+    @Bean @ConditionalOnMissingBean
+    open fun postEmptyApiTemplateRequestProcessor(endpointsListener: EndpointsListener): PostEmptyApiTemplateRequestProcessor {
         return PostEmptyApiTemplateRequestProcessor(endpointsListener)
     }
 
-    companion object {
-        private val log = LoggerFactory.getLogger(RestDocClientConfiguration::class.java)
-    }
 }

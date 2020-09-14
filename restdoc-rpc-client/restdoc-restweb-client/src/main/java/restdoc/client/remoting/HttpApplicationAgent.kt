@@ -23,7 +23,6 @@ import restdoc.remoting.protocol.RemotingCommand
  *
  * Establish channel
  */
-@Deprecated("")
 class HttpApplicationAgent @Autowired constructor(restDocProperties: RestDocProperties,
                                                   httpTaskRequestProcessor: HttpTaskRequestProcessor,
                                                   postEmptyApiTemplateRequestProcessor: PostEmptyApiTemplateRequestProcessor) {
