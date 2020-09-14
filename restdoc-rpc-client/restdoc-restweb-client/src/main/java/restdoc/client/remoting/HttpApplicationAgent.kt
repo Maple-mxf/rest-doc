@@ -2,7 +2,6 @@ package restdoc.client.remoting
 
 import io.netty.channel.Channel
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Autowired
 import restdoc.client.config.RestDocProperties
 import restdoc.remoting.ChannelEventListener
 import restdoc.remoting.common.RemotingUtil
@@ -23,9 +22,10 @@ import restdoc.remoting.protocol.RemotingCommand
  *
  * Establish channel
  */
-class HttpApplicationAgent @Autowired constructor(restDocProperties: RestDocProperties,
-                                                  httpTaskRequestProcessor: HttpTaskRequestProcessor,
-                                                  postEmptyApiTemplateRequestProcessor: PostEmptyApiTemplateRequestProcessor) {
+class HttpApplicationAgent(restDocProperties: RestDocProperties,
+                           httpTaskRequestProcessor: HttpTaskRequestProcessor,
+                           postEmptyApiTemplateRequestProcessor: PostEmptyApiTemplateRequestProcessor) {
+
     private val state = State.STOPPED
     private val httpTaskRequestProcessor: HttpTaskRequestProcessor
     private val postEmptyApiTemplateRequestProcessor: PostEmptyApiTemplateRequestProcessor
@@ -36,7 +36,7 @@ class HttpApplicationAgent @Autowired constructor(restDocProperties: RestDocProp
 
     private lateinit var remotingClient: NettyRemotingClient
 
-    private fun init() { // Register the given http task request processor
+    private fun registerProcessor() { // Register the given http task request processor
         remotingClient.registerProcessor(RequestCode.SUBMIT_HTTP_PROCESS,
                 httpTaskRequestProcessor, null)
         // Register the given api empty template request processor
@@ -44,7 +44,8 @@ class HttpApplicationAgent @Autowired constructor(restDocProperties: RestDocProp
                 postEmptyApiTemplateRequestProcessor, null)
     }
 
-    @Synchronized fun connection() {
+    @Synchronized
+    fun connection() {
         synchronized(this) {
             if (state == State.RUNNING) {
                 log.error("ApplicationClient already running")
@@ -87,13 +88,17 @@ class HttpApplicationAgent @Autowired constructor(restDocProperties: RestDocProp
                 }
             }
 
+            // When The channel close
             override fun onChannelClose(remoteAddr: String, channel: Channel) {}
+
             override fun onChannelException(remoteAddr: String, channel: Channel) {}
             override fun onChannelIdle(remoteAddr: String, channel: Channel) {}
         }
         this.postEmptyApiTemplateRequestProcessor = postEmptyApiTemplateRequestProcessor
         this.httpTaskRequestProcessor = httpTaskRequestProcessor
         remotingClient = NettyRemotingClient(config, eventListener)
-        init()
+
+        //
+        registerProcessor()
     }
 }
