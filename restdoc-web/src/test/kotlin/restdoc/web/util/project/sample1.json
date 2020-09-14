@@ -1,0 +1,66 @@
+[
+  {
+    "path": "sendDetail",
+    "value": null,
+    "description": null,
+    "type": "OBJECT",
+    "optional": false,
+    "defaultValue": null
+  },
+  {
+    "path": "sendDetail.content",
+    "value": null,
+    "description": null,
+    "type": "ARRAY",
+    "optional": false,
+    "defaultValue": null
+  },
+  {
+    "path": "sendDetail.content[0]",
+    "value": null,
+    "description": null,
+    "type": "OBJECT",
+    "optional": false,
+    "defaultValue": null
+  },
+  {
+    "path": "sendDetail.content[0].name",
+    "value": "Kobe",
+    "description": null,
+    "type": "STRING",
+    "optional": false,
+    "defaultValue": "Kobe"
+  },
+  {
+    "path": "sendDetail.content[0].recipient",
+    "value": "m17793873123@163.com",
+    "description": null,
+    "type": "STRING",
+    "optional": false,
+    "defaultValue": "m17793873123@163.com"
+  },
+  {
+    "path": "sendDetail.content[0].state",
+    "value": "SUCCESS",
+    "description": null,
+    "type": "STRING",
+    "optional": false,
+    "defaultValue": "SUCCESS"
+  },
+  {
+    "path": "sendDetail.content[0].callback",
+    "value": false,
+    "description": null,
+    "type": "BOOLEAN",
+    "optional": false,
+    "defaultValue": false
+  },
+  {
+    "path": "sendDetail.totalElements",
+    "value": 1,
+    "description": null,
+    "type": "NUMBER",
+    "optional": false,
+    "defaultValue": 1
+  }
+]

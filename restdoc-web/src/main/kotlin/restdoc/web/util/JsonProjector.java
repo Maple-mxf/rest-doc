@@ -62,7 +62,7 @@ import static restdoc.web.core.StandardKt.throwError;
  * }
  * </pre>
  *
- * @author ubuntu-m
+ * @author Overman
  * @since 1.0
  */
 public class JsonProjector {
@@ -115,10 +115,8 @@ public class JsonProjector {
      */
     public JsonProjector(List<PathValue> pathValues) {
 
-        List<PathValue> pathValueList = new ArrayList<>(this.resolve(pathValues)
-                .stream()
-                .collect(Collectors.toMap(PathValue::getPath, Function.identity(), (p1, p2) -> p2))
-                .values());
+        // Resolve the json
+        List<PathValue> pathValueList = resolve(pathValues);
 
         // Build for rootNode
         this.buildForTreeNode(pathValueList);
@@ -163,9 +161,17 @@ public class JsonProjector {
      *   }
      * ]
      * </pre>
+     * <p>
+     * <p>
+     * Deduplication by {@link PathValue#getPath()}
+     * <p>
+     * TODO  why Deduplication?
+     * <p>
+     * Review The resolve code
      */
     @VisibleForTesting
-    protected List<PathValue> resolve(List<PathValue> pathValues) {
+    protected static List<PathValue> resolve(List<PathValue> pathValues) {
+
         return pathValues.stream()
                 .flatMap(t -> {
                     String[] pathArray = t.getPath().split("\\.");
@@ -183,6 +189,7 @@ public class JsonProjector {
                     String[] pathArray = e.getPath().split("\\.");
                     String lastField = pathArray[pathArray.length - 1];
 
+                    // If last key is array
                     Matcher matcher = ARRAY_PATTERN.matcher(lastField);
 
                     if (matcher.find()) {
@@ -194,7 +201,7 @@ public class JsonProjector {
                                 {
                                     String suffixIndices = indexes.subList(0, index + 1)
                                             .stream()
-                                            .map(i -> String.format("[%s]", i))
+                                            .map(i -> String.format("[%d]", i))
                                             .collect(Collectors.joining(""));
 
                                     return String.join("", field, suffixIndices);
@@ -216,9 +223,13 @@ public class JsonProjector {
                         return Stream.of(e);
                     }
                 })
-                .peek(t -> {
-                    t.setPath(t.getPath().replaceAll("\\[\\]", "[0]"));
-                })
+                .peek(t -> t.setPath(t.getPath().replaceAll("\\[\\]", "[0]")))
+
+                // Bad code.
+                .collect(Collectors.groupingBy(PathValue::getPath))
+                .entrySet()
+                .stream()
+                .map(entry -> new PathValue(entry.getKey(), entry.getValue().get(0).getValue()))
                 .collect(toList());
     }
 
@@ -236,7 +247,8 @@ public class JsonProjector {
 
         try {
             System.err.println(mapper.writeValueAsString(nodes));
-        }catch (Throwable e){}
+        } catch (Throwable e) {
+        }
 
         // Find First level node
         List<Node> parentNodes = nodes.stream()

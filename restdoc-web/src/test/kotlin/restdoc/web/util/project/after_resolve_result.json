@@ -1,0 +1,38 @@
+[
+  {
+    "path": "sendDetail.content[0].name",
+    "value": "Kobe"
+  },
+  {
+    "path": "sendDetail",
+    "value": null
+  },
+  {
+    "path": "sendDetail.content[0].recipient",
+    "value": "m17793873123@163.com"
+  },
+  {
+    "path": "sendDetail.content",
+    "value": null
+  },
+  {
+    "path": "sendDetail.content[0].callback",
+    "value": false
+  },
+  {
+    "path": "sendDetail.content[0].state",
+    "value": "SUCCESS"
+  },
+  {
+    "path": "content[0]",
+    "value": null
+  },
+  {
+    "path": "sendDetail.totalElements",
+    "value": 1
+  },
+  {
+    "path": "content",
+    "value": null
+  }
+]

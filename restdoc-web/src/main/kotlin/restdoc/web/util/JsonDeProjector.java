@@ -70,7 +70,7 @@ public class JsonDeProjector {
 
         try {
             System.err.println(mapper.writeValueAsString(this.nodes));
-        } catch (Throwable e) {
+        } catch (Throwable ignored) {
         }
 
         // 3 End Return
@@ -84,8 +84,8 @@ public class JsonDeProjector {
                         node.path.replaceFirst("root\\.", ""), node.value,
                         null, node.type,
                         false, node.value))
-                /*.filter(d -> !d.getType().equals(FieldType.ARRAY)
-                        && !d.getType().equals(FieldType.OBJECT))*/
+                .filter(d -> !d.getType().equals(FieldType.ARRAY)
+                        && !d.getType().equals(FieldType.OBJECT))
                 .collect(Collectors.toList());
 
         this.descriptors.addAll(descriptors);
