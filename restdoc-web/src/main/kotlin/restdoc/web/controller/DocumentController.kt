@@ -3,6 +3,7 @@ package restdoc.web.controller
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Sort.Order.asc
 import org.springframework.data.domain.Sort.Order.desc
 import org.springframework.data.domain.Sort.by
 import org.springframework.data.mongodb.core.MongoTemplate
@@ -24,13 +25,11 @@ import restdoc.web.core.Status
 import restdoc.web.core.failure
 import restdoc.web.core.ok
 import restdoc.web.core.schedule.ScheduleController
-import restdoc.web.model.DocType
-import restdoc.web.model.Document
-import restdoc.web.model.HttpTaskExecutor
-import restdoc.web.model.Project
+import restdoc.web.model.*
 import restdoc.web.repository.DocumentRepository
 import restdoc.web.repository.ProjectRepository
 import restdoc.web.util.IDUtil
+import restdoc.web.util.IDUtil.now
 import restdoc.web.util.JsonDeProjector
 import restdoc.web.util.JsonProjector
 import restdoc.web.util.PathValue
@@ -57,9 +56,6 @@ class DocumentController {
     lateinit var documentRepository: DocumentRepository
 
     @Autowired
-    lateinit var holderKit: HolderKit
-
-    @Autowired
     lateinit var redisTemplate: RedisTemplate<String, Any>
 
     @Autowired
@@ -67,9 +63,6 @@ class DocumentController {
 
     @Autowired
     lateinit var httpTaskExecutor: HttpTaskExecutor
-
-    private val urlRegex: Regex =
-            Regex("")
 
     @GetMapping("/list/{projectId}")
     fun list(@PathVariable projectId: String): Result {
@@ -90,6 +83,30 @@ class DocumentController {
                 if (arr.size == 1) arr[0]
                 else "/" + arr.subList(1, arr.size).joinToString(separator = "/")
             }
+        }
+    }
+
+    private fun maintainHistoryAddress(url: String, documentId: String) {
+        val uri = URI(url)
+        val address = "${uri.scheme}://${uri.authority}"
+        val query = Query().addCriteria(Criteria("documentId").`is`(documentId).and("address").`is`(address))
+
+        if (mongoTemplate.exists(query, HistoryAddress::class.java)) return
+
+        val historyAddressNumber = mongoTemplate.count(
+                Query().addCriteria(Criteria("documentId").`is`(documentId)),
+                HistoryAddress::class.java)
+
+        val ha = HistoryAddress(id = IDUtil.id(), address = address, documentId = documentId, createTime = now())
+
+        if (historyAddressNumber > 10) {
+            // delete old
+            val query = Query().addCriteria(Criteria("documentId").`is`(documentId))
+            query.with(by(asc("createTime")))
+            query.limit(1)
+            mongoTemplate.remove(query, HistoryAddress::class.java)
+        } else {
+            mongoTemplate.save(ha)
         }
     }
 
@@ -137,7 +154,7 @@ class DocumentController {
         val document = Document(
                 id = dto.documentId,
                 name = dto.name,
-                projectId = present,
+                projectId = dto.projectId,
                 resource = dto.resource,
                 url = extractRawPath(dto.url),
                 requestHeaderDescriptor = requestHeaderDescriptor,
@@ -161,16 +178,23 @@ class DocumentController {
     @PostMapping("/deProject")
     fun deProjector(@RequestBody tree: JsonNode): Result = ok(JsonDeProjector(tree).deProject())
 
-    private val present: String = "Default"
-
     @Autowired
     lateinit var scheduleController: ScheduleController
 
     @PostMapping("/httpTask/submit")
     fun submitHttpTask(@RequestBody @Valid dto: RequestDto): Result {
         return if (dto.remoteAddress != null) {
+
+            if (!dto.remoteAddress!!.matches(Regex("^([/][a-zA-Z0-9])+[/]?$")))
+                Status.BAD_REQUEST.error("RPC测试请直接输入项目的contextPath")
+
+            // Record history url address
+            maintainHistoryAddress(dto.url, dto.documentId!!)
+
             rpcExecuteTask(dto)
         } else {
+            if (!dto.url.startsWith("http") || !dto.url.startsWith("https"))
+                Status.BAD_REQUEST.error("链接无效")
             outExecuteTask(dto)
         }
     }
@@ -267,7 +291,6 @@ class DocumentController {
                 capture.status = responseEntity.statusCodeValue
                 if (responseEntity.hasBody()) capture.responseBody = responseEntity.body
                 capture.responseHeader = responseEntity.headers
-//                capture.responseContentType = capture.responseHeader.contentType
             }
 
             redisTemplate.opsForValue().set(taskId, capture)
