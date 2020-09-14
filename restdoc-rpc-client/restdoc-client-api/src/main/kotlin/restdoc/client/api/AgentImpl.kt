@@ -1,5 +1,6 @@
 package restdoc.client.api
 
+import ch.qos.logback.core.pattern.FormatInfo
 import io.netty.channel.Channel
 import restdoc.remoting.ChannelEventListener
 import restdoc.remoting.RemotingClient
@@ -58,7 +59,13 @@ class AgentImpl(private val agentConfigurationProperties: AgentConfigurationProp
     }
 
     override fun reconnect() {
-        remotingClient.restart()
+        while (true) {
+            try {
+                remotingClient.startChannel()
+                break
+            } catch (ignored: Throwable) {
+            }
+        }
     }
 
     override fun getServerRemoteAddress(): String {

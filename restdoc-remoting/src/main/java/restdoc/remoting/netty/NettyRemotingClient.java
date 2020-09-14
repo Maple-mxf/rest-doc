@@ -176,7 +176,7 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
         }
     }
 
-    private void startChannel() throws InterruptedException {
+    public void startChannel() throws InterruptedException {
         ChannelFuture future = handler.connect(
                 nettyClientConfig.getHost(),
                 nettyClientConfig.getPort())
@@ -184,6 +184,7 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
     }
 
     @Override
+    @Deprecated
     public void restart() throws InterruptedException {
         synchronized (this) {
 
