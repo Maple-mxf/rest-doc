@@ -1,5 +1,6 @@
 package restdoc.web.util;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 
@@ -35,7 +36,7 @@ public class JsonProjectorTest {
                 .filter(t -> !"OBJECT".equals(t.get("type")) || !"ARRAY".equals(t.get("type")))
                 .map(t -> new PathValue((String) t.get("path"), t.get("value")))
                 .collect(Collectors.toList());
-        
+
         System.err.println(mapper.writerWithDefaultPrettyPrinter()
                 .writeValueAsString(new JsonProjector(pathValues).projectToMap()));
     }
@@ -56,6 +57,23 @@ public class JsonProjectorTest {
 
         System.err.println(mapper.writerWithDefaultPrettyPrinter()
                 .writeValueAsString(JsonProjector.resolve(pathValues)));
+    }
+
+    @Test
+    public void testBuildJson() throws IOException {
+        List<Map<String, Object>> array = mapper.readValue(
+                new File("D:\\jw\\rest-doc\\restdoc-web\\src\\test\\kotlin\\restdoc\\web\\util\\project\\sample1.json"),
+                List.class);
+
+        List<PathValue> pathValues = array.stream()
+                .filter(t -> !"OBJECT".equals(t.get("type")) || !"ARRAY".equals(t.get("type")))
+                .map(t -> new PathValue((String) t.get("path"), t.get("value")))
+                .collect(Collectors.toList());
+
+        System.err.println(mapper.writerWithDefaultPrettyPrinter()
+                .writeValueAsString(new JsonProjector((pathValues)).projectToMap()));
+
+
     }
 
 }

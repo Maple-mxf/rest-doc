@@ -24,15 +24,11 @@
     "value": "SUCCESS"
   },
   {
-    "path": "content[0]",
+    "path": "sendDetail.content[0]",
     "value": null
   },
   {
     "path": "sendDetail.totalElements",
     "value": 1
-  },
-  {
-    "path": "content",
-    "value": null
   }
 ]

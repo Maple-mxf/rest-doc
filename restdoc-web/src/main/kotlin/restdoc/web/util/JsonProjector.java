@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import restdoc.web.core.Status;
 import restdoc.web.model.FieldType;
@@ -196,6 +197,8 @@ public class JsonProjector {
                         String field = matcher.group(1);
                         List<Integer> indexes = splitIndex(lastField.substring(field.length()));
 
+                        pathArray[pathArray.length - 1] = field;
+
                         List<String> indices = IntStream.range(0, indexes.size())
                                 .mapToObj(index ->
                                 {
@@ -204,19 +207,15 @@ public class JsonProjector {
                                             .map(i -> String.format("[%d]", i))
                                             .collect(Collectors.joining(""));
 
-                                    return String.join("", field, suffixIndices);
+                                    return String.join("", Joiner.on(".").join(pathArray), suffixIndices);
                                 })
                                 .collect(toList());
 
-                        List<String> arr = new ArrayList<>();
-                        arr.add(field);
-                        arr.addAll(indices);
-
-                        return IntStream.range(0, arr.size())
+                        return IntStream.range(0, indices.size())
                                 .mapToObj(i ->
-                                        (i < arr.size() - 1) ?
-                                                new PathValue(arr.get(i), null) :
-                                                new PathValue(arr.get(i), e.getValue())
+                                        (i < indices.size() - 1) ?
+                                                new PathValue(indices.get(i), null) :
+                                                new PathValue(indices.get(i), e.getValue())
 
                                 );
                     } else {
@@ -244,11 +243,6 @@ public class JsonProjector {
         this.nodes.addAll(pathValues.stream()
                 .map(pv -> new Node(pv.getPath(), pv.getValue(), FieldType.OBJECT, new ArrayList<>()))
                 .collect(toList()));
-
-        try {
-            System.err.println(mapper.writeValueAsString(nodes));
-        } catch (Throwable e) {
-        }
 
         // Find First level node
         List<Node> parentNodes = nodes.stream()

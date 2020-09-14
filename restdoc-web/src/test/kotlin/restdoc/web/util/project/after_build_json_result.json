@@ -1,0 +1,13 @@
+{
+  "sendDetail": {
+    "content": [
+      {
+        "name": "Kobe",
+        "recipient": "m17793873123@163.com",
+        "callback": false,
+        "state": "SUCCESS"
+      }
+    ],
+    "totalElements": 1
+  }
+}
