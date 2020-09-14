@@ -3,6 +3,7 @@ package restdoc.web.model
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
 import org.springframework.http.HttpMethod
+import restdoc.web.util.FieldType
 
 /**
  * @sample HttpHeaders
@@ -24,4 +25,45 @@ data class Document(
         val content: String? = null,
         var responseHeaderDescriptor: List<HeaderFieldDescriptor>? = null,
         val docType: DocType = DocType.API
+)
+
+/**
+ * API test uri history
+ */
+@Document(collection = "restdoc_test_history_address")
+data class HistoryAddress(val id: String, val address: String, val createTime: Long)
+
+
+data class HeaderFieldDescriptor(
+        val field: String,
+        val value: List<String>,
+        val description: String?,
+        val optional: Boolean = false
+)
+
+data class BodyFieldDescriptor(
+        var path: String,
+        val value: Any?,
+        val description: String?,
+        val type: FieldType = FieldType.OBJECT,
+        val optional: Boolean = false,
+        val defaultValue: Any?
+) {
+
+    override fun equals(other: Any?): Boolean {
+        if (other is BodyFieldDescriptor) {
+            return this.path.equals(other.path)
+        }
+        return super.equals(other)
+    }
+
+    override fun hashCode(): Int {
+        return super.hashCode()
+    }
+}
+
+data class URIVarDescriptor(
+        val field: String,
+        val value: Any?,
+        val description: String?
 )

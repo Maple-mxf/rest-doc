@@ -32,6 +32,19 @@ data class Project(
         /**
          *
          */
-        val type: ApplicationType = ApplicationType.REST_WEB
+        val type: ProjectType = ProjectType.REST_WEB
 )
 
+enum class ProjectType {
+
+    /**
+     * Default
+     */
+    REST_WEB,
+
+    /**
+     *
+     */
+    DUBBO,
+    SPRINGCLOUD
+}

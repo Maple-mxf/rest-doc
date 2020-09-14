@@ -2,15 +2,16 @@ package restdoc.web.controller.obj
 
 import restdoc.remoting.common.ApplicationType
 import restdoc.web.model.BodyFieldDescriptor
-import restdoc.web.model.FieldType
+import restdoc.web.util.FieldType
 import restdoc.web.model.HeaderFieldDescriptor
+import restdoc.web.model.ProjectType
 import restdoc.web.model.URIVarDescriptor
 import java.net.URI
 import javax.validation.constraints.NotBlank
 
-data class CreateProjectDto(val name: String, val desc: String?, val type: ApplicationType)
+data class CreateProjectDto(val name: String, val desc: String?, val type: ProjectType)
 
-data class UpdateProjectDto(val id: String, val name: String, val desc: String, val type: ApplicationType)
+data class UpdateProjectDto(val id: String, val name: String, val desc: String, val type: ProjectType)
 
 data class RequestDto(
         val projectId: String,

@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.*;
 import restdoc.web.core.Status;
 import restdoc.web.model.BodyFieldDescriptor;
-import restdoc.web.model.FieldType;
 
 import java.util.ArrayList;
 import java.util.Iterator;

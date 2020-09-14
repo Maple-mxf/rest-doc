@@ -1,4 +1,4 @@
-package restdoc.web.model
+package restdoc.web.util
 
 /**
  * @sample JSON
