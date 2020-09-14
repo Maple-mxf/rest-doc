@@ -236,6 +236,12 @@
                 btn: ['确认创建'],
                 yes: function (index, document) {
                     var res = window["layui-layer-iframe" + index].getFormData();
+
+                    if (res['name'] === '') {
+                        layer.msg("请填写项目名称"); return;
+                    }
+
+
                     $.ajax({
                         type: 'POST',
                         dataType: 'JSON',
@@ -246,14 +252,13 @@
                         success: function (data) {
                             if (data.code === "200") {
                                 layer.msg("创建成功");
+                                layer.close(index);
                                 renderPage()
                             } else {
                                 layer.msg(data.message)
                             }
                         }
                     });
-
-                    layer.close(index);
                 }
             });
         })
@@ -292,7 +297,10 @@
             yes: function (index, document) {
                 var res = window["layui-layer-iframe" + index].getFormData();
 
-                console.info(res);
+                if (res['name'] === '') {
+                    lay.msg("请填写项目名称"); return;
+                }
+
 
                 $.ajax({
                     type: 'PATCH',
