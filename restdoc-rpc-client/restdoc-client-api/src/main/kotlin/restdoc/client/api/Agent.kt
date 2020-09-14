@@ -30,6 +30,12 @@ interface Agent {
     fun disconnect()
 
     /**
+     * When the channel is close
+     * retry connect to server
+     */
+    fun reconnect()
+
+    /**
      * Get ServerRemoteAddress
      */
     fun getServerRemoteAddress(): String

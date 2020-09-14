@@ -44,6 +44,9 @@ class AgentImpl(private val agentConfigurationProperties: AgentConfigurationProp
         remotingClient.shutdown()
     }
 
+    override fun reconnect() {
+    }
+
     override fun getServerRemoteAddress(): String {
         return this.agentConfigurationProperties.host + ":" + this.agentConfigurationProperties.port
     }

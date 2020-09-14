@@ -1,11 +1,11 @@
 package restdoc.client
 
-import org.springframework.boot.SpringApplication
-import org.springframework.boot.SpringBootConfiguration
+import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.runApplication
 
-@SpringBootConfiguration
+@SpringBootApplication
 open class RestDocClientApplication
 
 fun main(args: Array<String>) {
-    SpringApplication.run(RestDocClientApplication::class.java)
+    runApplication<RestDocClientApplication>(*args)
 }
