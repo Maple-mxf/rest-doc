@@ -10,7 +10,4 @@ public interface RemotingService {
 
     void registerRPCHook(RPCHook rpcHook);
 
-    default Status getStatus() {
-        return Status.STOPPED;
-    }
 }

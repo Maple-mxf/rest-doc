@@ -55,7 +55,6 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
     private final ChannelEventListener channelEventListener;
     private DefaultEventExecutorGroup defaultEventExecutorGroup;
     private Bootstrap handler;
-    private volatile Status status = Status.STOPPED;
 
     public NettyRemotingClient(final NettyClientConfig nettyClientConfig) {
         this(nettyClientConfig, null);
@@ -152,18 +151,11 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
     @Override
     public void start() {
         synchronized (this) {
-            this.status = Status.STARTING;
-
-            if (this.status != Status.STOPPED) {
-                log.error("NettyRemotingClient not stopped; Please Stop it ; ");
-                return;
-            }
-
             try {
                 // 1 Start channel
                 startChannel();
 
-                // 2
+                // 2 Schedule timer task
                 this.timer.scheduleAtFixedRate(new TimerTask() {
                     @Override
                     public void run() {
@@ -175,14 +167,11 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
                     }
                 }, 1000 * 3, 1000);
 
-                // 3
+                // 3 start event executor
                 if (this.channelEventListener != null) this.nettyEventExecutor.start();
-
-                this.status = Status.STARTED;
 
             } catch (Exception e) {
                 e.printStackTrace();
-                this.status = Status.STOPPED;
             }
         }
     }
@@ -204,11 +193,6 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
             // 2 Start
             start();
         }
-    }
-
-    @Override
-    public Status getStatus() {
-        return this.status;
     }
 
     @Override
