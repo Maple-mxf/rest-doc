@@ -2,10 +2,8 @@ package restdoc.web.controller
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpMethod
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
+import restdoc.remoting.common.ApplicationType
 import restdoc.web.controller.obj.SyncApiEmptyTemplateDto
 import restdoc.web.core.ok
 import restdoc.web.core.schedule.ClientChannelManager
@@ -39,19 +37,21 @@ class ServiceClientController {
     lateinit var projectRepository: ProjectRepository
 
     @GetMapping("/serviceClient/list")
-    fun list(): Any {
+    fun list(@RequestParam type: ApplicationType): Any {
 
-        val services = clientChannelManager.clients.map {
-            mapOf(
-                    "id" to it.value.id,
-                    "remoteAddress" to it.value.clientId,
-                    "hostname" to it.value.hostname,
-                    "osname" to it.value.osname,
-                    "service" to it.value.service,
-                    "applicationType" to it.value.applicationType,
-                    "serializationProtocol" to it.value.serializationProtocol
-            )
-        }
+        val services = clientChannelManager.clients
+                .filter { it.value.applicationType == type }
+                .map {
+                    mapOf(
+                            "id" to it.value.id,
+                            "remoteAddress" to it.value.clientId,
+                            "hostname" to it.value.hostname,
+                            "osname" to it.value.osname,
+                            "service" to it.value.service,
+                            "applicationType" to it.value.applicationType,
+                            "serializationProtocol" to it.value.serializationProtocol
+                    )
+                }
                 .toList()
 
         val res = mutableMapOf<String, Any>()
