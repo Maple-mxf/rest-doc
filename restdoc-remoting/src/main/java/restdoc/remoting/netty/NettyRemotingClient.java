@@ -151,7 +151,6 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
 
     @Override
     public void start() {
-
         synchronized (this) {
             this.status = Status.STARTING;
 
@@ -159,13 +158,12 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
                 log.error("NettyRemotingClient not stopped; Please Stop it ; ");
                 return;
             }
-            
-            try {
-                ChannelFuture future = handler.connect(
-                        nettyClientConfig.getHost(),
-                        nettyClientConfig.getPort())
-                        .sync();
 
+            try {
+                // 1 Start channel
+                startChannel();
+
+                // 2
                 this.timer.scheduleAtFixedRate(new TimerTask() {
                     @Override
                     public void run() {
@@ -177,9 +175,8 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
                     }
                 }, 1000 * 3, 1000);
 
-                if (this.channelEventListener != null) {
-                    this.nettyEventExecutor.start();
-                }
+                // 3
+                if (this.channelEventListener != null) this.nettyEventExecutor.start();
 
                 this.status = Status.STARTED;
 
@@ -190,10 +187,22 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
         }
     }
 
+    private void startChannel() throws InterruptedException {
+        ChannelFuture future = handler.connect(
+                nettyClientConfig.getHost(),
+                nettyClientConfig.getPort())
+                .sync();
+    }
+
     @Override
     public void restart() throws InterruptedException {
         synchronized (this) {
 
+            // 1 Shutdown
+            shutdown();
+
+            // 2 Start
+            start();
         }
     }
 
