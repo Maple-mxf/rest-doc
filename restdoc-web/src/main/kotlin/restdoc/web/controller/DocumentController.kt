@@ -16,7 +16,6 @@ import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 import restdoc.remoting.common.body.HttpCommunicationCaptureBody
-import restdoc.web.base.auth.HolderKit
 import restdoc.web.controller.obj.CreateUpdateWikiDto
 import restdoc.web.controller.obj.RequestDto
 import restdoc.web.controller.obj.UpdateNodeDto
