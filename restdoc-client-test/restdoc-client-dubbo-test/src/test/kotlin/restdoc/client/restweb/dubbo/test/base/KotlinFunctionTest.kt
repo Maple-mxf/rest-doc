@@ -1,4 +1,4 @@
-package restdoc.client.dubbo.test.base
+package restdoc.client.restweb.dubbo.test.base
 
 import org.junit.Test
 

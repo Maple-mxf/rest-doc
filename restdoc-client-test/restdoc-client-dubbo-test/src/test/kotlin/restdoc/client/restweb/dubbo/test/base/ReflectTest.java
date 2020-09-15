@@ -1,7 +1,8 @@
-package restdoc.client.dubbo.test.base;
+package restdoc.client.restweb.dubbo.test.base;
 
 import org.junit.Test;
-import restdoc.client.dubbo.test.service.EchoService;
+import restdoc.client.restweb.dubbo.test.service.EchoService;
+import restdoc.client.restweb.dubbo.test.service.EchoService;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
