@@ -5,6 +5,7 @@ import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.util.concurrent.DefaultEventExecutorGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,7 +63,9 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
 
     public NettyRemotingClient(final NettyClientConfig nettyClientConfig,
                                final ChannelEventListener channelEventListener) {
+
         super(nettyClientConfig.getClientOnewaySemaphoreValue(), nettyClientConfig.getClientAsyncSemaphoreValue());
+
         this.nettyClientConfig = nettyClientConfig;
         this.channelEventListener = channelEventListener;
 
@@ -104,7 +107,6 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
         this.defaultEventExecutorGroup = new DefaultEventExecutorGroup(
                 nettyClientConfig.getClientWorkerThreads(),
                 new ThreadFactory() {
-
                     private AtomicInteger threadIndex = new AtomicInteger(0);
 
                     @Override
@@ -113,7 +115,8 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
                     }
                 });
 
-        handler = this.bootstrap.group(this.eventLoopGroupWorker).channel(NioSocketChannel.class)
+        handler = this.bootstrap.group(this.eventLoopGroupWorker)
+                .channel(NioSocketChannel.class)
                 .option(ChannelOption.TCP_NODELAY, true)
                 .option(ChannelOption.SO_KEEPALIVE, true)
                 .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, nettyClientConfig.getConnectTimeoutMillis())
@@ -135,7 +138,7 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
                                 defaultEventExecutorGroup,
                                 new RemotingCommandEncoder(),
                                 new RemotingCommandDecoder(),
-                                // new IdleStateHandler(0, 0, nettyClientConfig.getClientChannelMaxIdleTimeSeconds()),
+                                new IdleStateHandler(0, 0, nettyClientConfig.getClientChannelMaxIdleTimeSeconds()),
                                 new NettyConnectManageHandler(),
                                 new NettyClientHandler());
                     }
@@ -153,7 +156,7 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
         synchronized (this) {
             try {
                 // 1 Start channel
-                startChannel();
+                connect();
 
                 // 2 Schedule timer task
                 this.timer.scheduleAtFixedRate(new TimerTask() {
@@ -176,24 +179,11 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
         }
     }
 
-    public void startChannel() throws InterruptedException {
+    public void connect() throws InterruptedException {
         ChannelFuture future = handler.connect(
                 nettyClientConfig.getHost(),
                 nettyClientConfig.getPort())
                 .sync();
-    }
-
-    @Override
-    @Deprecated
-    public void restart() throws InterruptedException {
-        synchronized (this) {
-
-            // 1 Shutdown
-            shutdown();
-
-            // 2 Start
-            start();
-        }
     }
 
     @Override
@@ -663,8 +653,6 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
         @Override
         public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
 
-            // Not Handeler
-
             /*if (evt instanceof IdleStateEvent) {
                 IdleStateEvent event = (IdleStateEvent) evt;
                 if (event.state().equals(IdleState.ALL_IDLE)) {
@@ -677,6 +665,7 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
                     }
                 }
             }*/
+
             ctx.fireUserEventTriggered(evt);
         }
 

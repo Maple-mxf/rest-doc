@@ -222,11 +222,6 @@ public class NettyRemotingServer extends NettyRemotingAbstract implements Remoti
     }
 
     @Override
-    public void restart() throws InterruptedException {
-
-    }
-
-    @Override
     public void shutdown() {
         try {
             if (this.timer != null) {

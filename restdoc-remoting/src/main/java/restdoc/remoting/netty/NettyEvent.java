@@ -3,6 +3,7 @@ package restdoc.remoting.netty;
 import io.netty.channel.Channel;
 
 public class NettyEvent {
+
     private final NettyEventType type;
     private final String remoteAddr;
     private final Channel channel;
