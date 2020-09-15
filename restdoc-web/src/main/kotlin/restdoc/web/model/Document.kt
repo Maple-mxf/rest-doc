@@ -20,6 +20,7 @@ data class Document(
         var requestHeaderDescriptor: List<HeaderFieldDescriptor>?,
         var requestBodyDescriptor: List<BodyFieldDescriptor>?,
         var responseBodyDescriptors: List<BodyFieldDescriptor>?,
+        var queryParam: Map<String, Any>? = null,
         val method: HttpMethod = HttpMethod.GET,
         val uriVarDescriptors: List<URIVarDescriptor>?,
         val executeResult: Map<String, Any?>? = null,
