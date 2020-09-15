@@ -31,12 +31,10 @@ class ApplicationAPIRequestProcessor(private val exposedAPIManager: ExposedAPIMa
         when (ApplicationType.valueOf(on.get("applicationType").asText())) {
             ApplicationType.SPRINGCLOUD -> {
                 val body = RemotingSerializable.decode(request.body, SpringCloudExposeAPIBody::class.java)
-                // type: ApplicationType, serviceAddress: String, service: String, apiList: List<ExposedAPI>
                 exposedAPIManager.registerAPI(ApplicationType.SPRINGCLOUD, serviceAddress, body.service, body.apiList)
             }
             ApplicationType.DUBBO -> {
                 val body = RemotingSerializable.decode(request.body, DubboExposedAPIBody::class.java)
-                // type: ApplicationType, serviceAddress: String, service: String, apiList: List<ExposedAPI>
                 exposedAPIManager.registerAPI(ApplicationType.DUBBO, serviceAddress, body.service, body.apiList)
             }
             ApplicationType.REST_WEB -> {

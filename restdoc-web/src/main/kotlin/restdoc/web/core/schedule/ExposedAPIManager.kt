@@ -17,7 +17,7 @@ class ExposedAPIManager {
     /**
      *
      */
-    private val dubboExposedExposedAPI: MutableMap<APIContext, List<DubboExposedAPI>> = ConcurrentHashMap()
+    open val dubboExposedExposedAPI: MutableMap<APIContext, List<DubboExposedAPI>> = ConcurrentHashMap()
 
     /**
      *

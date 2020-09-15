@@ -13,16 +13,16 @@ import restdoc.remoting.common.RequestCode
 import restdoc.remoting.protocol.RemotingCommand
 import restdoc.remoting.protocol.RemotingSerializable
 import restdoc.web.core.ok
-import restdoc.web.core.schedule.*
+import restdoc.web.core.schedule.ExposedAPIManager
+import restdoc.web.core.schedule.RemotingTask
+import restdoc.web.core.schedule.RemotingTaskType
+import restdoc.web.core.schedule.ScheduleController
 
 @RestController
 class DubboExposedAPITest {
 
     @Autowired
     lateinit var exposedAPIManager: ExposedAPIManager
-
-    @Autowired
-    lateinit var clientChannelManager: ClientChannelManager
 
     @Autowired
     lateinit var scheduleController: ScheduleController

@@ -52,15 +52,12 @@ class ScheduleController @Autowired constructor(scheduleProperties: ScheduleProp
         val config = NettyServerConfig()
         config.listenPort = scheduleProperties.port
         remotingServer = NettyRemotingServer(config)
-    }
 
-    fun initialize() {
         this.remotingServer.registerProcessor(RequestCode.REPORT_CLIENT_INFO, applicationClientRequestProcessor, null)
         this.remotingServer.registerProcessor(RequestCode.REPORT_EXPOSED_API, applicationAPIRequestProcessor, null)
     }
 
     override fun run(vararg args: String?) {
-        this.initialize()
 
         this.thread.start()
 
