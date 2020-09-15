@@ -27,13 +27,32 @@ class DubboInvokerImpl(private val beanManager: DubboRefBeanManager) : Invoker<D
         val method = bean.javaClass.getMethod(t.methodName, *paramTypes)
         method.isAccessible = true
 
-        val returnValue = method.invoke(bean, *params)
+        try {
+            val returnValue = method.invoke(bean, *params)
+            return if (returnValue == null) {
+                DubboInvocationResult(
+                        isSuccessful = true,
+                        exceptionMsg = null,
+                        invocation = t,
+                        returnValue = null,
+                        returnValueType = method.returnType)
+            } else {
+                DubboInvocationResult(
+                        isSuccessful = false,
+                        exceptionMsg = null,
+                        invocation = t,
+                        returnValue = returnValue,
+                        returnValueType = method.returnType)
 
-        return if (returnValue == null) {
-            DubboInvocationResult(isSuccessful = true, exceptionMsg = null, returnValue = null, returnValueType = method.returnType)
-        } else {
-            DubboInvocationResult(isSuccessful = false, exceptionMsg = null, returnValue = returnValue, returnValueType = method.returnType)
-
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return DubboInvocationResult(
+                    isSuccessful = false,
+                    exceptionMsg = e.message,
+                    invocation = t,
+                    returnValue = null,
+                    returnValueType = method.returnType)
         }
     }
 
