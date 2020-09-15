@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
 import restdoc.client.api.*
 import restdoc.client.restweb.context.EndpointsListener
+import restdoc.client.restweb.handler.RestWebInvokerAPIHandler
 import restdoc.remoting.InvokeCallback
 import restdoc.remoting.common.ApplicationType
 import restdoc.remoting.common.RemotingUtil
@@ -32,15 +33,23 @@ open class RestWebAgentClientConfiguration : AgentClientConfiguration {
     @Autowired
     lateinit var endpointsListener: EndpointsListener
 
+    @Autowired
+    lateinit var restWebInvokerAPIHandler: RestWebInvokerAPIHandler
+
     override fun getAgent() = this.agentImpl
 
     /**
-     *
+     * Hook The task
      */
     override fun hook(): AgentHook {
         return object : AgentHook {
             override fun beforeStart() = listOf<AgentCallback>()
-            override fun afterStart() = listOf<AgentCallback>()
+            override fun afterStart(): List<AgentCallback> {
+                return listOf<AgentCallback> {
+                    it.invoke(reportExposedInterfacesTask)
+                    it.invoke(reportClientInfoTask)
+                }
+            }
         }
     }
 
@@ -59,6 +68,7 @@ open class RestWebAgentClientConfiguration : AgentClientConfiguration {
      * Request process handelr
      */
     override fun registryRemotingHandler() {
+        agentImpl.addHandler(RequestCode.INVOKE_API, restWebInvokerAPIHandler)
     }
 
 

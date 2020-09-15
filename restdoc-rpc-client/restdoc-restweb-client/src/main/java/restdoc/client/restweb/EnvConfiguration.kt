@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.core.env.Environment
 import org.springframework.web.client.RestTemplate
 import restdoc.client.restweb.context.EndpointsListener
+import restdoc.client.restweb.handler.RestWebInvokerAPIHandler
 
 /**
  * @author Overman
@@ -24,4 +25,8 @@ open class EnvConfiguration {
     @Bean
     @ConditionalOnMissingBean
     open fun restTemplate() = RestTemplate()
+
+    @Bean
+    @ConditionalOnMissingBean
+    open fun restWebInvokerAPIHandler(restWebInvokerImpl: RestWebInvokerImpl) = RestWebInvokerAPIHandler(restWebInvokerImpl)
 }
