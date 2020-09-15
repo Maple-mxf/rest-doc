@@ -19,7 +19,7 @@ class DubboInvokerAPIHandler(val dubboInvokerImpl: DubboInvokerImpl) : NettyRequ
 
     override fun processRequest(ctx: ChannelHandlerContext, request: RemotingCommand): RemotingCommand {
         val invocation = RemotingSerializable.decode(request.body, DubboInvocation::class.java)
-        val invocationResult = dubboInvokerImpl.invoke(invocation)
+        val invocationResult = dubboInvokerImpl.rpcInvoke(invocation)
 
         val response = RemotingCommand.createResponseCommand(RemotingSysResponseCode.SUCCESS, null)
         response.body = invocationResult.encode()

@@ -7,11 +7,11 @@ import restdoc.client.api.model.InvocationResult
 /**
  * The Invoker class provided invoke service abstract
  */
-interface Invoker<T : Invocation, R> {
+interface Invoker<T : Invocation> {
 
 
     /**
      * Invoke target service
      */
-    fun invoke(t: T): InvocationResult<R>
+    fun rpcInvoke(t: T): InvocationResult
 }

@@ -9,8 +9,6 @@ import org.springframework.context.annotation.Configuration
 @EnableConfigurationProperties(value = [AgentConfigurationProperties::class])
 open class AgentConfiguration {
 
-    @Bean
-    @ConditionalOnMissingBean
-    open fun agentImpl(agentConfigurationProperties: AgentConfigurationProperties): AgentImpl =
-            AgentImpl(agentConfigurationProperties)
+    @Bean @ConditionalOnMissingBean
+    open fun agentImpl(agentConfigurationProperties: AgentConfigurationProperties) = AgentImpl(agentConfigurationProperties)
 }
