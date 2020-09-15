@@ -7,6 +7,8 @@ import restdoc.remoting.netty.NettyRequestProcessor
 import restdoc.remoting.protocol.RemotingCommand
 import restdoc.remoting.protocol.RemotingSysResponseCode
 
+
+@Deprecated(message = "PostEmptyApiTemplateRequestProcessor")
 class PostEmptyApiTemplateRequestProcessor(private val endpointsListener: EndpointsListener) : NettyRequestProcessor {
 
     @Throws(Exception::class)

@@ -1,4 +1,4 @@
-package restdoc.client.restweb.dubbo.test
+package restdoc.client.dubbo.test
 
 import org.apache.dubbo.config.spring.context.annotation.EnableDubbo
 import org.springframework.boot.autoconfigure.SpringBootApplication

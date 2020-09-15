@@ -22,12 +22,13 @@ import restdoc.remoting.protocol.RemotingCommand
  *
  * Establish channel
  */
+@Deprecated(message = "HttpApplicationAgent")
 class HttpApplicationAgent(restDocProperties: RestDocProperties,
-                           httpTaskRequestProcessor: _root_ide_package_.restdoc.client.restweb.remoting.HttpTaskRequestProcessor,
+                           httpTaskRequestProcessor: HttpTaskRequestProcessor,
                            postEmptyApiTemplateRequestProcessor: PostEmptyApiTemplateRequestProcessor) {
 
     private val state = State.STOPPED
-    private val httpTaskRequestProcessor: _root_ide_package_.restdoc.client.restweb.remoting.HttpTaskRequestProcessor
+    private val httpTaskRequestProcessor: HttpTaskRequestProcessor
     private val postEmptyApiTemplateRequestProcessor: PostEmptyApiTemplateRequestProcessor
 
     private enum class State {

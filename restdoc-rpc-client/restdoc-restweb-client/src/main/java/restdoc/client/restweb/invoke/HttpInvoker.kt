@@ -8,6 +8,7 @@ import org.springframework.web.client.RestTemplate
 import restdoc.remoting.common.body.HttpCommunicationCaptureBody
 import java.util.*
 
+@Deprecated(message = "HttpInvoker")
 open class HttpInvoker(private val restTemplate: RestTemplate, environment: Environment) {
     private val port: Int
     private val contextPath: String
