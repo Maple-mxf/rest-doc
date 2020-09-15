@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Import
 import org.springframework.util.CollectionUtils
 import restdoc.client.dubbo.handler.DubboInvokerAPIHandler
 import restdoc.client.dubbo.model.ServiceDescriptor
+import restdoc.client.api.*
 import restdoc.remoting.InvokeCallback
 import restdoc.remoting.common.ApplicationType
 import restdoc.remoting.common.DubboExposedAPI

@@ -2,8 +2,8 @@ package restdoc.client.dubbo.handler
 
 import io.netty.channel.ChannelHandlerContext
 import org.springframework.stereotype.Component
-import restdoc.client.api.model.DubboInvocation
 import restdoc.client.dubbo.DubboInvokerImpl
+import restdoc.client.api.model.DubboInvocation
 import restdoc.remoting.netty.NettyRequestProcessor
 import restdoc.remoting.protocol.RemotingCommand
 import restdoc.remoting.protocol.RemotingSerializable
