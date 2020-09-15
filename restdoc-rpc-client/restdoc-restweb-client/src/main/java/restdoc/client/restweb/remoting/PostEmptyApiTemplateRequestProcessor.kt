@@ -16,7 +16,7 @@ class PostEmptyApiTemplateRequestProcessor(private val endpointsListener: Endpoi
         val response = RemotingCommand.createResponseCommand(RemotingSysResponseCode.SUCCESS,
                 "OK")
         val body = RestWebExposedAPIBody()
-        body.apiList = endpointsListener.emptyApiTemplates
+        body.apiList = endpointsListener.restWebExposedAPIList
         response.body = body.encode()
         return response
     }

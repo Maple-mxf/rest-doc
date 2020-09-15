@@ -24,7 +24,7 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
 
     private static Logger log = LoggerFactory.getLogger(EndpointsListener.class);
 
-    private List<RestWebExposedAPI> emptyApiTemplates;
+    private List<RestWebExposedAPI> restWebExposedAPIList;
 
     private final Environment environment;
 
@@ -45,7 +45,7 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
         // because of The one handler method has many request pattern
 
         // final report the emptyApiTemplates to remoting server
-        this.emptyApiTemplates = handlerMethods.entrySet()
+        this.restWebExposedAPIList = handlerMethods.entrySet()
                 .stream()
                 .flatMap(hm -> {
                     RequestMappingInfo requestMappingInfo = hm.getKey();
@@ -96,10 +96,10 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
                             });
                 }).collect(Collectors.toList());
 
-        log.info("RESTDOC-CLIENT collect api empty templates {} ", emptyApiTemplates);
+        log.info("RESTDOC-CLIENT collect api empty templates {} ", restWebExposedAPIList);
     }
 
-    public List<RestWebExposedAPI> getEmptyApiTemplates() {
-        return emptyApiTemplates;
+    public List<RestWebExposedAPI> getRestWebExposedAPIList() {
+        return restWebExposedAPIList;
     }
 }

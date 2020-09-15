@@ -5,14 +5,13 @@ import org.apache.dubbo.config.context.ConfigManager
 import org.apache.dubbo.config.spring.ServiceBean
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory
-import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
 import org.springframework.util.CollectionUtils
+import restdoc.client.api.*
 import restdoc.client.dubbo.handler.DubboInvokerAPIHandler
 import restdoc.client.dubbo.model.ServiceDescriptor
-import restdoc.client.api.*
 import restdoc.remoting.InvokeCallback
 import restdoc.remoting.common.ApplicationType
 import restdoc.remoting.common.DubboExposedAPI
@@ -25,7 +24,7 @@ import restdoc.remoting.protocol.RemotingCommand
 @Configuration
 @Import(AgentConfiguration::class, DubboInvokerImpl::class, DubboInvokerAPIHandler::class, DubboRefBeanManager::class)
 @ConditionalOnClass(value = [AgentConfiguration::class])
-open class DubboAgentClientConfiguration : CommandLineRunner {
+open class DubboAgentClientConfiguration : AgentClientConfiguration {
 
     @Autowired
     lateinit var beanFactory: ConfigurableListableBeanFactory
@@ -42,34 +41,18 @@ open class DubboAgentClientConfiguration : CommandLineRunner {
     @Autowired
     lateinit var agentImpl: AgentImpl
 
-    override fun run(vararg args: String?) {
-        // 1 Registry remote task
-        registryTask()
-
-        // 2 Start client agent
-        agentImpl.start()
-
-        // 3 Registry client request handler
-        registryHandler()
-
-        // 4 Invoke report client exposed task
-        agentImpl.invoke(reportExposedInterfacesTask)
-        agentImpl.invoke(reportClientInfoTask)
-    }
-
-    private fun registryHandler() {
-
-        // 1 Add invoke api handler
-        agentImpl.addHandler(RequestCode.INVOKE_API, dubboInvokerAPIHandler)
-    }
-
-    private fun registryTask() {
-
-        // 1 Generate report client info interfaces
-        agentImpl.addTask(reportClientInfoTask())
-
-        // 2 Generate report dubbo application exposed interfaces
-        agentImpl.addTask(reportExposedInterfacesTask())
+    override fun hook(): AgentHook {
+        val hook = object : AgentHook {
+            override fun beforeStart(): List<AgentCallback> = listOf()
+            override fun afterStart(): List<AgentCallback> {
+                val invokeTask: AgentCallback = {
+                    it.invoke(reportExposedInterfacesTask)
+                    it.invoke(reportClientInfoTask)
+                }
+                return listOf(invokeTask)
+            }
+        }
+        return hook
     }
 
     private fun reportClientInfoTask(): RemotingTask {
@@ -143,4 +126,26 @@ open class DubboAgentClientConfiguration : CommandLineRunner {
                 timeoutMills = 1000000L,
                 invokeCallback = InvokeCallback { })
     }
+
+    /**
+     * registryRemotingTask
+     */
+    override fun registryRemotingTask() {
+
+        // 1 Generate report client info interfaces
+        agentImpl.addTask(reportClientInfoTask())
+
+        // 2 Generate report dubbo application exposed interfaces
+        agentImpl.addTask(reportExposedInterfacesTask())
+    }
+
+    /**
+     * Request process handelr
+     */
+    override fun registryRemotingHandler() {
+        // 1 Add invoke api handler
+        agentImpl.addHandler(RequestCode.INVOKE_API, dubboInvokerAPIHandler)
+    }
+
+    override fun getAgent(): Agent = this.agentImpl
 }
