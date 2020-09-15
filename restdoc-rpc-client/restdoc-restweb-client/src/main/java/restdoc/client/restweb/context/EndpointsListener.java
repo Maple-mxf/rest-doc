@@ -19,6 +19,8 @@ import java.util.stream.Collectors;
 
 /**
  * The EndpointsListener provided report client api list info to server
+ *
+ * @author Overman
  */
 public class EndpointsListener implements ApplicationListener<ContextRefreshedEvent> {
 

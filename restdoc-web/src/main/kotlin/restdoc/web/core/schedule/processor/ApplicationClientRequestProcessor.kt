@@ -33,12 +33,14 @@ class ApplicationClientRequestProcessor(private val clientManager: ClientChannel
                 "tcp://${address.address.hostAddress}:${address.port}",
                 LanguageCode.JAVA,
                 1)
+                .apply {
+                    hostname = body.hostname
+                    osname = body.osname
+                    service = body.service
+                    serializationProtocol = body.serializationProtocol
+                    applicationType = body.applicationType
+                }
 
-        clientChannelInfo.hostname = body.hostname
-        clientChannelInfo.osname = body.osname
-        clientChannelInfo.service = body.service
-        clientChannelInfo.serializationProtocol = body.serializationProtocol
-        clientChannelInfo.applicationType = body.applicationType
 
         clientManager.registerClient(clientChannelInfo.id, clientChannelInfo)
 
