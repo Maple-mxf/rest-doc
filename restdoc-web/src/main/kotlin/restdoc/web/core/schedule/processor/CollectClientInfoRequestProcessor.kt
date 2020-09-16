@@ -17,7 +17,7 @@ import java.net.InetSocketAddress
  * ApplicationClientRequestProcessor
  */
 @Component
-class ApplicationClientRequestProcessor(private val clientManager: ClientChannelManager) : NettyRequestProcessor {
+class CollectClientInfoRequestProcessor(private val clientManager: ClientChannelManager) : NettyRequestProcessor {
 
     override fun rejectRequest(): Boolean {
         return false

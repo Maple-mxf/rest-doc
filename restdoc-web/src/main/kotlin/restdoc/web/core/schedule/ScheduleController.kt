@@ -20,20 +20,20 @@ import restdoc.remoting.protocol.RemotingSerializable
 import restdoc.remoting.protocol.RemotingSysResponseCode
 import restdoc.web.core.ServiceException
 import restdoc.web.core.Status
-import restdoc.web.core.schedule.processor.ApplicationAPIRequestProcessor
-import restdoc.web.core.schedule.processor.ApplicationClientRequestProcessor
+import restdoc.web.core.schedule.processor.CollectClientAPIRequestProcessor
+import restdoc.web.core.schedule.processor.CollectClientInfoRequestProcessor
 import java.util.concurrent.CopyOnWriteArrayList
 
 /**
  * ScheduleServer provided the tcp server dashboard
  *
- * @author ubuntu-m
+ * @author Overman
  */
 @Component
 class ScheduleController @Autowired constructor(scheduleProperties: ScheduleProperties,
                                                 private val clientManager: ClientChannelManager,
-                                                private val applicationClientRequestProcessor: ApplicationClientRequestProcessor,
-                                                private val applicationAPIRequestProcessor: ApplicationAPIRequestProcessor
+                                                collectClientInfoRequestProcessor: CollectClientInfoRequestProcessor,
+                                                collectClientAPIRequestProcessor: CollectClientAPIRequestProcessor
 ) : CommandLineRunner {
 
     private val log: Logger = LoggerFactory.getLogger(ScheduleController::class.java)
@@ -53,8 +53,8 @@ class ScheduleController @Autowired constructor(scheduleProperties: ScheduleProp
         config.listenPort = scheduleProperties.port
         remotingServer = NettyRemotingServer(config)
 
-        this.remotingServer.registerProcessor(RequestCode.REPORT_CLIENT_INFO, applicationClientRequestProcessor, null)
-        this.remotingServer.registerProcessor(RequestCode.REPORT_EXPOSED_API, applicationAPIRequestProcessor, null)
+        this.remotingServer.registerProcessor(RequestCode.REPORT_CLIENT_INFO, collectClientInfoRequestProcessor, null)
+        this.remotingServer.registerProcessor(RequestCode.REPORT_EXPOSED_API, collectClientAPIRequestProcessor, null)
     }
 
     override fun run(vararg args: String?) {

@@ -5,7 +5,7 @@ import restdoc.remoting.common.*
 import java.util.concurrent.ConcurrentHashMap
 
 @Component
-class ExposedAPIManager {
+class ClientExposedAPIManager {
 
     inner class APIContext(val address: String, val service: String)
 

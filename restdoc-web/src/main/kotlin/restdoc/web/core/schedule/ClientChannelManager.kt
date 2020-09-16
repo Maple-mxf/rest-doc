@@ -30,7 +30,7 @@ class ClientChannelManager(var mapper: ObjectMapper) : CommandLineRunner {
 
     fun findClientByRemoteAddress(address: String): ApplicationClientInfo? {
 
-        clients.filter { it.value.clientId == address }.forEach{
+        clients.filter { it.value.clientId == address }.forEach {
             println(it.key)
         }
 
@@ -39,7 +39,7 @@ class ClientChannelManager(var mapper: ObjectMapper) : CommandLineRunner {
     }
 
     fun list(): List<ApplicationClientInfo?> {
-        return ArrayList(clients.values)
+        return clients.values.toList()
     }
 
     @Throws(Exception::class) override fun run(vararg args: String?) {

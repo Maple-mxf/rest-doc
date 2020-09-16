@@ -11,13 +11,13 @@ import restdoc.web.controller.obj.NavNode
 import restdoc.web.controller.obj.NodeType
 import restdoc.web.controller.obj.ROOT_NAV
 import restdoc.web.core.ok
-import restdoc.web.core.schedule.ExposedAPIManager
+import restdoc.web.core.schedule.ClientExposedAPIManager
 
 @RestController
 class MicroserviceController {
 
     @Autowired
-    lateinit var exposedAPIManager: ExposedAPIManager
+    lateinit var clientExposedAPIManager: ClientExposedAPIManager
 
     @GetMapping("/microservice/{id}/exposedapi")
     fun getExposedAPI(@PathVariable id: String,
@@ -25,7 +25,7 @@ class MicroserviceController {
 
         val applicationType = ApplicationType.valueOf(ap.toUpperCase())
 
-        val apiList = exposedAPIManager.listBy(applicationType, id)
+        val apiList = clientExposedAPIManager.listBy(applicationType, id)
 
         return when (applicationType) {
             ApplicationType.DUBBO -> {

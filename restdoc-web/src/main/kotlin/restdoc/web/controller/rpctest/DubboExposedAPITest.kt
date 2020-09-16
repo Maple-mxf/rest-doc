@@ -13,7 +13,7 @@ import restdoc.remoting.common.RequestCode
 import restdoc.remoting.protocol.RemotingCommand
 import restdoc.remoting.protocol.RemotingSerializable
 import restdoc.web.core.ok
-import restdoc.web.core.schedule.ExposedAPIManager
+import restdoc.web.core.schedule.ClientExposedAPIManager
 import restdoc.web.core.schedule.RemotingTask
 import restdoc.web.core.schedule.RemotingTaskType
 import restdoc.web.core.schedule.ScheduleController
@@ -22,7 +22,7 @@ import restdoc.web.core.schedule.ScheduleController
 class DubboExposedAPITest {
 
     @Autowired
-    lateinit var exposedAPIManager: ExposedAPIManager
+    lateinit var clientExposedAPIManager: ClientExposedAPIManager
 
     @Autowired
     lateinit var scheduleController: ScheduleController
@@ -30,9 +30,9 @@ class DubboExposedAPITest {
 
     @GetMapping("/invokeSimpleDubboAPI")
     fun invokeSimpleDubboAPI(): Any {
-        val apiList = exposedAPIManager.listBy(ApplicationType.DUBBO, "echo-service-provider") as List<DubboExposedAPI>
+        val apiList = clientExposedAPIManager.listBy(ApplicationType.DUBBO, "echo-service-provider") as List<DubboExposedAPI>
 
-        val pair = exposedAPIManager.dubboExposedExposedAPI
+        val pair = clientExposedAPIManager.dubboExposedExposedAPI
                 .filter { it.key.service == "echo-service-provider" }
                 .map { it.key.address to it.value }
                 .first()

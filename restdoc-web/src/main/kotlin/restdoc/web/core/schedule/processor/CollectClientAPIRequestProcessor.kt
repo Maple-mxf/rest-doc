@@ -10,14 +10,14 @@ import restdoc.remoting.netty.NettyRequestProcessor
 import restdoc.remoting.protocol.RemotingCommand
 import restdoc.remoting.protocol.RemotingSerializable
 import restdoc.remoting.protocol.RemotingSysResponseCode
-import restdoc.web.core.schedule.ExposedAPIManager
+import restdoc.web.core.schedule.ClientExposedAPIManager
 import java.net.InetSocketAddress
 
 /**
  * The ApplicationAPIRequestProcessor provided collect client api service
  */
 @Component
-class ApplicationAPIRequestProcessor(private val exposedAPIManager: ExposedAPIManager) : NettyRequestProcessor {
+class CollectClientAPIRequestProcessor(private val clientExposedAPIManager: ClientExposedAPIManager) : NettyRequestProcessor {
 
     override fun rejectRequest(): Boolean = false
 
@@ -31,15 +31,15 @@ class ApplicationAPIRequestProcessor(private val exposedAPIManager: ExposedAPIMa
         when (ApplicationType.valueOf(on.get("applicationType").asText())) {
             ApplicationType.SPRINGCLOUD -> {
                 val body = RemotingSerializable.decode(request.body, SpringCloudExposeAPIBody::class.java)
-                exposedAPIManager.registerAPI(ApplicationType.SPRINGCLOUD, serviceAddress, body.service, body.apiList)
+                clientExposedAPIManager.registerAPI(ApplicationType.SPRINGCLOUD, serviceAddress, body.service, body.apiList)
             }
             ApplicationType.DUBBO -> {
                 val body = RemotingSerializable.decode(request.body, DubboExposedAPIBody::class.java)
-                exposedAPIManager.registerAPI(ApplicationType.DUBBO, serviceAddress, body.service, body.apiList)
+                clientExposedAPIManager.registerAPI(ApplicationType.DUBBO, serviceAddress, body.service, body.apiList)
             }
             ApplicationType.REST_WEB -> {
                 val body = RemotingSerializable.decode(request.body, RestWebExposedAPIBody::class.java)
-                exposedAPIManager.registerAPI(ApplicationType.REST_WEB, serviceAddress, body.service, body.apiList)
+                clientExposedAPIManager.registerAPI(ApplicationType.REST_WEB, serviceAddress, body.service, body.apiList)
             }
             else -> {
                 println("Error")

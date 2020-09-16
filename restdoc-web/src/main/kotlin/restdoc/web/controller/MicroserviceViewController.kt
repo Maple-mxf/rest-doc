@@ -10,7 +10,7 @@ import restdoc.remoting.common.ApplicationType
 import restdoc.remoting.common.DubboExposedAPI
 import restdoc.web.core.Status
 import restdoc.web.core.schedule.ClientChannelManager
-import restdoc.web.core.schedule.ExposedAPIManager
+import restdoc.web.core.schedule.ClientExposedAPIManager
 
 @Controller
 class MicroserviceViewController {
@@ -19,7 +19,7 @@ class MicroserviceViewController {
     lateinit var clientChannelManager: ClientChannelManager
 
     @Autowired
-    lateinit var exposedAPIManager: ExposedAPIManager
+    lateinit var clientExposedAPIManager: ClientExposedAPIManager
 
     @GetMapping("/microservice/view/index")
     fun index() = "microservice/index"
@@ -28,7 +28,7 @@ class MicroserviceViewController {
     fun detail(@PathVariable service: String, @PathVariable id: String,
                @RequestParam ap: ApplicationType, model: Model): String {
 
-        val apiList = exposedAPIManager.listBy(ap, service) as List<DubboExposedAPI>
+        val apiList = clientExposedAPIManager.listBy(ap, service) as List<DubboExposedAPI>
 
         val methodDetail = apiList.flatMap { it.exposedMethods }
                 .first { id == it.methodName + "->" + it.parameterClasses.joinToString("-") }
