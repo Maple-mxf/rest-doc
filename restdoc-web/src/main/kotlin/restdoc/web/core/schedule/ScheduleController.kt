@@ -66,7 +66,7 @@ class ScheduleController @Autowired constructor(scheduleProperties: ScheduleProp
     }
 
 
-    fun executeRemotingTask(clientId: String,  remotingTask: RemotingTask): RemotingTaskExecuteResult {
+    fun executeRemotingTask(clientId: String, remotingTask: RemotingTask): RemotingTaskExecuteResult {
         val clientChannelInfo = clientManager.findClientByRemoteAddress(clientId)
         val channel = clientChannelInfo!!.channel
 
@@ -87,7 +87,6 @@ class ScheduleController @Autowired constructor(scheduleProperties: ScheduleProp
         }
     }
 
-    @Deprecated(message = "")
     @Throws(InterruptedException::class,
             RemotingTimeoutException::class,
             RemotingSendRequestException::class,
