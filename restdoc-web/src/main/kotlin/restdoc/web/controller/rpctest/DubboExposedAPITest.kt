@@ -47,7 +47,7 @@ class DubboExposedAPITest {
 //                request.body = n
                 val dubboInvocation = DubboInvocation(
                         method.methodName,
-                        listOf<ObjectHolder<Any>>(ObjectHolder<Any>(String::class.java.name, "HelloWorld")),
+                        listOf(ObjectHolder<Any>(String::class.java.name, "HelloWorld")),
                         refName = api.refName,
                         returnType = method.returnClass
                 )
