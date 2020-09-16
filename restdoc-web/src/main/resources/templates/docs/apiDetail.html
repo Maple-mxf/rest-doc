@@ -50,6 +50,15 @@
             text-decoration: underline #dadada;
         }
 
+        .layui-table td, .layui-table th {
+            color: #0C0C0C;
+            font-size: 15px;
+        }
+
+        th {
+            font-weight: 600;
+        }
+
     </style>
 
 </head>
@@ -61,32 +70,32 @@
 
 <div class="layui-container">
     <div class="layui-row">
-        <div class="layui-col-md9">
+        <div class="layui-col-md10">
             <div class="layui-row">
 
                 <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
                     <legend style="font-weight: bold">API基本信息</legend>
                 </fieldset>
-                <table class="layui-table" lay-skin="line" style="font-size: 17px">
+                <table class="layui-table" lay-skin="line" lay-size="lg">
                     <tr>
-                        <th>API</th>
-                        <th th:text="${document.name}"></th>
+                        <td>API</td>
+                        <td th:text="${document.name}"></td>
                     </tr>
                     <tr>
-                        <th>方法</th>
-                        <th th:text="${document.method}"></th>
+                        <td>方法</td>
+                        <td th:text="${document.method}"></td>
                     </tr>
                     <tr>
-                        <th>地址</th>
-                        <th th:text="${document.url}"></th>
+                        <td>地址</td>
+                        <td th:text="${document.url}"></td>
                     </tr>
                     <tr>
                         <th>资源</th>
-                        <th th:text="${resource}"></th>
+                        <td th:text="${resource}"></td>
                     </tr>
                     <tr>
                         <th>描述</th>
-                        <th th:utext="${document.description}"></th>
+                        <td th:utext="${document.description}"></td>
                     </tr>
                 </table>
 
@@ -97,11 +106,12 @@
                 <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
                     <legend style="font-weight: bold">请求头参数列表</legend>
                 </fieldset>
-                <table class="layui-table">
+                <table class="layui-table" lay-size="lg">
                     <colgroup>
-                        <col width="150">
                         <col width="200">
-                        <col>
+                        <col width="200">
+                        <col width="200">
+                        <col width="200">
                     </colgroup>
                     <thead>
                     <tr>
@@ -131,11 +141,13 @@
                 <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
                     <legend style="font-weight: bold">请求参数列表</legend>
                 </fieldset>
-                <table class="layui-table">
+                <table class="layui-table" lay-size="lg">
                     <colgroup>
-                        <col width="150">
                         <col width="200">
-                        <col>
+                        <col width="200">
+                        <col width="200">
+                        <col width="200">
+                        <col width="200">
                     </colgroup>
                     <thead>
                     <tr>
@@ -169,11 +181,13 @@
                 <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
                     <legend style="font-weight: bold">响应参数列表</legend>
                 </fieldset>
-                <table class="layui-table">
+                <table class="layui-table" lay-size="lg">
                     <colgroup>
-                        <col width="150">
                         <col width="200">
-                        <col>
+                        <col width="200">
+                        <col width="200">
+                        <col width="200">
+                        <col width="200">
                     </colgroup>
                     <thead>
                     <tr>
@@ -208,13 +222,13 @@
                   </pre>
             </div>
         </div>
-        <div class="layui-col-md3">
+        <div class="layui-col-md2">
             <div style="margin-top: 10%">
                 <a th:href="@{'/'+${projectId}+'/document/view/'+${document.id}+'/test'}" class="layui-btn"
                    target="_blank" style="margin-left: 10px">去调试</a>
-                <button class="layui-btn layui-btn-primary"
+                <!--<button class="layui-btn layui-btn-primary"
                         id="copyDocLink">复制访问链接
-                </button>
+                </button>-->
             </div>
         </div>
     </div>
