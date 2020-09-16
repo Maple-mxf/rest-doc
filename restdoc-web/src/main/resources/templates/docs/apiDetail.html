@@ -55,6 +55,12 @@
             font-size: 15px;
         }
 
+        .layui-table th{
+            font-weight: bold;
+        }
+
+
+
     </style>
 
 </head>
@@ -70,20 +76,11 @@
             <div class="layui-row">
 
                 <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-                    <legend style="font-weight: bold">API基本信息</legend>
+                    <legend style="font-weight: bold" th:text="${document.name}"></legend>
                 </fieldset>
                 <table class="layui-table" lay-skin="line" lay-size="lg">
                     <tr>
-                        <td>API</td>
-                        <td th:text="${document.name}"></td>
-                    </tr>
-                    <tr>
-                        <td>方法</td>
-                        <td th:text="${document.method}"></td>
-                    </tr>
-                    <tr>
-                        <td>地址</td>
-                        <td th:text="${document.url}"></td>
+                        <td th:text="'HTTP1.1' +${document.method}+ ' '+${document.url} "></td>
                     </tr>
                     <tr>
                         <th>资源</th>
