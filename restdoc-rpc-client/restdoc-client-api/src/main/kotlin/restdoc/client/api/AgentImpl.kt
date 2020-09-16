@@ -58,7 +58,6 @@ class AgentImpl(private val agentConfigurationProperties: AgentConfigurationProp
     }
 
     override fun reconnect() {
-
     }
 
     override fun getServerRemoteAddress(): String {

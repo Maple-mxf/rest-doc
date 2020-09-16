@@ -90,13 +90,17 @@ data class RestWebDocument(
          */
         var name: String?,
 
+
         /**
          *
          */
         var resource: String,
 
         /**
+         * No ip or domain
+         * and no port,net protocol
          *
+         * This field example:/{contextPath}/...
          */
         val url: String,
 

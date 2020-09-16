@@ -18,6 +18,7 @@ import restdoc.client.api.model.RestWebInvocation
 import restdoc.client.api.model.RestWebInvocationResult
 import restdoc.web.controller.obj.CreateUpdateWikiDto
 import restdoc.web.controller.obj.RequestDto
+import restdoc.web.controller.obj.SyncApiEmptyTemplateDto
 import restdoc.web.controller.obj.UpdateNodeDto
 import restdoc.web.core.Result
 import restdoc.web.core.Status
@@ -25,8 +26,8 @@ import restdoc.web.core.failure
 import restdoc.web.core.ok
 import restdoc.web.core.schedule.ScheduleController
 import restdoc.web.model.*
-import restdoc.web.repository.RestWebDocumentRepository
 import restdoc.web.repository.ProjectRepository
+import restdoc.web.repository.RestWebDocumentRepository
 import restdoc.web.util.IDUtil
 import restdoc.web.util.IDUtil.now
 import restdoc.web.util.JsonDeProjector
@@ -167,7 +168,6 @@ class RestWebDocumentController {
         return ok(document.id)
     }
 
-
     @PostMapping("/project")
     fun projector(@RequestBody requestDto: RequestDto): Result {
         return ok()
@@ -225,10 +225,6 @@ class RestWebDocumentController {
         return ok(taskId)
     }
 
-
-    /**
-     * @sample Throwable
-     */
     private fun outExecuteTask(dto: RequestDto): Result {
 
         val requestHeaderDescriptor = dto.mapToHeaderDescriptor()
@@ -280,7 +276,6 @@ class RestWebDocumentController {
         return ok(taskId)
     }
 
-
     @GetMapping("/httpTask/{taskId}")
     fun execute(@PathVariable taskId: String): Result {
         val result = redisTemplate.opsForValue().get(taskId) ?: return failure(Status.INVALID_REQUEST, "请刷新页面重试")
@@ -289,7 +284,7 @@ class RestWebDocumentController {
     }
 
     @PostMapping("/wiki")
-    fun createWikiDocument(@RequestBody dto: CreateUpdateWikiDto): Result {
+    fun createWiki(@RequestBody dto: CreateUpdateWikiDto): Result {
         var save = false;
         if (dto.id == null || dto.id!!.isEmpty()) {
             save = true
@@ -329,6 +324,15 @@ class RestWebDocumentController {
     fun patch(@PathVariable id: String, @RequestBody @Valid dto: UpdateNodeDto): Result {
         val updateResult = restWebDocumentRepository.update(Query().addCriteria(Criteria("_id").`is`(id)),
                 Update().set("name", dto.name))
+        return ok()
+    }
+
+    @PostMapping("/")
+    fun syncDocument(@RequestBody dto: SyncApiEmptyTemplateDto): Result {
+        // Invoke remote client api info
+        val emptyApiTemplates = scheduleController.syncGetEmptyApiTemplates(dto.clientId)
+
+
         return ok()
     }
 }

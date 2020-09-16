@@ -9,9 +9,6 @@ public class RestWebExposedAPI implements ExposedAPI {
 
     private String pattern;
 
-    @Deprecated
-    private boolean requireBody;
-
     private String function;
 
     private String[] consumer;
@@ -31,14 +28,6 @@ public class RestWebExposedAPI implements ExposedAPI {
 
     public void setPattern(String pattern) {
         this.pattern = pattern;
-    }
-
-    public boolean isRequireBody() {
-        return requireBody;
-    }
-
-    public void setRequireBody(boolean requireBody) {
-        this.requireBody = requireBody;
     }
 
     public String getFunction() {
@@ -94,7 +83,6 @@ public class RestWebExposedAPI implements ExposedAPI {
         return "ApiEmptyTemplate{" +
                 "supportMethod=" + Arrays.toString(supportMethod) +
                 ", pattern='" + pattern + '\'' +
-                ", requireBody=" + requireBody +
                 ", function='" + function + '\'' +
                 ", consumer=" + Arrays.toString(consumer) +
                 ", produces=" + Arrays.toString(produces) +
