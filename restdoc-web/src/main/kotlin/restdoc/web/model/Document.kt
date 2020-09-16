@@ -5,28 +5,154 @@ import org.springframework.data.mongodb.core.index.HashIndexed
 import org.springframework.data.mongodb.core.mapping.Document
 import org.springframework.http.HttpMethod
 import restdoc.web.util.FieldType
+import kotlin.properties.Delegates
+
+
+class DubboDocument {
+    /**
+     *
+     */
+    @Id lateinit var id: String
+
+    /**
+     *
+     */
+    lateinit var projectId: String
+
+    /**
+     * resource
+     */
+    lateinit var resource: String
+
+    /**
+     *
+     */
+    lateinit var name: String
+
+    /**
+     * javaClassName restdoc.client.xxxx.XXXX
+     */
+    lateinit var javaClassName: String
+
+    /**
+     *
+     */
+    lateinit var methodName: String
+
+    /**
+     * ["java.lang.Void"]
+     */
+    lateinit var paramTypes: List<String>
+
+    /**
+     *
+     */
+    lateinit var returnType: String
+
+    /**
+     * desc
+     */
+    lateinit var desc: String
+
+    /**
+     * Create time
+     */
+    var createTime by Delegates.notNull<Long>()
+
+    /**
+     *
+     */
+    lateinit var docType: DocType
+}
+
+
+enum class DocType {
+    API,
+    WIKI
+}
 
 /**
- * @sample HttpHeaders
  */
 @Document(collection = "restdoc_restweb_document")
 data class RestWebDocument(
+
         @Id var id: String?,
+
+        /**
+         *
+         */
         var projectId: String?,
+
+        /**
+         *
+         */
         var name: String?,
+
+        /**
+         *
+         */
         var resource: String,
+
+        /**
+         *
+         */
         val url: String,
+
+        /**
+         *
+         */
         val description: String? = null,
+
+        /**
+         *
+         */
         var requestHeaderDescriptor: List<HeaderFieldDescriptor>?,
+
+        /**
+         *
+         */
         var requestBodyDescriptor: List<BodyFieldDescriptor>?,
+
+        /**
+         *
+         */
         var responseBodyDescriptors: List<BodyFieldDescriptor>?,
+
+        /**
+         *
+         */
         var queryParam: Map<String, Any>? = null,
+
+        /**
+         *
+         */
         val method: HttpMethod = HttpMethod.GET,
+
+        /**
+         *
+         */
         val uriVarDescriptors: List<URIVarDescriptor>?,
+
+        /**
+         *
+         */
         val executeResult: Map<String, Any?>? = null,
+
+        /**
+         *
+         */
         val content: String? = null,
+
+        /**
+         *
+         */
         var responseHeaderDescriptor: List<HeaderFieldDescriptor>? = null,
+
+        /**
+         *
+         */
         val docType: DocType = DocType.API
+
 )
 
 /**
@@ -72,6 +198,7 @@ data class URIVarDescriptor(
 )
 
 /**
- * 测试用例记录
+ * Test case record
  */
-data class TestCaseLog(val id: String);
+data class TestCaseLog(val id: String)
+
