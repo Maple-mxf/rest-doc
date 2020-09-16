@@ -67,7 +67,7 @@ data class BodyFieldDescriptor(
 
 data class URIVarDescriptor(
         val field: String,
-        val value: Any?,
+        val value: Any,
         val description: String?
 )
 

@@ -11,11 +11,11 @@ import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.data.mongodb.core.query.Update
 import org.springframework.data.redis.core.RedisTemplate
-import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
-import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
-import restdoc.remoting.common.body.HttpCommunicationCaptureBody
+import restdoc.client.api.model.InvocationResult
+import restdoc.client.api.model.RestWebInvocation
+import restdoc.client.api.model.RestWebInvocationResult
 import restdoc.web.controller.obj.CreateUpdateWikiDto
 import restdoc.web.controller.obj.RequestDto
 import restdoc.web.controller.obj.UpdateNodeDto
@@ -204,35 +204,19 @@ class DocumentController {
         val requestBodyDescriptor = dto.mapToRequestDescriptor()
         val uriVarDescriptor = dto.mapToURIVarDescriptor()
 
-        val capture = HttpCommunicationCaptureBody()
+        val bodyMap = JsonProjector(requestBodyDescriptor.map { PathValue(it.path, it.value) }).projectToMap()
 
-        try {
-            capture.url = dto.lookupPath()
-        } catch (e: Exception) {
-            Status.BAD_REQUEST.error("请求路径必须不能携带任何ip和协议")
-        }
-        capture.method = HttpMethod.valueOf(dto.method)
-        val requestHeaders = HttpHeaders()
-        requestHeaderDescriptor.forEach { requestHeaders.addAll(it.field, it.value) }
-        capture.requestHeader = requestHeaders
-
-        if (capture.method.equals(HttpMethod.GET)) {
-            capture.queryParam = requestBodyDescriptor.map { it.path to it.value.toString() }.toMap().toMutableMap()
-        } else {
-            capture.requestBody = JsonProjector(requestBodyDescriptor.map { PathValue(it.path, it.value) }).projectToMap()
+        val invocation = RestWebInvocation().apply {
+            url = dto.lookupPath()
+            method = dto.method
+            requestHeaders = requestHeaderDescriptor.map { bd -> bd.field to bd.value }.toMap().toMutableMap()
+            queryParam = if (dto.queryParams == null) mutableMapOf() else dto.queryParams!!
+            requestBody = bodyMap
+            uriVariable = uriVarDescriptor.map { it.field to it.value }.toMap().toMutableMap()
         }
 
-        capture.uriVariables = uriVarDescriptor
-                .map { it.field to it.value.toString() }
-                .toMap()
-                .toMutableMap()
-
         try {
-            val executeResult = scheduleController.syncSubmitRemoteHttpTask(
-                    dto.remoteAddress,
-                    taskId,
-                    capture)
-
+            val executeResult = scheduleController.syncSubmitRemoteHttpTask(dto.remoteAddress, taskId, invocation)
             redisTemplate.opsForValue().set(taskId, executeResult)
             redisTemplate.expire(taskId, 1000, TimeUnit.SECONDS)
         } catch (e: Throwable) {
@@ -253,47 +237,44 @@ class DocumentController {
 
         val taskId = IDUtil.id()
 
-        val capture = HttpCommunicationCaptureBody()
-        try {
-            capture.url = dto.lookupPath()
-        } catch (e: Exception) {
-            Status.BAD_REQUEST.error("必须携带http协议或者https协议")
+        val bodyMap = JsonProjector(requestBodyDescriptor.map { PathValue(it.path, it.value) }).projectToMap()
+
+        val restWebInvocation = RestWebInvocation().apply {
+            url = dto.lookupPath()
+            method = dto.method
+            requestHeaders = requestHeaderDescriptor.map { bd -> bd.field to bd.value }.toMap().toMutableMap()
+            queryParam = if (dto.queryParams == null) mutableMapOf() else dto.queryParams!!
+            requestBody = bodyMap
+            uriVariable = uriVarDescriptor.map { it.field to it.value }.toMap().toMutableMap()
         }
 
-        capture.method = HttpMethod.valueOf(dto.method)
-
-        val requestHeaders = HttpHeaders()
-        requestHeaderDescriptor.forEach { requestHeaders.addAll(it.field, it.value) }
-
-        capture.requestHeader = requestHeaders
-                .map { (k, v) -> k to v }
-                .toMap().toMutableMap()
-
-        if (capture.method.equals(HttpMethod.GET)) {
-            capture.queryParam = requestBodyDescriptor.map { it.path to it.value.toString() }.toMap().toMutableMap()
-        } else {
-            capture.requestBody = JsonProjector(requestBodyDescriptor.map { PathValue(it.path, it.value) }).projectToMap()
-        }
-
-        capture.uriVariables = uriVarDescriptor
-                .map { it.field to it.value.toString() }
-                .toMap()
-                .toMutableMap()
+        var invocationResult: InvocationResult
         try {
+            val responseEntity = httpTaskExecutor.execute(restWebInvocation)
 
-            val responseEntity = httpTaskExecutor.execute(capture)
-
-            if (responseEntity == null) {
-                capture.status = HttpStatus.NOT_FOUND.value()
-            } else {
-                capture.status = responseEntity.statusCodeValue
-                if (responseEntity.hasBody()) capture.responseBody = responseEntity.body
-                capture.responseHeader = responseEntity.headers
+            invocationResult = RestWebInvocationResult().apply {
+                isSuccessful = true
+                status = responseEntity?.statusCodeValue ?: -1
+                responseHeaders = responseEntity?.headers ?: mutableMapOf()
+                responseBody = responseEntity?.body
+                invocation = restWebInvocation
             }
 
-            redisTemplate.opsForValue().set(taskId, capture)
+            redisTemplate.opsForValue().set(taskId, invocationResult)
             redisTemplate.expire(taskId, 1000, TimeUnit.SECONDS)
         } catch (e: Throwable) {
+            invocationResult = RestWebInvocationResult().apply {
+                isSuccessful = false
+                exceptionMsg = e.message
+                status = -1
+                responseHeaders = mutableMapOf()
+                responseBody = null
+                invocation = restWebInvocation
+            }
+
+            redisTemplate.opsForValue().set(taskId, invocationResult)
+            redisTemplate.expire(taskId, 1000, TimeUnit.SECONDS)
+
             return failure(Status.BAD_REQUEST, e.message.toString())
         }
         return ok(taskId)

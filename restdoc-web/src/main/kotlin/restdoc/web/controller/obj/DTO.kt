@@ -1,11 +1,10 @@
 package restdoc.web.controller.obj
 
-import restdoc.remoting.common.ApplicationType
 import restdoc.web.model.BodyFieldDescriptor
-import restdoc.web.util.FieldType
 import restdoc.web.model.HeaderFieldDescriptor
 import restdoc.web.model.ProjectType
 import restdoc.web.model.URIVarDescriptor
+import restdoc.web.util.FieldType
 import java.net.URI
 import javax.validation.constraints.NotBlank
 
@@ -18,6 +17,7 @@ data class RequestDto(
         var documentId: String?,
         var executeMode: String?,
         var remoteAddress: String?,
+        var queryParams: MutableMap<String, Any>?,
         var url: String,
         val name: String?,
         val description: String?,

@@ -5,9 +5,10 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.CommandLineRunner
 import org.springframework.stereotype.Component
+import restdoc.client.api.model.RestWebInvocation
+import restdoc.client.api.model.RestWebInvocationResult
 import restdoc.remoting.common.RequestCode
 import restdoc.remoting.common.RestWebExposedAPI
-import restdoc.remoting.common.body.HttpCommunicationCaptureBody
 import restdoc.remoting.common.body.RestWebExposedAPIBody
 import restdoc.remoting.common.header.SubmitHttpTaskRequestHeader
 import restdoc.remoting.exception.RemotingCommandException
@@ -93,12 +94,12 @@ class ScheduleController @Autowired constructor(scheduleProperties: ScheduleProp
             RemotingCommandException::class)
     fun syncSubmitRemoteHttpTask(clientId: String?,
                                  taskId: String?,
-                                 capture: HttpCommunicationCaptureBody): HttpCommunicationCaptureBody {
+                                 invocation: RestWebInvocation): RestWebInvocationResult {
 
         val header = SubmitHttpTaskRequestHeader()
         header.taskId = taskId
         val request = RemotingCommand.createRequestCommand(RequestCode.SUBMIT_HTTP_PROCESS, header)
-        request.body = capture.encode()
+        request.body = invocation.encode()
         val clientChannelInfo = clientManager.findClient(clientId)
 
         val response = remotingServer.invokeSync(clientChannelInfo!!.channel, request,
@@ -106,7 +107,7 @@ class ScheduleController @Autowired constructor(scheduleProperties: ScheduleProp
 
         return if (response.code == RemotingSysResponseCode.SUCCESS) {
             val responseBody = RemotingSerializable.decode(response.body,
-                    HttpCommunicationCaptureBody::class.java)
+                    RestWebInvocationResult::class.java)
 
             responseBody
         } else {
