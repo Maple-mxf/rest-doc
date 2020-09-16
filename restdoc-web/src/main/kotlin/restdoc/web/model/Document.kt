@@ -7,7 +7,9 @@ import org.springframework.http.HttpMethod
 import restdoc.web.util.FieldType
 import kotlin.properties.Delegates
 
-
+/**
+ * DubboDocument
+ */
 class DubboDocument {
     /**
      *
