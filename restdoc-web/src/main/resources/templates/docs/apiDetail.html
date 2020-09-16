@@ -55,10 +55,6 @@
             font-size: 15px;
         }
 
-        th {
-            font-weight: 600;
-        }
-
     </style>
 
 </head>
@@ -70,7 +66,7 @@
 
 <div class="layui-container">
     <div class="layui-row">
-        <div class="layui-col-md10">
+        <div class="layui-col-md12">
             <div class="layui-row">
 
                 <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
@@ -190,7 +186,7 @@
                         <col width="200">
                     </colgroup>
                     <thead>
-                    <tr>
+                    <tr style="font-weight: bold">
                         <th>参数Path</th>
                         <th>参数类型</th>
                         <th>默认值</th>
@@ -222,15 +218,15 @@
                   </pre>
             </div>
         </div>
-        <div class="layui-col-md2">
+        <!--<div class="layui-col-md2">
             <div style="margin-top: 10%">
                 <a th:href="@{'/'+${projectId}+'/document/view/'+${document.id}+'/test'}" class="layui-btn"
                    target="_blank" style="margin-left: 10px">去调试</a>
-                <!--<button class="layui-btn layui-btn-primary"
+                &lt;!&ndash;<button class="layui-btn layui-btn-primary"
                         id="copyDocLink">复制访问链接
-                </button>-->
+                </button>&ndash;&gt;
             </div>
-        </div>
+        </div>-->
     </div>
 </div>
 
