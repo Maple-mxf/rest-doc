@@ -6,6 +6,7 @@ import restdoc.remoting.exception.RemotingCommandException;
 /**
  * HttpTaskRequestHeader
  */
+@Deprecated
 public class SubmitHttpTaskRequestHeader implements CommandCustomHeader {
 
     private String taskId;

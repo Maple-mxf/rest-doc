@@ -9,6 +9,12 @@ import restdoc.remoting.common.ApplicationClientInfo
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
+
+/**
+ * ClientChannelManager
+ *
+ * @author Overman
+ */
 @Component
 class ClientChannelManager(var mapper: ObjectMapper) : CommandLineRunner {
 

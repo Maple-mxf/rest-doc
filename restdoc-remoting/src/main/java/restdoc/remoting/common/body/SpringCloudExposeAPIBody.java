@@ -5,6 +5,7 @@ import restdoc.remoting.common.SpringCloudExposedAPI;
 
 import java.util.List;
 
+@Deprecated
 public class SpringCloudExposeAPIBody extends BaseExposedAPIBody {
 
     private List<SpringCloudExposedAPI> apiList;

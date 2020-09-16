@@ -2,8 +2,8 @@ package restdoc.web.core.schedule.processor
 
 import io.netty.channel.ChannelHandlerContext
 import org.springframework.stereotype.Component
+import restdoc.client.api.model.ClientInfo
 import restdoc.remoting.common.ApplicationClientInfo
-import restdoc.remoting.common.body.ClientInfoBody
 import restdoc.remoting.netty.NettyRequestProcessor
 import restdoc.remoting.protocol.LanguageCode
 import restdoc.remoting.protocol.RemotingCommand
@@ -15,6 +15,8 @@ import java.net.InetSocketAddress
 
 /**
  * ApplicationClientRequestProcessor
+ *
+ * @author Overman
  */
 @Component
 class CollectClientInfoRequestProcessor(private val clientManager: ClientChannelManager) : NettyRequestProcessor {
@@ -24,7 +26,7 @@ class CollectClientInfoRequestProcessor(private val clientManager: ClientChannel
     }
 
     override fun processRequest(ctx: ChannelHandlerContext, request: RemotingCommand): RemotingCommand {
-        val body = RemotingSerializable.decode(request.body, ClientInfoBody::class.java)
+        val body = RemotingSerializable.decode(request.body, ClientInfo::class.java)
 
         val address = ctx.channel().remoteAddress() as InetSocketAddress
 
@@ -38,9 +40,8 @@ class CollectClientInfoRequestProcessor(private val clientManager: ClientChannel
                     osname = body.osname
                     service = body.service
                     serializationProtocol = body.serializationProtocol
-                    applicationType = body.applicationType
+                    applicationType = body.type
                 }
-
 
         clientManager.registerClient(clientChannelInfo.id, clientChannelInfo)
 

@@ -5,13 +5,13 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnClass
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
 import restdoc.client.api.*
+import restdoc.client.api.model.ClientInfo
 import restdoc.client.restweb.context.EndpointsListener
 import restdoc.client.restweb.handler.RestWebInvokerAPIHandler
 import restdoc.remoting.InvokeCallback
 import restdoc.remoting.common.ApplicationType
 import restdoc.remoting.common.RemotingUtil
 import restdoc.remoting.common.RequestCode
-import restdoc.remoting.common.body.ClientInfoBody
 import restdoc.remoting.common.body.RestWebExposedAPIBody
 import restdoc.remoting.protocol.RemotingCommand
 
@@ -75,12 +75,12 @@ open class RestWebAgentClientConfiguration : AgentClientConfiguration {
     private fun reportClientInfoTask(): RemotingTask {
         val serializationProtocol = "http"
 
-        val body = ClientInfoBody()
-        body.osname = System.getProperty("os.name")
-        body.hostname = RemotingUtil.getHostname()
-        body.service = agentConfigurationProperties.service
-        body.applicationType = ApplicationType.DUBBO
-        body.serializationProtocol = serializationProtocol
+        val body = ClientInfo(
+                osname = System.getProperty("os.name", "Windows 10"),
+                hostname = RemotingUtil.getHostname(),
+                service = if (agentConfigurationProperties.service == null) "" else agentConfigurationProperties.service!!,
+                type = ApplicationType.REST_WEB,
+                serializationProtocol = serializationProtocol)
 
         val request = RemotingCommand.createRequestCommand(RequestCode.REPORT_CLIENT_INFO, null)
         request.body = body.encode()

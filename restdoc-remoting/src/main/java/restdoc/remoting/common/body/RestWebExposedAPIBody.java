@@ -5,6 +5,7 @@ import restdoc.remoting.common.RestWebExposedAPI;
 
 import java.util.List;
 
+@Deprecated
 public class RestWebExposedAPIBody extends BaseExposedAPIBody {
 
     private List<RestWebExposedAPI> apiList;

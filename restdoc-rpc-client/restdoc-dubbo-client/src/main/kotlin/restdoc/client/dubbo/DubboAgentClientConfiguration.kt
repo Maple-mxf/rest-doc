@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
 import org.springframework.util.CollectionUtils
 import restdoc.client.api.*
+import restdoc.client.api.model.ClientInfo
 import restdoc.client.dubbo.handler.DubboInvokerAPIHandler
 import restdoc.client.dubbo.model.ServiceDescriptor
 import restdoc.remoting.InvokeCallback
@@ -17,7 +18,6 @@ import restdoc.remoting.common.ApplicationType
 import restdoc.remoting.common.DubboExposedAPI
 import restdoc.remoting.common.RemotingUtil
 import restdoc.remoting.common.RequestCode
-import restdoc.remoting.common.body.ClientInfoBody
 import restdoc.remoting.common.body.DubboExposedAPIBody
 import restdoc.remoting.protocol.RemotingCommand
 
@@ -42,7 +42,7 @@ open class DubboAgentClientConfiguration : AgentClientConfiguration {
     lateinit var agentImpl: AgentImpl
 
     override fun hook(): AgentHook {
-        val hook = object : AgentHook {
+        return object : AgentHook {
             override fun beforeStart(): List<AgentCallback> = listOf()
             override fun afterStart(): List<AgentCallback> {
                 val invokeTask: AgentCallback = {
@@ -52,7 +52,6 @@ open class DubboAgentClientConfiguration : AgentClientConfiguration {
                 return listOf(invokeTask)
             }
         }
-        return hook
     }
 
     private fun reportClientInfoTask(): RemotingTask {
@@ -67,12 +66,12 @@ open class DubboAgentClientConfiguration : AgentClientConfiguration {
         } catch (ignore: Throwable) {
         }
 
-        val body = ClientInfoBody()
-        body.osname = System.getProperty("os.name")
-        body.hostname = RemotingUtil.getHostname()
-        body.service = ConfigManager.getInstance().application.map { it.name }.orElse(agentConfigurationProperties.service)
-        body.applicationType = ApplicationType.DUBBO
-        body.serializationProtocol = serializationProtocol
+        val body = ClientInfo(
+                osname = System.getProperty("os.name", "Windows 10"),
+                hostname = RemotingUtil.getHostname(),
+                service = ConfigManager.getInstance().application.map { it.name }.orElse(agentConfigurationProperties.service),
+                type = ApplicationType.DUBBO,
+                serializationProtocol = serializationProtocol)
 
         val request = RemotingCommand.createRequestCommand(RequestCode.REPORT_CLIENT_INFO, null)
         request.body = body.encode()

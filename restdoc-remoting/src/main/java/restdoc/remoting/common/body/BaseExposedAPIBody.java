@@ -6,6 +6,7 @@ import restdoc.remoting.protocol.RemotingSerializable;
 
 import java.util.List;
 
+@Deprecated
 public abstract class BaseExposedAPIBody extends RemotingSerializable {
 
     private ApplicationType applicationType;
