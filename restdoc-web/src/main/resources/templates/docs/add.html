@@ -91,7 +91,7 @@
                         <button class="layui-btn" style="margin-left: 10px;float: left" lay-submit lay-filter="execute">
                             外网调试
                         </button>
-                        <button class="layui-btn"  lay-submit lay-filter="save">
+                        <button class="layui-btn" lay-submit lay-filter="save">
                             保存文档
                         </button>
                     </div>
@@ -319,8 +319,6 @@
         });
 
         $('#tableContent').click(function () {
-            console.info("hello world");
-
             layer.open({
                 type: 1,
                 title: '选择目录',
@@ -644,7 +642,6 @@
         });
 
 
-
         function completeExecuteCallback(body) {
             $("#response-fieldset").addClass("layui-show");
             $.ajax({
@@ -815,11 +812,11 @@
             return array
         }
 
-
         var document = [[${initDocument}]];
 
         if (document != null) {
-            initTestApiDoc(document, form, oneuriline, oneheaderline, oneline, responseoneline)
+            initTestApiDoc(document, form, oneuriline, oneheaderline, oneline, responseoneline);
+            element.render('collapse');
         }
 
     });
