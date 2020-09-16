@@ -9,8 +9,8 @@ import restdoc.web.util.FieldType
 /**
  * @sample HttpHeaders
  */
-@Document(collection = "restdoc_document")
-data class Document(
+@Document(collection = "restdoc_restweb_document")
+data class RestWebDocument(
         @Id var id: String?,
         var projectId: String?,
         var name: String?,

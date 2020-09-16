@@ -8,15 +8,15 @@ import org.springframework.ui.set
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import restdoc.web.model.DocType
-import restdoc.web.model.Document
-import restdoc.web.repository.DocumentRepository
+import restdoc.web.model.RestWebDocument
 import restdoc.web.repository.ResourceRepository
+import restdoc.web.repository.RestWebDocumentRepository
 
 @Controller
-class DocumentViewController {
+class RestWebDocumentViewController {
 
     @Autowired
-    lateinit var documentRepository: DocumentRepository
+    lateinit var restWebDocumentRepository: RestWebDocumentRepository
 
     @Autowired
     lateinit var resourceRepository: ResourceRepository
@@ -71,20 +71,20 @@ class DocumentViewController {
     fun getApi(@PathVariable projectId: String, @PathVariable documentId: String, model: Model): String {
         model.set("documentId", documentId)
 
-        val document: Document = documentRepository.findById(documentId)
+        val restWebDocument: RestWebDocument = restWebDocumentRepository.findById(documentId)
                 .orElse(null)
                 ?: return "docs/resourceDetail"
 
-        val resource = resourceRepository.findById(document.resource)
+        val resource = resourceRepository.findById(restWebDocument.resource)
 
         model.addAttribute("resource", resource)
-        model.addAttribute("document", document)
+        model.addAttribute("document", restWebDocument)
         model.addAttribute("projectId", projectId)
-        model.addAttribute("sample", mapper.writeValueAsString(document.executeResult))
+        model.addAttribute("sample", mapper.writeValueAsString(restWebDocument.executeResult))
 
-        return if (DocType.API == document.docType) {
+        return if (DocType.API == restWebDocument.docType) {
             "docs/apiDetail"
-        } else if (DocType.WIKI == document.docType) {
+        } else if (DocType.WIKI == restWebDocument.docType) {
             "docs/wikiDetail"
         } else {
             "docs/resourceDetail"
@@ -94,11 +94,11 @@ class DocumentViewController {
     @GetMapping("/{projectId}/document/view/{id}/test")
     fun testApi(@PathVariable projectId: String, @PathVariable id: String, model: Model): String {
 
-        val document: Document = documentRepository.findById(id)
+        val restWebDocument: RestWebDocument = restWebDocumentRepository.findById(id)
                 .orElse(null)
                 ?: return "view/error/500"
 
-        model.addAttribute("initDocument", document)
+        model.addAttribute("initDocument", restWebDocument)
         model.addAttribute("projectId", projectId)
 
         return "docs/add"

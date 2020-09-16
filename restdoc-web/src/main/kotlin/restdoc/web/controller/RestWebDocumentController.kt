@@ -25,7 +25,7 @@ import restdoc.web.core.failure
 import restdoc.web.core.ok
 import restdoc.web.core.schedule.ScheduleController
 import restdoc.web.model.*
-import restdoc.web.repository.DocumentRepository
+import restdoc.web.repository.RestWebDocumentRepository
 import restdoc.web.repository.ProjectRepository
 import restdoc.web.util.IDUtil
 import restdoc.web.util.IDUtil.now
@@ -43,7 +43,7 @@ import javax.validation.Valid
 @RestController
 @RequestMapping("/document")
 //@Verify
-class DocumentController {
+class RestWebDocumentController {
 
     @Autowired
     lateinit var mongoTemplate: MongoTemplate
@@ -52,7 +52,7 @@ class DocumentController {
     lateinit var projectRepository: ProjectRepository
 
     @Autowired
-    lateinit var documentRepository: DocumentRepository
+    lateinit var restWebDocumentRepository: RestWebDocumentRepository
 
     @Autowired
     lateinit var redisTemplate: RedisTemplate<String, Any>
@@ -117,7 +117,7 @@ class DocumentController {
         val responseBodyDescriptor = dto.mapToResponseDescriptor()
         val uriVarDescriptor = dto.mapToURIVarDescriptor()
 
-        val document = Document(
+        val document = RestWebDocument(
                 id = IDUtil.id(),
                 name = dto.name,
                 projectId = dto.projectId,
@@ -132,7 +132,7 @@ class DocumentController {
                 executeResult = dto.executeResult,
                 docType = DocType.API)
 
-        documentRepository.save(document)
+        restWebDocumentRepository.save(document)
 
         return ok(document.id)
     }
@@ -149,7 +149,7 @@ class DocumentController {
         val uriVarDescriptor = dto.mapToURIVarDescriptor()
 
         // Save An Api Project Document
-        val document = Document(
+        val document = RestWebDocument(
                 id = dto.documentId,
                 name = dto.name,
                 projectId = dto.projectId,
@@ -162,7 +162,7 @@ class DocumentController {
                 uriVarDescriptors = uriVarDescriptor,
                 executeResult = dto.executeResult)
 
-        val updateResult = documentRepository.update(document)
+        val updateResult = restWebDocumentRepository.update(document)
 
         return ok(document.id)
     }
@@ -284,7 +284,6 @@ class DocumentController {
     @GetMapping("/httpTask/{taskId}")
     fun execute(@PathVariable taskId: String): Result {
         val result = redisTemplate.opsForValue().get(taskId) ?: return failure(Status.INVALID_REQUEST, "请刷新页面重试")
-
         val map = result as LinkedHashMap<String, Any>
         return ok(map)
     }
@@ -297,7 +296,7 @@ class DocumentController {
             dto.id = IDUtil.id()
         }
 
-        val document = Document(
+        val document = RestWebDocument(
                 id = dto.id,
                 projectId = dto.projectId,
                 name = dto.name,
@@ -312,9 +311,9 @@ class DocumentController {
         )
 
         if (save) {
-            documentRepository.save(document)
+            restWebDocumentRepository.save(document)
         } else {
-            documentRepository.update(document);
+            restWebDocumentRepository.update(document);
         }
 
         return ok(document.id)
@@ -322,13 +321,13 @@ class DocumentController {
 
     @DeleteMapping("/{id}")
     fun delete(@PathVariable id: String): Result {
-        documentRepository.deleteById(id)
+        restWebDocumentRepository.deleteById(id)
         return ok()
     }
 
     @PatchMapping("/{id}")
     fun patch(@PathVariable id: String, @RequestBody @Valid dto: UpdateNodeDto): Result {
-        val updateResult = documentRepository.update(Query().addCriteria(Criteria("_id").`is`(id)),
+        val updateResult = restWebDocumentRepository.update(Query().addCriteria(Criteria("_id").`is`(id)),
                 Update().set("name", dto.name))
         return ok()
     }

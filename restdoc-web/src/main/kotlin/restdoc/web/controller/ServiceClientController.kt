@@ -8,16 +8,18 @@ import restdoc.web.controller.obj.SyncApiEmptyTemplateDto
 import restdoc.web.core.ok
 import restdoc.web.core.schedule.ClientChannelManager
 import restdoc.web.core.schedule.ScheduleController
-import restdoc.web.model.Document
 import restdoc.web.model.Project
 import restdoc.web.model.Resource
+import restdoc.web.model.RestWebDocument
 import restdoc.web.model.URIVarDescriptor
-import restdoc.web.repository.DocumentRepository
 import restdoc.web.repository.ProjectRepository
 import restdoc.web.repository.ResourceRepository
+import restdoc.web.repository.RestWebDocumentRepository
 import restdoc.web.util.IDUtil
 import restdoc.web.util.IDUtil.now
 
+
+@Deprecated(message = "")
 @RestController
 class ServiceClientController {
 
@@ -31,7 +33,7 @@ class ServiceClientController {
     lateinit var resourceRepository: ResourceRepository
 
     @Autowired
-    lateinit var documentRepository: DocumentRepository
+    lateinit var restWebDocumentRepository: RestWebDocumentRepository
 
     @Autowired
     lateinit var projectRepository: ProjectRepository
@@ -78,7 +80,7 @@ class ServiceClientController {
         val resourceKeyDocumentMap = syncApiEmptyTemplates(dto.clientId, project.id)
 
         resourceRepository.saveAll(resourceKeyDocumentMap.keys)
-        documentRepository.saveAll(resourceKeyDocumentMap.values.flatten())
+        restWebDocumentRepository.saveAll(resourceKeyDocumentMap.values.flatten())
 
         projectRepository.save(project)
 
@@ -91,12 +93,12 @@ class ServiceClientController {
         val resourceKeyDocumentMap = syncApiEmptyTemplates(dto.clientId, dto.projectId!!)
 
         resourceRepository.saveAll(resourceKeyDocumentMap.keys)
-        documentRepository.saveAll(resourceKeyDocumentMap.values.flatten())
+        restWebDocumentRepository.saveAll(resourceKeyDocumentMap.values.flatten())
 
         return ok(dto.projectId)
     }
 
-    private fun syncApiEmptyTemplates(clientId: String, projectId: String): Map<Resource, List<Document>> {
+    private fun syncApiEmptyTemplates(clientId: String, projectId: String): Map<Resource, List<RestWebDocument>> {
 
         // Invoke remote client api info
         val emptyApiTemplates = scheduleController.syncGetEmptyApiTemplates(clientId)
@@ -123,10 +125,10 @@ class ServiceClientController {
                     val documents = it.value.map { template ->
 
                         val uriVarDescriptors = template.uriVarFields.map { uriField ->
-                            URIVarDescriptor(uriField, null, null)
+                            URIVarDescriptor(uriField, "", null)
                         }
 
-                        Document(id = IDUtil.id(),
+                        RestWebDocument(id = IDUtil.id(),
                                 projectId = projectId,
                                 name = template.function,
                                 resource = resource.id!!,

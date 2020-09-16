@@ -10,7 +10,7 @@ import restdoc.web.core.Result
 import restdoc.web.core.ok
 import restdoc.web.model.DocType
 import restdoc.web.model.Resource
-import restdoc.web.repository.DocumentRepository
+import restdoc.web.repository.RestWebDocumentRepository
 import restdoc.web.repository.ResourceRepository
 import restdoc.web.util.IDUtil
 import restdoc.web.util.IDUtil.now
@@ -23,7 +23,7 @@ class ResourceController {
     lateinit var resourceRepository: ResourceRepository
 
     @Autowired
-    lateinit var documentRepository: DocumentRepository
+    lateinit var restWebDocumentRepository: RestWebDocumentRepository
 
     @PostMapping("/{projectId}/resource")
     fun create(@PathVariable projectId: String, @Valid @RequestBody dto: CreateResourceDto): Result {
@@ -61,7 +61,7 @@ class ResourceController {
 
         val nodeIds = allNode.map { it.id }.toMutableList()
 
-        val docs = documentRepository.list(Query(Criteria("resource").`in`(nodeIds)))
+        val docs = restWebDocumentRepository.list(Query(Criteria("resource").`in`(nodeIds)))
 
         for (navNode in allNode) {
             val childrenDocNode: MutableList<NavNode> = docs

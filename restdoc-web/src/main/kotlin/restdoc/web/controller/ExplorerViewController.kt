@@ -8,14 +8,15 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import restdoc.web.core.Status
-import restdoc.web.repository.DocumentRepository
+import restdoc.web.repository.RestWebDocumentRepository
 
 @Controller
 @RequestMapping("/explorer/view")
+@Deprecated(message = "")
 class ExplorerViewController {
 
     @Autowired
-    lateinit var documentRepository: DocumentRepository
+    lateinit var restWebDocumentRepository: RestWebDocumentRepository
 
     @Autowired
     lateinit var mapper: ObjectMapper
@@ -23,7 +24,7 @@ class ExplorerViewController {
     @GetMapping("/{documentId}")
     fun get(@PathVariable documentId: String, model: Model): String {
 
-        val document = documentRepository
+        val document = restWebDocumentRepository
                 .findById(documentId)
                 .orElseThrow { Status.INVALID_REQUEST.instanceError() }
 
@@ -37,7 +38,7 @@ class ExplorerViewController {
 
     @GetMapping("/{documentId}/test")
     fun command(@PathVariable documentId: String, model: Model): String {
-        val document = documentRepository
+        val document = restWebDocumentRepository
                 .findById(documentId)
                 .orElseThrow { Status.INVALID_REQUEST.instanceError() }
 
