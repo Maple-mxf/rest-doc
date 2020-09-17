@@ -97,9 +97,9 @@
             <div class="layui-tab-item layui-show">
                 <div class="layui-row">
                     <div class="layui-col-md10">
-                        <span style="margin-left: 2%"><h2>获取设置</h2></span>
+                        <span style="margin-left: 2%"><h2 th:text="${document.name}"></h2></span>
                         <div class="layui-row code-block" style="margin-top: 1%; height: 60px;line-height: 60px; ">
-                            <span style="margin-left: 2%">HTTP1.1 GET /restdoc/document/{id}/view</span>
+                            <span style="margin-left: 2%">HTTP1.1 GET <span th:text="${document.url}"></span></span>
 
                             <span id="urlSpan" style="position: absolute;right: 10px;margin-top: -1%">
                     <i class="layui-icon layui-icon-file-b" style="font-size: 25px; color: whitesmoke;"

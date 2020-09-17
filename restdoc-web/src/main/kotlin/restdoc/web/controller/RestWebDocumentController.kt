@@ -35,6 +35,7 @@ import restdoc.web.util.JsonDeProjector
 import restdoc.web.util.JsonProjector
 import restdoc.web.util.PathValue
 import java.net.URI
+import java.net.URL
 import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.validation.Valid
@@ -79,9 +80,8 @@ class RestWebDocumentController {
     fun get(@PathVariable id: String): Result = ok(mongoTemplate.findById(id, Project::class.java))
 
     private fun extractRawPath(url: String, uriVars: Map<String, Any>): String {
-        val uri = restTemplate.uriTemplateHandler.expand(url, uriVars)
         return when {
-            url.startsWith("http") -> uri.rawPath
+            url.startsWith("http") -> URL(url).path
             url.matches(Regex("^([/][a-zA-Z0-9])+[/]?$")) -> url
             else -> {
                 val arr = url.split(delimiters = *arrayOf("/"))
