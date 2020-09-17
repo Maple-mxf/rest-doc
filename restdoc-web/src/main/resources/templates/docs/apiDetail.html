@@ -8,6 +8,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/admin/css/fangge-style.css}"/>
     <link rel="stylesheet" th:href="@{/admin/css/doc-common.css}"/>
+    <link rel="stylesheet" th:href="@{/admin/css/code.css}"/>
+    <link rel="stylesheet" th:href="@{/admin/css/nav.css}"/>
     <style>
         body {
             font-family: 'Roboto', sans-serif;
@@ -55,182 +57,186 @@
             font-size: 15px;
         }
 
-        .layui-table th{
+        .layui-table th {
             font-weight: bold;
         }
 
+        .headerTitle {
+            font-family: Roboto, serif;
+            /*font-size: 18px;*/
+            /*font-weight: bold;*/
+            margin-top: 30px;
+        }
+
+        .api-content {
+            margin-top: 20px;
+        }
+
+        #urlSpan:hover {
+            cursor: pointer;
+        }
 
 
+        .layui-tab-title li {
+            font-size: 20px;
+            font-family: Roboto, serif;
+            padding: 0 5%;
+        }
     </style>
 
 </head>
 <body>
-
+<div th:include="nav::nav"></div>
 <input id="documentId" type="hidden" th:value="${document.id}">
 <input id="projectId" type="hidden" th:value="${projectId}">
 
+<div class="layui-fluid">
+    <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+        <ul class="layui-tab-title" >
+            <li class="layui-this">文档</li>
+            <li>调试</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+                <div  class="layui-row">
+                    <div class="layui-col-md10">
+                        <span style="margin-left: 2%"><h2>获取设置</h2></span>
+                        <div class="layui-row code-block" style="margin-top: 1%; height: 60px;line-height: 60px; ">
+                            <span style="margin-left: 2%">HTTP1.1 GET /restdoc/document/{id}/view</span>
 
-<div class="layui-container">
-    <div class="layui-row">
-        <div class="layui-col-md12">
-            <div class="layui-row">
+                            <span id="urlSpan" style="position: absolute;right: 10px;margin-top: -1%">
+                    <i class="layui-icon layui-icon-file-b" style="font-size: 25px; color: whitesmoke;"
+                       title="复制URL"></i></span>
+                        </div>
 
-                <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-                    <legend style="font-weight: bold" th:text="${document.name}"></legend>
-                </fieldset>
-                <table class="layui-table" lay-skin="line" lay-size="lg">
-                    <tr>
-                        <td th:text="'HTTP1.1' +${document.method}+ ' '+${document.url} "></td>
-                    </tr>
-                    <tr>
-                        <th>资源</th>
-                        <td th:text="${resource}"></td>
-                    </tr>
-                    <tr>
-                        <th>描述</th>
-                        <td th:utext="${document.description}"></td>
-                    </tr>
-                </table>
+                        <div class="layui-row">
+                            <h3 class="headerTitle">请求头参数列表</h3>
+                            <p>
+                            <table class="layui-table api-content" lay-size="lg">
+                                <colgroup>
+                                    <col width="200">
+                                    <col width="200">
+                                    <col width="200">
+                                    <col width="200">
+                                </colgroup>
+                                <thead>
+                                <tr>
+                                    <th>请求头参数</th>
+                                    <th>示例值</th>
+                                    <th>是否可选</th>
+                                    <th>参数说明</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <th:foreach th:each="item :${document.requestHeaderDescriptor}">
+                                    <tr>
+                                        <td th:text="${item.field}"></td>
+                                        <td th:text="${item.value}"></td>
+                                        <td th:text="${item.optional}"></td>
+                                        <td th:utext="${item.description}"></td>
+                                    </tr>
+                                </th:foreach>
+                                </tbody>
+                            </table>
 
-            </div>
-
-            <div class="layui-row">
-
-                <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-                    <legend style="font-weight: bold">请求头参数列表</legend>
-                </fieldset>
-                <table class="layui-table" lay-size="lg">
-                    <colgroup>
-                        <col width="200">
-                        <col width="200">
-                        <col width="200">
-                        <col width="200">
-                    </colgroup>
-                    <thead>
-                    <tr>
-                        <th>请求头参数</th>
-                        <th>示例值</th>
-                        <th>是否可选</th>
-                        <th>参数说明</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <th:foreach th:each="item :${document.requestHeaderDescriptor}">
-                        <tr>
-                            <td th:text="${item.field}"></td>
-                            <td th:text="${item.value}"></td>
-                            <td th:text="${item.optional}"></td>
-                            <td th:utext="${item.description}"></td>
-                        </tr>
-                    </th:foreach>
-                    </tbody>
-                </table>
-
-            </div>
+                        </div>
 
 
-            <div class="layui-row">
-
-                <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-                    <legend style="font-weight: bold">请求参数列表</legend>
-                </fieldset>
-                <table class="layui-table" lay-size="lg">
-                    <colgroup>
-                        <col width="200">
-                        <col width="200">
-                        <col width="200">
-                        <col width="200">
-                        <col width="200">
-                    </colgroup>
-                    <thead>
-                    <tr>
-                        <th>参数Path</th>
-                        <th>参数类型</th>
-                        <th>示例值</th>
-                        <th>是否可选</th>
-                        <th>默认值</th>
-                        <th>参数说明</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <th:foreach th:each="item :${document.requestBodyDescriptor}">
-                        <tr>
-                            <td th:text="${item.path}"></td>
-                            <td th:text="${item.type}"></td>
-                            <td th:text="${item.value}"></td>
-                            <td th:text="${item.optional}"></td>
-                            <td th:text="${item.defaultValue}"></td>
-                            <td th:utext="${item.description}"></td>
-                        </tr>
-                    </th:foreach>
-                    </tbody>
-                </table>
-
-            </div>
+                        <div class="layui-row">
+                            <h3 class="headerTitle">请求参数列表</h3>
+                            <p>
+                            <table class="layui-table api-content" lay-size="lg">
+                                <colgroup>
+                                    <col width="200">
+                                    <col width="200">
+                                    <col width="200">
+                                    <col width="200">
+                                    <col width="200">
+                                </colgroup>
+                                <thead>
+                                <tr>
+                                    <th>参数Path</th>
+                                    <th>参数类型</th>
+                                    <th>示例值</th>
+                                    <th>是否可选</th>
+                                    <th>默认值</th>
+                                    <th>参数说明</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <th:foreach th:each="item :${document.requestBodyDescriptor}">
+                                    <tr>
+                                        <td th:text="${item.path}"></td>
+                                        <td th:text="${item.type}"></td>
+                                        <td th:text="${item.value}"></td>
+                                        <td th:text="${item.optional}"></td>
+                                        <td th:text="${item.defaultValue}"></td>
+                                        <td th:utext="${item.description}"></td>
+                                    </tr>
+                                </th:foreach>
+                                </tbody>
+                            </table>
+                            </p>
+                        </div>
 
 
-            <div class="layui-row">
-
-                <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-                    <legend style="font-weight: bold">响应参数列表</legend>
-                </fieldset>
-                <table class="layui-table" lay-size="lg">
-                    <colgroup>
-                        <col width="200">
-                        <col width="200">
-                        <col width="200">
-                        <col width="200">
-                        <col width="200">
-                    </colgroup>
-                    <thead>
-                    <tr style="font-weight: bold">
-                        <th>参数Path</th>
-                        <th>参数类型</th>
-                        <th>默认值</th>
-                        <th>参数说明</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <th:foreach th:each="item :${document.responseBodyDescriptors}">
-                        <tr>
-                            <td th:text="${item.path}"></td>
-                            <td th:text="${item.type}"></td>
-                            <td th:text="${item.defaultValue}"></td>
-                            <td th:utext="${item.description}"></td>
-                        </tr>
-                    </th:foreach>
-                    </tbody>
-                </table>
-
-            </div>
+                        <div class="layui-row">
+                            <h3 class="headerTitle">响应参数列表</h3>
+                            <p>
+                            <table class="layui-table api-content" lay-size="lg">
+                                <colgroup>
+                                    <col width="200">
+                                    <col width="200">
+                                    <col width="200">
+                                    <col width="200">
+                                </colgroup>
+                                <thead>
+                                <tr style="font-weight: bold">
+                                    <th>参数Path</th>
+                                    <th>参数类型</th>
+                                    <th>默认值</th>
+                                    <th>参数说明</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <th:foreach th:each="item :${document.responseBodyDescriptors}">
+                                    <tr>
+                                        <td th:text="${item.path}"></td>
+                                        <td th:text="${item.type}"></td>
+                                        <td th:text="${item.defaultValue}"></td>
+                                        <td th:utext="${item.description}"></td>
+                                    </tr>
+                                </th:foreach>
+                                </tbody>
+                            </table>
+                        </div>
 
 
-            <div class="layui-row">
-
-                <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-                    <legend style="font-weight: bold">请求示例</legend>
-                </fieldset>
-                <pre id="codeSample" class="common-code-pre">
-
+                        <div class="layui-row">
+                            <h3 class="headerTitle">请求示例</h3>
+                            <pre id="codeSample" class="code-block api-content">
                   </pre>
+                        </div>
+                    </div>
+                </div>
             </div>
+            <div class="layui-tab-item">
+<!--                "/restdoc/" + projectId + '/document/view/' + documentId + "/test"-->
+                <iframe th:src="@{'/'+${projectId}+'/document/view/'+${document.id}+'/test'}" style="width: 100%;height: 900px" frameborder=”no” border=”0″ marginwidth=”0″ marginheight=”0″></iframe>
+            </div>
+
         </div>
-        <!--<div class="layui-col-md2">
-            <div style="margin-top: 10%">
-                <a th:href="@{'/'+${projectId}+'/document/view/'+${document.id}+'/test'}" class="layui-btn"
-                   target="_blank" style="margin-left: 10px">去调试</a>
-                &lt;!&ndash;<button class="layui-btn layui-btn-primary"
-                        id="copyDocLink">复制访问链接
-                </button>&ndash;&gt;
-            </div>
-        </div>-->
     </div>
 </div>
+
 
 <script th:src="@{/layui/layui.js}"></script>
 <script th:src="@{/admin/js/jquery.js}"></script>
 <script th:src="@{/admin/js/util.js}"></script>
 <script th:inline="javascript">
+
+    var projectId = [[${projectId}]];
+    var documentId = [[${document.id}]];
 
 
     layui.use([
@@ -238,8 +244,19 @@
         'element', 'jquery'], function () {
         var $ = layui.jquery;
         var layer = layui.layer;
+        var element = layui.element;
 
-        var docId = $("#documentId").val()
+        var docId = $("#documentId").val();
+        element.on('tab(docDemoTabBrief)', function (data) {
+            /*console.log(data.index);
+            if (0 === data.index) {
+                $(".layui-tab-content").html($('#apiDetailContent').text());
+            } else {
+                $.get("/restdoc/" + projectId + '/document/view/' + documentId + "/test", function (data, status) {
+                    $(".layui-tab-content").html(data);
+                });
+            }*/
+        });
 
         $("#test").click(function () {
             /*layer.open({
@@ -252,8 +269,7 @@
                 btn: ['关闭'],
             });*/
 
-
-        })
+        });
 
         $("#delete").click(function () {
             layer.confirm('确山删除文档？删除后不可恢复', {

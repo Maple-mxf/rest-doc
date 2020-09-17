@@ -1,0 +1,29 @@
+body {
+    /*margin: 10px;*/
+    background-color: whitesmoke;
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+}
+
+.common-command {
+    background: black;
+    /*border: 1px solid #ddd;
+    border-left: 3px solid #f36d33;*/
+    color: whitesmoke;
+    page-break-inside: avoid;
+    font-family: Roboto, serif;
+    font-size: 13px;
+    line-height: 1.6;
+    margin-bottom: 1.6em;
+    max-width: 100%;
+    overflow: auto;
+    padding: 1em 1.5em;
+    display: block;
+    word-wrap: break-word;
+    height: 100%;
+    border-top: 3px solid #ff7043;
+}
+
+.group {
+    margin-top: 10px;
+}

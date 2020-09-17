@@ -11,51 +11,16 @@
     <link rel="stylesheet" th:href="@{/admin/css/fangge-style.css}"/>
     <link rel="stylesheet" th:href="@{/admin/css/pear-tree/dtree.css}"/>
     <link rel="stylesheet" th:href="@{/admin/css/nav.css}"/>
-    <style>
-        body {
-            /*margin: 10px;*/
-            background-color: whitesmoke;
-            font-family: 'Roboto', sans-serif;
-            font-size: 14px;
-        }
-
-        .common-command {
-            background: black;
-            /*border: 1px solid #ddd;
-            border-left: 3px solid #f36d33;*/
-            color: whitesmoke;
-            page-break-inside: avoid;
-            font-family: Roboto, serif;
-            font-size: 13px;
-            line-height: 1.6;
-            margin-bottom: 1.6em;
-            max-width: 100%;
-            overflow: auto;
-            padding: 1em 1.5em;
-            display: block;
-            word-wrap: break-word;
-            height: 100%;
-            border-top: 3px solid #ff7043;
-        }
-
-        .group {
-            margin-top: 10px;
-        }
-    </style>
-
+    <link rel="stylesheet" th:href="@{/admin/css/apiexplore.css}"/>
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
 </head>
 <body>
-<div th:include="nav::nav"></div>
 <div id="sourceTreeDiv" class="layui-bg-gray" style="display: none">
 </div>
-
 <input type="hidden" name="documentId" id="documentId"/>
 <input type="hidden" name="projectId" id="projectId" th:value="${projectId}"/>
 <div class="layui-fluid" style="margin-top: 10px">
-
     <div class="layui-row">
-
         <div class="layui-col-md4" id="command-div">
                <pre id="test-result" class="common-command" style="height: 700px;">
             </pre>
@@ -84,7 +49,7 @@
                                    class="layui-input">
                         </div>
 
-                        <button class="layui-btn" style="margin-left: 20%;float: left" lay-submit
+                        <button class="layui-btn" style="margin-left: 23%;float: left" lay-submit
                                 lay-filter="rpcExecute">
                             RPC远程调试
                         </button>
@@ -216,8 +181,6 @@
     </div>
 
 </div>
-
-
 <div id="desc-hidden-div" style="display: none">
     <textarea id="L_content" name="content" required lay-verify="required" placeholder="请输入字段备注"
               class="layui-textarea editor">
@@ -232,13 +195,11 @@
 <script th:src="@{/admin/js/doc/header.js}"></script>
 <script th:src="@{/admin/js/marked.min.js}"></script>
 <script th:src="@{/admin/js/util.js}"></script>
+<!--<script th:src="@{/admin/js/apiexplore.js}"></script>-->
 <script type="text/javascript" th:inline="javascript">
     $("#projectNav").addClass("layui-this")
     var msg;
-
     var globalExecuteResult = null;
-
-
     layui.config({
         base: '/restdoc/layui/lay/extends/'
     }).extend({
@@ -924,6 +885,7 @@
         var children = obj.parentNode.parentNode;
         parent.removeChild(children);
     }
+
 
 </script>
 </body>

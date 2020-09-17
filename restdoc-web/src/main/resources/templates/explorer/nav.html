@@ -13,7 +13,7 @@
     <link rel="stylesheet" th:href="@{/admin/css/nav.css}"/>
 </head>
 <body>
-<div th:include="nav::nav"></div>
+<!--<div th:include="nav::nav"></div>-->
 
 <input type="hidden" id="projectId" th:value="${projectId}">
 
@@ -143,7 +143,7 @@
             content: $('#tableContents'),
             shadeClose: true,
             shade: 0,
-            offset: 'rb',
+            offset: 'rt',
             closeBtn: 0,
             area: ['400px', '900px'],
             zIndex: layer.zIndex
