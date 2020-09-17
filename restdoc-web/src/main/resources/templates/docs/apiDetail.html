@@ -6,7 +6,11 @@
     <link rel="stylesheet" th:href="@{/layui/css/layui.css}"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}"/>
+    <link rel="stylesheet" th:href="@{/admin/css/pearForm.css}"/>
+    <link rel="stylesheet" th:href="@{/admin/css/easyeditor.css}"/>
     <link rel="stylesheet" th:href="@{/admin/css/fangge-style.css}"/>
+    <link rel="stylesheet" th:href="@{/admin/css/pear-tree/dtree.css}"/>
     <link rel="stylesheet" th:href="@{/admin/css/doc-common.css}"/>
     <link rel="stylesheet" th:href="@{/admin/css/code.css}"/>
     <link rel="stylesheet" th:href="@{/admin/css/nav.css}"/>
@@ -48,10 +52,6 @@
             word-wrap: break-word;
         }
 
-        a {
-            text-decoration: underline #dadada;
-        }
-
         .layui-table td, .layui-table th {
             color: #0C0C0C;
             font-size: 15px;
@@ -63,8 +63,6 @@
 
         .headerTitle {
             font-family: Roboto, serif;
-            /*font-size: 18px;*/
-            /*font-weight: bold;*/
             margin-top: 30px;
         }
 
@@ -86,19 +84,18 @@
 
 </head>
 <body>
-<div th:include="nav::nav"></div>
 <input id="documentId" type="hidden" th:value="${document.id}">
 <input id="projectId" type="hidden" th:value="${projectId}">
 
 <div class="layui-fluid">
     <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
-        <ul class="layui-tab-title" >
+        <ul class="layui-tab-title">
             <li class="layui-this">文档</li>
             <li>调试</li>
         </ul>
         <div class="layui-tab-content">
             <div class="layui-tab-item layui-show">
-                <div  class="layui-row">
+                <div class="layui-row">
                     <div class="layui-col-md10">
                         <span style="margin-left: 2%"><h2>获取设置</h2></span>
                         <div class="layui-row code-block" style="margin-top: 1%; height: 60px;line-height: 60px; ">
@@ -109,7 +106,40 @@
                        title="复制URL"></i></span>
                         </div>
 
-                        <div class="layui-row">
+
+                        <div class="layui-row"
+                             th:if="${document.uriVarDescriptors!=null and !document.uriVarDescriptors.isEmpty()}">
+                            <h3 class="headerTitle">URI路径参数列表</h3>
+                            <p>
+                            <table class="layui-table api-content" lay-size="lg">
+                                <colgroup>
+                                    <col width="200">
+                                    <col width="200">
+                                    <col width="200">
+                                    <col width="200">
+                                </colgroup>
+                                <thead>
+                                <tr>
+                                    <th>请求头参数</th>
+                                    <th>示例值</th>
+                                    <th>参数说明</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <th:foreach th:each="item :${document.uriVarDescriptors}">
+                                    <tr>
+                                        <td th:text="${item.field}"></td>
+                                        <td th:text="${item.value}"></td>
+                                        <td th:utext="${item.description}"></td>
+                                    </tr>
+                                </th:foreach>
+                                </tbody>
+                            </table>
+
+                        </div>
+
+                        <div class="layui-row"
+                             th:if="${document.requestHeaderDescriptor!=null and !document.requestHeaderDescriptor.isEmpty()}">
                             <h3 class="headerTitle">请求头参数列表</h3>
                             <p>
                             <table class="layui-table api-content" lay-size="lg">
@@ -142,7 +172,8 @@
                         </div>
 
 
-                        <div class="layui-row">
+                        <div class="layui-row"
+                             th:if="${document.requestBodyDescriptor!=null and !document.requestBodyDescriptor.isEmpty()}">
                             <h3 class="headerTitle">请求参数列表</h3>
                             <p>
                             <table class="layui-table api-content" lay-size="lg">
@@ -180,7 +211,8 @@
                         </div>
 
 
-                        <div class="layui-row">
+                        <div class="layui-row"
+                             th:if="${document.responseBodyDescriptors!=null and !document.responseBodyDescriptors.isEmpty()}">
                             <h3 class="headerTitle">响应参数列表</h3>
                             <p>
                             <table class="layui-table api-content" lay-size="lg">
@@ -221,8 +253,10 @@
                 </div>
             </div>
             <div class="layui-tab-item">
-<!--                "/restdoc/" + projectId + '/document/view/' + documentId + "/test"-->
-                <iframe th:src="@{'/'+${projectId}+'/document/view/'+${document.id}+'/test'}" style="width: 100%;height: 900px" frameborder=”no” border=”0″ marginwidth=”0″ marginheight=”0″></iframe>
+                <!--                "/restdoc/" + projectId + '/document/view/' + documentId + "/test"-->
+                <iframe id="testApiFrame" th:src="@{'/'+${projectId}+'/document/view/'+${document.id}+'/test'}"
+                        style="width: 100%;height: 900px" frameborder=”no” border=”0″ marginwidth=”0″
+                        marginheight=”0″></iframe>
             </div>
 
         </div>
@@ -235,9 +269,6 @@
 <script th:src="@{/admin/js/util.js}"></script>
 <script th:inline="javascript">
 
-    var projectId = [[${projectId}]];
-    var documentId = [[${document.id}]];
-
 
     layui.use([
         'util', 'layer',
@@ -248,14 +279,12 @@
 
         var docId = $("#documentId").val();
         element.on('tab(docDemoTabBrief)', function (data) {
-            /*console.log(data.index);
             if (0 === data.index) {
-                $(".layui-tab-content").html($('#apiDetailContent').text());
-            } else {
-                $.get("/restdoc/" + projectId + '/document/view/' + documentId + "/test", function (data, status) {
-                    $(".layui-tab-content").html(data);
-                });
-            }*/
+                var projectId = $("#projectId").val();
+                var documentId = $("#documentId").val();
+                $("#testApiFrame").attr("src", "/restdoc/" + projectId + '/document/view/' + documentId + "/test")
+            }
+
         });
 
         $("#test").click(function () {

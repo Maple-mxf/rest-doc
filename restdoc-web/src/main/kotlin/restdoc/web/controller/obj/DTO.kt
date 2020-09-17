@@ -37,6 +37,9 @@ data class RequestDto(
         }
     }
 
+    /**
+     *
+     */
     fun mapToHeaderDescriptor(): List<HeaderFieldDescriptor> {
 
         return if (!(headers == null || this.headers.isEmpty())) {
@@ -49,6 +52,8 @@ data class RequestDto(
                                 description = it.headerDescription,
                                 optional = it.headerConstraint)
                     }
+                    // Fields Deduplication
+                    .distinctBy { it.field }
         } else mutableListOf()
     }
 
@@ -66,6 +71,8 @@ data class RequestDto(
                                 defaultValue = null
                         )
                     }
+                    // Fields Deduplication
+                    .distinctBy { it.path }
         } else mutableListOf()
     }
 
@@ -83,6 +90,8 @@ data class RequestDto(
                                 defaultValue = null
                         )
                     }
+                    // Fields Deduplication
+                    .distinctBy { it.path }
         } else mutableListOf()
     }
 
@@ -95,6 +104,8 @@ data class RequestDto(
                                 value = it.value.toString(),
                                 description = it.desc)
                     }
+                    // Fields Deduplication
+                    .distinctBy { it.field }
         } else mutableListOf()
     }
 }

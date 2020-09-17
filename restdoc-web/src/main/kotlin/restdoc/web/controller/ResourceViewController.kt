@@ -16,4 +16,5 @@ class ResourceViewController {
     fun add(@PathVariable projectId: String): String {
         return "resource/add"
     }
+
 }

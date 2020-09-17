@@ -28,6 +28,10 @@ class RestWebDocumentViewController {
     @GetMapping("/{projectId}/document/view/list/")
     fun list(@PathVariable projectId: String, model: Model): String = listView(projectId, model)
 
+
+    @GetMapping("/document/json/convert")
+    fun jsonToDescriptor() = "docs/convert_json"
+
     // Handler Lambda Expression
     val listView: ((String, Model) -> String) =
             { projectId, model ->

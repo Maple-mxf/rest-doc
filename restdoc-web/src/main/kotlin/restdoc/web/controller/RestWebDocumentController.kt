@@ -13,6 +13,7 @@ import org.springframework.data.mongodb.core.query.Update
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.http.HttpMethod
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.client.RestTemplate
 import restdoc.client.api.model.InvocationResult
 import restdoc.client.api.model.RestWebInvocation
 import restdoc.client.api.model.RestWebInvocationResult
@@ -59,6 +60,9 @@ class RestWebDocumentController {
     lateinit var redisTemplate: RedisTemplate<String, Any>
 
     @Autowired
+    lateinit var restTemplate: RestTemplate
+
+    @Autowired
     lateinit var mapper: ObjectMapper
 
     @Autowired
@@ -74,9 +78,10 @@ class RestWebDocumentController {
     @GetMapping("/{id}")
     fun get(@PathVariable id: String): Result = ok(mongoTemplate.findById(id, Project::class.java))
 
-    private fun extractRawPath(url: String): String {
+    private fun extractRawPath(url: String, uriVars: Map<String, Any>): String {
+        val uri = restTemplate.uriTemplateHandler.expand(url, uriVars)
         return when {
-            url.startsWith("http") -> URI(url).rawPath
+            url.startsWith("http") -> uri.rawPath
             url.matches(Regex("^([/][a-zA-Z0-9])+[/]?$")) -> url
             else -> {
                 val arr = url.split(delimiters = *arrayOf("/"))
@@ -118,12 +123,14 @@ class RestWebDocumentController {
         val responseBodyDescriptor = dto.mapToResponseDescriptor()
         val uriVarDescriptor = dto.mapToURIVarDescriptor()
 
+        val uriVars = uriVarDescriptor.map { it.field to it.value }.toMap()
+
         val document = RestWebDocument(
                 id = IDUtil.id(),
                 name = dto.name,
                 projectId = dto.projectId,
                 resource = dto.resource,
-                url = extractRawPath(dto.url),
+                url = extractRawPath(dto.url, uriVars),
                 requestHeaderDescriptor = requestHeaderDescriptor,
                 requestBodyDescriptor = requestBodyDescriptor,
                 responseBodyDescriptors = responseBodyDescriptor,
@@ -149,13 +156,15 @@ class RestWebDocumentController {
         val responseBodyDescriptor = dto.mapToResponseDescriptor()
         val uriVarDescriptor = dto.mapToURIVarDescriptor()
 
+        val uriVars = uriVarDescriptor.map { it.field to it.value }.toMap()
+
         // Save An Api Project Document
         val document = RestWebDocument(
                 id = dto.documentId,
                 name = dto.name,
                 projectId = dto.projectId,
                 resource = dto.resource,
-                url = extractRawPath(dto.url),
+                url = extractRawPath(dto.url, uriVars),
                 requestHeaderDescriptor = requestHeaderDescriptor,
                 requestBodyDescriptor = requestBodyDescriptor,
                 responseBodyDescriptors = responseBodyDescriptor,
@@ -191,7 +200,7 @@ class RestWebDocumentController {
 
             rpcExecuteTask(dto)
         } else {
-            if (!dto.url.startsWith("http") || !dto.url.startsWith("https"))
+            if (!dto.url.startsWith("http") && !dto.url.startsWith("https"))
                 Status.BAD_REQUEST.error("链接无效")
             outExecuteTask(dto)
         }
