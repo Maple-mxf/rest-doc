@@ -426,7 +426,7 @@
             var did = $("#documentId").val();
             map["projectId"] = $("#projectId").val();
 
-            if (did === "") {
+            if (did === undefined || did === "") {
                 method = "POST"
             } else {
                 method = "PUT";

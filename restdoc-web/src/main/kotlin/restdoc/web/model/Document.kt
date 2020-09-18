@@ -204,7 +204,7 @@ data class HistoryFieldDescription(
         /**
          * Field frequency
          */
-        var frequency: Int = 0
+        var frequency: Int = 1
 )
 
 /**

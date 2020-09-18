@@ -3,7 +3,6 @@ package restdoc.web.controller
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Sort.Order.asc
@@ -53,25 +52,22 @@ import javax.validation.Valid
 class RestWebDocumentController {
 
     @Autowired
-    lateinit var mongoTemplate: MongoTemplate
+    private lateinit var mongoTemplate: MongoTemplate
 
     @Autowired
-    lateinit var projectRepository: ProjectRepository
+    private lateinit var projectRepository: ProjectRepository
 
     @Autowired
-    lateinit var restWebDocumentRepository: RestWebDocumentRepository
+    private lateinit var restWebDocumentRepository: RestWebDocumentRepository
 
     @Autowired
-    lateinit var redisTemplate: RedisTemplate<String, Any>
+    private lateinit var redisTemplate: RedisTemplate<String, Any>
 
     @Autowired
-    lateinit var restTemplate: RestTemplate
+    private lateinit var mapper: ObjectMapper
 
     @Autowired
-    lateinit var mapper: ObjectMapper
-
-    @Autowired
-    lateinit var httpTaskExecutor: HttpTaskExecutor
+    private lateinit var httpTaskExecutor: HttpTaskExecutor
 
     @GetMapping("/list/{projectId}")
     fun list(@PathVariable projectId: String): Result {
@@ -183,8 +179,10 @@ class RestWebDocumentController {
 
         val updateResult = restWebDocumentRepository.update(document)
 
-        GlobalScope.launch {
-            optimizationAndAutocomplete(dto.projectId, document)
+        if (updateResult.matchedCount > 0) {
+            GlobalScope.launch {
+                optimizationAndAutocomplete(dto.projectId, document)
+            }
         }
 
         return ok(document.id)
@@ -360,11 +358,11 @@ class RestWebDocumentController {
 
     private suspend fun optimizationAndAutocomplete(projectId: String, doc: RestWebDocument) {
         try {
-            // 1 Autocomplete
-            this.autocomplete(projectId, doc)
-
-            // 2 Optimization
+            // 1 Optimization
             this.optimization(projectId, doc)
+
+            // 2 Autocomplete
+            this.autocomplete(projectId, doc)
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -394,6 +392,8 @@ class RestWebDocumentController {
                 ?.forEach {
                     it.description = getRecommendDescription(projectId = projectId, field = it.path, type = FieldDescType.RESPONSE_PARAM)
                 }
+
+        restWebDocumentRepository.update(doc)
     }
 
     /*private inner class CountDescription {
@@ -413,7 +413,7 @@ class RestWebDocumentController {
         val mappedResults = mongoTemplate.aggregate(newAggregation(match, count),
                 HistoryFieldDescription::class.java, CountDescription::class.java).mappedResults*/
 
-        val query = Query().addCriteria(Criteria("projectId").`is`(projectId).and("type").`is`(type).and(" field").`is`(field))
+        val query = Query().addCriteria(Criteria("projectId").`is`(projectId).and("type").`is`(type).and("field").`is`(field))
                 .with(by(desc("frequency")))
         query.limit(1)
 
@@ -458,7 +458,7 @@ class RestWebDocumentController {
                 HistoryFieldDescription(
                         id = IDUtil.id(),
                         field = it.key,
-                        description = it.value,
+                        description = it.value.replace("\n", ""),
                         type = FieldDescType.REQUEST_PARAM,
                         projectId = projectId)
             }
@@ -469,7 +469,7 @@ class RestWebDocumentController {
                 HistoryFieldDescription(
                         id = IDUtil.id(),
                         field = it.key,
-                        description = it.value,
+                        description = it.value.replace("\n", ""),
                         type = FieldDescType.RESPONSE_PARAM,
                         projectId = projectId)
             }
@@ -480,7 +480,7 @@ class RestWebDocumentController {
                 HistoryFieldDescription(
                         id = IDUtil.id(),
                         field = it.key,
-                        description = it.value,
+                        description = it.value.replace("\n", "").trim(),
                         type = FieldDescType.HEADER,
                         projectId = projectId)
             }
@@ -493,7 +493,8 @@ class RestWebDocumentController {
 
         historyFieldsDesc.forEach {
 
-            val query = Query().addCriteria(Criteria("projectId").`is`(projectId).and("type").`is`(it.type).and(" field").`is`(it.field))
+            val query = Query().addCriteria(Criteria("projectId").`is`(projectId).and("type").`is`(it.type).and("field").`is`(it.field)
+                    .and("description").`is`(it.description))
                     .with(by(desc("frequency")))
 
             val hfd = mongoTemplate.findOne(query, HistoryFieldDescription::class.java)
