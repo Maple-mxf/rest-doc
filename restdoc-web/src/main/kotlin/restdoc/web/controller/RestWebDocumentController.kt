@@ -7,6 +7,7 @@ import org.springframework.data.domain.Sort.Order.asc
 import org.springframework.data.domain.Sort.Order.desc
 import org.springframework.data.domain.Sort.by
 import org.springframework.data.mongodb.core.MongoTemplate
+import org.springframework.data.mongodb.core.aggregation.Aggregation.*
 import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.data.mongodb.core.query.Update
@@ -39,6 +40,7 @@ import java.net.URL
 import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.validation.Valid
+import kotlin.properties.Delegates
 
 /**
  * @see Project
@@ -314,7 +316,7 @@ class RestWebDocumentController {
                 content = dto.content,
                 docType = DocType.WIKI
         )
-
+        
         if (save) {
             restWebDocumentRepository.save(document)
         } else {
@@ -346,20 +348,85 @@ class RestWebDocumentController {
         return ok()
     }
 
-    fun saveHistoryFieldDesc(projectId: String, doc: RestWebDocument) {
-        val fieldMap1: Map<String, String>? = doc.uriVarDescriptors
+    /**
+     * Autocomplete field description
+     */
+    private fun autocomplete(projectId: String, doc: RestWebDocument) {
+        // 1 Autocomplete header descriptor
+        doc.requestHeaderDescriptor
+                ?.filter { it.description == null || it.description!!.isEmpty() }
+                ?.forEach {
+                    it.description = getRecommendDescription(projectId = projectId, field = it.field, type = FieldDescType.HEADER)
+                }
+
+        // 2 Autocomplete request descriptor
+        doc.requestBodyDescriptor
+                ?.filter { it.description == null || it.description!!.isEmpty() }
+                ?.forEach {
+                    it.description = getRecommendDescription(projectId = projectId, field = it.path, type = FieldDescType.REQUEST_PARAM)
+                }
+
+        // 3 Autocomplete response descriptor
+        doc.responseBodyDescriptors
+                ?.filter { it.description == null || it.description!!.isEmpty() }
+                ?.forEach {
+                    it.description = getRecommendDescription(projectId = projectId, field = it.path, type = FieldDescType.RESPONSE_PARAM)
+                }
+    }
+
+    private inner class CountDescription {
+        lateinit var _id: String
+        var frequency by Delegates.notNull<Long>()
+    }
+
+
+    /**
+     * Get recommend field description
+     */
+    private fun getRecommendDescription(projectId: String,
+                                        field: String,
+                                        type: FieldDescType): String? {
+
+        val match = match(Criteria("projectId").`is`(projectId).and("type").`is`(type).and(" field").`is`(field))
+        val count = group("description").push("createTime").`as`("createTime").count().`as`("frequency")
+        val mappedResults = mongoTemplate.aggregate(newAggregation(match, count),
+                HistoryFieldDescription::class.java, CountDescription::class.java).mappedResults
+
+        return mappedResults.maxBy { it.frequency }?._id
+    }
+
+    private fun saveHistoryFieldDesc(projectId: String, doc: RestWebDocument) {
+
+        val fieldMap1 = doc.uriVarDescriptors
                 ?.filter { it.description != null && it.description.isNotEmpty() }
                 ?.map { it.field to it.description!! }
                 ?.toMap()
 
-        val fieldMap2: Map<String, String>? = doc.requestBodyDescriptor?.map { it.path to it.description }?.filter { it.second != null && it.second!!.isNotEmpty() }?.toMap()
-        val fieldMap3: Map<String, String>? = doc.responseBodyDescriptors?.map { it.path to it.description }?.filter { it.second != null && it.second!!.isNotEmpty() }?.toMap()
+        val fieldMap2 = doc.requestBodyDescriptor
+                ?.filter { it.description != null && it.description!!.isNotEmpty() }
+                ?.map { it.path to it.description!! }
+                ?.toMap()
+
+        val fieldMap3 = doc.responseBodyDescriptors
+                ?.filter { it.description != null && it.description!!.isNotEmpty() }
+                ?.map { it.path to it.description!! }
+                ?.toMap()
+
+        val fieldMap4 = doc.requestHeaderDescriptor
+                ?.filter { it.description != null && it.description!!.isNotEmpty() }
+                ?.map { it.field to it.description!! }
+                ?.toMap()
 
         val requestFieldParamMap = mutableMapOf<String, String>()
+        val responseFieldParamMap = mutableMapOf<String, String>()
+        val headerFieldParamMap = mutableMapOf<String, String>()
+
         fieldMap1?.let { requestFieldParamMap.putAll(it) }
         fieldMap2?.let { requestFieldParamMap.putAll(it) }
+        fieldMap3?.let { responseFieldParamMap.putAll(it) }
+        fieldMap4?.let { headerFieldParamMap.putAll(it) }
 
-        fieldMap1?.let { map ->
+        val requestFieldsDesc = requestFieldParamMap.let { map ->
             map.map {
                 HistoryFieldDescription(
                         id = IDUtil.id(),
@@ -369,6 +436,35 @@ class RestWebDocumentController {
                         projectId = projectId)
             }
         }
+
+        val responseFieldDesc = responseFieldParamMap.let { map ->
+            map.map {
+                HistoryFieldDescription(
+                        id = IDUtil.id(),
+                        field = it.key,
+                        description = it.value,
+                        type = FieldDescType.RESPONSE_PARAM,
+                        projectId = projectId)
+            }
+        }
+
+        val headerFieldDesc = headerFieldParamMap.let { map ->
+            map.map {
+                HistoryFieldDescription(
+                        id = IDUtil.id(),
+                        field = it.key,
+                        description = it.value,
+                        type = FieldDescType.HEADER,
+                        projectId = projectId)
+            }
+        }
+
+        val historyFieldsDesc = mutableListOf<HistoryFieldDescription>()
+        historyFieldsDesc.addAll(headerFieldDesc)
+        historyFieldsDesc.addAll(requestFieldsDesc)
+        historyFieldsDesc.addAll(responseFieldDesc)
+
+        historyFieldsDesc.forEach { mongoTemplate.save(it) }
     }
 }
 
