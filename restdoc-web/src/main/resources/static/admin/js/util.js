@@ -21,10 +21,10 @@ function initTestApiDoc(document, form, one_uri_line, one_request_header_line,
             .attr("selected", true);
 
         // 设定api地址
-        $('#url').val(document['url'])
+        $('#url').val(document['url']);
 
         // 设定api名称
-        $('#apiName').val(document['name'])
+        $('#apiName').val(document['name']);
 
         // 设定描述
         $('#apiDescription').text(document['description']);
@@ -58,12 +58,17 @@ function initResponseParamDoc(responseFields, one_response_param_line) {
     var all_input_line = $("#response-fieldset").children(".one-response-body-line");
     for (let i = 0; i < all_input_line.length; i++) {
         let line = all_input_line[i];
+
+
         $(line).find("input").each(function () {
             if (this.name === 'responseFieldPath') {
                 this.value = responseFields[i]['path']
             }
         });
-        $(line).find("textarea:first-child").text(responseFields[i]['description']);
+
+        $(line).find("textarea").text(responseFields[i]['description']);
+
+        //
         $($(line).find("select:first-child"))
             .find("option[value=" + responseFields[i]['type'] + "]")
             .attr("selected", true);
@@ -88,7 +93,7 @@ function initRequestParamDoc(requestFields, one_request_param_line) {
                 this.value = requestFields[i]['value']
             }
         });
-        $(line).find("textarea:first-child").text(requestFields[i]['description'])
+        $(line).find("textarea").text(requestFields[i]['description'])
         $($(line).find("select:first-child"))
             .find("option[value=" + requestFields[i]['type'] + "]")
             .attr("selected", true);
@@ -136,7 +141,7 @@ function initUriFieldDoc(uriVariables, oneuriline) {
             }
         });
 
-        $(line).find("textarea:first-child").text(uriVariables[i]['description']);
+        $(line).find("textarea:first-child").html(uriVariables[i]['description']);
 
         $("#uri-fieldset").addClass("layui-show");
     }

@@ -106,7 +106,6 @@
                     <div class="layui-colla-item">
                         <h2 class="layui-colla-title layui-bg-red">REST路径参数</h2>
                         <div class="layui-colla-content layui-bg-gray" id="uri-fieldset">
-
                             <div class="layui-form-item" style="margin-top: 10px">
                                 <div class="layui-inline">
                                     <button type="button" class="layui-btn layui-btn-primary"
@@ -115,7 +114,6 @@
                                     </button>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -701,10 +699,10 @@
         }
 
         function getHeaderKeyValueJsonArray() {
-            var headerKeyNodes = $('input[name=headerKey]')
-            var headerValueNodes = $('input[name=headerValue]')
-            var headerDescriptionNodes = $('textarea[name=headerDescription]')
-            var headerConstraintNodes = $('input[name=headerConstraint]')
+            var headerKeyNodes = $('input[name=headerKey]');
+            var headerValueNodes = $('input[name=headerValue]');
+            var headerDescriptionNodes = $('textarea[name=headerDescription]');
+            var headerConstraintNodes = $('input[name=headerConstraint]');
 
             var array = [];
 
@@ -782,7 +780,6 @@
             initTestApiDoc(document, form, oneuriline, oneheaderline, oneline, responseoneline);
             element.render('collapse');
         }
-
     });
 
 

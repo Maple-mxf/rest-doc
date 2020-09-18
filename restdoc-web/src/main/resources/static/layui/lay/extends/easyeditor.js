@@ -240,7 +240,7 @@ layui.define(['jquery', 'layer', 'form', 'element', 'upload', 'code', 'face'], f
                             }
                         }
                     },
-                    h2:function (editor) {
+                    h2: function (editor) {
                         layui.focusInsert(editor[0], '#2  ');
                         if (options.onchangeCallback != null && options.onchangeCallback.length > 0) {
                             for (let i = 0; i < options.onchangeCallback.length; i++) {
@@ -249,7 +249,7 @@ layui.define(['jquery', 'layer', 'form', 'element', 'upload', 'code', 'face'], f
                         }
                     },
 
-                    h3:function (editor) {
+                    h3: function (editor) {
                         layui.focusInsert(editor[0], '#3  ');
                         if (options.onchangeCallback != null && options.onchangeCallback.length > 0) {
                             for (let i = 0; i < options.onchangeCallback.length; i++) {
@@ -258,7 +258,7 @@ layui.define(['jquery', 'layer', 'form', 'element', 'upload', 'code', 'face'], f
                         }
                     },
 
-                    h4:function (editor) {
+                    h4: function (editor) {
                         layui.focusInsert(editor[0], '#4   ');
                         if (options.onchangeCallback != null && options.onchangeCallback.length > 0) {
                             for (let i = 0; i < options.onchangeCallback.length; i++) {
@@ -457,7 +457,7 @@ layui.define(['jquery', 'layer', 'form', 'element', 'upload', 'code', 'face'], f
             });
             easyeditor.codeContent({elem: $(options.elem).find('pre')});
         }
-    }
+    };
 
     if (!easyeditor.faces) {
         easyeditor.faces = face;

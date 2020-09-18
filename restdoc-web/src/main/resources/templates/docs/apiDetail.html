@@ -20,7 +20,7 @@
             font-size: 15px;
         }
 
-        pre{
+        pre {
             background-color: #283142;
             color: white;
             font-size: 16px;
@@ -60,6 +60,7 @@
         .headerTitle {
             font-family: Roboto, serif;
             margin-top: 30px;
+            font-weight: bold;
         }
 
         .api-content {
@@ -95,9 +96,7 @@
                         <span style="margin-left: 2%"><h2 th:text="${document.name}"></h2></span>
                         <div class="layui-row code-block" style="margin-top: 1%; height: 60px;line-height: 60px; ">
                             <span style="margin-left: 2%">HTTP1.1 GET <span th:text="${document.url}"></span></span>
-                            <span id="urlSpan" style="position: absolute;right: 10px;margin-top: -1%">
-                    <i class="layui-icon layui-icon-file-b" style="font-size: 25px; color: whitesmoke;"
-                       title="复制URL"></i></span>
+                            <span id="urlSpan" style="position: absolute;right: 10px;margin-top: -1%"><i class="layui-icon layui-icon-file-b" style="font-size: 25px; color: whitesmoke;" title="复制URL" id="copyURL"></i></span>
                         </div>
 
                         <br>
@@ -248,8 +247,7 @@
 
                         <div class="layui-row">
                             <h3 class="headerTitle">请求示例</h3>
-                            <pre id="codeSample" class="code-block api-content">
-                  </pre>
+                            <pre id="codeSample" class="code-block api-content"></pre>
                         </div>
                     </div>
                 </div>
@@ -271,6 +269,7 @@
 <script th:inline="javascript">
 
     var documentId = [[${document.id}]];
+    var url = [[${document.url}]];
 
 
     layui.use([
@@ -279,6 +278,20 @@
         var $ = layui.jquery;
         var layer = layui.layer;
         var element = layui.element;
+
+
+        $("#copyURL").click(function () {
+            const input = document.createElement('input');
+            document.body.appendChild(input);
+            input.setAttribute('value', url);
+            input.select();
+            if (document.execCommand('copy')) {
+                document.execCommand('copy');
+                layer.msg("复制成功")
+            }
+            document.body.removeChild(input);
+
+        });
 
         element.on('tab(docDemoTabBrief)', function (data) {
             if (0 === data.index) {

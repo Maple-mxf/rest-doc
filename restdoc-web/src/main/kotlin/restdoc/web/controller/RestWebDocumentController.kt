@@ -15,7 +15,6 @@ import org.springframework.data.mongodb.core.query.Update
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.http.HttpMethod
 import org.springframework.web.bind.annotation.*
-import org.springframework.web.client.RestTemplate
 import restdoc.client.api.model.InvocationResult
 import restdoc.client.api.model.RestWebInvocation
 import restdoc.client.api.model.RestWebInvocationResult
