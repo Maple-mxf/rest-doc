@@ -199,7 +199,12 @@ data class HistoryFieldDescription(
         /**
          * Create Time
          */
-        val createTime: Long = now()
+        val createTime: Long = now(),
+
+        /**
+         * Field frequency
+         */
+        var frequency: Int = 0
 )
 
 /**
