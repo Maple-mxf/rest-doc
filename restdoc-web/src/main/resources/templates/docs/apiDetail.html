@@ -253,8 +253,7 @@
                     {field: 'path', width: '30%', title: '参数'}
                     , {field: 'type', width: '15%', title: '类型'}
                     , {field: 'value', width: '20%', title: '示例值', edit: 'text'}
-                    // , {field: 'optional', width: '10%', title: '是否可选'}
-                    , {field: 'description', width: '25%', title: '说明', edit: 'text'}
+                    , {field: 'description', width: '35%', title: '说明', edit: 'text'}
                 ]
             ]
             , align: 'center'
@@ -274,6 +273,11 @@
         table.on('edit(requestBodyFieldListTable)', function (obj) {
             var value = obj.value, data = obj.data, field = obj.field;
             updateDocumentTable("requestBody", data)
+        });
+
+        table.on('edit(responseBodyFieldListTable)', function (obj) {
+            var value = obj.value, data = obj.data, field = obj.field;
+            updateDocumentTable("responseBody", data)
         });
 
 
@@ -297,7 +301,6 @@
             });
         }
 
-
         $("#copyURL").click(function () {
             const input = document.createElement('input');
             document.body.appendChild(input);
@@ -308,7 +311,6 @@
                 layer.msg("复制成功")
             }
             document.body.removeChild(input);
-
         });
 
         element.on('tab(docDemoTabBrief)', function (data) {

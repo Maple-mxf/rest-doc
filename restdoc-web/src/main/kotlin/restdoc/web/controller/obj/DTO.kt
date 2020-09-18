@@ -165,6 +165,6 @@ data class SyncApiEmptyTemplateDto(val clientId: String, val projectId: String, 
 
 
 data class UpdateURIVarSnippetDto(val field: String, val value: String, val description: String)
-data class UpdateRequestHeaderSnippetDto(val field: String, val value: String, val optional: Any, val description: String)
-data class UpdateRequestBodySnippetDto(val path: String, val value: String, val optional: Any, val description: String)
-data class UpdateResponseBodySnippetDto(val path: String, val value: String, val description: String)
+data class UpdateRequestHeaderSnippetDto(val field: String, val value: List<String>, val optional: Any, val description: String)
+data class UpdateRequestBodySnippetDto(val path: String, val value: Any, val optional: Any, val description: String)
+data class UpdateResponseBodySnippetDto(val path: String, val value: Any, val description: String)

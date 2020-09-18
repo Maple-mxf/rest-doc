@@ -32,7 +32,6 @@ import restdoc.web.util.IDUtil.now
 import restdoc.web.util.JsonDeProjector
 import restdoc.web.util.JsonProjector
 import restdoc.web.util.PathValue
-import java.lang.Exception
 import java.net.URI
 import java.net.URL
 import java.util.*
@@ -547,7 +546,7 @@ class RestWebDocumentController {
 
         doc.requestHeaderDescriptor?.filter { it.field == dto.field }
                 ?.forEach {
-                    it.value = dto.value.split(",")
+                    it.value = dto.value
                     it.description = dto.description
                 }
 
@@ -564,7 +563,7 @@ class RestWebDocumentController {
 
         doc.requestBodyDescriptor?.filter { it.path == dto.path }
                 ?.forEach {
-                    it.value = dto.value.split(",")
+                    it.value = dto.value
                     it.description = dto.description
                 }
 
@@ -581,7 +580,7 @@ class RestWebDocumentController {
 
         doc.responseBodyDescriptors?.filter { it.path == dto.path }
                 ?.forEach {
-                    it.value = dto.value.split(",")
+                    it.value = dto.value
                     it.description = dto.description
                 }
 
