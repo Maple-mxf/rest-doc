@@ -146,6 +146,10 @@ class RestWebDocumentController {
 
         restWebDocumentRepository.save(document)
 
+        GlobalScope.launch {
+            optimizationAndAutocomplete(dto.projectId, document)
+        }
+
         return ok(document.id)
     }
 
@@ -353,7 +357,7 @@ class RestWebDocumentController {
 
         return ok()
     }
-    
+
     private suspend fun optimizationAndAutocomplete(projectId: String, doc: RestWebDocument) {
         try {
             // 1 Autocomplete
