@@ -35,3 +35,19 @@ data class NavNode(var id: String,
                    var type: NodeType = NodeType.RESOURCE
 
 )
+
+
+/**
+ * Layui data format
+ *
+ * {
+"code": 0,
+"msg": "",
+"count": 1000,
+"data": [{}, {}]
+}
+ *
+ */
+fun layuiTableOK(data: Any, count: Int): LayuiTable = LayuiTable(code = 0, count = count, data = data, msg = null)
+
+data class LayuiTable(val code: Int, var msg: String?, val count: Int = 0, val data: Any? = null)

@@ -96,9 +96,10 @@
                         <span style="margin-left: 2%"><h2 th:text="${document.name}"></h2></span>
                         <div class="layui-row code-block" style="margin-top: 1%; height: 60px;line-height: 60px; ">
                             <span style="margin-left: 2%">HTTP1.1 GET <span th:text="${document.url}"></span></span>
-                            <span id="urlSpan" style="position: absolute;right: 10px;margin-top: -1%"><i class="layui-icon layui-icon-file-b" style="font-size: 25px; color: whitesmoke;" title="复制URL" id="copyURL"></i></span>
+                            <span id="urlSpan" style="position: absolute;right: 10px;margin-top: -1%"><i
+                                    class="layui-icon layui-icon-file-b" style="font-size: 25px; color: whitesmoke;"
+                                    title="复制URL" id="copyURL"></i></span>
                         </div>
-
                         <br>
 
                         <div class="layui-row"
@@ -114,29 +115,8 @@
                              th:if="${document.uriVarDescriptors!=null and !document.uriVarDescriptors.isEmpty()}">
                             <h3 class="headerTitle">URI路径参数列表</h3>
                             <p>
-                            <table class="layui-table api-content" lay-size="lg">
-                                <colgroup>
-                                    <col width="200">
-                                    <col width="200">
-                                    <col width="200">
-                                    <col width="200">
-                                </colgroup>
-                                <thead class="layui-bg-black">
-                                <tr>
-                                    <th>请求头参数</th>
-                                    <th>示例值</th>
-                                    <th>参数说明</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <th:foreach th:each="item :${document.uriVarDescriptors}">
-                                    <tr>
-                                        <td th:text="${item.field}"></td>
-                                        <td th:text="${item.value}"></td>
-                                        <td th:utext="${item.description}"></td>
-                                    </tr>
-                                </th:foreach>
-                                </tbody>
+                            </p>
+                            <table class="layui-table" id="uriFieldListTable" lay-filter="uriFieldListTable">
                             </table>
                         </div>
 
@@ -146,33 +126,9 @@
                              th:if="${document.requestHeaderDescriptor!=null and !document.requestHeaderDescriptor.isEmpty()}">
                             <h3 class="headerTitle">请求头参数列表</h3>
                             <p>
-                            <table class="layui-table api-content" lay-size="lg">
-                                <colgroup>
-                                    <col width="200">
-                                    <col width="200">
-                                    <col width="200">
-                                    <col width="200">
-                                </colgroup>
-                                <thead>
-                                <tr>
-                                    <th>请求头参数</th>
-                                    <th>示例值</th>
-                                    <th>是否可选</th>
-                                    <th>参数说明</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <th:foreach th:each="item :${document.requestHeaderDescriptor}">
-                                    <tr>
-                                        <td th:text="${item.field}"></td>
-                                        <td th:text="${item.value}"></td>
-                                        <td th:text="${item.optional}"></td>
-                                        <td th:utext="${item.description}"></td>
-                                    </tr>
-                                </th:foreach>
-                                </tbody>
-                            </table>
 
+                            <table class="layui-table" id="requestHeaderListTable" lay-filter="requestHeaderListTable">
+                            </table>
                         </div>
 
                         <br>
@@ -180,36 +136,10 @@
                              th:if="${document.requestBodyDescriptor!=null and !document.requestBodyDescriptor.isEmpty()}">
                             <h3 class="headerTitle">请求参数列表</h3>
                             <p>
-                            <table class="layui-table api-content" lay-size="lg">
-                                <colgroup>
-                                    <col width="200">
-                                    <col width="200">
-                                    <col width="200">
-                                    <col width="200">
-                                    <col width="200">
-                                </colgroup>
-                                <thead>
-                                <tr>
-                                    <th>参数Path</th>
-                                    <th>参数类型</th>
-                                    <th>示例值</th>
-                                    <th>是否可选</th>
-                                    <th>参数说明</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <th:foreach th:each="item :${document.requestBodyDescriptor}">
-                                    <tr>
-                                        <td th:text="${item.path}"></td>
-                                        <td th:text="${item.type}"></td>
-                                        <td th:text="${item.value}"></td>
-                                        <td th:text="${item.optional}"></td>
-                                        <td th:utext="${item.description}"></td>
-                                    </tr>
-                                </th:foreach>
-                                </tbody>
+
+                            <table class="layui-table" id="requestBodyFieldListTable"
+                                   lay-filter="requestBodyFieldListTable">
                             </table>
-                            </p>
                         </div>
 
                         <br>
@@ -217,31 +147,10 @@
                              th:if="${document.responseBodyDescriptors!=null and !document.responseBodyDescriptors.isEmpty()}">
                             <h3 class="headerTitle">响应参数列表</h3>
                             <p>
-                            <table class="layui-table api-content" lay-size="lg">
-                                <colgroup>
-                                    <col width="200">
-                                    <col width="200">
-                                    <col width="200">
-                                    <col width="200">
-                                </colgroup>
-                                <thead>
-                                <tr style="font-weight: bold">
-                                    <th>参数Path</th>
-                                    <th>参数类型</th>
-                                    <th>参数说明</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <th:foreach th:each="item :${document.responseBodyDescriptors}">
-                                    <tr>
-                                        <td th:text="${item.path}"></td>
-                                        <td th:text="${item.type}"></td>
-                                        <td th:text="${item.defaultValue}"></td>
-                                        <td th:utext="${item.description}"></td>
-                                    </tr>
-                                </th:foreach>
-                                </tbody>
+                            <table class="layui-table" id="responseBodyFieldListTable"
+                                   lay-filter="responseBodyFieldListTable">
                             </table>
+
                         </div>
 
 
@@ -272,12 +181,121 @@
     var url = [[${document.url}]];
 
 
-    layui.use([
-        'util', 'layer',
-        'element', 'jquery'], function () {
+    layui.use(['table', 'util', 'layer', 'element', 'jquery',], function () {
         var $ = layui.jquery;
         var layer = layui.layer;
         var element = layui.element;
+        var table = layui.table;
+
+        let uriTable = table.render({
+            elem: '#uriFieldListTable'
+            , url: '/restdoc/document/' + documentId + '/snippet?type=uri'
+            , toolbar: false
+            , size: 'lg'
+            , unresize: true
+            , cols: [
+                [
+                    {field: 'field', width: '30%', title: '参数'}
+                    , {field: 'value', width: '30%', title: '示例值', edit: 'text'}
+                    , {field: 'description', width: '40%', title: '说明', edit: 'text'}
+                ]
+            ]
+            , align: 'center'
+            , style: 'background-color: red; color: #fff;'
+        });
+
+        let requestHeaderTable = table.render({
+            elem: '#requestHeaderListTable'
+            , url: '/restdoc/document/' + documentId + '/snippet?type=requestHeader'
+            , toolbar: false
+            , size: 'lg'
+            , unresize: true
+            , cols: [
+                [
+                    {field: 'field', width: '25%', title: '参数'}
+                    , {field: 'value', width: '25%', title: '示例值', edit: 'text'}
+                    , {field: 'optional', width: '20%', title: '是否可选'}
+                    , {field: 'description', width: '30%', title: '说明', edit: 'text'}
+                ]
+            ]
+            , align: 'center'
+            , style: 'background-color: red; color: #fff;'
+        });
+
+
+        table.render({
+            elem: '#requestBodyFieldListTable'
+            , url: '/restdoc/document/' + documentId + '/snippet?type=requestBody'
+            , toolbar: false
+            , size: 'lg'
+            , unresize: true
+            , cols: [
+                [
+                    {field: 'path', width: '30%', title: '参数'}
+                    , {field: 'type', width: '15%', title: '类型'}
+                    , {field: 'value', width: '20%', title: '示例值', edit: 'text'}
+                    , {field: 'optional', width: '10%', title: '是否可选'}
+                    , {field: 'description', width: '25%', title: '说明', edit: 'text'}
+                ]
+            ]
+            , align: 'center'
+            , style: 'background-color: red; color: #fff;'
+        });
+
+        table.render({
+            elem: '#responseBodyFieldListTable'
+            , url: '/restdoc/document/' + documentId + '/snippet?type=responseBody'
+            , toolbar: false
+            , size: 'lg'
+            , unresize: true
+            , cols: [
+                [
+                    {field: 'path', width: '30%', title: '参数'}
+                    , {field: 'type', width: '15%', title: '类型'}
+                    , {field: 'value', width: '20%', title: '示例值', edit: 'text'}
+                    // , {field: 'optional', width: '10%', title: '是否可选'}
+                    , {field: 'description', width: '25%', title: '说明', edit: 'text'}
+                ]
+            ]
+            , align: 'center'
+            , style: 'background-color: red; color: #fff;'
+        });
+
+
+        table.on('edit(uriFieldListTable)', function (obj) {
+            var value = obj.value, data = obj.data, field = obj.field;
+            updateDocumentTable("uri", data)
+        });
+        table.on('edit(requestHeaderListTable)', function (obj) {
+            var value = obj.value, data = obj.data, field = obj.field;
+            updateDocumentTable("requestHeader", data)
+        });
+
+        table.on('edit(requestBodyFieldListTable)', function (obj) {
+            var value = obj.value, data = obj.data, field = obj.field;
+            updateDocumentTable("requestBody", data)
+        });
+
+
+        /**
+         *
+         */
+        function updateDocumentTable(type, data) {
+            $.ajax({
+                method: 'PATCH',
+                url: '/restdoc/document/' + documentId + '/snippet/' + type,
+                contentType: 'application/json;charset=utf-8',
+                dataType: 'json',
+                data: JSON.stringify(data),
+                success: function (data) {
+                    if ('200' === data['code']) {
+                        layer.msg("文档修改成功");
+                    } else {
+                        layer.msg(data['message']);
+                    }
+                }
+            });
+        }
 
 
         $("#copyURL").click(function () {
@@ -298,20 +316,6 @@
                 var projectId = $("#projectId").val();
                 $("#testApiFrame").attr("src", "/restdoc/" + projectId + '/document/view/' + documentId + "/test")
             }
-
-        });
-
-        $("#test").click(function () {
-            /*layer.open({
-                title: 'API Explorer',
-                area: ['900px', '600px'],
-                scrollbar: false,
-                type: 2,
-                content: '/restdoc/explorer/view/' + docId + '/test',
-                closeBtn: 1,
-                btn: ['关闭'],
-            });*/
-
         });
 
         $("#delete").click(function () {
@@ -344,7 +348,6 @@
     });
 
     var sample = [[${sample}]];
-
 
     try {
         var obj = JSON.parse(sample);

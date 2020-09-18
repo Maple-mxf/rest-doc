@@ -162,3 +162,9 @@ data class CreateUpdateWikiDto(
 data class UpdateNodeDto(@NotBlank(message = "名称不可为空") val name: String)
 
 data class SyncApiEmptyTemplateDto(val clientId: String, val projectId: String, @Deprecated(message = "") val name: String)
+
+
+data class UpdateURIVarSnippetDto(val field: String, val value: String, val description: String)
+data class UpdateRequestHeaderSnippetDto(val field: String, val value: String, val optional: Any, val description: String)
+data class UpdateRequestBodySnippetDto(val path: String, val value: String, val optional: Any, val description: String)
+data class UpdateResponseBodySnippetDto(val path: String, val value: String, val description: String)

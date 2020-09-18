@@ -142,7 +142,7 @@ data class RestWebDocument(
         /**
          *
          */
-        val uriVarDescriptors: List<URIVarDescriptor>?,
+        var uriVarDescriptors: List<URIVarDescriptor>?,
 
         /**
          *
@@ -217,14 +217,14 @@ data class HistoryAddress(@Id val id: String, val address: String,
 
 data class HeaderFieldDescriptor(
         val field: String,
-        val value: List<String>,
+        var value: List<String>,
         var description: String?,
         val optional: Boolean = false
 )
 
 data class BodyFieldDescriptor(
         var path: String,
-        val value: Any?,
+        var value: Any?,
         var description: String?,
         val type: FieldType = FieldType.OBJECT,
         val optional: Boolean = false,
@@ -245,8 +245,8 @@ data class BodyFieldDescriptor(
 
 data class URIVarDescriptor(
         val field: String,
-        val value: Any,
-        val description: String?
+        var value: Any,
+        var description: String?
 )
 
 /**

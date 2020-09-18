@@ -18,10 +18,7 @@ import org.springframework.web.bind.annotation.*
 import restdoc.client.api.model.InvocationResult
 import restdoc.client.api.model.RestWebInvocation
 import restdoc.client.api.model.RestWebInvocationResult
-import restdoc.web.controller.obj.CreateUpdateWikiDto
-import restdoc.web.controller.obj.RequestDto
-import restdoc.web.controller.obj.SyncApiEmptyTemplateDto
-import restdoc.web.controller.obj.UpdateNodeDto
+import restdoc.web.controller.obj.*
 import restdoc.web.core.Result
 import restdoc.web.core.Status
 import restdoc.web.core.failure
@@ -424,7 +421,7 @@ class RestWebDocumentController {
     private fun optimization(projectId: String, doc: RestWebDocument) {
 
         val fieldMap1 = doc.uriVarDescriptors
-                ?.filter { it.description != null && it.description.isNotEmpty() }
+                ?.filter { it.description != null && it.description!!.isNotEmpty() }
                 ?.map { it.field to it.description!! }
                 ?.toMap()
 
@@ -506,6 +503,91 @@ class RestWebDocumentController {
 
             } else mongoTemplate.save(it)
         }
+    }
+
+    @GetMapping("/{id}/snippet")
+    fun getSnippet(@PathVariable id: String, @RequestParam type: String): LayuiTable {
+        val uriVars = restWebDocumentRepository.findById(id)
+                .map {
+                    when (type) {
+                        "uri" -> it.uriVarDescriptors
+                        "requestHeader" -> it.requestHeaderDescriptor
+                        "requestBody" -> it.requestBodyDescriptor
+                        "responseBody" -> it.responseBodyDescriptors
+                        else -> listOf()
+                    }
+                }
+                .orElse(mutableListOf())
+
+        return layuiTableOK(uriVars!!, uriVars.size)
+    }
+
+    @PatchMapping("/{id}/snippet/uri")
+    fun patchURIVarsSnippet(@PathVariable id: String,
+                            @Valid @RequestBody dto: UpdateURIVarSnippetDto): Result {
+
+        val doc = restWebDocumentRepository.findById(id).orElseThrow(Status.BAD_REQUEST::instanceError)
+
+        doc.uriVarDescriptors?.filter { it.field == dto.field }
+                ?.forEach {
+                    it.value = dto.value
+                    it.description = dto.description
+                }
+
+        restWebDocumentRepository.update(doc)
+
+        return ok()
+    }
+
+    @PatchMapping("/{id}/snippet/requestHeader")
+    fun patchRequestHeaderSnippet(@PathVariable id: String,
+                                  @Valid @RequestBody dto: UpdateRequestHeaderSnippetDto): Result {
+
+        val doc = restWebDocumentRepository.findById(id).orElseThrow(Status.BAD_REQUEST::instanceError)
+
+        doc.requestHeaderDescriptor?.filter { it.field == dto.field }
+                ?.forEach {
+                    it.value = dto.value.split(",")
+                    it.description = dto.description
+                }
+
+        restWebDocumentRepository.update(doc)
+
+        return ok()
+    }
+
+    @PatchMapping("/{id}/snippet/requestBody")
+    fun patchRequestBodySnippet(@PathVariable id: String,
+                                @Valid @RequestBody dto: UpdateRequestBodySnippetDto): Result {
+
+        val doc = restWebDocumentRepository.findById(id).orElseThrow(Status.BAD_REQUEST::instanceError)
+
+        doc.requestBodyDescriptor?.filter { it.path == dto.path }
+                ?.forEach {
+                    it.value = dto.value.split(",")
+                    it.description = dto.description
+                }
+
+        restWebDocumentRepository.update(doc)
+
+        return ok()
+    }
+
+    @PatchMapping("/{id}/snippet/responseBody")
+    fun patchResponseBodySnippet(@PathVariable id: String,
+                                 @Valid @RequestBody dto: UpdateResponseBodySnippetDto): Result {
+
+        val doc = restWebDocumentRepository.findById(id).orElseThrow(Status.BAD_REQUEST::instanceError)
+
+        doc.responseBodyDescriptors?.filter { it.path == dto.path }
+                ?.forEach {
+                    it.value = dto.value.split(",")
+                    it.description = dto.description
+                }
+
+        restWebDocumentRepository.update(doc)
+
+        return ok()
     }
 }
 
