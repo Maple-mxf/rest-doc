@@ -127,6 +127,7 @@ data class RestWebDocument(
         /**
          *
          */
+        @Deprecated(message = "")
         var queryParam: Map<String, Any>? = null,
 
         /**
@@ -161,6 +162,10 @@ data class RestWebDocument(
 
 )
 
+enum class FieldDescType {
+    HEADER, REQUEST_PARAM, RESPONSE_PARAM
+}
+
 @Document(collection = "restdoc_history_field_description")
 data class HistoryFieldDescription(
         @Id val id: String,
@@ -175,7 +180,17 @@ data class HistoryFieldDescription(
         /**
          * Must Not Empty
          */
-        val description: String
+        val description: String,
+
+        /**
+         *
+         */
+        val type: FieldDescType = FieldDescType.REQUEST_PARAM,
+
+        /**
+         * Project
+         */
+        val projectId: String
 )
 
 /**

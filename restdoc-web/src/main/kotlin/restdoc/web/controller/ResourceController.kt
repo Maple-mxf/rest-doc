@@ -105,7 +105,6 @@ class ResourceController {
     fun patch(@PathVariable id: String, @RequestBody @Valid dto: UpdateNodeDto): Result {
         val updateResult = resourceRepository.update(Query().addCriteria(Criteria("_id").`is`(id)),
                 Update().set("name", dto.name))
-
         return ok()
     }
 }

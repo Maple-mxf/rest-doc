@@ -345,4 +345,30 @@ class RestWebDocumentController {
 
         return ok()
     }
+
+    fun saveHistoryFieldDesc(projectId: String, doc: RestWebDocument) {
+        val fieldMap1: Map<String, String>? = doc.uriVarDescriptors
+                ?.filter { it.description != null && it.description.isNotEmpty() }
+                ?.map { it.field to it.description!! }
+                ?.toMap()
+
+        val fieldMap2: Map<String, String>? = doc.requestBodyDescriptor?.map { it.path to it.description }?.filter { it.second != null && it.second!!.isNotEmpty() }?.toMap()
+        val fieldMap3: Map<String, String>? = doc.responseBodyDescriptors?.map { it.path to it.description }?.filter { it.second != null && it.second!!.isNotEmpty() }?.toMap()
+
+        val requestFieldParamMap = mutableMapOf<String, String>()
+        fieldMap1?.let { requestFieldParamMap.putAll(it) }
+        fieldMap2?.let { requestFieldParamMap.putAll(it) }
+
+        fieldMap1?.let { map ->
+            map.map {
+                HistoryFieldDescription(
+                        id = IDUtil.id(),
+                        field = it.key,
+                        description = it.value,
+                        type = FieldDescType.REQUEST_PARAM,
+                        projectId = projectId)
+            }
+        }
+    }
 }
+
