@@ -16,6 +16,10 @@ import restdoc.web.util.IDUtil
 import restdoc.web.util.IDUtil.now
 import javax.validation.Valid
 
+
+/**
+ *
+ */
 @RestController
 class ResourceController {
 

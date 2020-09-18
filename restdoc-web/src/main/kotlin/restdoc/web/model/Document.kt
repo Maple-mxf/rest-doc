@@ -161,10 +161,27 @@ data class RestWebDocument(
 
 )
 
+@Document(collection = "restdoc_history_field_description")
+data class HistoryFieldDescription(
+        @Id val id: String,
+
+        /**
+         * Field or Path
+         *
+         * Example: a.b.c:desc
+         */
+        @HashIndexed val field: String,
+
+        /**
+         * Must Not Empty
+         */
+        val description: String
+)
+
 /**
  * API test uri history
  */
-@Document(collection = "restdoc_test_history_address")
+@Document(collection = "restdoc_history_address")
 data class HistoryAddress(@Id val id: String, val address: String,
                           @HashIndexed val documentId: String, val createTime: Long)
 
