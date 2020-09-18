@@ -20,19 +20,11 @@
             font-size: 15px;
         }
 
-        pre {
-            background: #f4f4f4;
-            color: #666;
-            page-break-inside: avoid;
+        pre{
+            background-color: #283142;
+            color: white;
+            font-size: 16px;
             font-family: Roboto, serif;
-            font-size: 15px;
-            line-height: 1.6;
-            margin-bottom: 1.6em;
-            max-width: 100%;
-            overflow: auto;
-            padding: 1em 1.5em;
-            display: block;
-            word-wrap: break-word;
         }
 
         .common-code-pre {
@@ -57,7 +49,7 @@
             font-size: 15px;
         }
 
-        .layui-table th{
+        .layui-table th {
             text-align: center;
         }
 
@@ -88,7 +80,6 @@
 
 </head>
 <body>
-<input id="documentId" type="hidden" th:value="${document.id}">
 <input id="projectId" type="hidden" th:value="${projectId}">
 
 <div class="layui-fluid">
@@ -98,23 +89,33 @@
             <li>调试</li>
         </ul>
         <div class="layui-tab-content">
-            <div class="layui-tab-item layui-show">
+            <div class="layui-tab-item layui-show layui-container">
                 <div class="layui-row">
                     <div class="layui-col-md10">
                         <span style="margin-left: 2%"><h2 th:text="${document.name}"></h2></span>
                         <div class="layui-row code-block" style="margin-top: 1%; height: 60px;line-height: 60px; ">
                             <span style="margin-left: 2%">HTTP1.1 GET <span th:text="${document.url}"></span></span>
-
                             <span id="urlSpan" style="position: absolute;right: 10px;margin-top: -1%">
                     <i class="layui-icon layui-icon-file-b" style="font-size: 25px; color: whitesmoke;"
                        title="复制URL"></i></span>
+                        </div>
+
+                        <br>
+
+                        <div class="layui-row"
+                             th:if="${document.description !=null and document.description != ''}">
+                            <h3 class="headerTitle">API备注</h3>
+
+                            <br>
+                            <p th:utext="${document.description}">
+                            </p>
                         </div>
 
                         <div class="layui-row"
                              th:if="${document.uriVarDescriptors!=null and !document.uriVarDescriptors.isEmpty()}">
                             <h3 class="headerTitle">URI路径参数列表</h3>
                             <p>
-                            <table class="layui-table api-content" lay-size="lg" >
+                            <table class="layui-table api-content" lay-size="lg">
                                 <colgroup>
                                     <col width="200">
                                     <col width="200">
@@ -194,7 +195,6 @@
                                     <th>参数类型</th>
                                     <th>示例值</th>
                                     <th>是否可选</th>
-                                    <th>默认值</th>
                                     <th>参数说明</th>
                                 </tr>
                                 </thead>
@@ -205,7 +205,6 @@
                                         <td th:text="${item.type}"></td>
                                         <td th:text="${item.value}"></td>
                                         <td th:text="${item.optional}"></td>
-                                        <td th:text="${item.defaultValue}"></td>
                                         <td th:utext="${item.description}"></td>
                                     </tr>
                                 </th:foreach>
@@ -230,7 +229,6 @@
                                 <tr style="font-weight: bold">
                                     <th>参数Path</th>
                                     <th>参数类型</th>
-                                    <th>默认值</th>
                                     <th>参数说明</th>
                                 </tr>
                                 </thead>
@@ -257,7 +255,6 @@
                 </div>
             </div>
             <div class="layui-tab-item">
-                <!--                "/restdoc/" + projectId + '/document/view/' + documentId + "/test"-->
                 <iframe id="testApiFrame" th:src="@{'/'+${projectId}+'/document/view/'+${document.id}+'/test'}"
                         style="width: 100%;height: 900px" frameborder=”no” border=”0″ marginwidth=”0″
                         marginheight=”0″></iframe>
@@ -273,6 +270,8 @@
 <script th:src="@{/admin/js/util.js}"></script>
 <script th:inline="javascript">
 
+    var documentId = [[${document.id}]];
+
 
     layui.use([
         'util', 'layer',
@@ -281,11 +280,9 @@
         var layer = layui.layer;
         var element = layui.element;
 
-        var docId = $("#documentId").val();
         element.on('tab(docDemoTabBrief)', function (data) {
             if (0 === data.index) {
                 var projectId = $("#projectId").val();
-                var documentId = $("#documentId").val();
                 $("#testApiFrame").attr("src", "/restdoc/" + projectId + '/document/view/' + documentId + "/test")
             }
 
@@ -308,8 +305,6 @@
             layer.confirm('确山删除文档？删除后不可恢复', {
                 btn: ['确定', '取消']
             }, function (index, layero) {
-
-                var documentId = $("#documentId").val();
 
                 $.ajax({
                     type: 'DELETE',

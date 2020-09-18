@@ -170,7 +170,9 @@ class RestWebDocumentController {
                 responseBodyDescriptors = responseBodyDescriptor,
                 method = HttpMethod.valueOf(dto.method),
                 uriVarDescriptors = uriVarDescriptor,
-                executeResult = dto.executeResult)
+                executeResult = dto.executeResult,
+                description = dto.description
+                )
 
         val updateResult = restWebDocumentRepository.update(document)
 

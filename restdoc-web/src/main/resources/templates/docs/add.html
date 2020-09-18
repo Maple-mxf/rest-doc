@@ -12,12 +12,14 @@
     <link rel="stylesheet" th:href="@{/admin/css/pear-tree/dtree.css}"/>
     <link rel="stylesheet" th:href="@{/admin/css/nav.css}"/>
     <link rel="stylesheet" th:href="@{/admin/css/apiexplore.css}"/>
+    <link rel="stylesheet" th:href="@{/admin/css/code.css}"/>
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
 </head>
 <body>
 <div id="sourceTreeDiv" class="layui-bg-gray" style="display: none">
 </div>
-<input type="hidden" name="documentId" id="documentId"/>
+
+<input id="documentId" name="documentId" th:if="${initDocument} != null " th:value="${initDocument.id}" type="hidden"/>
 <input type="hidden" name="projectId" id="projectId" th:value="${projectId}"/>
 <div class="layui-fluid" style="margin-top: 10px">
     <div class="layui-row">
@@ -84,14 +86,15 @@
                                                readonly="readonly"
                                                placeholder="请选择目录">
 
-                                        <input type="hidden" name="resource" id="resource" value="root" class="layui-input">
+                                        <input type="hidden" name="resource" id="resource" value="root"
+                                               class="layui-input">
                                     </div>
                                 </div>
                             </div>
 
                             <div class="layui-form-item layui-form-text">
                                 <div class="layui-input-block">
-                                    <textarea id="apiDescription" placeholder="请输入内容" class="layui-textarea"
+                                    <textarea id="apiDescription" placeholder="请输入内容" class="layui-textarea editor"
                                               name="description"></textarea>
                                 </div>
                             </div>
@@ -215,10 +218,6 @@
         var easyeditor = layui.easyeditor;
         easyeditor.init({
             elem: '.editor'
-            , uploadUrl: '/upload'
-            , videoUploadUrl: '/upload'
-            , videoUploadSize: '102400'
-            , uploadSize: ''
         });
 
         var dtree = layui.dtree;
@@ -418,12 +417,16 @@
             var map = getFormData(data.field);
             map['executeResult'] = globalExecuteResult;
 
+            if (map['description'] != null) {
+                map['description'] = easyeditor.content(map['description'])
+            }
+
             var method;
 
             var did = $("#documentId").val();
             map["projectId"] = $("#projectId").val();
 
-            if (did == "") {
+            if (did === "") {
                 method = "POST"
             } else {
                 method = "PUT";
