@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}"/>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="layui-container">
+    <form class="layui-form layui-form-pane">
+        <div class="layui-form-item">
+            <label class="layui-form-label">参数</label>
+            <div class="layui-input-block">
+                <input type="text" readonly id="name" th:value="${field.field}" name="name" lay-verify="required" placeholder="请输入参数名称"
+                       autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">示例值</label>
+            <div class="layui-input-block">
+                <input type="text" id="value" name="value" th:value="${field.value}" lay-verify="required" placeholder="请输入示例值"
+                       autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <textarea id="layeditDemo" rows="10" th:text="${field.description}"></textarea>
+        </div>
+
+    </form>
+</div>
+
+<script th:src="@{/layui/layui.js}"></script>
+<script th:src="@{/admin/js/jquery.js}"></script>
+<script th:src="@{/ace/ace.js}"></script>
+<script type="text/javascript" th:inline="javascript">
+
+    var description = [[${description}]];
+
+    var contentFunction = null;
+
+    layui.use([
+        'util', 'layer',
+        'form',
+        'layedit',
+        'jquery'], function () {
+
+        var $ = layui.jquery;
+        var layer = layui.layer, layedit = layui.layedit;
+
+        layedit.set({
+            uploadImage: {
+                url: 'your url',
+                accept: 'image',
+                acceptMime: 'image/*',
+                exts: 'jpg|png|gif|bmp|jpeg',
+                size: 1024 * 10,
+                done: function (data) {
+                    console.log(data);
+                }
+            }
+            , uploadVideo: {
+                url: 'your url',
+                accept: 'video',
+                acceptMime: 'video/*',
+                exts: 'mp4|flv|avi|rm|rmvb',
+                size: 1024 * 10 * 2,
+                done: function (data) {
+                    console.log(data);
+                }
+            }
+            , uploadFiles: {
+                url: 'your url',
+                accept: 'file',
+                acceptMime: 'file/*',
+                size: '20480',
+                done: function (data) {
+                    console.log(data);
+                }
+            }
+            , calldel: {
+                url: 'your url',
+                done: function (data) {
+                    console.log(data);
+                }
+            }
+            , autoSync: true
+            , facePath: '/restdoc/layui/'
+            , devmode: true
+            , tool: [
+                'undo', 'redo', 'code', 'strong', 'italic', 'underline', 'del', 'addhr', '|', 'fontFomatt', 'fontBackColor', 'colorpicker', 'face'
+                , '|', 'left', 'center', 'right', '|', 'link', 'unlink', 'image_alt', 'attachment', 'anchors'
+                , '|'
+
+            ]
+            , height: '90%'
+        });
+
+        var ieditor = layedit.build('layeditDemo');
+
+        if (description != null && description !== '') {
+            layedit.setContent(ieditor, description, false);
+        }
+
+        contentFunction = function () {
+            return layedit.getContent(ieditor)
+        }
+    });
+
+    function getValue() {
+        return {
+            "field":$('#name').val(),
+            "value":$('#value').val(),
+            "description":contentFunction()
+        }
+    }
+</script>
+
+</body>
+</html>

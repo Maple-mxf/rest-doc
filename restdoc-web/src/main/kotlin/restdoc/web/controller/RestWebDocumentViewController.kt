@@ -7,6 +7,7 @@ import org.springframework.ui.Model
 import org.springframework.ui.set
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestParam
 import restdoc.web.model.DocType
 import restdoc.web.model.RestWebDocument
 import restdoc.web.repository.ResourceRepository
@@ -106,5 +107,81 @@ class RestWebDocumentViewController {
         model.addAttribute("projectId", projectId)
 
         return "docs/add"
+    }
+
+    @Deprecated(message = "")
+    @GetMapping("/document/{id}/description/view")
+    fun editDescription(@PathVariable id: String,
+                        @RequestParam type: String,
+                        @RequestParam field: String,
+                        model: Model): String {
+
+        val restWebDocument: RestWebDocument = restWebDocumentRepository.findById(id)
+                .orElse(null)
+                ?: return "view/error/500"
+
+        val description: Any? = when (type) {
+            "uri" -> {
+                val uriField = restWebDocument.uriVarDescriptors?.filter { it.field == field }?.first()
+                uriField?.description
+            }
+            "requestBody" -> {
+                val requestField = restWebDocument.requestBodyDescriptor?.filter { it.path == field }?.first()
+                requestField?.description
+            }
+            "responseBody" -> {
+                val responseField = restWebDocument.responseBodyDescriptors?.filter { it.path == field }?.first()
+                responseField?.description
+            }
+            "requestHeader" -> {
+                val requestHeader = restWebDocument.requestHeaderDescriptor?.filter { it.field == field }?.first()
+                requestHeader?.description
+            }
+            else -> {
+                restdoc.web.core.Status.INTERNAL_SERVER_ERROR.error()
+            }
+        }
+
+        model.addAttribute("description", description ?: "")
+
+        return "docs/edit_desc"
+    }
+
+
+    inner class PageView(val pageLocation: String, val field: Any?)
+
+    @GetMapping("/document/{id}/snippet/view")
+    fun editSnippetField(@PathVariable id: String,
+                         @RequestParam type: String,
+                         @RequestParam field: String,
+                         model: Model): String {
+
+        val restWebDocument: RestWebDocument = restWebDocumentRepository.findById(id)
+                .orElse(null)
+                ?: return "view/error/500"
+
+        val pv = when (type) {
+            "uri" -> {
+                val uriField = restWebDocument.uriVarDescriptors?.filter { it.field == field }?.first()
+                PageView("docs/edit_urivar", uriField)
+            }
+            "requestBody" -> {
+                val requestField = restWebDocument.requestBodyDescriptor?.filter { it.path == field }?.first()
+                PageView("docs/a", requestField)
+            }
+            "responseBody" -> {
+                val responseField = restWebDocument.responseBodyDescriptors?.filter { it.path == field }?.first()
+                PageView("docs/a", (responseField ?: mutableListOf<Any>()))
+            }
+            "requestHeader" -> {
+                val requestHeader = restWebDocument.requestHeaderDescriptor?.filter { it.field == field }?.first()
+                PageView("docs/a", (requestHeader ?: mutableListOf<Any>()))
+            }
+            else -> {
+                throw RuntimeException()
+            }
+        }
+        model.addAttribute("field", pv.field)
+        return pv.pageLocation
     }
 }

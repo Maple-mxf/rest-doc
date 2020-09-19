@@ -535,7 +535,7 @@ class RestWebDocumentController {
 
         restWebDocumentRepository.update(doc)
 
-        return ok()
+        return ok(doc)
     }
 
     @PatchMapping("/{id}/snippet/requestHeader")

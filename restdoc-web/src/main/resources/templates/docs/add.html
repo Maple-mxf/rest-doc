@@ -194,11 +194,11 @@
 <script th:src="@{/admin/js/doc/response.js}"></script>
 <script th:src="@{/admin/js/doc/urivar.js}"></script>
 <script th:src="@{/admin/js/doc/header.js}"></script>
-<script th:src="@{/admin/js/marked.min.js}"></script>
+<script th:src="@{/admin/js/marked.min.js}" type="application/javascript" charset="UTF-8"></script>
 <script th:src="@{/admin/js/util.js}"></script>
 <!--<script th:src="@{/admin/js/apiexplore.js}"></script>-->
 <script type="text/javascript" th:inline="javascript">
-    $("#projectNav").addClass("layui-this")
+    $("#projectNav").addClass("layui-this");
     var msg;
     var globalExecuteResult = null;
     layui.config({

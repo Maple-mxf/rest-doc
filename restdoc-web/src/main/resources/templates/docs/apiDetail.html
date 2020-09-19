@@ -14,6 +14,7 @@
     <link rel="stylesheet" th:href="@{/admin/css/doc-common.css}"/>
     <link rel="stylesheet" th:href="@{/admin/css/code.css}"/>
     <link rel="stylesheet" th:href="@{/admin/css/nav.css}"/>
+
     <style>
         body {
             font-family: 'Roboto', sans-serif;
@@ -77,11 +78,35 @@
             font-family: Roboto, serif;
             padding: 0 5%;
         }
+
+        .description:hover {
+            cursor: pointer;
+        }
+
+        .layui-table-cell {
+            padding: 0 5px;
+            height: auto;
+            overflow: visible;
+            text-overflow: inherit;
+            white-space: normal;
+            word-break: break-all;
+        }
+
+        .uriEditBtn {
+            margin: 2px;
+        }
     </style>
 
 </head>
 <body>
+
 <input id="projectId" type="hidden" th:value="${projectId}">
+
+<script type="text/html" id="uriDescriptionTpl">
+    <span>{{d.description}}</span>
+    <span lay-event="description" id="description" title="编写备注" style="position: absolute; bottom: -8px; right: 10px"><i
+            class="layui-icon layui-icon-edit" style="font-size: 25px; color: #009688;"></i></span>
+</script>
 
 <div class="layui-fluid">
     <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
@@ -92,7 +117,7 @@
         <div class="layui-tab-content">
             <div class="layui-tab-item layui-show layui-container">
                 <div class="layui-row">
-                    <div class="layui-col-md10">
+                    <div class="layui-col-md12">
                         <span style="margin-left: 2%"><h2 th:text="${document.name}"></h2></span>
                         <div class="layui-row code-block" style="margin-top: 1%; height: 60px;line-height: 60px; ">
                             <span style="margin-left: 2%">HTTP1.1 GET <span th:text="${document.url}"></span></span>
@@ -116,7 +141,23 @@
                             <h3 class="headerTitle">URI路径参数列表</h3>
                             <p>
                             </p>
-                            <table class="layui-table" id="uriFieldListTable" lay-filter="uriFieldListTable">
+                            <table class="layui-table" id="uriFieldListTable" lay-size="lg">
+                                <colgroup>
+                                    <col width="220">
+                                    <col width="220">
+                                    <col width="400">
+                                    <col>
+                                </colgroup>
+                                <thead>
+                                <tr>
+                                    <th>参数</th>
+                                    <th>示例值</th>
+                                    <th>说明</th>
+                                    <th>操作</th>
+                                </tr>
+                                </thead>
+                                <tbody id="uriFieldListTableBody">
+                                </tbody>
                             </table>
                         </div>
 
@@ -126,8 +167,25 @@
                              th:if="${document.requestHeaderDescriptor!=null and !document.requestHeaderDescriptor.isEmpty()}">
                             <h3 class="headerTitle">请求头参数列表</h3>
                             <p>
-
-                            <table class="layui-table" id="requestHeaderListTable" lay-filter="requestHeaderListTable">
+                            <table class="layui-table" id="requestHeaderListTable" lay-size="lg">
+                                <colgroup>
+                                    <col width="180">
+                                    <col width="200">
+                                    <col width="300">
+                                    <col width="150">
+                                    <col>
+                                </colgroup>
+                                <thead>
+                                <tr>
+                                    <th>参数</th>
+                                    <th>示例值</th>
+                                    <th>说明</th>
+                                    <th>是否可选</th>
+                                    <th>操作</th>
+                                </tr>
+                                </thead>
+                                <tbody id="requestHeaderListTableBody">
+                                </tbody>
                             </table>
                         </div>
 
@@ -137,8 +195,27 @@
                             <h3 class="headerTitle">请求参数列表</h3>
                             <p>
 
-                            <table class="layui-table" id="requestBodyFieldListTable"
-                                   lay-filter="requestBodyFieldListTable">
+                            <table class="layui-table" id="requestBodyFieldListTable" lay-size="lg">
+                                <colgroup>
+                                    <col width="180">
+                                    <col width="100">
+                                    <col width="200">
+                                    <col width="150">
+                                    <col width="200">
+                                    <col>
+                                </colgroup>
+                                <thead>
+                                <tr>
+                                    <th>参数</th>
+                                    <th>类型</th>
+                                    <th>说明</th>
+                                    <th>是否可选</th>
+                                    <th>示例值</th>
+                                    <th>操作</th>
+                                </tr>
+                                </thead>
+                                <tbody id="requestBodyFieldListTableBody">
+                                </tbody>
                             </table>
                         </div>
 
@@ -147,13 +224,28 @@
                              th:if="${document.responseBodyDescriptors!=null and !document.responseBodyDescriptors.isEmpty()}">
                             <h3 class="headerTitle">响应参数列表</h3>
                             <p>
-                            <table class="layui-table" id="responseBodyFieldListTable"
-                                   lay-filter="responseBodyFieldListTable">
+                            <table class="layui-table" id="responseBodyFieldListTable" lay-size="lg">
+                                <colgroup>
+                                    <col width="200">
+                                    <col width="200">
+                                    <col width="200">
+                                    <col width="200">
+                                    <col width="200">
+                                    <col>
+                                </colgroup>
+                                <thead>
+                                <tr>
+                                    <th>参数</th>
+                                    <th>类型</th>
+                                    <th>说明</th>
+                                    <th>示例值</th>
+                                    <th>操作</th>
+                                </tr>
+                                </thead>
+                                <tbody id="responseBodyFieldListTableBody">
+                                </tbody>
                             </table>
-
                         </div>
-
-
                         <div class="layui-row">
                             <h3 class="headerTitle">请求示例</h3>
                             <pre id="codeSample" class="code-block api-content"></pre>
@@ -178,176 +270,31 @@
 <script th:inline="javascript">
 
     var documentId = [[${document.id}]];
+    var doc = [[${document}]];
     var url = [[${document.url}]];
 
+    var lay = null;
 
-    layui.use(['table', 'util', 'layer', 'element', 'jquery',], function () {
-        var $ = layui.jquery;
-        var layer = layui.layer;
-        var element = layui.element;
-        var table = layui.table;
+    layui.use(['table', 'util', 'layer', 'element', 'jquery', 'layedit', 'form'],
+        function () {
+            var $ = layui.jquery;
+            var layer = layui.layer;
+            var element = layui.element;
+            util = layui.util;
+            lay = layer;
 
-        let uriTable = table.render({
-            elem: '#uriFieldListTable'
-            , url: '/restdoc/document/' + documentId + '/snippet?type=uri'
-            , toolbar: false
-            , size: 'lg'
-            , unresize: true
-            , cols: [
-                [
-                    {field: 'field', width: '30%', title: '参数'}
-                    , {field: 'value', width: '30%', title: '示例值', edit: 'text'}
-                    , {field: 'description', width: '40%', title: '说明', edit: 'text'}
-                ]
-            ]
-            , align: 'center'
-            , style: 'background-color: red; color: #fff;'
-        });
-
-        let requestHeaderTable = table.render({
-            elem: '#requestHeaderListTable'
-            , url: '/restdoc/document/' + documentId + '/snippet?type=requestHeader'
-            , toolbar: false
-            , size: 'lg'
-            , unresize: true
-            , cols: [
-                [
-                    {field: 'field', width: '25%', title: '参数'}
-                    , {field: 'value', width: '25%', title: '示例值', edit: 'text'}
-                    , {field: 'optional', width: '20%', title: '是否可选'}
-                    , {field: 'description', width: '30%', title: '说明', edit: 'text'}
-                ]
-            ]
-            , align: 'center'
-            , style: 'background-color: red; color: #fff;'
-        });
-
-
-        table.render({
-            elem: '#requestBodyFieldListTable'
-            , url: '/restdoc/document/' + documentId + '/snippet?type=requestBody'
-            , toolbar: false
-            , size: 'lg'
-            , unresize: true
-            , cols: [
-                [
-                    {field: 'path', width: '30%', title: '参数'}
-                    , {field: 'type', width: '15%', title: '类型'}
-                    , {field: 'value', width: '20%', title: '示例值', edit: 'text'}
-                    , {field: 'optional', width: '10%', title: '是否可选'}
-                    , {field: 'description', width: '25%', title: '说明', edit: 'text'}
-                ]
-            ]
-            , align: 'center'
-            , style: 'background-color: red; color: #fff;'
-        });
-
-        table.render({
-            elem: '#responseBodyFieldListTable'
-            , url: '/restdoc/document/' + documentId + '/snippet?type=responseBody'
-            , toolbar: false
-            , size: 'lg'
-            , unresize: true
-            , cols: [
-                [
-                    {field: 'path', width: '30%', title: '参数'}
-                    , {field: 'type', width: '15%', title: '类型'}
-                    , {field: 'value', width: '20%', title: '示例值', edit: 'text'}
-                    , {field: 'description', width: '35%', title: '说明', edit: 'text'}
-                ]
-            ]
-            , align: 'center'
-            , style: 'background-color: red; color: #fff;'
-        });
-
-
-        table.on('edit(uriFieldListTable)', function (obj) {
-            var value = obj.value, data = obj.data, field = obj.field;
-            updateDocumentTable("uri", data)
-        });
-        table.on('edit(requestHeaderListTable)', function (obj) {
-            var value = obj.value, data = obj.data, field = obj.field;
-            updateDocumentTable("requestHeader", data)
-        });
-
-        table.on('edit(requestBodyFieldListTable)', function (obj) {
-            var value = obj.value, data = obj.data, field = obj.field;
-            updateDocumentTable("requestBody", data)
-        });
-
-        table.on('edit(responseBodyFieldListTable)', function (obj) {
-            var value = obj.value, data = obj.data, field = obj.field;
-            updateDocumentTable("responseBody", data)
-        });
-
-
-        /**
-         *
-         */
-        function updateDocumentTable(type, data) {
-            $.ajax({
-                method: 'PATCH',
-                url: '/restdoc/document/' + documentId + '/snippet/' + type,
-                contentType: 'application/json;charset=utf-8',
-                dataType: 'json',
-                data: JSON.stringify(data),
-                success: function (data) {
-                    if ('200' === data['code']) {
-                        layer.msg("文档修改成功");
-                    } else {
-                        layer.msg(data['message']);
-                    }
+            element.on('tab(docDemoTabBrief)', function (data) {
+                if (0 === data.index) {
+                    var projectId = $("#projectId").val();
+                    $("#testApiFrame").attr("src", "/restdoc/" + projectId + '/document/view/' + documentId + "/test")
                 }
             });
-        }
 
-        $("#copyURL").click(function () {
-            const input = document.createElement('input');
-            document.body.appendChild(input);
-            input.setAttribute('value', url);
-            input.select();
-            if (document.execCommand('copy')) {
-                document.execCommand('copy');
-                layer.msg("复制成功")
-            }
-            document.body.removeChild(input);
+            renderURITable(doc['uriVarDescriptors']);
+            renderRequestHeaderTable(doc['requestHeaderDescriptor']);
+            renderRequestBodyTable(doc['requestBodyDescriptor']);
+            renderResponseBodyTable(doc['responseBodyDescriptors']);
         });
-
-        element.on('tab(docDemoTabBrief)', function (data) {
-            if (0 === data.index) {
-                var projectId = $("#projectId").val();
-                $("#testApiFrame").attr("src", "/restdoc/" + projectId + '/document/view/' + documentId + "/test")
-            }
-        });
-
-        $("#delete").click(function () {
-            layer.confirm('确山删除文档？删除后不可恢复', {
-                btn: ['确定', '取消']
-            }, function (index, layero) {
-
-                $.ajax({
-                    type: 'DELETE',
-                    url: '/restdoc/document/' + documentId,
-                    async: false,
-                    success: function (data) {
-                        if (data['code'] === "200") {
-                            layer.msg("操作成功")
-                        } else {
-                            layer.msg(data['message']);
-                        }
-                    },
-                    error: function () {
-                        layer.msg("网络异常")
-                    }
-                });
-
-                layer.close(index)
-            }, function (index) {
-                layer.close(index)
-            });
-
-        })
-    });
 
     var sample = [[${sample}]];
 
@@ -360,7 +307,117 @@
         $('#codeSample').html(sample)
     }
 
+    $("#copyURL").click(function () {
+        const input = document.createElement('input');
+        document.body.appendChild(input);
+        input.setAttribute('value', url);
+        input.select();
+        if (document.execCommand('copy')) {
+            document.execCommand('copy');
+            layer.msg("复制成功")
+        }
+        document.body.removeChild(input);
+    });
 
+
+    function renderURITable(uriFields) {
+        if (uriFields !== null && uriFields.length > 0) {
+            var start = "<tr>", end = "</tr>";
+            var allLine = "";
+            for (let i = 0; i < uriFields.length; i++) {
+
+                var param = "'" + uriFields[i]['field'] + "'";
+                var fun = "openEditVarPage(" + param + ")";
+                var lastField = "<td><button style='position: absolute;top: 2px;left: 18%' type='button' class='layui-btn layui-btn-lg layui-btn-primary uriEditBtn' onclick=" + fun + ">编辑</button></td>";
+
+                var line = '<td>' + uriFields[i]['field'] + '</td>' + '<td>' + uriFields[i]['value'] + '</td>' + '<td>' + uriFields[i]['description'] + '</td>' + lastField;
+
+                allLine = allLine + start + line + end;
+            }
+            $("#uriFieldListTableBody").html(allLine)
+        }
+    }
+
+    function renderRequestHeaderTable(headerFields) {
+        if (headerFields !== null && headerFields.length > 0) {
+            var start = "<tr>", end = "</tr>";
+            var allLine = "";
+            var lastField = "<td><button style='position: absolute;top: 2px;left: 18%' type='button' class='layui-btn layui-btn-lg layui-btn-primary requestHeaderEditBtn'>编辑</button></td>";
+            for (let i = 0; i < headerFields.length; i++) {
+                var line = '<td>' + headerFields[i]['field'] + '</td>' + '<td>' + headerFields[i]['value'] + '</td>' + '<td>' + headerFields[i]['description'] + '</td>' + '<td>' + headerFields[i]['optional'] + '</td>' + lastField;
+                allLine = allLine + start + line + end;
+            }
+            $("#requestHeaderListTableBody").html(allLine)
+        }
+    }
+
+
+    function renderRequestBodyTable(requestBodyFields) {
+        if (requestBodyFields !== null && requestBodyFields.length > 0) {
+            var start = "<tr>", end = "</tr>";
+            var allLine = "";
+            var lastField = "<td><button style='position: absolute;top: 2px;left: 18%' type='button' class='layui-btn layui-btn-lg layui-btn-primary requestBodyEditBtn'>编辑</button></td>";
+            for (let i = 0; i < requestBodyFields.length; i++) {
+                var line = '<td>' + requestBodyFields[i]['path'] + '</td>' + '<td>' + requestBodyFields[i]['type'] + '</td>' + '<td>' + requestBodyFields[i]['value'] + '</td>' + '<td>' + requestBodyFields[i]['description'] + '</td>' + '<td>' + requestBodyFields[i]['optional'] + '</td>' + lastField;
+                allLine = allLine + start + line + end;
+            }
+            $("#requestBodyFieldListTableBody").html(allLine)
+        }
+    }
+
+    function renderResponseBodyTable(responseBodyFields) {
+        if (responseBodyFields !== null && responseBodyFields.length > 0) {
+            var start = "<tr>", end = "</tr>";
+            var allLine = "";
+            var lastField = "<td><button style='position: absolute;top: 2px;left: 18%' type='button' class='layui-btn layui-btn-lg layui-btn-primary responseBodyEditBtn'>编辑</button></td>";
+            for (let i = 0; i < responseBodyFields.length; i++) {
+                var line = '<td>' + responseBodyFields[i]['path'] + '</td>' + '<td>' + responseBodyFields[i]['type'] + '</td>' + '<td>' + responseBodyFields[i]['value'] + '</td>' + '<td>' + responseBodyFields[i]['description'] + '</td>' + lastField;
+                allLine = allLine + start + line + end;
+            }
+            $("#responseBodyFieldListTableBody").html(allLine)
+        }
+    }
+
+    function openEditVarPage(field) {
+        lay.open({
+            type: 2,
+            title: "编辑URI路径参数",
+            area: ['600px', '500px'],
+            content: ['/restdoc/document/' + documentId + '/snippet/view?type=uri&field=' + field, 'no'],
+            btn: ["保存", "取消"],
+            yes: function (index, dom) {
+                var res = window["layui-layer-iframe" + index].getValue();
+                var doc = updateDocumentTable("uri", res);
+
+                if (doc != null) {
+                    renderURITable(doc['uriVarDescriptors'])
+                }
+                lay.close(index)
+            }
+        });
+    }
+
+    function updateDocumentTable(type, data) {
+
+        var returnValue = null;
+        $.ajax({
+            method: 'PATCH',
+            url: '/restdoc/document/' + documentId + '/snippet/' + type,
+            contentType: 'application/json;charset=utf-8',
+            dataType: 'json',
+            data: JSON.stringify(data),
+            async: false,
+            success: function (data) {
+                if ('200' === data['code']) {
+                    returnValue = data['data'];
+                    layer.msg("文档修改成功");
+                } else {
+                    layer.msg(data['message']);
+                }
+            }
+        });
+        return returnValue;
+    }
 </script>
 
 </body>
