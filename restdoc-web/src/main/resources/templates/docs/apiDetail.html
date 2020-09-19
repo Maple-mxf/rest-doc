@@ -153,7 +153,6 @@
                                     <th>参数</th>
                                     <th>示例值</th>
                                     <th>说明</th>
-                                    <th>操作</th>
                                 </tr>
                                 </thead>
                                 <tbody id="uriFieldListTableBody">
@@ -322,15 +321,16 @@
 
     function renderURITable(uriFields) {
         if (uriFields !== null && uriFields.length > 0) {
-            var start = "<tr>", end = "</tr>";
-            var allLine = "";
+
             for (let i = 0; i < uriFields.length; i++) {
 
                 var param = "'" + uriFields[i]['field'] + "'";
                 var fun = "openEditVarPage(" + param + ")";
-                var lastField = "<td><button style='position: absolute;top: 2px;left: 18%' type='button' class='layui-btn layui-btn-lg layui-btn-primary uriEditBtn' onclick=" + fun + ">编辑</button></td>";
 
-                var line = '<td>' + uriFields[i]['field'] + '</td>' + '<td>' + uriFields[i]['value'] + '</td>' + '<td>' + uriFields[i]['description'] + '</td>' + lastField;
+                var line = '<td>' + uriFields[i]['field'] + '</td>' + '<td>' + uriFields[i]['value'] + '</td>' + '<td>' + uriFields[i]['description'] + '</td>';
+
+                var start = "<tr ondblclick=" + fun + ">", end = "</tr>";
+                var allLine = "";
 
                 allLine = allLine + start + line + end;
             }
