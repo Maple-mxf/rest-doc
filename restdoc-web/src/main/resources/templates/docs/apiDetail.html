@@ -138,7 +138,10 @@
 
                         <div class="layui-row"
                              th:if="${document.uriVarDescriptors!=null and !document.uriVarDescriptors.isEmpty()}">
-                            <h3 class="headerTitle">URI路径参数列表</h3>
+                            <h3 class="headerTitle">URI路径参数列表 &nbsp;&nbsp;&nbsp;
+                                <i class="layui-icon layui-icon-rate" style="font-size: 18px; color: #FF5722;">
+                                    <span style="font-size: 14px;color: #FF5722">Tip：双击行可以编辑文档 </span></i>
+                                </h3>
                             <p>
                             </p>
                             <table class="layui-table" id="uriFieldListTable" lay-size="lg">
@@ -321,19 +324,17 @@
 
     function renderURITable(uriFields) {
         if (uriFields !== null && uriFields.length > 0) {
+            var allLine = "";
 
             for (let i = 0; i < uriFields.length; i++) {
-
                 var param = "'" + uriFields[i]['field'] + "'";
                 var fun = "openEditVarPage(" + param + ")";
-
                 var line = '<td>' + uriFields[i]['field'] + '</td>' + '<td>' + uriFields[i]['value'] + '</td>' + '<td>' + uriFields[i]['description'] + '</td>';
-
                 var start = "<tr ondblclick=" + fun + ">", end = "</tr>";
-                var allLine = "";
-
                 allLine = allLine + start + line + end;
             }
+
+            // <tr ondblclick=openEditVarPage('3')><td>3</td><td>3</td><td>1</td></tr>
             $("#uriFieldListTableBody").html(allLine)
         }
     }
