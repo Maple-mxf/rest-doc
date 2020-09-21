@@ -179,9 +179,9 @@
                             <p>
                             <table class="layui-table" id="requestHeaderListTable" lay-size="lg">
                                 <colgroup>
-                                    <col width="180">
                                     <col width="200">
-                                    <col width="150">
+                                    <col width="250">
+                                    <col width="180">
                                     <col>
                                 </colgroup>
                                 <thead>
@@ -200,13 +200,15 @@
                         <br>
                         <div class="layui-row"
                              th:if="${document.requestBodyDescriptor!=null and !document.requestBodyDescriptor.isEmpty()}">
-                            <h3 class="headerTitle">请求参数列表</h3>
+                            <h3 class="headerTitle">请求参数列表 <i class="layui-icon layui-icon-rate"
+                                                              style="font-size: 18px; color: #FF5722;">
+                                <span style="font-size: 14px;color: #FF5722">Tip：双击行可以编辑文档 </span></i></h3>
                             <p>
 
                             <table class="layui-table" id="requestBodyFieldListTable" lay-size="lg">
                                 <colgroup>
-                                    <col width="180">
-                                    <col width="100">
+                                    <col width="200">
+                                    <col width="120">
                                     <col width="200">
                                     <col width="200">
                                     <col>
@@ -215,10 +217,9 @@
                                 <tr>
                                     <th>参数</th>
                                     <th>类型</th>
-                                    <th>说明</th>
-                                    <th>是否可选</th>
                                     <th>示例值</th>
-                                    <th>操作</th>
+                                    <th>是否可选</th>
+                                    <th>说明</th>
                                 </tr>
                                 </thead>
                                 <tbody id="requestBodyFieldListTableBody">
@@ -229,14 +230,15 @@
                         <br>
                         <div class="layui-row"
                              th:if="${document.responseBodyDescriptors!=null and !document.responseBodyDescriptors.isEmpty()}">
-                            <h3 class="headerTitle">响应参数列表</h3>
+                            <h3 class="headerTitle">响应参数列表 <i class="layui-icon layui-icon-rate"
+                                                              style="font-size: 18px; color: #FF5722;">
+                                <span style="font-size: 14px;color: #FF5722">Tip：双击行可以编辑文档 </span></i></h3>
                             <p>
                             <table class="layui-table" id="responseBodyFieldListTable" lay-size="lg">
                                 <colgroup>
-                                    <col width="200">
-                                    <col width="200">
-                                    <col width="200">
-                                    <col width="200">
+                                    <col width="150">
+                                    <col width="120">
+                                    <col width="150">
                                     <col width="200">
                                     <col>
                                 </colgroup>
@@ -244,9 +246,9 @@
                                 <tr>
                                     <th>参数</th>
                                     <th>类型</th>
-                                    <th>说明</th>
                                     <th>示例值</th>
-                                    <th>操作</th>
+                                    <th>说明</th>
+
                                 </tr>
                                 </thead>
                                 <tbody id="responseBodyFieldListTableBody">
@@ -362,11 +364,15 @@
 
     function renderRequestBodyTable(requestBodyFields) {
         if (requestBodyFields !== null && requestBodyFields.length > 0) {
-            var start = "<tr>", end = "</tr>";
+
             var allLine = "";
-            var lastField = "<td><button style='position: absolute;top: 2px;left: 18%' type='button' class='layui-btn layui-btn-lg layui-btn-primary requestBodyEditBtn'>编辑</button></td>";
             for (let i = 0; i < requestBodyFields.length; i++) {
-                var line = '<td>' + requestBodyFields[i]['path'] + '</td>' + '<td>' + requestBodyFields[i]['type'] + '</td>' + '<td>' + requestBodyFields[i]['value'] + '</td>' + '<td>' + requestBodyFields[i]['description'] + '</td>' + '<td>' + requestBodyFields[i]['optional'] + '</td>' + lastField;
+
+                var param = "'" + requestBodyFields[i]['path'] + "'";
+                var fun = "openEditRequestBodyPage(" + param + ")";
+                var start = "<tr ondblclick=" + fun + ">", end = "</tr>";
+
+                var line = '<td>' + requestBodyFields[i]['path'] + '</td>' + '<td>' + requestBodyFields[i]['type'] + '</td>' + '<td>' + requestBodyFields[i]['value'] + '</td>' + '<td>' + requestBodyFields[i]['optional'] + '</td>' + '<td>' + requestBodyFields[i]['description'] + '</td>';
                 allLine = allLine + start + line + end;
             }
             $("#requestBodyFieldListTableBody").html(allLine)
@@ -375,11 +381,14 @@
 
     function renderResponseBodyTable(responseBodyFields) {
         if (responseBodyFields !== null && responseBodyFields.length > 0) {
-            var start = "<tr>", end = "</tr>";
             var allLine = "";
-            var lastField = "<td><button style='position: absolute;top: 2px;left: 18%' type='button' class='layui-btn layui-btn-lg layui-btn-primary responseBodyEditBtn'>编辑</button></td>";
             for (let i = 0; i < responseBodyFields.length; i++) {
-                var line = '<td>' + responseBodyFields[i]['path'] + '</td>' + '<td>' + responseBodyFields[i]['type'] + '</td>' + '<td>' + responseBodyFields[i]['value'] + '</td>' + '<td>' + responseBodyFields[i]['description'] + '</td>' + lastField;
+
+                var param = "'" + responseBodyFields[i]['path'] + "'";
+                var fun = "openEditResponseBodyPage(" + param + ")";
+                var start = "<tr ondblclick=" + fun + ">", end = "</tr>";
+
+                var line = '<td>' + responseBodyFields[i]['path'] + '</td>' + '<td>' + responseBodyFields[i]['type'] + '</td>' + '<td>' + responseBodyFields[i]['value'] + '</td>' + '<td>' + responseBodyFields[i]['description'] + '</td>';
                 allLine = allLine + start + line + end;
             }
             $("#responseBodyFieldListTableBody").html(allLine)
@@ -415,9 +424,44 @@
             yes: function (index, dom) {
                 var res = window["layui-layer-iframe" + index].getValue();
                 var doc = updateDocumentTable("requestHeader", res);
-
                 if (doc != null) {
-                    renderURITable(doc['requestHeaderDescriptor'])
+                    renderRequestHeaderTable(doc['requestHeaderDescriptor'])
+                }
+                lay.close(index)
+            }
+        });
+    }
+
+    function openEditRequestBodyPage(field) {
+        lay.open({
+            type: 2,
+            title: "编辑请求体参数",
+            area: ['800px', '600px'],
+            content: ['/restdoc/document/' + documentId + '/snippet/view?type=requestBody&field=' + field, 'no'],
+            btn: ["保存", "取消"],
+            yes: function (index, dom) {
+                var res = window["layui-layer-iframe" + index].getValue();
+                var doc = updateDocumentTable("requestBody", res);
+                if (doc != null) {
+                    renderRequestBodyTable(doc['requestBodyDescriptor'])
+                }
+                lay.close(index)
+            }
+        });
+    }
+
+    function openEditResponseBodyPage(field) {
+        lay.open({
+            type: 2,
+            title: "编辑响应体参数",
+            area: ['800px', '600px'],
+            content: ['/restdoc/document/' + documentId + '/snippet/view?type=responseBody&field=' + field, 'no'],
+            btn: ["保存", "取消"],
+            yes: function (index, dom) {
+                var res = window["layui-layer-iframe" + index].getValue();
+                var doc = updateDocumentTable("responseBody", res);
+                if (doc != null) {
+                    renderResponseBodyTable(doc['responseBodyDescriptors'])
                 }
                 lay.close(index)
             }
@@ -444,6 +488,8 @@
         });
         return returnValue;
     }
+
+
 </script>
 
 </body>

@@ -13,7 +13,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">参数</label>
             <div class="layui-input-block">
-                <input type="text" readonly id="name" th:value="${field.field}" name="name" lay-verify="required"
+                <input type="text" readonly id="name" th:value="${field.path}" name="name" lay-verify="required"
                        placeholder="请输入参数名称"
                        autocomplete="off"
                        class="layui-input">
@@ -31,11 +31,14 @@
         </div>
 
         <div class="layui-form-item">
-            <label class="layui-form-label">可选</label>
+            <label class="layui-form-label">类型</label>
             <div class="layui-input-block">
-                <select id="optional" name="optional" lay-verify="optional">
-                    <option value="true" th:selected="${field.optional == '是'}">是</option>
-                    <option value="false" th:selected="${field.optional == '否'}">否</option>
+                <select id="type" name="type" lay-verify="type">
+                    <option value="OBJECT" th:selected="${field.type == 'object'}">object</option>
+                    <option value="ARRAY" th:selected="${field.type == 'array'}">array</option>
+                    <option value="STRING" th:selected="${field.type == 'string'}">string</option>
+                    <option value="NUMBER" th:selected="${field.type == 'number'}">number</option>
+                    <option value="BOOLEAN" th:selected="${field.type == 'boolean'}">number</option>
                 </select>
             </div>
         </div>
@@ -125,14 +128,12 @@
     });
 
     function getValue() {
-
         let optional = $("#optional").val();
-
         return {
-            "field": $('#name').val(),
+            "path": $('#name').val(),
             "value": $('#value').val(),
             "description": contentFunction(),
-            "optional": Boolean(optional)
+            "type": $("#type").val()
         }
     }
 </script>

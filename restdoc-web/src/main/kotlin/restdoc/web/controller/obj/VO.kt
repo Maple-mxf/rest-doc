@@ -154,7 +154,7 @@ fun transformRestDocumentToVO(doc: RestWebDocument) = RestWebDocumentVO(
         url = doc.url,
         description = doc.description ?: "",
         requestHeaderDescriptor = transformHeaderToVO(doc.requestHeaderDescriptor ?: mutableListOf()),
-        responseBodyDescriptors = transformNormalParamToVO(doc.requestBodyDescriptor ?: mutableListOf()),
-        requestBodyDescriptor = transformNormalParamToVO(doc.responseBodyDescriptors ?: mutableListOf()),
+        responseBodyDescriptors = transformNormalParamToVO(doc.responseBodyDescriptors ?: mutableListOf()),
+        requestBodyDescriptor = transformNormalParamToVO(doc.requestBodyDescriptor ?: mutableListOf()),
         uriVarDescriptors = transformURIFieldToVO(doc.uriVarDescriptors ?: mutableListOf())
 )

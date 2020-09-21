@@ -535,7 +535,7 @@ class RestWebDocumentController {
 
         restWebDocumentRepository.update(doc)
 
-        return ok(doc)
+        return ok(transformRestDocumentToVO(doc))
     }
 
     @PatchMapping("/{id}/snippet/requestHeader")
@@ -546,13 +546,13 @@ class RestWebDocumentController {
 
         doc.requestHeaderDescriptor?.filter { it.field == dto.field }
                 ?.forEach {
-                    it.value = dto.value
+                    it.value = dto.value.split(",")
                     it.description = dto.description
                 }
 
         restWebDocumentRepository.update(doc)
 
-        return ok()
+        return ok(transformRestDocumentToVO(doc))
     }
 
     @PatchMapping("/{id}/snippet/requestBody")
@@ -569,7 +569,7 @@ class RestWebDocumentController {
 
         restWebDocumentRepository.update(doc)
 
-        return ok()
+        return ok(transformRestDocumentToVO(doc))
     }
 
     @PatchMapping("/{id}/snippet/responseBody")
@@ -586,7 +586,7 @@ class RestWebDocumentController {
 
         restWebDocumentRepository.update(doc)
 
-        return ok()
+        return ok(transformRestDocumentToVO(doc))
     }
 }
 

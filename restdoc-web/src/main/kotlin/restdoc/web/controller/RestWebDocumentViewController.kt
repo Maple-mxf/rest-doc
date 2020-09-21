@@ -8,7 +8,10 @@ import org.springframework.ui.set
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestParam
+import restdoc.web.controller.obj.transformHeaderToVO
+import restdoc.web.controller.obj.transformNormalParamToVO
 import restdoc.web.controller.obj.transformRestDocumentToVO
+import restdoc.web.controller.obj.transformURIFieldToVO
 import restdoc.web.model.DocType
 import restdoc.web.model.RestWebDocument
 import restdoc.web.repository.ResourceRepository
@@ -165,20 +168,24 @@ class RestWebDocumentViewController {
 
         val pv = when (type) {
             "uri" -> {
-                val uriField = restWebDocument.uriVarDescriptors?.filter { it.field == field }?.first()
-                PageView("docs/edit_urivar", uriField)
+                PageView("docs/edit_urivar", transformURIFieldToVO(
+                        (restWebDocument.uriVarDescriptors?.filter { it.field == field }) ?: mutableListOf())[0]
+                )
             }
             "requestBody" -> {
-                val requestField = restWebDocument.requestBodyDescriptor?.filter { it.path == field }?.first()
-                PageView("docs/edit_requestheader", requestField)
+                PageView("docs/edit_requestparam", transformNormalParamToVO(
+                        (restWebDocument.requestBodyDescriptor?.filter { it.path == field } ?: mutableListOf()))[0])
             }
             "responseBody" -> {
-                val responseField = restWebDocument.responseBodyDescriptors?.filter { it.path == field }?.first()
-                PageView("docs/a", (responseField ?: mutableListOf<Any>()))
+                PageView("docs/edit_responseparam",
+                        transformNormalParamToVO((restWebDocument.responseBodyDescriptors?.filter { it.path == field }
+                                ?: mutableListOf()))[0]
+                )
             }
             "requestHeader" -> {
-                val requestHeader = restWebDocument.requestHeaderDescriptor?.filter { it.field == field }?.first()
-                PageView("docs/edit_requestheader", (requestHeader ?: mutableListOf<Any>()))
+                PageView("docs/edit_requestheader",
+                        transformHeaderToVO(restWebDocument.requestHeaderDescriptor?.filter { it.field == field }
+                                ?: mutableListOf())[0])
             }
             else -> {
                 throw RuntimeException()
