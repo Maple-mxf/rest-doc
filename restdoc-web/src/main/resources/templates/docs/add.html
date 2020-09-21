@@ -239,14 +239,12 @@
             , id: 'id'
             , icon: ["0"]
             , oncheck: function (obj) {
-                console.log(obj.data.id);
                 checkData = obj.data.id;
                 $('#pid').val(obj.data.id);
                 $("#parent").val(obj.data.title);
             }
         });
         dtree.on("node('sourceTreeDiv')", function (obj) {
-            console.log(obj.param);
             $('#tableContent').val(obj.param.context)
             $('#resource').val(obj.param.nodeId);
             layer.closeAll()
@@ -660,7 +658,6 @@
             try {
                 // var obj = JSON.parse(ugly);
                 var pretty = JSON.stringify(ugly, undefined, 4);
-                console.info(pretty)
                 return pretty
             } catch (e) {
                 // layer.msg("JSON字符串错误，请检查")
@@ -863,15 +860,12 @@
     }
 
     function deleteHeaderFieldLine(obj) {
-        console.info(obj.id);
-        console.info(obj.id);
         var parent = obj.parentNode.parentNode.parentNode;
         var children = obj.parentNode.parentNode;
         parent.removeChild(children)
     }
 
     function deleteUriVarFieldLine(obj) {
-        console.info(obj.id);
         var parent = obj.parentNode.parentNode.parentNode;
         var children = obj.parentNode.parentNode;
         parent.removeChild(children);
