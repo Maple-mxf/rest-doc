@@ -34,14 +34,14 @@
 <div th:include="nav::nav"></div>
 <div id="sourceTreeDiv" style="display: none">
 </div>
-<div class="layui-fluid">
+<div class="layui-container" style="height: 100%">
     <div class="layui-row" style="margin-top: 5px">
         <form class="layui-form layui-form-pane" action="">
             <input type="hidden" id="resource" name="resource" value="root">
             <input id="projectId" name="projectId" type="hidden" th:value="${projectId}">
             <input id="id" type="hidden" name="id">
 
-            <div class="layui-form-item" style="margin-left: 41.7%">
+            <div class="layui-form-item" style="margin-left: 20%">
                 <div class="layui-inline">
                     <label class="layui-form-label">文档标题</label>
                     <div class="layui-input-inline">
@@ -69,7 +69,7 @@
     </div>
 
     <div class="layui-row">
-        <div class="layui-col-md5 ">
+        <!--<div class="layui-col-md5 ">
             <fieldset class="layui-elem-field layui-field-title">
                 <legend>内容预览区</legend>
             </fieldset>
@@ -79,18 +79,102 @@
             </div>
         </div>
         <div class="layui-col-md7">
-            <!-- Markdown编辑器元素 -->
+            &lt;!&ndash; Markdown编辑器元素 &ndash;&gt;
             <textarea id="L_content" name="content" style="overflow-x:visible;overflow-y:visible;height: 800px" required
                       lay-verify="required" placeholder="请输入字段备注"
                       class="layui-textarea editor"></textarea>
+        </div>-->
+
+        <div style="height: 100%;width: 100%">
+            <textarea id="layeditDemo" rows="30" th:text="${field}"></textarea>
         </div>
     </div>
 </div>
 <script th:src="@{/layui/layui.js}"></script>
 <script th:src="@{/admin/js/jquery.js}"></script>
 <script th:src="@{/admin/js/marked.min.js}"></script>
+<script th:src="@{/ace/ace.js}"></script>
+<script type="text/javascript" th:inline="javascript">
+    var description = [[${description}]];
+    var contentFunction = null;
 
-<script>
+    layui.use([
+        'util', 'layer',
+        'form',
+        'layedit',
+        'jquery'], function () {
+
+        var $ = layui.jquery;
+        var layer = layui.layer, layedit = layui.layedit;
+
+        layedit.set({
+            uploadImage: {
+                url: 'your url',
+                accept: 'image',
+                acceptMime: 'image/*',
+                exts: 'jpg|png|gif|bmp|jpeg',
+                size: 1024 * 10,
+                done: function (data) {
+                    console.log(data);
+                }
+            }
+            , uploadVideo: {
+                url: 'your url',
+                accept: 'video',
+                acceptMime: 'video/*',
+                exts: 'mp4|flv|avi|rm|rmvb',
+                size: 1024 * 10 * 2,
+                done: function (data) {
+                    console.log(data);
+                }
+            }
+            , uploadFiles: {
+                url: 'your url',
+                accept: 'file',
+                acceptMime: 'file/*',
+                size: '20480',
+                done: function (data) {
+                    console.log(data);
+                }
+            }
+            , calldel: {
+                url: 'your url',
+                done: function (data) {
+                    console.log(data);
+                }
+            }
+            ,area:['100%','70%']
+            , autoSync: true
+            , facePath: '/restdoc/layui/'
+            , devmode: true
+            , tool: [
+                'undo', 'redo', 'code', 'strong', 'italic', 'underline', 'del', 'addhr', '|', 'fontFomatt', 'fontBackColor', 'colorpicker', 'face'
+                , '|', 'left', 'center', 'right', '|', 'link', 'unlink', 'image_alt', 'attachment', 'anchors'
+                , '|'
+
+            ]
+            , height: '500px'
+        });
+
+        var ieditor = layedit.build('layeditDemo');
+
+        if (description != null && description !== '') {
+            layedit.setContent(ieditor, description, false);
+        }
+
+        contentFunction = function () {
+            return layedit.getContent(ieditor)
+        }
+    });
+
+    function getValue() {
+        return {
+            "description": contentFunction()
+        }
+    }
+</script>
+
+<!--<script>
 
 
     layui.config({
@@ -119,7 +203,7 @@
             var html = easyeditor.content($("#L_content").val());
             $('#previewContent').html(html);
         });
-        
+
         var projectId = $("#projectId").val();
 
         $.ajax({
@@ -150,8 +234,6 @@
                 $("#parent").val(obj.data.title);
             }
         });
-        // tree.setChecked('id', "root");
-        // var checkData = tree.getChecked('id');
 
         $('#tableContent').click(function () {
             layer.open({
@@ -162,7 +244,6 @@
             });
         });
 
-
         dtree.on("node('sourceTreeDiv')", function (obj) {
             console.log(obj.param); // 点击当前节点传递的参数
             $('#tableContent').val(obj.param.context)
@@ -171,11 +252,7 @@
         });
 
         form.on('submit(save)', function (data) {
-
             data.field['content'] = easyeditor.content($("#L_content").val());
-
-            console.info(data.field);
-
             $.ajax({
                 method: 'POST',
                 dataType: 'JSON',
@@ -205,6 +282,6 @@
         });
     });
     $("#projectNav").addClass("layui-this")
-</script>
+</script>-->
 </body>
 </html>
