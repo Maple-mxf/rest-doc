@@ -167,7 +167,7 @@ class RestWebDocumentViewController {
             }
             "requestBody" -> {
                 val requestField = restWebDocument.requestBodyDescriptor?.filter { it.path == field }?.first()
-                PageView("docs/a", requestField)
+                PageView("docs/edit_requestheader", requestField)
             }
             "responseBody" -> {
                 val responseField = restWebDocument.responseBodyDescriptors?.filter { it.path == field }?.first()
@@ -175,7 +175,7 @@ class RestWebDocumentViewController {
             }
             "requestHeader" -> {
                 val requestHeader = restWebDocument.requestHeaderDescriptor?.filter { it.field == field }?.first()
-                PageView("docs/a", (requestHeader ?: mutableListOf<Any>()))
+                PageView("docs/edit_requestheader", (requestHeader ?: mutableListOf<Any>()))
             }
             else -> {
                 throw RuntimeException()
