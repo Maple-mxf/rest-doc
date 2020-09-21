@@ -91,13 +91,6 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <div class="layui-form-item layui-form-text">
-                                <div class="layui-input-block">
-                                    <textarea id="apiDescription" placeholder="请输入内容" class="layui-textarea editor"
-                                              name="description"></textarea>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -118,13 +111,11 @@
                     </div>
                 </div>
 
-
                 <div class="layui-collapse group">
                     <div class="layui-colla-item">
                         <h2 class="layui-colla-title layui-bg-orange">请求头</h2>
-                        <div class="layui-colla-content layui-bg-gray">
-
-                            <div class="layui-form-item" style="margin-top: 10px" id="header-fieldset">
+                        <div class="layui-colla-content layui-bg-gray" id="header-fieldset">
+                            <div class="layui-form-item" style="margin-top: 10px">
                                 <div class="layui-inline">
                                     <button type="button" class="layui-btn layui-btn-primary"
                                             id="add_request_header_field">
@@ -776,7 +767,7 @@
 
         var document = [[${initDocument}]];
 
-        if (document != null) {
+        if (document !== null) {
             initTestApiDoc(document, form, oneuriline, oneheaderline, oneline, responseoneline);
             element.render('collapse');
         }

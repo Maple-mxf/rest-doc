@@ -168,3 +168,4 @@ data class UpdateURIVarSnippetDto(val field: String, val value: String, val desc
 data class UpdateRequestHeaderSnippetDto(val field: String, val value: String, val optional: Any, val description: String)
 data class UpdateRequestBodySnippetDto(val path: String, val value: Any, val optional: Any, val description: String)
 data class UpdateResponseBodySnippetDto(val path: String, val value: Any, val description: String)
+data class UpdateDescriptionSnippetDto(val description: String)

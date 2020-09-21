@@ -588,5 +588,17 @@ class RestWebDocumentController {
 
         return ok(transformRestDocumentToVO(doc))
     }
+
+    @PatchMapping("/{id}/snippet/description")
+    fun patchDescription(@PathVariable id: String,
+                         @Valid @RequestBody dto: UpdateDescriptionSnippetDto): Result {
+
+        val doc = restWebDocumentRepository.findById(id).orElseThrow(Status.BAD_REQUEST::instanceError)
+
+        doc.description = dto.description
+        restWebDocumentRepository.update(doc)
+
+        return ok(transformRestDocumentToVO(doc))
+    }
 }
 

@@ -29,8 +29,8 @@ function initTestApiDoc(document, form, one_uri_line, one_request_header_line,
         // 设定描述
         $('#apiDescription').text(document['description']);
 
-        if (document['uriVariables'] != null && document['uriVariables'].length > 0) {
-            initUriFieldDoc(document['uriVariables'], one_uri_line);
+        if (document['uriVarDescriptors'] != null && document['uriVarDescriptors'].length > 0) {
+            initUriFieldDoc(document['uriVarDescriptors'], one_uri_line);
             form.render()
         }
 
@@ -131,8 +131,12 @@ function initUriFieldDoc(uriVariables, oneuriline) {
         $("#uri-fieldset").append(oneuriline);
     }
     var all_input_line = $("#uri-fieldset").children(".one-uri-header-line");
+
     for (let i = 0; i < all_input_line.length; i++) {
         let line = all_input_line[i];
+
+        console.info($(line).find("input").length);
+
         $(line).find("input").each(function () {
             if (this.name === 'uriField') {
                 this.value = uriVariables[i]['field']

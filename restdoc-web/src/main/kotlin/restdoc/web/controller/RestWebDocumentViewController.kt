@@ -187,6 +187,9 @@ class RestWebDocumentViewController {
                         transformHeaderToVO(restWebDocument.requestHeaderDescriptor?.filter { it.field == field }
                                 ?: mutableListOf())[0])
             }
+            "description" -> {
+                PageView("docs/edit_description", restWebDocument.description)
+            }
             else -> {
                 throw RuntimeException()
             }

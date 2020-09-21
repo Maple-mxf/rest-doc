@@ -111,7 +111,7 @@ data class RestWebDocument(
         /**
          *
          */
-        val description: String? = null,
+        var description: String? = null,
 
         /**
          *
