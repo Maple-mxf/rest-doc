@@ -1,9 +1,9 @@
 # rest-doc
-[为什么需要REST doc](#为什么需要REST doc)
+[为什么需要REST doc](#为什么需要RESTdoc)
 [快速开始](#快速开始)
 
 
-##为什么需要REST doc
+##为什么需要RESTdoc
 REST doc主要解决的问题如下
 
 - 快速的编写API文档是具有一定的体力输出，REST doc可以简化切加速这个过程；
