@@ -131,7 +131,6 @@ data class RestWebDocument(
         /**
          *
          */
-        @Deprecated(message = "")
         var queryParam: Map<String, Any>? = null,
 
         /**

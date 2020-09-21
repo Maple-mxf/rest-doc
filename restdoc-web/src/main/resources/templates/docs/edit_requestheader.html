@@ -13,7 +13,8 @@
         <div class="layui-form-item">
             <label class="layui-form-label">参数</label>
             <div class="layui-input-block">
-                <input type="text" readonly id="name" th:value="${field.field}" name="name" lay-verify="required" placeholder="请输入参数名称"
+                <input type="text" readonly id="name" th:value="${field.field}" name="name" lay-verify="required"
+                       placeholder="请输入参数名称"
                        autocomplete="off"
                        class="layui-input">
             </div>
@@ -22,9 +23,20 @@
         <div class="layui-form-item">
             <label class="layui-form-label">示例值</label>
             <div class="layui-input-block">
-                <input type="text" id="value" name="value" th:value="${field.value}" lay-verify="required" placeholder="请输入示例值"
+                <input type="text" id="value" name="value" th:value="${field.value}" lay-verify="required"
+                       placeholder="请输入示例值"
                        autocomplete="off"
                        class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">可选</label>
+            <div class="layui-input-block">
+                <select id="optional" name="optional" lay-verify="optional">
+                    <option value="true" selected>是</option>
+                    <option value="false">否</option>
+                </select>
             </div>
         </div>
 
@@ -114,9 +126,9 @@
 
     function getValue() {
         return {
-            "field":$('#name').val(),
-            "value":$('#value').val(),
-            "description":contentFunction()
+            "field": $('#name').val(),
+            "value": $('#value').val(),
+            "description": contentFunction()
         }
     }
 </script>

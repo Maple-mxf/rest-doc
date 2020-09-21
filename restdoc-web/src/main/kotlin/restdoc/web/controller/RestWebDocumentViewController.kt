@@ -8,6 +8,7 @@ import org.springframework.ui.set
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestParam
+import restdoc.web.controller.obj.transformRestDocumentToVO
 import restdoc.web.model.DocType
 import restdoc.web.model.RestWebDocument
 import restdoc.web.repository.ResourceRepository
@@ -83,13 +84,15 @@ class RestWebDocumentViewController {
         val resource = resourceRepository.findById(restWebDocument.resource)
 
         model.addAttribute("resource", resource)
-        model.addAttribute("document", restWebDocument)
+
         model.addAttribute("projectId", projectId)
         model.addAttribute("sample", mapper.writeValueAsString(restWebDocument.executeResult))
 
         return if (DocType.API == restWebDocument.docType) {
+            model.addAttribute("document", transformRestDocumentToVO(restWebDocument))
             "docs/apiDetail"
         } else if (DocType.WIKI == restWebDocument.docType) {
+            model.addAttribute("document", restWebDocument)
             "docs/wikiDetail"
         } else {
             "docs/resourceDetail"
