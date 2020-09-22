@@ -1,118 +1,56 @@
 {
-  "status": "OK",
-  "code": "200",
-  "message": null,
-  "data": {
-    "content": [
-      {
-        "id": "746946688983240704",
-        "name": "ApiProject",
-        "desc": null,
-        "createTime": 1598156368252,
-        "accessPwd": null
+  "content": [
+    {
+      "type": "LAYOUT_CONTENT",
+      "title": "布局",
+      "id": "06452982-9d33-4649-b31f-4eb849f8f910",
+      "style": {
+        "height": 725,
+        "width": 1123
       },
-      {
-        "id": "746948087771041792",
-        "name": "Api1",
-        "desc": null,
-        "createTime": 1598156701749,
-        "accessPwd": null
-      },
-      {
-        "id": "746948116653019136",
-        "name": "Api1",
-        "desc": null,
-        "createTime": 1598156708635,
-        "accessPwd": null
-      },
-      {
-        "id": "746948356223275008",
-        "name": "阿斯顿撒多",
-        "desc": null,
-        "createTime": 1598156765753,
-        "accessPwd": null
-      },
-      {
-        "id": "746948380525072384",
-        "name": "阿斯顿撒多",
-        "desc": null,
-        "createTime": 1598156771547,
-        "accessPwd": null
-      },
-      {
-        "id": "746948382282485760",
-        "name": "阿斯顿撒多",
-        "desc": null,
-        "createTime": 1598156771966,
-        "accessPwd": null
-      },
-      {
-        "id": "746948382915825664",
-        "name": "阿斯顿撒多",
-        "desc": null,
-        "createTime": 1598156772117,
-        "accessPwd": null
-      },
-      {
-        "id": "746948384589352960",
-        "name": "阿斯顿撒多",
-        "desc": null,
-        "createTime": 1598156772516,
-        "accessPwd": null
-      },
-      {
-        "id": "746948385268830208",
-        "name": "阿斯顿撒多",
-        "desc": null,
-        "createTime": 1598156772678,
-        "accessPwd": null
-      },
-      {
-        "id": "746948385893781504",
-        "name": "阿斯顿撒多",
-        "desc": null,
-        "createTime": 1598156772827,
-        "accessPwd": null
-      },
-      {
-        "id": "746948386493566976",
-        "name": "阿斯顿撒多",
-        "desc": null,
-        "createTime": 1598156772970,
-        "accessPwd": null
-      },
-      {
-        "id": "746948551560400896",
-        "name": "奥术大师",
-        "desc": null,
-        "createTime": 1598156812325,
-        "accessPwd": null
-      }
-    ],
-    "pageable": {
-      "sort": {
-        "sorted": false,
-        "unsorted": true,
-        "empty": true
-      },
-      "offset": 0,
-      "pageSize": 12,
-      "pageNumber": 0,
-      "unpaged": false,
-      "paged": true
-    },
-    "totalElements": 22,
-    "last": false,
-    "totalPages": 2,
-    "size": 12,
-    "number": 0,
-    "sort": {
-      "sorted": false,
-      "unsorted": true,
-      "empty": true
-    },
-    "numberOfElements": 12,
-    "first": true,
-    "empty": false
-  }
+      "path": [
+        "06452982-9d33-4649-b31f-4eb849f8f910"
+      ],
+      "display": true,
+      "childNodes": [
+        {
+          "type": "DETAIL",
+          "title": "详情",
+          "id": "06452982-9d33-4649-b31f-4eb849f8f912",
+          "style": {
+            "minWidth": 760,
+            "padding": 20,
+            "left": 0,
+            "top": 0,
+            "width": 1193,
+            "height": 617,
+            "paddingTop": "0px",
+            "paddingBottom": "0px",
+            "paddingLeft": "10px",
+            "paddingRight": "10px",
+            "borderColor": "rgba(190,190,190,1)",
+            "borderWidth": "0px",
+            "borderStyle": "solid",
+            "opacity": 1,
+            "marginTop": "5px",
+            "marginLeft": "5px",
+            "marginBottom": "5px",
+            "marginRight": "5px",
+            "backgroundColor": "rgba(255,255,255,1)"
+          },
+          "path": [
+            "06452982-9d33-4649-b31f-4eb849f8f910",
+            "06452982-9d33-4649-b31f-4eb849f8f912"
+          ],
+          "keyProp": "content",
+          "showTime": true,
+          "showCategory": true,
+          "showAuthor": true,
+          "showOriginal": true,
+          "showShare": true,
+          "showNext": true
+        }
+      ]
+    }
+  ]
 }

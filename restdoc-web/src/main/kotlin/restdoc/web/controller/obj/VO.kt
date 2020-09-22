@@ -1,5 +1,8 @@
 package restdoc.web.controller.obj
 
+import org.thymeleaf.spring5.context.SpringContextUtils
+import restdoc.web.base.getBean
+import restdoc.web.core.code.CURLCodeSampleGenerator
 import restdoc.web.model.BodyFieldDescriptor
 import restdoc.web.model.HeaderFieldDescriptor
 import restdoc.web.model.RestWebDocument
@@ -118,7 +121,12 @@ data class RestWebDocumentVO(
         val responseBodyDescriptors: MutableList<BodyFieldDescriptorVO> = mutableListOf(),
 
 
-        var uriVarDescriptors: MutableList<URIVarDescriptorVO> = mutableListOf()
+        var uriVarDescriptors: MutableList<URIVarDescriptorVO> = mutableListOf(),
+
+        /**
+         * Code sample
+         */
+        val codeSample: String = ""
 )
 
 fun transformHeaderToVO(headers: List<HeaderFieldDescriptor>) =
@@ -156,5 +164,6 @@ fun transformRestDocumentToVO(doc: RestWebDocument) = RestWebDocumentVO(
         requestHeaderDescriptor = transformHeaderToVO(doc.requestHeaderDescriptor ?: mutableListOf()),
         responseBodyDescriptors = transformNormalParamToVO(doc.responseBodyDescriptors ?: mutableListOf()),
         requestBodyDescriptor = transformNormalParamToVO(doc.requestBodyDescriptor ?: mutableListOf()),
-        uriVarDescriptors = transformURIFieldToVO(doc.uriVarDescriptors ?: mutableListOf())
+        uriVarDescriptors = transformURIFieldToVO(doc.uriVarDescriptors ?: mutableListOf()),
+        codeSample = getBean(CURLCodeSampleGenerator::class.java).invoke(doc)
 )

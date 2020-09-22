@@ -278,9 +278,10 @@
                             </table>
                         </div>
                         <div class="layui-row">
+                            <br>
                             <h3 class="headerTitle">请求示例</h3>
-                            <pre id="codeSample" class="code-block api-content"></pre>
-                        </div>
+                            <pre id="codeSample" style="font-size: 16px" class="layui-code api-content" th:utext="${document.codeSample}"></pre>
+.                        </div>
                     </div>
                 </div>
             </div>
@@ -345,17 +346,6 @@
                 });
             });
         });
-
-    var sample = [[${sample}]];
-
-    try {
-        var obj = JSON.parse(sample);
-        var pretty = JSON.stringify(obj, undefined, 4);
-        console.info(pretty);
-        $('#codeSample').html(pretty)
-    } catch (e) {
-        $('#codeSample').html(sample)
-    }
 
     $("#copyURL").click(function () {
         const input = document.createElement('input');
