@@ -197,4 +197,7 @@ class RestWebDocumentViewController {
         model.addAttribute("field", pv.field)
         return pv.pageLocation
     }
+
+//    @GetMapping("/{projectId}")
+//    fun baseInfo() =
 }

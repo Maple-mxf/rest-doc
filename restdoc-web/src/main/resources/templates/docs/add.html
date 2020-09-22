@@ -16,8 +16,33 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
 </head>
 <body>
-<div id="sourceTreeDiv" class="layui-bg-gray" style="display: none">
+
+<div style="display: none" id="apiBaseInfo">
+    <div id="sourceTreeDiv">
+    </div>
+
+   <form class="layui-form layui-form-pane">
+       <div class="layui-form-item">
+           <div class="layui-inline">
+               <label class="layui-form-label">API名称</label>
+               <input id="apiName" type="text" name="name" class="layui-input">
+           </div>
+           <div class="layui-inline">
+               <label class="layui-form-label">所属资源</label>
+               <input type="text" name="tableContent"
+                      id="tableContent"
+                      class="layui-input"
+                      value="一级目录"
+                      readonly="readonly"
+                      placeholder="请选择目录">
+
+               <input type="hidden" name="resource" id="resource" value="root"
+                      class="layui-input">
+           </div>
+       </div>
+   </form>
 </div>
+
 
 <input id="documentId" name="documentId" th:if="${initDocument} != null " th:value="${initDocument.id}" type="hidden"/>
 <input type="hidden" name="projectId" id="projectId" th:value="${projectId}"/>
@@ -64,41 +89,10 @@
                     </div>
                 </fieldset>
 
-                <div class="layui-collapse ">
-                    <div class="layui-colla-item">
-                        <h2 class="layui-colla-title layui-bg-blue">API基本信息</h2>
-                        <div class="layui-colla-content layui-bg-gray">
-
-                            <div class="layui-form-item">
-                                <div class="layui-inline">
-                                    <label class="layui-form-label">API名称</label>
-                                    <div class="layui-input-inline">
-                                        <input id="apiName" type="text" name="name" class="layui-input">
-                                    </div>
-                                </div>
-                                <div class="layui-inline">
-                                    <label class="layui-form-label">所属资源</label>
-                                    <div class="layui-input-inline">
-                                        <input type="text" name="tableContent"
-                                               id="tableContent"
-                                               class="layui-input"
-                                               value="一级目录"
-                                               readonly="readonly"
-                                               placeholder="请选择目录">
-
-                                        <input type="hidden" name="resource" id="resource" value="root"
-                                               class="layui-input">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
                 <div class="layui-collapse group">
                     <div class="layui-colla-item">
                         <h2 class="layui-colla-title layui-bg-red">REST路径参数</h2>
-                        <div class="layui-colla-content layui-bg-gray" id="uri-fieldset">
+                        <div class="layui-colla-content" id="uri-fieldset">
                             <div class="layui-form-item" style="margin-top: 10px">
                                 <div class="layui-inline">
                                     <button type="button" class="layui-btn layui-btn-primary"
@@ -114,7 +108,7 @@
                 <div class="layui-collapse group">
                     <div class="layui-colla-item">
                         <h2 class="layui-colla-title layui-bg-orange">请求头</h2>
-                        <div class="layui-colla-content layui-bg-gray" id="header-fieldset">
+                        <div class="layui-colla-content" id="header-fieldset">
                             <div class="layui-form-item" style="margin-top: 10px">
                                 <div class="layui-inline">
                                     <button type="button" class="layui-btn layui-btn-primary"
@@ -129,7 +123,7 @@
                 <div class="layui-collapse group">
                     <div class="layui-colla-item">
                         <h2 class="layui-colla-title layui-bg-cyan">请求参数</h2>
-                        <div class="layui-colla-content layui-bg-gray" id="body-fieldset">
+                        <div class="layui-colla-content" id="body-fieldset">
 
                             <div class="layui-form-item" style="margin-top: 10px">
                                 <div class="layui-inline">
@@ -150,7 +144,7 @@
                 <div class="layui-collapse group">
                     <div class="layui-colla-item">
                         <h2 class="layui-colla-title layui-bg-black">期望响应参数</h2>
-                        <div class="layui-colla-content layui-bg-gray" id="response-fieldset">
+                        <div class="layui-colla-content" id="response-fieldset">
 
                             <div class="layui-form-item" style="margin-top: 10px">
                                 <div class="layui-inline">
@@ -400,26 +394,45 @@
             form.render();
         });
         form.on('submit(save)', function (data) {
-            var index = layer.load(1);
+            var projectId = $("#projectId").val();
+
             var map = getFormData(data.field);
             map['executeResult'] = globalExecuteResult;
-
             if (map['description'] != null) {
+
                 map['description'] = easyeditor.content(map['description'])
             }
-
             var method;
 
             var did = $("#documentId").val();
-            map["projectId"] = $("#projectId").val();
+
+            map["projectId"] = projectId;
+            map["documentId"] = did;
+            var isNewDoc = true;
 
             if (did === undefined || did === "") {
                 method = "POST"
             } else {
                 method = "PUT";
-                map["documentId"] = did;
+                isNewDoc = false;
             }
 
+            if (isNewDoc) {
+                layer.open({
+                    type: 1,
+                    title: '完善API基本信息',
+                    area: ['700px', '500px'],
+                    content: $('#apiBaseInfo'),
+                    btn: ['确定', '取消'],
+                    yes: function (index, doc) {
+
+                        map['name'] = $('#apiName').val();
+                        map['resource'] = $('#resource').val();
+
+                        layer.close(index);
+                    }
+                });
+            }
             $.ajax({
                 type: method,
                 dataType: 'JSON',
@@ -452,7 +465,6 @@
                     layer.msg("网络异常")
                 }
             });
-            layer.close(index);
 
             return false;
         });
@@ -657,8 +669,7 @@
         function formatJson(ugly) {
             try {
                 // var obj = JSON.parse(ugly);
-                var pretty = JSON.stringify(ugly, undefined, 4);
-                return pretty
+                return JSON.stringify(ugly, undefined, 4)
             } catch (e) {
                 // layer.msg("JSON字符串错误，请检查")
                 return ugly

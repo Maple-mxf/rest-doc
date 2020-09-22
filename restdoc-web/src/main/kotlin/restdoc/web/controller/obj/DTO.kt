@@ -21,7 +21,7 @@ data class RequestDto(
         var url: String,
         val name: String?,
         val description: String?,
-        val resource: String,
+        val resource: String?,
         val method: String,
         val headers: List<HeaderDto>?,
         val requestFields: List<RequestFieldsDto>?,
