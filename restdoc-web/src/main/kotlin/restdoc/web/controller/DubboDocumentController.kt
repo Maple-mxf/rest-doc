@@ -14,5 +14,4 @@ class DubboDocumentController {
     @Autowired
     lateinit var dubboDocumentRepository: DubboDocumentRepository
 
-
 }

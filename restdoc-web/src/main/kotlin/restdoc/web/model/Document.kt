@@ -23,7 +23,7 @@ class DubboDocument {
     lateinit var projectId: String
 
     /**
-     * resource
+     * Resource Equals A Java Class
      */
     lateinit var resource: String
 
