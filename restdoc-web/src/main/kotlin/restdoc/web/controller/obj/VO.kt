@@ -179,4 +179,5 @@ fun transformRestDocumentToVO(doc: RestWebDocument) = RestWebDocumentVO(
         curlCodeSample = getBean(CURLCodeSampleGenerator::class.java).invoke(doc),
         javaCodeSample = getBean(JavaCodeSampleGenerator::class.java).invoke(doc),
         pythonCodeSample = getBean(PythonCodeSampleGenerator::class.java).invoke(doc)
+//        pythonCodeSample = "pythonCodeSample"
 )

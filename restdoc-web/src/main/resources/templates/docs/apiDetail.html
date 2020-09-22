@@ -28,6 +28,13 @@
             font-family: Roboto, serif;
         }
 
+        .code-block{
+            background-color: #283142;
+            color: white;
+            font-size: 16px;
+            font-family: Roboto, serif;
+        }
+
         .common-code-pre {
             background: #f4f4f4;
             border: 1px solid #ddd;
@@ -289,22 +296,19 @@
                                 </ul>
                                 <div class="layui-tab-content" style="height: 400px;">
                                     <div class="layui-tab-item layui-show">
-                                        <pre style="font-size: 16px" class="layui-code api-content"
-                                             th:utext="${document.curlCodeSample}"></pre>
+                                        <pre style="font-size: 16px" class="layui-code code-block"
+                                             th:text="${document.curlCodeSample}"></pre>
                                     </div>
                                     <div class="layui-tab-item">
-                                        <pre style="font-size: 16px" class="layui-code api-content"
-                                             th:utext="${document.javaCodeSample}"></pre>
+                                        <pre style="font-size: 16px" class="layui-code code-block"
+                                             th:text="${document.javaCodeSample}"></pre>
                                     </div>
-
                                     <div class="layui-tab-item">
-                                        <pre style="font-size: 16px" class="layui-code api-content"
-                                             th:utext="${document.pythonCodeSample}"></pre>
+                                        <pre style="font-size: 16px" class="layui-code code-block"
+                                             th:text="${document.pythonCodeSample}"></pre>
                                     </div>
-
                                 </div>
                             </div>
-                            .
                         </div>
                     </div>
                 </div>
