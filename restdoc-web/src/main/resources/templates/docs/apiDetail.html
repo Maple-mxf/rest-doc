@@ -156,9 +156,8 @@
 
                             <h3 class="headerTitle">备注 <span><i class="layui-icon layui-icon-edit"
                                                                 id="editDocDescriptionBtn"
-                                                                style="font-size: 25px; color: #FF5722;font-weight: normal"></i></span>
+                                                                style="font-size: 20px; color: #FF5722;font-weight: normal"></i></span>
                             </h3>
-                            <br>
                             <blockquote class="layui-elem-quote"><div class="layui-text	" th:utext="${document.description}" id="descriptionArea"></div></blockquote>
                         </div>
                         <div class="layui-row"
@@ -188,9 +187,6 @@
                                 </tbody>
                             </table>
                         </div>
-
-                        <br>
-
                         <div class="layui-row"
                              th:if="${document.requestHeaderDescriptor!=null and !document.requestHeaderDescriptor.isEmpty()}">
                             <h3 class="headerTitle">请求头参数列表
@@ -283,17 +279,17 @@
                                     <li>Java</li>
                                     <li>Python</li>
                                 </ul>
-                                <div class="layui-tab-content" style="height: 400px;">
+                                <div class="layui-tab-content" style="height: 500px;">
                                     <div class="layui-tab-item layui-show">
-                                        <pre style="font-size: 16px" class="layui-code code-block"
+                                        <pre style="font-size: 16px" class="layui-code "
                                              th:text="${document.curlCodeSample}"></pre>
                                     </div>
                                     <div class="layui-tab-item">
-                                        <pre style="font-size: 16px" class="layui-code code-block"
+                                        <pre style="font-size: 16px" class="layui-code "
                                              th:text="${document.javaCodeSample}"></pre>
                                     </div>
                                     <div class="layui-tab-item">
-                                        <pre style="font-size: 16px" class="layui-code code-block"
+                                        <pre style="font-size: 16px" class="layui-code "
                                              th:text="${document.pythonCodeSample}"></pre>
                                     </div>
                                 </div>
