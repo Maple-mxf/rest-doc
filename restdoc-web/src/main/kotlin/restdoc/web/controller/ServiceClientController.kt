@@ -39,7 +39,7 @@ class ServiceClientController {
     lateinit var projectRepository: ProjectRepository
 
     @GetMapping("/serviceClient/list")
-    fun list(@RequestParam type: ApplicationType): Any {
+    fun list(@RequestParam(defaultValue = "DUBBO") type: ApplicationType): Any {
 
         val services = clientChannelManager.clients
                 .filter { it.value.applicationType == type }

@@ -1,12 +1,15 @@
 package restdoc.client.api.model
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder
 import restdoc.remoting.common.ApplicationType
 import restdoc.remoting.protocol.RemotingSerializable
+import java.beans.ConstructorProperties
 
 /**
  * @author Overman
  */
-data class ClientInfo(
+@JsonPropertyOrder(value = ["osname", "hostname", "type", "service", "serializationProtocol"])
+data class ClientInfo @ConstructorProperties(value = ["osname", "hostname", "type", "service", "serializationProtocol"]) constructor(
         /**
          * OS name
          */
@@ -15,7 +18,7 @@ data class ClientInfo(
         /**
          * Hostname
          */
-        val hostname:String,
+        val hostname: String,
 
         /**
          * Client types
