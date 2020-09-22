@@ -1,8 +1,9 @@
 package restdoc.web.controller.obj
 
-import org.thymeleaf.spring5.context.SpringContextUtils
 import restdoc.web.base.getBean
 import restdoc.web.core.code.CURLCodeSampleGenerator
+import restdoc.web.core.code.JavaCodeSampleGenerator
+import restdoc.web.core.code.PythonCodeSampleGenerator
 import restdoc.web.model.BodyFieldDescriptor
 import restdoc.web.model.HeaderFieldDescriptor
 import restdoc.web.model.RestWebDocument
@@ -124,9 +125,19 @@ data class RestWebDocumentVO(
         var uriVarDescriptors: MutableList<URIVarDescriptorVO> = mutableListOf(),
 
         /**
-         * Code sample
+         * CURL Code sample
          */
-        val codeSample: String = ""
+        val curlCodeSample: String = "",
+
+        /**
+         * Java Code sample
+         */
+        val javaCodeSample: String = "",
+
+        /**
+         * Python code sample
+         */
+        val pythonCodeSample: String = ""
 )
 
 fun transformHeaderToVO(headers: List<HeaderFieldDescriptor>) =
@@ -165,5 +176,7 @@ fun transformRestDocumentToVO(doc: RestWebDocument) = RestWebDocumentVO(
         responseBodyDescriptors = transformNormalParamToVO(doc.responseBodyDescriptors ?: mutableListOf()),
         requestBodyDescriptor = transformNormalParamToVO(doc.requestBodyDescriptor ?: mutableListOf()),
         uriVarDescriptors = transformURIFieldToVO(doc.uriVarDescriptors ?: mutableListOf()),
-        codeSample = getBean(CURLCodeSampleGenerator::class.java).invoke(doc)
+        curlCodeSample = getBean(CURLCodeSampleGenerator::class.java).invoke(doc),
+        javaCodeSample = getBean(JavaCodeSampleGenerator::class.java).invoke(doc),
+        pythonCodeSample = getBean(PythonCodeSampleGenerator::class.java).invoke(doc)
 )

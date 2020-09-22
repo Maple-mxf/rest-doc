@@ -1,0 +1,50 @@
+package testcase.sample;
+
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.http.HttpMethod.*;
+
+import javax.xml.stream.events.EndDocument;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * @since ${since}
+ */
+public class JavaCodeUnitTestCaseSample {
+
+    @Test
+    public void testInvokeAPI() {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+
+        // Add Headers
+        #if( !$null.isNull($requestHeaders) )
+            #foreach($item in $requestHeaders )
+        headers.addAll("${item.field}","${item.value}");
+            #end
+        #end
+
+        #if( !$null.isNull($uriVars))
+        Map<String,Object> uriVars = new HashMap<>();
+        #foreach($key in $uriVars.keySet())
+        uriVars.put("$key","$uriVars.get($key)");
+
+         // Add body
+         Map<String, Object> body = new HashMap<>();
+         HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>(body, headers);
+
+        #end
+        ResponseEntity<Object> responseEntity = restTemplate.exchange("${url}", ${method}, httpEntity, Object.class, uriVars);
+        #else
+        ResponseEntity<Object> responseEntity = restTemplate.exchange("${url}", ${method}, httpEntity, Object.class);
+        #end
+
+        System.err.println(String.format("status code : %d", responseEntity.getStatusCodeValue()));
+        System.err.println(String.format("content-type : %s", responseEntity.getHeaders().getContentType()));
+        System.err.println(String.format("response result : %s", responseEntity.getBody()));
+    }
+}

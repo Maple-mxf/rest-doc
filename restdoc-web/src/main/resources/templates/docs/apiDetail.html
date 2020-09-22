@@ -101,11 +101,11 @@
             font-family: Roboto, serif;
         }
 
-        #editDocDescriptionBtn:hover{
+        #editDocDescriptionBtn:hover {
             cursor: pointer;
         }
 
-        tr:hover{
+        tr:hover {
             cursor: pointer;
         }
     </style>
@@ -144,8 +144,8 @@
                              th:if="${document.description !=null and document.description != ''}">
 
                             <h3 class="headerTitle">备注 <span><i class="layui-icon layui-icon-edit"
-                                                                       id="editDocDescriptionBtn"
-                                                                       style="font-size: 25px; color: #FF5722;font-weight: normal"></i></span>
+                                                                id="editDocDescriptionBtn"
+                                                                style="font-size: 25px; color: #FF5722;font-weight: normal"></i></span>
                             </h3>
                             <div class="layui-inline">
 
@@ -279,9 +279,33 @@
                         </div>
                         <div class="layui-row">
                             <br>
-                            <h3 class="headerTitle">请求示例</h3>
-                            <pre id="codeSample" style="font-size: 16px" class="layui-code api-content" th:utext="${document.codeSample}"></pre>
-.                        </div>
+                            <h3 class="headerTitle">代码示例</h3>
+                            <br>
+                            <div class="layui-tab layui-tab-card">
+                                <ul class="layui-tab-title">
+                                    <li class="layui-this">CURL</li>
+                                    <li>Java</li>
+                                    <li>Python</li>
+                                </ul>
+                                <div class="layui-tab-content" style="height: 400px;">
+                                    <div class="layui-tab-item layui-show">
+                                        <pre style="font-size: 16px" class="layui-code api-content"
+                                             th:utext="${document.curlCodeSample}"></pre>
+                                    </div>
+                                    <div class="layui-tab-item">
+                                        <pre style="font-size: 16px" class="layui-code api-content"
+                                             th:utext="${document.javaCodeSample}"></pre>
+                                    </div>
+
+                                    <div class="layui-tab-item">
+                                        <pre style="font-size: 16px" class="layui-code api-content"
+                                             th:utext="${document.pythonCodeSample}"></pre>
+                                    </div>
+
+                                </div>
+                            </div>
+                            .
+                        </div>
                     </div>
                 </div>
             </div>
