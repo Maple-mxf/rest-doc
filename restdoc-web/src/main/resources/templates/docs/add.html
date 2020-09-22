@@ -18,32 +18,25 @@
 <body>
 
 <div style="display: none" id="apiBaseInfo" class="layui-container">
-
     <form class="layui-form layui-form-pane">
+
         <div class="layui-form-item">
             <label class="layui-form-label">API名称</label>
-            <div class="layui-input-block">
-                <input id="apiName" type="text" name="name" class="layui-input">
+            <div class="layui-input-inline">
+                <input type="text" id="apiName" name="name" lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
             </div>
-
         </div>
-
         <div class="layui-form-item">
             <label class="layui-form-label">所属资源</label>
-            <div class="layui-input-block">
-                <input type="text" name="tableContent"
-                       id="sourceTreeDiv"
-                       class="layui-input"
-                       value="一级目录"
-                       readonly="readonly"
-                       placeholder="请选择目录">
+            <div class="layui-input-inline">
+                <input type="text" id="sourceTreeDiv" name="name"  value="一级目录" lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
             </div>
         </div>
-        <input type="hidden" name="resource" id="resource" value="root"
-               class="layui-input">
+
+
     </form>
 </div>
-
+<input type="hidden" name="resource" id="resource" value="root">
 
 <input id="documentId" name="documentId" th:if="${initDocument} != null " th:value="${initDocument.id}" type="hidden"/>
 <input type="hidden" name="projectId" id="projectId" th:value="${projectId}"/>
@@ -466,7 +459,7 @@
                         layer.close(index);
                     }
                 });
-            }else{
+            } else {
                 $.ajax({
                     type: 'PATCH',
                     dataType: 'JSON',
