@@ -45,11 +45,11 @@ open class DubboAgentClientConfiguration : AgentClientConfiguration {
     @Autowired
     lateinit var agentImpl: AgentImpl
 
-    override fun hook(): AgentHook {
-        return object : AgentHook {
-            override fun beforeStart(): List<AgentCallback> = listOf()
-            override fun afterStart(): List<AgentCallback> {
-                val invokeTask: AgentCallback = {
+    override fun hook(): AgentStartHook {
+        return object : AgentStartHook {
+            override fun beforeStart(): List<AgentStartCallback> = listOf()
+            override fun afterStart(): List<AgentStartCallback> {
+                val invokeTask: AgentStartCallback = {
                     it.invoke(reportExposedInterfacesTask)
                     it.invoke(reportClientInfoTask)
                 }
@@ -151,4 +151,10 @@ open class DubboAgentClientConfiguration : AgentClientConfiguration {
     }
 
     override fun getAgent(): Agent = this.agentImpl
+
+    override fun registryConnectedHook() {
+        agentImpl.getRemotingClient().registryConnectHook {
+            getConnectedHook().invoke(this.agentImpl)
+        }
+    }
 }

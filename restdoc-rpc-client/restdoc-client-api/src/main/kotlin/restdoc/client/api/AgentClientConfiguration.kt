@@ -14,6 +14,9 @@ interface AgentClientConfiguration : CommandLineRunner {
      */
     fun registryRemotingHandler()
 
+
+    fun registryConnectedHook()
+
     /**
      * Start The Agent client
      */
@@ -30,7 +33,10 @@ interface AgentClientConfiguration : CommandLineRunner {
         // 2 registryRemotingHandler
         this.registryRemotingHandler()
 
-        // 3 start agent
+        // 3 registry connected hook
+        this.registryConnectedHook()
+
+        // 4 start agent
         agent.start()
 
         hook.afterStart().forEach { it.invoke(agent) }
@@ -41,5 +47,11 @@ interface AgentClientConfiguration : CommandLineRunner {
     /**
      *
      */
-    fun hook(): AgentHook
+    @Deprecated(message = "")
+    fun hook(): AgentStartHook
+
+    fun getConnectedHook(): ConnectedHook = {
+        it.invoke(reportExposedInterfacesTask)
+        it.invoke(reportClientInfoTask)
+    }
 }

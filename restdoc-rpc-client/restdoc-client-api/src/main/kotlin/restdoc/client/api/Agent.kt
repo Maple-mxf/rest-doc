@@ -1,6 +1,7 @@
 package restdoc.client.api
 
 import restdoc.remoting.RemotingClient
+import restdoc.remoting.netty.NettyRemotingClient
 import restdoc.remoting.netty.NettyRequestProcessor
 
 
@@ -12,7 +13,7 @@ interface Agent {
     /**
      * Get remoting client
      */
-    fun getRemotingClient(): RemotingClient
+    fun getRemotingClient(): NettyRemotingClient
 
     /**
      * Start client channel
@@ -33,6 +34,7 @@ interface Agent {
      * When the channel is close
      * retry connect to server
      */
+    @Deprecated(message = "reconnect")
     fun reconnect()
 
     /**

@@ -41,7 +41,7 @@ class AgentImpl(private val agentConfigurationProperties: AgentConfigurationProp
         this.remotingTasks.add(task)
     }
 
-    override fun getRemotingClient(): RemotingClient {
+    override fun getRemotingClient(): NettyRemotingClient {
         return this.remotingClient
     }
 

@@ -17,7 +17,6 @@ import restdoc.remoting.protocol.RemotingCommand
 
 /**
  * @author Overman
- * @since 2020/9/15
  */
 @Configuration
 @Import(AgentConfiguration::class)
@@ -41,11 +40,11 @@ open class RestWebAgentClientConfiguration : AgentClientConfiguration {
     /**
      * Hook The task
      */
-    override fun hook(): AgentHook {
-        return object : AgentHook {
-            override fun beforeStart() = listOf<AgentCallback>()
-            override fun afterStart(): List<AgentCallback> {
-                return listOf<AgentCallback> {
+    override fun hook(): AgentStartHook {
+        return object : AgentStartHook {
+            override fun beforeStart() = listOf<AgentStartCallback>()
+            override fun afterStart(): List<AgentStartCallback> {
+                return listOf<AgentStartCallback> {
                     it.invoke(reportExposedInterfacesTask)
                     it.invoke(reportClientInfoTask)
                 }
