@@ -20,7 +20,7 @@ interface AgentClientConfiguration : CommandLineRunner {
     override fun run(vararg args: String) {
 
         val agent = this.getAgent()
-        val hook = hook()
+        val hook = this.hook()
 
         hook.beforeStart().forEach { it.invoke(agent) }
 

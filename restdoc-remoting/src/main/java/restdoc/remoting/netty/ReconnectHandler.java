@@ -12,6 +12,7 @@ import java.util.concurrent.TimeUnit;
  *
  * @author Overman
  */
+@Deprecated
 @ChannelHandler.Sharable
 public class ReconnectHandler extends ChannelInboundHandlerAdapter {
 
@@ -35,7 +36,7 @@ public class ReconnectHandler extends ChannelInboundHandlerAdapter {
                             remotingClient.disconnect();
 
                             remotingClient.connect();
-                            
+
                         } catch (RemotingException e) {
                             e.printStackTrace();
                         }

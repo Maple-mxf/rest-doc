@@ -7,6 +7,8 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.util.concurrent.DefaultEventExecutorGroup;
+import io.netty.util.concurrent.Future;
+import io.netty.util.concurrent.GenericFutureListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import restdoc.remoting.*;
@@ -57,6 +59,7 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
     private final ChannelEventListener channelEventListener;
     private DefaultEventExecutorGroup defaultEventExecutorGroup;
     private Bootstrap handler;
+    private final List<Runnable> connectHook = new ArrayList<>();
 
     /**
      * current channel. Each successful invocation of  will
@@ -64,12 +67,6 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
      * <b>volatile, please copy reference to use.</b>
      */
     private volatile Channel channel;
-
-    /**
-     *
-     */
-    private final Lock connectLock = new ReentrantLock(true);
-
 
     public NettyRemotingClient(final NettyClientConfig nettyClientConfig) {
         this(nettyClientConfig, null);
@@ -166,6 +163,10 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
         return Math.abs(r.nextInt() % 999) % 999;
     }
 
+    public void registryConnectHook(Runnable hook) {
+        this.connectHook.add(hook);
+    }
+
     @Override
     public void start() throws RemotingException {
         synchronized (this) {
@@ -199,31 +200,41 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
         // 1 Start channel
         ChannelFuture future = handler.connect(nettyClientConfig.getHost(), nettyClientConfig.getPort());
 
-        boolean ret = future.awaitUninterruptibly(2000, TimeUnit.MILLISECONDS);
+        // boolean ret = future.awaitUninterruptibly(2000, TimeUnit.MILLISECONDS);
+        future.addListener(new GenericFutureListener<Future<? super Void>>() {
 
-        if (ret && future.isSuccess()) {
-            Channel newChannel = future.channel();
+            @Override
+            public void operationComplete(Future<? super Void> f) throws Exception {
+                if (!f.isSuccess()) {
+                    if (f.cause() != null) {
+                        f.cause().printStackTrace();
+                    }
+                    Channel newChannel = future.channel();
+                    Channel oldChannel = NettyRemotingClient.this.channel;
+                    if (oldChannel != null) {
+                        try {
+                            log.info("Remove old channel {} ", oldChannel);
+                            oldChannel.close();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        } finally {
+                            NettyRemotingClient.this.channelTables.remove(RemotingHelper.parseChannelRemoteAddr(oldChannel));
+                        }
+                    } else {
+                        NettyRemotingClient.this.channel = newChannel;
+                    }
 
-            Channel oldChannel = this.channel;
-            if (oldChannel != null) {
-                try {
-                    log.info("Remove old channel {} ", oldChannel);
-                    oldChannel.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
-                    this.channelTables.remove(RemotingHelper.parseChannelRemoteAddr(oldChannel));
+                    future.channel().pipeline().fireChannelInactive();
+
+                } else {
+                    NettyRemotingClient.this.channel = future.channel();
+                    for (Runnable hook : NettyRemotingClient.this.connectHook) {
+                        hook.run();
+                    }
                 }
-            } else {
-                this.channel = newChannel;
             }
-        } else if (future.cause() != null) {
-            future.cause().printStackTrace();
-            throw new RemotingException(future.cause().getMessage(), future.cause());
-        } else {
-            log.error("Not connected server");
-            throw new RemotingException("Not connected server");
-        }
+        });
+
 
     }
 
@@ -691,6 +702,7 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
     }
 
     class NettyConnectManageHandler extends ChannelDuplexHandler {
+
         @Override
         public void connect(ChannelHandlerContext ctx, SocketAddress remoteAddress, SocketAddress localAddress,
                             ChannelPromise promise) throws Exception {
