@@ -35,7 +35,7 @@
             font-family: Roboto, serif;
         }
 
-        .common-code-pre {
+        /*.common-code-pre {
             background: #f4f4f4;
             border: 1px solid #ddd;
             border-left: 3px solid #f36d33;
@@ -50,7 +50,7 @@
             padding: 1em 1.5em;
             display: block;
             word-wrap: break-word;
-        }
+        }*/
 
         .layui-table td, .layui-table th {
             color: #0C0C0C;
@@ -71,52 +71,27 @@
             font-weight: bold;
         }
 
-        .api-content {
-            margin-top: 20px;
-        }
-
         #urlSpan:hover {
             cursor: pointer;
         }
 
 
         .layui-tab-title li {
-            font-size: 20px;
+            font-size: 18px;
             font-family: Roboto, serif;
             padding: 0 5%;
-        }
-
-        .description:hover {
-            cursor: pointer;
-        }
-
-        .layui-table-cell {
-            padding: 0 5px;
-            height: auto;
-            overflow: visible;
-            text-overflow: inherit;
-            white-space: normal;
-            word-break: break-all;
-        }
-
-        .uriEditBtn {
-            margin: 2px;
         }
 
         .layui-code {
             font-size: 14px;
             font-family: Roboto, serif;
         }
-
         #editDocDescriptionBtn:hover {
             cursor: pointer;
         }
-
         tr:hover {
             cursor: pointer;
         }
-
-
         body{
             background-color: white;
         }
@@ -125,7 +100,6 @@
 
 </head>
 <body>
-
 <input id="projectId" type="hidden" th:value="${projectId}">
 
 <script type="text/html" id="uriDescriptionTpl">

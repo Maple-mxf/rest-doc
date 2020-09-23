@@ -17,28 +17,10 @@
 </head>
 <body>
 
-<div style="display: none" id="apiBaseInfo" class="layui-container">
-    <form class="layui-form layui-form-pane">
-
-        <div class="layui-form-item">
-            <label class="layui-form-label">API名称</label>
-            <div class="layui-input-inline">
-                <input type="text" id="apiName" name="name" lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">所属资源</label>
-            <div class="layui-input-inline">
-                <input type="text" id="sourceTreeDiv" name="name"  value="一级目录" lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
-            </div>
-        </div>
-
-
-    </form>
-</div>
 <input type="hidden" name="resource" id="resource" value="root">
+<input type="hidden" name="name" id="apiName">
+<input id="documentId" name="documentId" th:value="${documentId}" type="hidden"/>
 
-<input id="documentId" name="documentId" th:if="${initDocument} != null " th:value="${initDocument.id}" type="hidden"/>
 <input type="hidden" name="projectId" id="projectId" th:value="${projectId}"/>
 <div class="layui-fluid" style="margin-top: 10px">
     <div class="layui-row">
@@ -189,15 +171,13 @@
         'form', 'upload',
         'easyeditor',
         'element',
-        'jquery',
-        'dtree',], function () {
+        'jquery'], function () {
 
         var easyeditor = layui.easyeditor;
         easyeditor.init({
             elem: '.editor'
         });
 
-        var dtree = layui.dtree;
         var form = layui.form;
         var $ = layui.jquery;
         msg = layui.layer;
@@ -221,22 +201,7 @@
                 layer.msg("网络异常")
             }
         });
-        dtree.render({
-            elem: '#sourceTreeDiv'
-            , data: treeData
-            , id: 'id'
-            , icon: ["0"]
-            , oncheck: function (obj) {
-                checkData = obj.data.id;
-                $('#pid').val(obj.data.id);
-                $("#parent").val(obj.data.title);
-            }
-        });
-        dtree.on("node('sourceTreeDiv')", function (obj) {
-            $('#tableContent').val(obj.param.context)
-            $('#resource').val(obj.param.nodeId);
-            layer.closeAll()
-        });
+
 
         form.verify({
             url: function (value, item) {
@@ -404,6 +369,8 @@
             map["documentId"] = did;
             var isNewDoc = true;
 
+            console.info(did);
+
             if (did === undefined || did === "") {
                 method = "POST"
             } else {
@@ -411,17 +378,23 @@
                 isNewDoc = false;
             }
 
+            console.info(isNewDoc);
+
             if (isNewDoc) {
                 layer.open({
-                    type: 1,
+                    type: 2,
                     title: '完善API基本信息',
                     area: ['700px', '500px'],
-                    content: $('#apiBaseInfo'),
+                    content: ['/restdoc/' + projectId + '/document/baseinfo/edit/view', 'no'],
                     btn: ['确定', '取消'],
                     yes: function (index, doc) {
+                        var res = window["layui-layer-iframe" + index].getFormData();
 
-                        map['name'] = $('#apiName').val();
-                        map['resource'] = $('#resource').val();
+                        map['name'] = res['name'];
+                        map['resource'] = res['resource'];
+
+                        $("#apiName").val(res['name']);
+                        $("#resource").val(res['resource']);
 
                         $.ajax({
                             type: 'POST',
@@ -435,14 +408,8 @@
                                     if (data['data'] != null) {
                                         var id = data['data'];
                                         $('#documentId').val(id);
-                                        layer.confirm('查看文档详情页面', function (i) {
-                                            layer.open({
-                                                type: 2,
-                                                area: ['900px', '600px'],
-                                                content: '/restdoc/explorer/view/' + id
-                                            });
-                                            layer.close(i);
-                                        });
+                                        console.info(id);
+                                        layer.msg("保存成功");
                                     } else {
                                         layer.msg("保存失败")
                                     }
@@ -455,13 +422,15 @@
                                 layer.msg("网络异常")
                             }
                         });
-
                         layer.close(index);
                     }
                 });
             } else {
+                map['name'] = $("#apiName").val();
+                map['resource'] =  $("#resource").val();
+
                 $.ajax({
-                    type: 'PATCH',
+                    type: 'PUT',
                     dataType: 'JSON',
                     contentType: 'application/json;charset=utf-8',
                     url: '/restdoc/document',
@@ -472,21 +441,13 @@
                             if (data['data'] != null) {
                                 var id = data['data'];
                                 $('#documentId').val(id);
-                                layer.confirm('查看文档详情页面', function (i) {
-                                    layer.open({
-                                        type: 2,
-                                        area: ['900px', '600px'],
-                                        content: '/restdoc/explorer/view/' + id
-                                    });
-                                    layer.close(i);
-                                });
+                                layer.msg("保存成功");
                             } else {
                                 layer.msg("保存失败")
                             }
                         } else {
                             layer.msg(data['message'])
                         }
-
                     },
                     error: function () {
                         layer.msg("网络异常")

@@ -180,3 +180,5 @@ fun transformRestDocumentToVO(doc: RestWebDocument) = RestWebDocumentVO(
         javaCodeSample = getBean(JavaCodeSampleGenerator::class.java).invoke(doc),
         pythonCodeSample = getBean(PythonCodeSampleGenerator::class.java).invoke(doc)
 )
+
+data class ResourcePath(val path:String, val id:String)

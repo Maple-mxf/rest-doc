@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>基本信息</title>
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}"/>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="layui-container">
+    <form class="layui-form layui-form-pane" style="margin-left: 10%;margin-top: 10%">
+        <div class="layui-form-item">
+            <label class="layui-form-label">文档名称</label>
+            <div class="layui-input-inline">
+                <input type="text" id="apiName" name="apiName" lay-verify="required" placeholder="请输入文档名称"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">搜索选择框</label>
+            <div class="layui-input-inline">
+
+                <select id="resource" name="modules" th:name="tid" lay-verify="required" lay-search="">
+                    <option th:each="resourcePath:${resourcePaths}" th:selected="${resourcePath.id}== 'root'"
+                            th:value="${resourcePath.id}" th:text="${resourcePath.path}">
+                    </option>
+                </select>
+
+            </div>
+        </div>
+    </form>
+</div>
+
+<script th:src="@{/layui/layui.js}"></script>
+<script th:src="@{/admin/js/jquery.js}"></script>
+<script type="text/javascript" th:inline="javascript">
+    layui.use(['layer', 'form', 'jquery'], function () {
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var form = layui.form;
+    });
+
+    // /*function getDescription() {
+    //     return $('#layeditDemo').val()
+    // }*/
+
+    function getFormData() {
+        return {
+            "name":$('#apiName').val(),
+            "resource":$('#resource').val()
+        }
+    }
+</script>
+
+</body>
+</html>

@@ -2,16 +2,15 @@ package restdoc.web.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.mongodb.core.query.Criteria
+import org.springframework.data.mongodb.core.query.Query
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.ui.set
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestParam
-import restdoc.web.controller.obj.transformHeaderToVO
-import restdoc.web.controller.obj.transformNormalParamToVO
-import restdoc.web.controller.obj.transformRestDocumentToVO
-import restdoc.web.controller.obj.transformURIFieldToVO
+import restdoc.web.controller.obj.*
 import restdoc.web.model.DocType
 import restdoc.web.model.RestWebDocument
 import restdoc.web.repository.ResourceRepository
@@ -110,6 +109,7 @@ class RestWebDocumentViewController {
                 ?: return "view/error/500"
 
         model.addAttribute("initDocument", restWebDocument)
+        model.addAttribute("documentId", restWebDocument.id)
         model.addAttribute("projectId", projectId)
 
         return "docs/add"
@@ -198,6 +198,41 @@ class RestWebDocumentViewController {
         return pv.pageLocation
     }
 
-//    @GetMapping("/{projectId}")
-//    fun baseInfo() =
+    @GetMapping("/{projectId}/document/baseinfo/edit/view")
+    fun baseInfo(@PathVariable projectId: String, model: Model): String {
+        model.addAttribute("projectId", projectId)
+
+        val resources = resourceRepository.list(Query().addCriteria(Criteria("projectId").`is`(projectId)))
+
+        val navNodes = resources.map {
+            NavNode(id = it.id!!,
+                    title = it.name!!,
+                    field = "name",
+                    children = null,
+                    pid = it.pid!!)
+        }
+
+        findChild(ROOT_NAV, navNodes)
+
+        val resourcePaths = mutableListOf<ResourcePath>()
+        resourcePaths.add(ResourcePath(ROOT_NAV.title, ROOT_NAV.id))
+
+        ROOT_NAV.children?.forEach {
+            mapToResourcePath("一级目录", it, resourcePaths)
+        }
+        model.addAttribute("resourcePaths", resourcePaths)
+        return "docs/edit_baseinfo"
+    }
+
+    /**
+     * Split By '/'
+     */
+    private fun mapToResourcePath(path: String, node: NavNode, resourcePaths: MutableList<ResourcePath>) {
+        if (node.children != null && node.children!!.isNotEmpty()) {
+            node.children!!.forEach {
+                mapToResourcePath("${path}/${node.title}", it, resourcePaths)
+            }
+        }
+        resourcePaths.add(ResourcePath("${path}/${node.title}", node.id))
+    }
 }
