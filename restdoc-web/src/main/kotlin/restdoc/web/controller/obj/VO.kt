@@ -171,7 +171,7 @@ fun transformRestDocumentToVO(doc: RestWebDocument) = RestWebDocumentVO(
         name = doc.name ?: "",
         resource = doc.resource,
         url = doc.url,
-        description = doc.description ?: "",
+        description = if (doc.description == null || doc.description!!.isBlank()) "API说明" else doc.description!!,
         requestHeaderDescriptor = transformHeaderToVO(doc.requestHeaderDescriptor ?: mutableListOf()),
         responseBodyDescriptors = transformNormalParamToVO(doc.responseBodyDescriptors ?: mutableListOf()),
         requestBodyDescriptor = transformNormalParamToVO(doc.requestBodyDescriptor ?: mutableListOf()),
@@ -181,4 +181,4 @@ fun transformRestDocumentToVO(doc: RestWebDocument) = RestWebDocumentVO(
         pythonCodeSample = getBean(PythonCodeSampleGenerator::class.java).invoke(doc)
 )
 
-data class ResourcePath(val path:String, val id:String)
+data class ResourcePath(val path: String, val id: String)

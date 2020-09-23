@@ -13,10 +13,7 @@ import restdoc.remoting.*;
 import restdoc.remoting.common.Pair;
 import restdoc.remoting.common.RemotingHelper;
 import restdoc.remoting.common.RemotingUtil;
-import restdoc.remoting.exception.RemotingConnectException;
-import restdoc.remoting.exception.RemotingSendRequestException;
-import restdoc.remoting.exception.RemotingTimeoutException;
-import restdoc.remoting.exception.RemotingTooMuchRequestException;
+import restdoc.remoting.exception.*;
 import restdoc.remoting.protocol.RemotingCommand;
 
 import java.io.IOException;
@@ -29,6 +26,10 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+
+/**
+ * NettyRemotingClient
+ */
 public class NettyRemotingClient extends NettyRemotingAbstract implements RemotingClient {
     private static final Logger log = LoggerFactory.getLogger(NettyRemotingClient.class);
 
@@ -38,7 +39,7 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
     private final Bootstrap bootstrap = new Bootstrap();
     private final EventLoopGroup eventLoopGroupWorker;
     private final Lock lockChannelTables = new ReentrantLock();
-    private final ConcurrentMap<String /* addr */, ChannelWrapper> channelTables = new ConcurrentHashMap<String, ChannelWrapper>();
+    private final ConcurrentMap<String /* addr */, ChannelWrapper> channelTables = new ConcurrentHashMap<>();
 
     private final Timer timer = new Timer("ClientHouseKeepingService", true);
 
@@ -56,6 +57,19 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
     private final ChannelEventListener channelEventListener;
     private DefaultEventExecutorGroup defaultEventExecutorGroup;
     private Bootstrap handler;
+
+    /**
+     * current channel. Each successful invocation of  will
+     * replace this with new channel and close old channel.
+     * <b>volatile, please copy reference to use.</b>
+     */
+    private volatile Channel channel;
+
+    /**
+     *
+     */
+    private final Lock connectLock = new ReentrantLock(true);
+
 
     public NettyRemotingClient(final NettyClientConfig nettyClientConfig) {
         this(nettyClientConfig, null);
@@ -140,22 +154,23 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
                                 new RemotingCommandDecoder(),
                                 new IdleStateHandler(0, 0, nettyClientConfig.getClientChannelMaxIdleTimeSeconds()),
                                 new NettyConnectManageHandler(),
+                                new ReconnectHandler(NettyRemotingClient.this),
                                 new NettyClientHandler());
                     }
                 });
+
     }
 
     private static int initValueIndex() {
         Random r = new Random();
-
         return Math.abs(r.nextInt() % 999) % 999;
     }
 
     @Override
-    public void start() {
+    public void start() throws RemotingException {
         synchronized (this) {
             try {
-                // 1 Start channel
+                // 1 Connect
                 connect();
 
                 // 2 Schedule timer task
@@ -175,15 +190,83 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
 
             } catch (Exception e) {
                 e.printStackTrace();
+                throw new RemotingException(e.getMessage(), e);
             }
         }
     }
 
-    public void connect() throws InterruptedException {
+    public void connect() throws InterruptedException, RemotingException {
+        // 1 Start channel
         ChannelFuture future = handler.connect(
                 nettyClientConfig.getHost(),
                 nettyClientConfig.getPort())
                 .sync();
+
+        boolean ret = future.awaitUninterruptibly(2000, TimeUnit.MILLISECONDS);
+
+        if (ret && future.isSuccess()) {
+            Channel newChannel = future.channel();
+
+            Channel oldChannel = this.channel;
+            if (oldChannel != null) {
+                try {
+                    log.info("Remove old channel {} ", oldChannel);
+                    oldChannel.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    this.channelTables.remove(RemotingHelper.parseChannelRemoteAddr(oldChannel));
+                }
+            } else {
+                this.channel = newChannel;
+
+
+            }
+        } else if (future.cause() != null) {
+            throw new RemotingException(future.cause().getMessage(), future.cause());
+        } else {
+            log.error("Not connected server");
+            throw new RemotingException("Not connected server");
+        }
+
+    }
+
+    public void disconnect() throws RemotingException {
+        if (this.channel != null) {
+            if (channel.isActive()) {
+                try {
+                    // 1 close channel
+                    channel.close();
+                } catch (Exception e) {
+                    log.error("Close channel error {} ", e.getMessage());
+                    e.printStackTrace();
+                    throw new RemotingException(e.getMessage(), e);
+                } finally {
+                    // 2 remove channel
+                    this.channelTables.remove(RemotingHelper.parseChannelRemoteAddr(this.channel));
+                }
+            } else {
+                log.error("Not channel connected server");
+            }
+        }
+    }
+
+    public void reconnect() throws RemotingException {
+        try {
+            connectLock.lock();
+
+            // 1 Disconnect
+            disconnect();
+
+            // 2 Connect
+            connect();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RemotingException(e.getMessage());
+        } finally {
+            connectLock.unlock();
+        }
     }
 
     @Override
@@ -650,6 +733,9 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
             }
         }
 
+        /**
+         *
+         */
         @Override
         public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
 

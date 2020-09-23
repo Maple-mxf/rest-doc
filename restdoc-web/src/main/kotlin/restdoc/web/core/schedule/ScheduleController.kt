@@ -10,7 +10,6 @@ import restdoc.client.api.model.RestWebInvocationResult
 import restdoc.remoting.common.RequestCode
 import restdoc.remoting.common.RestWebExposedAPI
 import restdoc.remoting.common.body.RestWebExposedAPIBody
-import restdoc.remoting.common.header.SubmitHttpTaskRequestHeader
 import restdoc.remoting.exception.RemotingCommandException
 import restdoc.remoting.exception.RemotingSendRequestException
 import restdoc.remoting.exception.RemotingTimeoutException
@@ -95,9 +94,7 @@ class ScheduleController @Autowired constructor(scheduleProperties: ScheduleProp
                                  taskId: String?,
                                  invocation: RestWebInvocation): RestWebInvocationResult {
 
-        val header = SubmitHttpTaskRequestHeader()
-        header.taskId = taskId
-        val request = RemotingCommand.createRequestCommand(RequestCode.SUBMIT_HTTP_PROCESS, header)
+        val request = RemotingCommand.createRequestCommand(RequestCode.SUBMIT_HTTP_PROCESS, null)
         request.body = invocation.encode()
         val clientChannelInfo = clientManager.findClient(clientId)
 

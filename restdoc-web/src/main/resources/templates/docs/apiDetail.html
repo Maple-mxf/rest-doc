@@ -28,7 +28,7 @@
             font-family: Roboto, serif;
         }
 
-        .code-block{
+        .code-block {
             background-color: #283142;
             color: white;
             font-size: 16px;
@@ -86,13 +86,16 @@
             font-size: 14px;
             font-family: Roboto, serif;
         }
+
         #editDocDescriptionBtn:hover {
             cursor: pointer;
         }
+
         tr:hover {
             cursor: pointer;
         }
-        body{
+
+        body {
             background-color: white;
         }
 
@@ -113,6 +116,7 @@
         <ul class="layui-tab-title">
             <li class="layui-this">文档</li>
             <li>调试</li>
+            <li>Agent列表</li>
         </ul>
         <div class="layui-tab-content">
             <div class="layui-tab-item layui-show layui-container">
@@ -125,14 +129,16 @@
                                     class="layui-icon layui-icon-file-b" style="font-size: 25px; color: whitesmoke;"
                                     title="复制URL" id="copyURL"></i></span>
                         </div>
-                        <div class="layui-row"
-                             th:if="${document.description !=null and document.description != ''}">
+                        <div class="layui-row">
 
                             <h3 class="headerTitle">备注 <span><i class="layui-icon layui-icon-edit"
                                                                 id="editDocDescriptionBtn"
                                                                 style="font-size: 20px; color: #FF5722;font-weight: normal"></i></span>
                             </h3>
-                            <blockquote class="layui-elem-quote"><div class="layui-text	" th:utext="${document.description}" id="descriptionArea"></div></blockquote>
+                            <blockquote class="layui-elem-quote">
+                                <div class="layui-text	" th:utext="${document.description}"
+                                     id="descriptionArea"></div>
+                            </blockquote>
                         </div>
                         <div class="layui-row"
                              th:if="${document.uriVarDescriptors!=null and !document.uriVarDescriptors.isEmpty()}">
@@ -188,7 +194,6 @@
                                 </tbody>
                             </table>
                         </div>
-
                         <div class="layui-row"
                              th:if="${document.requestBodyDescriptor!=null and !document.requestBodyDescriptor.isEmpty()}">
                             <h3 class="headerTitle">请求参数列表 <i class="layui-icon layui-icon-rate"
@@ -217,7 +222,6 @@
                                 </tbody>
                             </table>
                         </div>
-
                         <div class="layui-row"
                              th:if="${document.responseBodyDescriptors!=null and !document.responseBodyDescriptors.isEmpty()}">
                             <h3 class="headerTitle">响应参数列表 <i class="layui-icon layui-icon-rate"
@@ -278,10 +282,12 @@
                         marginheight=”0″></iframe>
             </div>
 
+            <div class="layui-tab-item">
+
+            </div>
         </div>
     </div>
 </div>
-
 
 <script th:src="@{/layui/layui.js}"></script>
 <script th:src="@{/admin/js/jquery.js}"></script>
@@ -511,8 +517,6 @@
         return returnValue;
     }
 
-
 </script>
-
 </body>
 </html>

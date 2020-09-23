@@ -21,6 +21,10 @@ import restdoc.remoting.common.RequestCode
 import restdoc.remoting.common.body.DubboExposedAPIBody
 import restdoc.remoting.protocol.RemotingCommand
 
+
+/**
+ * DubboAgentClientConfiguration
+ */
 @Configuration
 @Import(AgentConfiguration::class, DubboInvokerImpl::class, DubboInvokerAPIHandler::class, DubboRefBeanManager::class)
 @ConditionalOnClass(value = [AgentConfiguration::class])
