@@ -32,7 +32,10 @@ public class ReconnectHandler extends ChannelInboundHandlerAdapter {
                     @Override
                     public void run() {
                         try {
-                            remotingClient.reconnect();
+                            remotingClient.disconnect();
+
+                            remotingClient.connect();
+                            
                         } catch (RemotingException e) {
                             e.printStackTrace();
                         }

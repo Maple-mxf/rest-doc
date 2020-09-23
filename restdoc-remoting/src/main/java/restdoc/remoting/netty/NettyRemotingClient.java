@@ -195,12 +195,9 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
         }
     }
 
-    public void connect() throws InterruptedException, RemotingException {
+    public void connect() throws RemotingException {
         // 1 Start channel
-        ChannelFuture future = handler.connect(
-                nettyClientConfig.getHost(),
-                nettyClientConfig.getPort())
-                .sync();
+        ChannelFuture future = handler.connect(nettyClientConfig.getHost(), nettyClientConfig.getPort());
 
         boolean ret = future.awaitUninterruptibly(2000, TimeUnit.MILLISECONDS);
 
@@ -219,10 +216,9 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
                 }
             } else {
                 this.channel = newChannel;
-
-
             }
         } else if (future.cause() != null) {
+            future.cause().printStackTrace();
             throw new RemotingException(future.cause().getMessage(), future.cause());
         } else {
             log.error("Not connected server");
@@ -251,7 +247,7 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
         }
     }
 
-    public void reconnect() throws RemotingException {
+    /*public void reconnect() throws RemotingException {
         try {
             connectLock.lock();
 
@@ -267,7 +263,7 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
         } finally {
             connectLock.unlock();
         }
-    }
+    }*/
 
     @Override
     public void shutdown() {
