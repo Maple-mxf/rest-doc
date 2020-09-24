@@ -37,20 +37,6 @@ open class RestWebAgentClientConfiguration : AgentClientConfiguration {
 
     override fun getAgent() = this.agentImpl
 
-    /**
-     * Hook The task
-     */
-    override fun hook(): AgentStartHook {
-        return object : AgentStartHook {
-            override fun beforeStart() = listOf<AgentStartCallback>()
-            override fun afterStart(): List<AgentStartCallback> {
-                return listOf<AgentStartCallback> {
-                    it.invoke(reportExposedInterfacesTask)
-                    it.invoke(reportClientInfoTask)
-                }
-            }
-        }
-    }
 
     /**
      * registryRemotingTask

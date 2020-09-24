@@ -15,7 +15,11 @@ interface AgentClientConfiguration : CommandLineRunner {
     fun registryRemotingHandler()
 
 
-    fun registryConnectedHook()
+    fun registryConnectedHook() {
+        getAgent().getRemotingClient().registryConnectHook {
+            getConnectedHook().invoke(getAgent())
+        }
+    }
 
     /**
      * Start The Agent client
@@ -23,9 +27,6 @@ interface AgentClientConfiguration : CommandLineRunner {
     override fun run(vararg args: String) {
 
         val agent = this.getAgent()
-        val hook = this.hook()
-
-        hook.beforeStart().forEach { it.invoke(agent) }
 
         // 1 registryRemotingTask
         this.registryRemotingTask()
@@ -38,17 +39,9 @@ interface AgentClientConfiguration : CommandLineRunner {
 
         // 4 start agent
         agent.start()
-
-        hook.afterStart().forEach { it.invoke(agent) }
     }
 
     fun getAgent(): Agent
-
-    /**
-     *
-     */
-    @Deprecated(message = "")
-    fun hook(): AgentStartHook
 
     fun getConnectedHook(): ConnectedHook = {
         it.invoke(reportExposedInterfacesTask)

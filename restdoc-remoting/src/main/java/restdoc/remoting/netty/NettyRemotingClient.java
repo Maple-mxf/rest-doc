@@ -59,7 +59,7 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
     private final ChannelEventListener channelEventListener;
     private DefaultEventExecutorGroup defaultEventExecutorGroup;
     private Bootstrap handler;
-    private final List<Runnable> connectHook = new ArrayList<>();
+    private final List<Runnable> connectedHook = new ArrayList<>();
 
     /**
      * current channel. Each successful invocation of  will
@@ -164,13 +164,14 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
     }
 
     public void registryConnectHook(Runnable hook) {
-        this.connectHook.add(hook);
+        this.connectedHook.add(hook);
     }
 
     @Override
     public void start() throws RemotingException {
         synchronized (this) {
             try {
+
                 // 1 Connect
                 connect();
 
@@ -223,12 +224,10 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
                     } else {
                         NettyRemotingClient.this.channel = newChannel;
                     }
-
                     future.channel().pipeline().fireChannelInactive();
-
                 } else {
                     NettyRemotingClient.this.channel = future.channel();
-                    for (Runnable hook : NettyRemotingClient.this.connectHook) {
+                    for (Runnable hook : NettyRemotingClient.this.connectedHook) {
                         hook.run();
                     }
                 }

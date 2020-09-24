@@ -1,6 +1,5 @@
 package restdoc.client.api
 
-import restdoc.remoting.RemotingClient
 import restdoc.remoting.netty.NettyRemotingClient
 import restdoc.remoting.netty.NettyRequestProcessor
 
