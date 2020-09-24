@@ -1,5 +1,6 @@
 package restdoc.web.core.schedule
 
+import com.fasterxml.jackson.databind.node.ObjectNode
 import io.netty.channel.Channel
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -10,11 +11,10 @@ import restdoc.client.api.model.ClientInfo
 import restdoc.client.api.model.RestWebInvocation
 import restdoc.client.api.model.RestWebInvocationResult
 import restdoc.remoting.ChannelEventListener
-import restdoc.remoting.common.ApplicationClientInfo
-import restdoc.remoting.common.RemotingHelper
-import restdoc.remoting.common.RequestCode
-import restdoc.remoting.common.RestWebExposedAPI
+import restdoc.remoting.common.*
+import restdoc.remoting.common.body.DubboExposedAPIBody
 import restdoc.remoting.common.body.RestWebExposedAPIBody
+import restdoc.remoting.common.body.SpringCloudExposeAPIBody
 import restdoc.remoting.exception.RemotingCommandException
 import restdoc.remoting.exception.RemotingSendRequestException
 import restdoc.remoting.exception.RemotingTimeoutException
@@ -33,7 +33,8 @@ import java.net.InetSocketAddress
  */
 @Component
 class ScheduleController @Autowired constructor(scheduleProperties: ScheduleProperties,
-                                                private val clientManager: ClientChannelManager
+                                                private val clientManager: ClientChannelManager,
+                                                private val exposedAPIManager: ClientExposedAPIManager
 ) : CommandLineRunner {
 
     private val log: Logger = LoggerFactory.getLogger(ScheduleController::class.java)
@@ -65,13 +66,12 @@ class ScheduleController @Autowired constructor(scheduleProperties: ScheduleProp
         val getClientInfoRequest =
                 RemotingCommand.createRequestCommand(RequestCode.REPORT_CLIENT_INFO, null)
 
+        val getClientAPIListRequest = RemotingCommand.createRequestCommand(RequestCode.REPORT_EXPOSED_API, null)
+
         this.remotingServer.invokeAsync(channel, getClientInfoRequest, 10000L) {
             if (it.responseCommand.code == RemotingSysResponseCode.SUCCESS) {
-
                 val address = channel.remoteAddress() as InetSocketAddress
-
                 val body = RemotingSerializable.decode(it.responseCommand.body, ClientInfo::class.java)
-
                 val clientChannelInfo = ApplicationClientInfo(
                         channel,
                         "tcp://${address.address.hostAddress}:${address.port}",
@@ -85,6 +85,26 @@ class ScheduleController @Autowired constructor(scheduleProperties: ScheduleProp
                             applicationType = body.type
                         }
                 clientManager.registerClient(RemotingHelper.parseChannelRemoteAddr(channel), clientChannelInfo)
+            }
+        }
+
+        this.remotingServer.invokeAsync(channel, getClientAPIListRequest, 10000L) {
+            if (it.responseCommand.code == RemotingSysResponseCode.SUCCESS) {
+                val on = RemotingSerializable.decode(it.responseCommand.body, ObjectNode::class.java)
+
+                val at = ApplicationType.valueOf(on.get("applicationType").asText())
+                val exposedAPIBody = when {
+                    ApplicationType.DUBBO == at -> {
+                        RemotingSerializable.decode(it.responseCommand.body, DubboExposedAPIBody::class.java) as DubboExposedAPIBody
+                    }
+                    ApplicationType.REST_WEB == at -> {
+                        RemotingSerializable.decode(it.responseCommand.body, RestWebExposedAPIBody::class.java) as RestWebExposedAPIBody
+                    }
+                    else -> {
+                        RemotingSerializable.decode(it.responseCommand.body, SpringCloudExposeAPIBody::class.java) as SpringCloudExposeAPIBody
+                    }
+                }
+                exposedAPIManager.registerAPI(at, RemotingHelper.parseChannelRemoteAddr(channel), exposedAPIBody.service, exposedAPIBody.apiList)
             }
         }
     }

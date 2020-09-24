@@ -19,7 +19,7 @@ import restdoc.web.util.IDUtil
 import restdoc.web.util.IDUtil.now
 
 
-@Deprecated(message = "")
+@Deprecated(message = "ServiceClientController")
 @RestController
 class ServiceClientController {
 

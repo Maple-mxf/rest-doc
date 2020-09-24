@@ -9,5 +9,60 @@
 </head>
 <body>
 <div th:include="nav::nav"></div>
+<input type="hidden" id="projectId" th:value="${projectId}">
+
+<div class="layui-container">
+    <div class="layui-row">
+        <div class="layui-col-md8">
+            代码区域
+        </div>
+        <div class="layui-col-md4">
+            目录区域
+        </div>
+    </div>
+</div>
+
+
+<script>
+    layui.config({
+        base: '/restdoc/layui/lay/extends/'
+    }).use([
+        'util',
+        'layer',
+        'element',
+        'jquery',
+        'tree'], function () {
+        var tree = layui.tree;
+        var $ = layui.jquery;
+        var layer = layui.layer;
+
+        var treeData = null;
+        var projectId = $("#projectId").val();
+
+
+        $.ajax({
+            type: 'GET',
+            url: '/restdoc/' + projectId + '/resource/tree',
+            async: false,
+            success: function (data) {
+                if (data['code'] === "200") {
+                    // treeData = data['data'][0].children;
+                    treeData = data['data'];
+
+                    var docId = getFirstDocument(treeData);
+                    if (null != docId) {
+                        $("#docContentFrame").attr("src", '/restdoc/' + projectId + '/document/' + docId + '/view');
+                    }
+
+                } else {
+                    layer.msg(data['message']);
+                }
+            },
+            error: function () {
+                layer.msg("网络异常")
+            }
+        });
+    });
+</script>
 </body>
 </html>

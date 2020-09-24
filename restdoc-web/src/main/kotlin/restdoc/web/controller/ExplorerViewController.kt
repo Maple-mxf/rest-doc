@@ -12,7 +12,7 @@ import restdoc.web.repository.RestWebDocumentRepository
 
 @Controller
 @RequestMapping("/explorer/view")
-@Deprecated(message = "")
+@Deprecated(message = "ExplorerViewController")
 class ExplorerViewController {
 
     @Autowired

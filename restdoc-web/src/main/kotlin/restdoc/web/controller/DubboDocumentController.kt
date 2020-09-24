@@ -5,8 +5,6 @@ import org.springframework.web.bind.annotation.RestController
 import restdoc.web.repository.DubboDocumentRepository
 
 /**
- * @sample restdoc.web.model.RestWebDocument
- * @sample restdoc.web.model.DubboDocument
  */
 @RestController
 class DubboDocumentController {

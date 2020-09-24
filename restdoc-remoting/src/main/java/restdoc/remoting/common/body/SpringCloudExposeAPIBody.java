@@ -14,7 +14,6 @@ public class SpringCloudExposeAPIBody extends BaseExposedAPIBody {
         super(ApplicationType.SPRINGCLOUD);
     }
 
-
     public List<SpringCloudExposedAPI> getApiList() {
         return apiList;
     }
