@@ -22,12 +22,11 @@ import restdoc.web.core.ServiceException
 import restdoc.web.core.Status
 import restdoc.web.core.schedule.processor.CollectClientAPIRequestProcessor
 import restdoc.web.core.schedule.processor.CollectClientInfoRequestProcessor
-import java.util.concurrent.CopyOnWriteArrayList
 
 /**
  * ScheduleServer provided the tcp server dashboard
  *
- * @author Overman
+ * @author Maple
  */
 @Component
 class ScheduleController @Autowired constructor(scheduleProperties: ScheduleProperties,
@@ -37,8 +36,6 @@ class ScheduleController @Autowired constructor(scheduleProperties: ScheduleProp
 ) : CommandLineRunner {
 
     private val log: Logger = LoggerFactory.getLogger(ScheduleController::class.java)
-
-    private val remotingTasks: CopyOnWriteArrayList<RemotingTask> = CopyOnWriteArrayList()
 
     private val httpTaskExecuteTimeout = (32 shl 9).toLong()
 
@@ -86,10 +83,15 @@ class ScheduleController @Autowired constructor(scheduleProperties: ScheduleProp
         }
     }
 
+
+    /**
+     * @sample executeRemotingTask
+     */
     @Throws(InterruptedException::class,
             RemotingTimeoutException::class,
             RemotingSendRequestException::class,
             RemotingCommandException::class)
+    @Deprecated(message = "syncSubmitRemoteHttpTask")
     fun syncSubmitRemoteHttpTask(clientId: String?,
                                  taskId: String?,
                                  invocation: RestWebInvocation): RestWebInvocationResult {
@@ -111,7 +113,12 @@ class ScheduleController @Autowired constructor(scheduleProperties: ScheduleProp
         }
     }
 
-    @Deprecated(message = "")
+
+    /**
+     * @see executeRemotingTask
+     * @since 1.0
+     */
+    @Deprecated(message = "syncGetEmptyApiTemplates")
     fun syncGetEmptyApiTemplates(clientId: String?): List<RestWebExposedAPI> {
 
         val request = RemotingCommand.createRequestCommand(RequestCode.GET_EMPTY_API_TEMPLATES, null)

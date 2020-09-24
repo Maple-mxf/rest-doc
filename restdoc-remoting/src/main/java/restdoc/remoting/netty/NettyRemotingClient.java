@@ -59,10 +59,7 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
     private final ChannelEventListener channelEventListener;
     private DefaultEventExecutorGroup defaultEventExecutorGroup;
     private Bootstrap handler;
-
-    @Deprecated
-    private final List<Runnable> connectedHook = new ArrayList<>();
-
+    
     /**
      * current channel. Each successful invocation of  will
      * replace this with new channel and close old channel.
@@ -163,11 +160,6 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
     private static int initValueIndex() {
         Random r = new Random();
         return Math.abs(r.nextInt() % 999) % 999;
-    }
-
-    @Deprecated
-    public void registryConnectHook(Runnable hook) {
-        this.connectedHook.add(hook);
     }
 
     @Override
