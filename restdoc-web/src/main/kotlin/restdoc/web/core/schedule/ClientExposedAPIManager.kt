@@ -7,6 +7,7 @@ import java.util.concurrent.ConcurrentHashMap
 /**
  * @author Overman
  */
+@Deprecated(message = "ClientExposedAPIManager")
 @Component
 class ClientExposedAPIManager {
 

@@ -1,6 +1,7 @@
 package restdoc.web.model
 
 import org.springframework.data.annotation.Id
+import org.springframework.data.mongodb.core.index.CompoundIndex
 import org.springframework.data.mongodb.core.index.HashIndexed
 import org.springframework.data.mongodb.core.mapping.Document
 import org.springframework.http.HttpMethod
@@ -11,6 +12,8 @@ import kotlin.properties.Delegates
 /**
  * DubboDocument
  */
+@CompoundIndex(def = "{'javaClassName': 1, 'methodName': 1, 'paramTypes': 1}", unique = true)
+@Document(collection = "restdoc_dubbo_document")
 class DubboDocument {
     /**
      *
@@ -43,9 +46,18 @@ class DubboDocument {
     lateinit var methodName: String
 
     /**
-     * ["java.lang.Void"]
+     * Split By ','
+     *
+     * java.lang.Integer,java.util.List
+     *
      */
-    lateinit var paramTypes: List<String>
+    lateinit var paramTypes: String
+
+    /**
+     * Split By ','
+     * name,age,var1,...
+     */
+    lateinit var paramNames: String
 
     /**
      *

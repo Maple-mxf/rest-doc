@@ -43,6 +43,11 @@ class ResourceController {
         return ok()
     }
 
+
+    /**
+     *
+     * TODO   code reveiw
+     */
     @GetMapping("/{projectId}/resource/tree")
     fun getTree(@PathVariable projectId: String, @RequestParam(required = false, defaultValue = "false") onlyResource: Boolean): Result {
         val resources = resourceRepository.list(Query(Criteria("projectId").`is`(projectId)))
@@ -65,7 +70,7 @@ class ResourceController {
 
         val nodeIds = allNode.map { it.id }.toMutableList()
 
-        val docs = restWebDocumentRepository.list(Query(Criteria("resource").`in`(nodeIds)))
+        val docs = restWebDocumentRepository.list(Query(Criteria("resource").`in`(nodeIds).and("projectId").`is`(projectId)))
 
         for (navNode in allNode) {
             val childrenDocNode: MutableList<NavNode> = docs

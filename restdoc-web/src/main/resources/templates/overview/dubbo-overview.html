@@ -6,24 +6,59 @@
     <link rel="stylesheet" th:href="@{/layui/css/layui.css}"/>
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/admin/css/nav.css}"/>
+
+    <style type="text/css">
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 15px;
+        }
+
+        .layui-table td, .layui-table th {
+            color: #0C0C0C;
+            font-size: 15px;
+        }
+    </style>
+
 </head>
 <body>
 <div th:include="nav::nav"></div>
 <input type="hidden" id="projectId" th:value="${projectId}">
 
-<div class="layui-container">
+<div class="layui-fluid">
     <div class="layui-row">
         <div class="layui-col-md8">
-            代码区域
+            <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+                <ul class="layui-tab-title">
+                    <li class="layui-this">Dubbo文档</li>
+                    <li>服务列表</li>
+                </ul>
+                <div class="layui-tab-content">
+                    <div class="layui-tab-item layui-show">
+                        1
+                    </div>
+                    <div class="layui-tab-item">
+                        <table class="layui-hide" style="font-family: Roboto,serif;font-size: 15px"
+                               id="serviceListTable" lay-filter="serviceListTable"></table>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="layui-col-md4">
-            目录区域
+            <div id="tableContents">
+                <div id="nav"></div>
+            </div>
         </div>
     </div>
 </div>
+<script type="text/html" id="barDemo">
+    <a class="layui-btn  layui-btn-primary" lay-event="getDetail">查看详情</a>
+    <a class="layui-btn " lay-event="syncAPI">同步服务API</a>
+</script>
 
-
-<script>
+<script th:src="@{/layui/layui.js}"></script>
+<script th:src="@{/admin/js/jquery.js}"></script>
+<script th:src="@{/admin/js/util.js}"></script>
+<script th:inline="javascript">
     layui.config({
         base: '/restdoc/layui/lay/extends/'
     }).use([
@@ -31,29 +66,154 @@
         'layer',
         'element',
         'jquery',
+        'table',
         'tree'], function () {
         var tree = layui.tree;
         var $ = layui.jquery;
         var layer = layui.layer;
+        var util = layui.util;
+        var table = layui.table;
 
-        var treeData = null;
+        //执行
+        util.fixbar({
+            bar1: true
+            , click: function (type) {
+                console.log(type);
+                if (type === 'bar1') {
+                    alert('点击了bar1')
+                }
+            }
+        });
+
         var projectId = $("#projectId").val();
 
+        tree.render({
+            elem: '#nav'
+            , data: getTreeData()
+            , edit: ['update', 'del']
+            , click: function (obj) {
+                if (obj.data.type === "API") {
+                    // $("#docContentFrame").attr("src", '/restdoc/microservice/' + service + '/view/document/' + obj.data.id);
+                }
+            }
+            , operate: function (obj) {
+                var type = obj.type;
+                var data = obj.data;
 
+                if (type == 'del') {
+                    if (data.type == 'WIKI' || data.type == 'API') {
+                        deleteTreeNode('/restdoc/document/' + data.id)
+                    } else {
+                        deleteTreeNode('/restdoc/resource/' + data.id)
+                    }
+                } else if (type == 'update') {
+                    var body = {"name": data.title};
+
+                    console.info(body);
+
+                    console.info(data)
+
+                    if (data.type == 'WIKI' || data.type == 'API') {
+                        editTreeNode('/restdoc/document/' + data.id, body)
+                    } else {
+                        editTreeNode('/restdoc/resource/' + data.id, body)
+                    }
+                }
+            }
+        });
+
+        layer.open({
+            type: 1,
+            title: '服务目录',
+            content: $('#tableContents'),
+            shadeClose: true,
+            shade: 0,
+            offset: 'rb',
+            closeBtn: 0,
+            area: ['600px', '900px'],
+            zIndex: layer.zIndex,
+            success: function (layero) {
+                layer.setTop(layero);
+            }
+        });
+
+        table.render({
+            elem: '#serviceListTable'
+            , url: '/restdoc/serviceClient/list'
+            , size: 'lg'
+            , skin: 'row'
+            , cols: [
+                [
+                    {
+                        field: 'applicationType', width: 200, title: '应用类型'
+                    }
+                    ,
+                    {
+                        field: 'service', width: 300, title: '服务名称'
+                    }
+                    ,
+                    /*{
+                        field: 'serializationProtocol', width: 150, title: '序列化协议'
+                    }
+                    ,*/
+                    /*{
+                        field: 'remoteAddress', width: 200, title: '服务远程地址'
+                    },
+                    {
+                        field: 'osname', width: 150, title: '运行平台'
+                    },
+                    {
+                        field: 'hostname', width: 200, title: '计算机名称'
+                    }
+                    ,*/
+                    {
+                        field: 'remoteAddress', width: 300, title: '服务远程地址'
+                    },
+                    {fixed: 'right', title: '操作', toolbar: '#barDemo'}
+                ]
+            ]
+
+        });
+
+        table.on('tool(serviceListTable)', function (obj) {
+            if (obj.event === 'getDetail') {
+            } else if (obj.event === 'syncAPI') {
+                var index = layer.load(2, {time: 10 * 1000});
+                $.ajax({
+                    method: 'POST',
+                    url: '/restdoc/' + projectId + '/microservice/api/sync?service=' + obj.data.service + '&address=' + obj.data.remoteAddress,
+                    async: false,
+                    success: function (data) {
+                        if (data['code'] === "200") {
+                            // treeData = getTreeData();
+                            tree.reload();
+                            layer.msg("API同步成功")
+                        } else {
+                            layer.msg(data['message'])
+                        }
+                    },
+                    error: function () {
+                        layer.msg("网络异常")
+                    }
+                });
+                layer.close(index);
+            }
+        });
+
+
+    });
+
+    function getTreeData() {
+        var returnData = null;
+        var projectId = $("#projectId").val();
         $.ajax({
             type: 'GET',
-            url: '/restdoc/' + projectId + '/resource/tree',
+            url: '/restdoc/' + projectId + '/resource/tree?onlyResource=true',
             async: false,
             success: function (data) {
                 if (data['code'] === "200") {
                     // treeData = data['data'][0].children;
-                    treeData = data['data'];
-
-                    var docId = getFirstDocument(treeData);
-                    if (null != docId) {
-                        $("#docContentFrame").attr("src", '/restdoc/' + projectId + '/document/' + docId + '/view');
-                    }
-
+                    returnData = data['data'][0].children;
                 } else {
                     layer.msg(data['message']);
                 }
@@ -62,7 +222,10 @@
                 layer.msg("网络异常")
             }
         });
-    });
+
+        return returnData;
+    }
+
 </script>
 </body>
 </html>
