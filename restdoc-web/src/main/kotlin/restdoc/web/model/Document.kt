@@ -9,6 +9,62 @@ import restdoc.web.util.FieldType
 import restdoc.web.util.IDUtil.now
 import kotlin.properties.Delegates
 
+
+class MethodParamDescriptor {
+
+    /**
+     * Method param name
+     *
+     * name in document is unique
+     */
+    lateinit var name: String
+
+    /**
+     * Method param type
+     * example: restdoc.core.Status
+     */
+    lateinit var type: String
+
+    /**
+     * Method sample value
+     *
+     * example: "HelloKitty"
+     */
+    var sampleValue: Any? = ""
+
+    /**
+     *
+     */
+    var defaultValue: Any? = null
+
+    /**
+     *
+     */
+    var description: String? = ""
+}
+
+
+class MethodReturnValueDescriptor {
+
+    /**
+     * return type
+     *
+     * example: java.lang.Void
+     */
+    lateinit var type: String
+
+    /**
+     *
+     */
+    var sampleValue: Any? = null
+
+    /**
+     *
+     */
+    var description: String? = ""
+}
+
+
 /**
  * DubboDocument
  */
@@ -46,25 +102,6 @@ class DubboDocument {
     lateinit var methodName: String
 
     /**
-     * Split By ','
-     *
-     * java.lang.Integer,java.util.List
-     *
-     */
-    lateinit var paramTypes: String
-
-    /**
-     * Split By ','
-     * name,age,var1,...
-     */
-    lateinit var paramNames: String
-
-    /**
-     *
-     */
-    lateinit var returnType: String
-
-    /**
      * desc
      */
     lateinit var desc: String
@@ -78,6 +115,16 @@ class DubboDocument {
      *
      */
     lateinit var docType: DocType
+
+    /**
+     *
+     */
+    lateinit var paramDescriptors: List<MethodParamDescriptor>
+
+    /**
+     *
+     */
+    lateinit var returnValueDescriptor: MethodReturnValueDescriptor
 }
 
 

@@ -4,9 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import restdoc.remoting.common.DubboExposedAPI
 import restdoc.web.controller.obj.ROOT_NAV
-import restdoc.web.model.DocType
-import restdoc.web.model.DubboDocument
-import restdoc.web.model.Resource
+import restdoc.web.model.*
 import restdoc.web.repository.DubboDocumentRepository
 import restdoc.web.repository.ResourceRepository
 import restdoc.web.util.IDUtil.now
@@ -49,7 +47,6 @@ open class DubboDocumentServiceImpl : DubboDocumentService {
             }
 
             for (method in api.exposedMethods) {
-
                 // id = javaClass+method+paramType
                 val id = "${api.refName}${method.methodName}${method.parameterClasses}".hashCode().toString()
                 val exist = dubboDocumentRepository.existsById(id)
@@ -60,11 +57,22 @@ open class DubboDocumentServiceImpl : DubboDocumentService {
                     this.id = id
                     this.javaClassName = api.refName
                     this.methodName = method.methodName
-                    this.paramNames = method.parameterNames.joinToString(separator = ",")
-                    this.paramTypes = method.parameterClasses.joinToString(separator = ",")
+
+                    if (method.parameterClasses != null && method.parameterNames != null) {
+                        this.paramDescriptors = method.parameterNames.zip(method.parameterClasses)
+                                .map {
+                                    val descriptor = MethodParamDescriptor()
+                                    descriptor.name = it.first
+                                    descriptor.type = it.second
+                                    descriptor
+                                }
+                    }
+                    
+                    val descriptor = MethodReturnValueDescriptor()
+                    descriptor.type = method.returnTypes[0]
+
                     this.projectId = projectId
                     this.docType = DocType.API
-                    this.returnType = method.returnTypes.joinToString(separator = ",")
                     this.resource = resourceId
                 }
 

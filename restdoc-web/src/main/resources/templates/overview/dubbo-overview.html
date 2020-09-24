@@ -17,6 +17,13 @@
             color: #0C0C0C;
             font-size: 15px;
         }
+
+        .code-block {
+            background-color: #283142;
+            color: white;
+            font-size: 16px;
+            font-family: Roboto, serif;
+        }
     </style>
 
 </head>
@@ -33,8 +40,78 @@
                     <li>服务列表</li>
                 </ul>
                 <div class="layui-tab-content">
-                    <div class="layui-tab-item layui-show">
-                        1
+                    <div class="layui-tab-item layui-show" id="methodsDocContent">
+                        <div class="layui-row">
+                            <fieldset class="layui-elem-field">
+                                <legend>Echo</legend>
+                                <div class="layui-field-box">
+                                    <!--方法的所在位置-->
+                                    <div class="layui-row code-block"
+                                         style="margin-top: 1%; height: 60px;line-height: 60px; ">
+                                        <span style="margin-left: 2%"> com.restdoc.echo.EchoService#echo</span>
+                                    </div>
+                                    <br>
+                                    <!--方法入参-->
+                                    <h3>服务入参</h3>
+                                    <table class="layui-table" lay-skin="row" lay-size="lg">
+                                        <colgroup>
+                                            <col width="250">
+                                            <col width="250">
+                                            <col width="250">
+                                            <col>
+                                        </colgroup>
+                                        <thead>
+                                        <tr>
+                                            <th>参数名称</th>
+                                            <th>参数类型</th>
+                                            <th>示例值</th>
+                                            <th>参数说明</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td>name</td>
+                                            <td>java.lang.String</td>
+                                            <td>SampleValue</td>
+                                            <td>此处填写参数备注</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    <br>
+                                    <!--方法出参-->
+                                    <h3>服务出参</h3>
+                                    <br>
+                                    <table class="layui-table" lay-skin="row" lay-size="lg">
+                                        <colgroup>
+                                            <col width="300">
+                                            <col width="300">
+                                            <col>
+                                        </colgroup>
+                                        <thead>
+                                        <tr>
+                                            <th>参数类型</th>
+                                            <th>示例值</th>
+                                            <th>参数备注</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td>java.lang.String</td>
+                                            <td>SampleValue</td>
+                                            <td>此处填写参数备注</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    <br>
+                                    <h3>服务备注信息</h3>
+                                    <br>
+                                    <blockquote class="layui-elem-quote">在这里输入服务的备注</blockquote>
+                                </div>
+
+                                <button class="layui-btn layui-btn-lg">调用服务API</button>
+
+                            </fieldset>
+                        </div>
                     </div>
                     <div class="layui-tab-item">
                         <table class="layui-hide" style="font-family: Roboto,serif;font-size: 15px"
