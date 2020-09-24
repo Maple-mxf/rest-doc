@@ -4,7 +4,6 @@ import org.springframework.stereotype.Component
 import restdoc.remoting.common.*
 import java.util.concurrent.ConcurrentHashMap
 
-
 /**
  * @author Overman
  */

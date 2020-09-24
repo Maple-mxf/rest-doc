@@ -16,6 +16,7 @@ import java.net.InetSocketAddress
 /**
  * The ApplicationAPIRequestProcessor provided collect client api service
  */
+@Deprecated(message = "CollectClientAPIRequestProcessor")
 @Component
 class CollectClientAPIRequestProcessor(private val clientExposedAPIManager: ClientExposedAPIManager) : NettyRequestProcessor {
 

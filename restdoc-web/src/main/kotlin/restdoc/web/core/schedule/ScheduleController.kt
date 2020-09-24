@@ -1,12 +1,17 @@
 package restdoc.web.core.schedule
 
+import io.netty.channel.Channel
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.CommandLineRunner
 import org.springframework.stereotype.Component
+import restdoc.client.api.model.ClientInfo
 import restdoc.client.api.model.RestWebInvocation
 import restdoc.client.api.model.RestWebInvocationResult
+import restdoc.remoting.ChannelEventListener
+import restdoc.remoting.common.ApplicationClientInfo
+import restdoc.remoting.common.RemotingHelper
 import restdoc.remoting.common.RequestCode
 import restdoc.remoting.common.RestWebExposedAPI
 import restdoc.remoting.common.body.RestWebExposedAPIBody
@@ -15,49 +20,77 @@ import restdoc.remoting.exception.RemotingSendRequestException
 import restdoc.remoting.exception.RemotingTimeoutException
 import restdoc.remoting.netty.NettyRemotingServer
 import restdoc.remoting.netty.NettyServerConfig
+import restdoc.remoting.protocol.LanguageCode
 import restdoc.remoting.protocol.RemotingCommand
 import restdoc.remoting.protocol.RemotingSerializable
 import restdoc.remoting.protocol.RemotingSysResponseCode
 import restdoc.web.core.ServiceException
 import restdoc.web.core.Status
-import restdoc.web.core.schedule.processor.CollectClientAPIRequestProcessor
-import restdoc.web.core.schedule.processor.CollectClientInfoRequestProcessor
+import java.net.InetSocketAddress
 
 /**
  * ScheduleServer provided the tcp server dashboard
- *
- * @author Maple
  */
 @Component
 class ScheduleController @Autowired constructor(scheduleProperties: ScheduleProperties,
-                                                private val clientManager: ClientChannelManager,
-                                                collectClientInfoRequestProcessor: CollectClientInfoRequestProcessor,
-                                                collectClientAPIRequestProcessor: CollectClientAPIRequestProcessor
+                                                private val clientManager: ClientChannelManager
 ) : CommandLineRunner {
 
     private val log: Logger = LoggerFactory.getLogger(ScheduleController::class.java)
 
     private val httpTaskExecuteTimeout = (32 shl 9).toLong()
 
-    private val thread: Thread = Thread(Runnable {
-        this.remotingServer.start()
-    })
+    private val thread: Thread = Thread { this.remotingServer.start() }
 
-    private val remotingServer: NettyRemotingServer;
+    private val remotingServer: NettyRemotingServer
 
     init {
         val config = NettyServerConfig()
         config.listenPort = scheduleProperties.port
-        remotingServer = NettyRemotingServer(config)
+        remotingServer = NettyRemotingServer(config,
+                object : ChannelEventListener {
+                    override fun onChannelConnect(remoteAddr: String, channel: Channel) {
+                        callClient(channel)
+                    }
 
-        this.remotingServer.registerProcessor(RequestCode.REPORT_CLIENT_INFO, collectClientInfoRequestProcessor, null)
-        this.remotingServer.registerProcessor(RequestCode.REPORT_EXPOSED_API, collectClientAPIRequestProcessor, null)
+                    override fun onChannelException(remoteAddr: String, channel: Channel) {}
+                    override fun onChannelIdle(remoteAddr: String, channel: Channel) {}
+                    override fun onChannelClose(remoteAddr: String, channel: Channel) {
+                        clientManager.unregisterClient(RemotingHelper.parseChannelRemoteAddr(channel));
+                    }
+                })
     }
 
-    override fun run(vararg args: String?) {
+    private fun callClient(channel: Channel) {
+        val getClientInfoRequest =
+                RemotingCommand.createRequestCommand(RequestCode.REPORT_CLIENT_INFO, null)
 
+        this.remotingServer.invokeAsync(channel, getClientInfoRequest, 10000L) {
+            if (it.responseCommand.code == RemotingSysResponseCode.SUCCESS) {
+
+                val address = channel.remoteAddress() as InetSocketAddress
+
+                val body = RemotingSerializable.decode(it.responseCommand.body, ClientInfo::class.java)
+
+                val clientChannelInfo = ApplicationClientInfo(
+                        channel,
+                        "tcp://${address.address.hostAddress}:${address.port}",
+                        LanguageCode.JAVA,
+                        1)
+                        .apply {
+                            hostname = body.hostname
+                            osname = body.osname
+                            service = body.service
+                            serializationProtocol = body.serializationProtocol
+                            applicationType = body.type
+                        }
+                clientManager.registerClient(RemotingHelper.parseChannelRemoteAddr(channel), clientChannelInfo)
+            }
+        }
+    }
+
+    override fun run(vararg args: String) {
         this.thread.start()
-
         log.info("ScheduleController started")
     }
 

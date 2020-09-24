@@ -18,6 +18,7 @@ import java.net.InetSocketAddress
  *
  * @author Overman
  */
+@Deprecated(message = "CollectClientInfoRequestProcessor")
 @Component
 class CollectClientInfoRequestProcessor(private val clientManager: ClientChannelManager) : NettyRequestProcessor {
 
