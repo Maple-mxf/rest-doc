@@ -25,18 +25,6 @@ interface Agent {
     fun getClientStatus(): Status
 
     /**
-     * Disconnect from server
-     */
-    fun disconnect()
-
-    /**
-     * When the channel is close
-     * retry connect to server
-     */
-    @Deprecated(message = "reconnect")
-    fun reconnect()
-
-    /**
      * Get ServerRemoteAddress
      */
     fun getServerRemoteAddress(): String

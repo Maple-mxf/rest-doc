@@ -227,9 +227,9 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
                     future.channel().pipeline().fireChannelInactive();
                 } else {
                     NettyRemotingClient.this.channel = future.channel();
-                    for (Runnable hook : NettyRemotingClient.this.connectedHook) {
+                    /*for (Runnable hook : NettyRemotingClient.this.connectedHook) {
                         hook.run();
-                    }
+                    }*/
                 }
             }
         });

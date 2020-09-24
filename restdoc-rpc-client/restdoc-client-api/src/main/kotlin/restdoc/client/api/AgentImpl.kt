@@ -29,9 +29,7 @@ class AgentImpl(private val agentConfigurationProperties: AgentConfigurationProp
             override fun onChannelConnect(remoteAddr: String?, channel: Channel) {}
             override fun onChannelException(remoteAddr: String?, channel: Channel) {}
             override fun onChannelIdle(remoteAddr: String?, channel: Channel) {}
-            override fun onChannelClose(remoteAddr: String?, channel: Channel) {
-                reconnect()
-            }
+            override fun onChannelClose(remoteAddr: String?, channel: Channel) {}
         }
 
         this.remotingClient = NettyRemotingClient(config, channelEventListener)
@@ -51,13 +49,6 @@ class AgentImpl(private val agentConfigurationProperties: AgentConfigurationProp
 
     override fun getClientStatus(): Status {
         return this.status
-    }
-
-    override fun disconnect() {
-        remotingClient.shutdown()
-    }
-
-    override fun reconnect() {
     }
 
     override fun getServerRemoteAddress(): String {
