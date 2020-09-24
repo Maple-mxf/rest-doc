@@ -1,25 +1,39 @@
 package restdoc.client.api
 
 import org.springframework.boot.CommandLineRunner
+import restdoc.remoting.common.RequestCode
+import restdoc.remoting.netty.NettyRequestProcessor
 
 interface AgentClientConfiguration : CommandLineRunner {
 
     /**
      * Registry RemotingTask
      */
-    fun registryRemotingTask()
+    fun registryRemotingTask(){}
 
     /**
      * Request process handelr
      */
-    fun registryRemotingHandler()
-
-
-    fun registryConnectedHook() {
-        getAgent().getRemotingClient().registryConnectHook {
-            getConnectedHook().invoke(getAgent())
-        }
+    fun registryRemotingHandler() {
+        getAgent().addHandler(RequestCode.REPORT_CLIENT_INFO, getReportClientInfoHandler())
+        getAgent().addHandler(RequestCode.REPORT_EXPOSED_API, getExportAPIHandler())
+        getAgent().addHandler(RequestCode.INVOKE_API, getInvokeAPIHandler())
     }
+
+    /**
+     *
+     */
+    fun getInvokeAPIHandler(): NettyRequestProcessor
+
+    /**
+     *
+     */
+    fun getReportClientInfoHandler(): NettyRequestProcessor
+
+    /**
+     *
+     */
+    fun getExportAPIHandler(): NettyRequestProcessor
 
     /**
      * Start The Agent client
@@ -34,17 +48,10 @@ interface AgentClientConfiguration : CommandLineRunner {
         // 2 registryRemotingHandler
         this.registryRemotingHandler()
 
-        // 3 registry connected hook
-        this.registryConnectedHook()
-
-        // 4 start agent
+        // 3 start agent
         agent.start()
     }
 
     fun getAgent(): Agent
 
-    fun getConnectedHook(): ConnectedHook = {
-        it.invoke(reportExposedInterfacesTask)
-        it.invoke(reportClientInfoTask)
-    }
 }

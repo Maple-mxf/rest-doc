@@ -59,10 +59,7 @@ class AgentImpl(private val agentConfigurationProperties: AgentConfigurationProp
         remotingClient.registerProcessor(code, handler, null)
     }
 
-    @Throws(exceptionClasses = [NoSuchElementException::class])
-    override fun invoke(taskId: String): InvokeResult {
-        val remotingTask = remotingTasks.first { it.taskId == taskId }
-
+    override fun invoke(remotingTask: RemotingTask): InvokeResult {
         return when (remotingTask.type) {
             RemotingTaskType.ASYNC -> {
                 this.getRemotingClient().invokeAsync(
@@ -84,5 +81,11 @@ class AgentImpl(private val agentConfigurationProperties: AgentConfigurationProp
                 empty()
             }
         }
+    }
+
+    @Throws(exceptionClasses = [NoSuchElementException::class])
+    override fun invoke(taskId: String): InvokeResult {
+        val remotingTask = remotingTasks.first { it.taskId == taskId }
+        return this.invoke(remotingTask)
     }
 }

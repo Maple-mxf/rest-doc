@@ -59,6 +59,8 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
     private final ChannelEventListener channelEventListener;
     private DefaultEventExecutorGroup defaultEventExecutorGroup;
     private Bootstrap handler;
+
+    @Deprecated
     private final List<Runnable> connectedHook = new ArrayList<>();
 
     /**
@@ -163,6 +165,7 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
         return Math.abs(r.nextInt() % 999) % 999;
     }
 
+    @Deprecated
     public void registryConnectHook(Runnable hook) {
         this.connectedHook.add(hook);
     }

@@ -28,13 +28,17 @@ interface Agent {
      * Get ServerRemoteAddress
      */
     fun getServerRemoteAddress(): String
-
-
+    
     /**
      * Invoke Task
      */
     @Throws(exceptionClasses = [NoSuchElementException::class])
     fun invoke(taskId: String): InvokeResult
+
+    /**
+     * Invoke task
+     */
+    fun invoke(remotingTask: RemotingTask): InvokeResult
 
     /**
      *
