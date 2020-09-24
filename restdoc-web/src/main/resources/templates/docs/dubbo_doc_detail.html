@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Dubbo文档详情</title>
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}"/>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/admin/css/nav.css}"/>
+
+    <style type="text/css">
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 15px;
+        }
+
+        .layui-table td, .layui-table th {
+            color: #0C0C0C;
+            font-size: 15px;
+        }
+
+        .code-block {
+            background-color: #283142;
+            color: white;
+            font-size: 16px;
+            font-family: Roboto, serif;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="layui-fluid">
+
+    <br>
+
+    <h2 th:text="${resourceName}"></h2>
+
+    <br>
+    <br>
+
+    <div class="layui-row" th:each="doc:${docs}">
+        <fieldset class="layui-elem-field">
+            <legend th:text="${doc.methodName}"></legend>
+            <div class="layui-field-box">
+                <!--方法的所在位置-->
+                <div class="layui-row code-block"
+                     style="margin-top: 1%; height: 60px;line-height: 60px; ">
+                                        <span style="margin-left: 2%"
+                                              th:text="${doc.javaClassName}+'#'+${doc.methodName}"> </span>
+                </div>
+                <br>
+
+                <h3>服务入参</h3>
+                <table class="layui-table" lay-skin="row" lay-size="lg">
+                    <colgroup>
+                        <col width="250">
+                        <col width="250">
+                        <col width="250">
+                        <col>
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th>参数名称</th>
+                        <th>参数类型</th>
+                        <th>示例值</th>
+                        <th>参数说明</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:if="${doc.paramDescriptors != null && !doc.paramDescriptors.isEmpty()}"
+                        th:each="paramDescriptor:${doc.paramDescriptors}">
+                        <td th:text="${paramDescriptor.name}"></td>
+                        <td th:text="${paramDescriptor.type}"></td>
+                        <td th:text="${paramDescriptor.sampleValue}"></td>
+                        <td th:utext="${paramDescriptor.description}"></td>
+                    </tr>
+                    <tr th:if="${doc.paramDescriptors == null || doc.paramDescriptors.isEmpty()}">
+                        <td>无入参</td>
+                    </tr>
+
+                    </tbody>
+                </table>
+                <br>
+                <!--方法出参-->
+                <h3>服务出参</h3>
+                <br>
+                <table class="layui-table" lay-skin="row" lay-size="lg">
+                    <colgroup>
+                        <col width="300">
+                        <col width="300">
+                        <col>
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th>参数类型</th>
+                        <th>示例值</th>
+                        <th>参数备注</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:if="${doc.returnValueDescriptor == null }">
+                        <td th:text="${doc.returnValueDescriptor.type}"></td>
+                        <td th:text="${doc.returnValueDescriptor.sampleValue}"></td>
+                        <td th:utext="${doc.returnValueDescriptor.description}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <br>
+                <h3>服务备注信息</h3>
+                <br>
+                <blockquote class="layui-elem-quote" th:text="${doc.desc}"></blockquote>
+            </div>
+            <button class="layui-btn layui-btn-lg">调用服务API</button>
+
+            <br>
+
+        </fieldset>
+        <br>
+        <br>
+        <br>
+    </div>
+</div>
+<script th:src="@{/layui/layui.js}"></script>
+<script th:src="@{/admin/js/jquery.js}"></script>
+<script th:src="@{/admin/js/util.js}"></script>
+</body>
+</html>

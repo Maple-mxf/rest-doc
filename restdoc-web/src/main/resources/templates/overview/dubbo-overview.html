@@ -37,81 +37,13 @@
             <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
                 <ul class="layui-tab-title">
                     <li class="layui-this">Dubbo文档</li>
-                    <li>服务列表</li>
+                    <li>服务实例列表</li>
                 </ul>
                 <div class="layui-tab-content">
                     <div class="layui-tab-item layui-show" id="methodsDocContent">
-                        <div class="layui-row">
-                            <fieldset class="layui-elem-field">
-                                <legend>Echo</legend>
-                                <div class="layui-field-box">
-                                    <!--方法的所在位置-->
-                                    <div class="layui-row code-block"
-                                         style="margin-top: 1%; height: 60px;line-height: 60px; ">
-                                        <span style="margin-left: 2%"> com.restdoc.echo.EchoService#echo</span>
-                                    </div>
-                                    <br>
-                                    <!--方法入参-->
-                                    <h3>服务入参</h3>
-                                    <table class="layui-table" lay-skin="row" lay-size="lg">
-                                        <colgroup>
-                                            <col width="250">
-                                            <col width="250">
-                                            <col width="250">
-                                            <col>
-                                        </colgroup>
-                                        <thead>
-                                        <tr>
-                                            <th>参数名称</th>
-                                            <th>参数类型</th>
-                                            <th>示例值</th>
-                                            <th>参数说明</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr>
-                                            <td>name</td>
-                                            <td>java.lang.String</td>
-                                            <td>SampleValue</td>
-                                            <td>此处填写参数备注</td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                    <br>
-                                    <!--方法出参-->
-                                    <h3>服务出参</h3>
-                                    <br>
-                                    <table class="layui-table" lay-skin="row" lay-size="lg">
-                                        <colgroup>
-                                            <col width="300">
-                                            <col width="300">
-                                            <col>
-                                        </colgroup>
-                                        <thead>
-                                        <tr>
-                                            <th>参数类型</th>
-                                            <th>示例值</th>
-                                            <th>参数备注</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr>
-                                            <td>java.lang.String</td>
-                                            <td>SampleValue</td>
-                                            <td>此处填写参数备注</td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                    <br>
-                                    <h3>服务备注信息</h3>
-                                    <br>
-                                    <blockquote class="layui-elem-quote">在这里输入服务的备注</blockquote>
-                                </div>
+                        <iframe width="100%" height="900px" src="" frameborder="0" id="methodsDoc">
 
-                                <button class="layui-btn layui-btn-lg">调用服务API</button>
-
-                            </fieldset>
-                        </div>
+                        </iframe>
                     </div>
                     <div class="layui-tab-item">
                         <table class="layui-hide" style="font-family: Roboto,serif;font-size: 15px"
@@ -172,6 +104,8 @@
                 if (obj.data.type === "API") {
                     // $("#docContentFrame").attr("src", '/restdoc/microservice/' + service + '/view/document/' + obj.data.id);
                 }
+
+                $('#methodsDoc').attr("src", "/restdoc/" + obj.data.id + "/dubboDocument")
             }
             , operate: function (obj) {
                 var type = obj.type;
@@ -276,8 +210,6 @@
                 layer.close(index);
             }
         });
-
-
     });
 
     function getTreeData() {
@@ -296,10 +228,9 @@
                 }
             },
             error: function () {
-                layer.msg("网络异常")
+                layer.msg("网络异常");
             }
         });
-
         return returnData;
     }
 

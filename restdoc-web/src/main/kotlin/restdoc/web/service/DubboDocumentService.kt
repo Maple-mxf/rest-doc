@@ -67,9 +67,11 @@ open class DubboDocumentServiceImpl : DubboDocumentService {
                                     descriptor
                                 }
                     }
-                    
+
                     val descriptor = MethodReturnValueDescriptor()
                     descriptor.type = method.returnTypes[0]
+
+                    this.returnValueDescriptor = descriptor
 
                     this.projectId = projectId
                     this.docType = DocType.API

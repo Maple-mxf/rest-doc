@@ -51,7 +51,7 @@ class MethodReturnValueDescriptor {
      *
      * example: java.lang.Void
      */
-    lateinit var type: String
+    var type: String = ""
 
     /**
      *
@@ -74,57 +74,57 @@ class DubboDocument {
     /**
      *
      */
-    @Id lateinit var id: String
+    @Id var id: String = ""
 
     /**
      *
      */
-    lateinit var projectId: String
+    var projectId: String = ""
 
     /**
      * Resource Equals A Java Class
      */
-    lateinit var resource: String
+    var resource: String = ""
 
     /**
      *
      */
-    lateinit var name: String
+    var name: String = ""
 
     /**
      * javaClassName restdoc.client.xxxx.XXXX
      */
-    lateinit var javaClassName: String
+    var javaClassName: String = ""
 
     /**
      *
      */
-    lateinit var methodName: String
+    var methodName: String = ""
 
     /**
      * desc
      */
-    lateinit var desc: String
+    var desc: String = ""
 
     /**
      * Create time
      */
-    var createTime by Delegates.notNull<Long>()
+    var createTime: Long = now()
 
     /**
      *
      */
-    lateinit var docType: DocType
+    var docType: DocType = DocType.API
 
     /**
      *
      */
-    lateinit var paramDescriptors: List<MethodParamDescriptor>
+    var paramDescriptors: List<MethodParamDescriptor> = listOf()
 
     /**
      *
      */
-    lateinit var returnValueDescriptor: MethodReturnValueDescriptor
+    var returnValueDescriptor: MethodReturnValueDescriptor = MethodReturnValueDescriptor()
 }
 
 
