@@ -1,5 +1,8 @@
 package restdoc.client.dubbo.test.service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public interface EchoService {
 
     void echo(String a);
@@ -14,5 +17,12 @@ public interface EchoService {
 
     default void echo3(String a) {
         System.err.println(String.format("restdoc.client.dubbo.test.service.EchoService.echo3 %s", "Hello Java"));
+    }
+
+    default Map<String, Object> generateMap(String inParam) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("inParam", "这是入参");
+        map.put("echo", "Hello 欢迎测试远程Dubbo API");
+        return map;
     }
 }
