@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ResponseBody
 import restdoc.web.model.Menu
 
+@Deprecated(message = "ConsoleViewController")
 @Controller
 class ConsoleViewController {
 

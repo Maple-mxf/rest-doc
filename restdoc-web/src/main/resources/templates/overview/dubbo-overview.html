@@ -83,21 +83,13 @@
         var util = layui.util;
         var table = layui.table;
 
-        //执行
-        util.fixbar({
-            bar1: true
-            , click: function (type) {
-                console.log(type);
-                if (type === 'bar1') {
-                    alert('点击了bar1')
-                }
-            }
-        });
+
 
         var projectId = $("#projectId").val();
 
         tree.render({
             elem: '#nav'
+            , id: "dubboTableContent"
             , data: getTreeData()
             , edit: ['update', 'del']
             , click: function (obj) {
@@ -196,8 +188,7 @@
                     async: false,
                     success: function (data) {
                         if (data['code'] === "200") {
-                            // treeData = getTreeData();
-                            tree.reload();
+                            tree.reload('dubboTableContent',{});
                             layer.msg("API同步成功")
                         } else {
                             layer.msg(data['message'])

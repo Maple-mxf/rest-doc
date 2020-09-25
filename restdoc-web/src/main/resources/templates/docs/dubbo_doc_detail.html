@@ -26,32 +26,21 @@
         }
     </style>
 </head>
-
 <body>
 
-<div class="layui-fluid">
-
-    <br>
-
-    <h2 th:text="${resourceName}"></h2>
-
-    <br>
-    <br>
-
-    <div class="layui-row" th:each="doc:${docs}">
-        <fieldset class="layui-elem-field">
-            <legend th:text="${doc.methodName}"></legend>
+<div style="display: none" id="hideDocDiv">
+    <div class="layui-row one-row">
+        <fieldset class="layui-elem-field onedocument">
+            <legend class="methodName"></legend>
             <div class="layui-field-box">
                 <!--方法的所在位置-->
-                <div class="layui-row code-block"
-                     style="margin-top: 1%; height: 60px;line-height: 60px; ">
-                                        <span style="margin-left: 2%"
-                                              th:text="${doc.javaClassName}+'#'+${doc.methodName}"> </span>
+                <div class="layui-row code-block" style="margin-top: 1%; height: 60px;line-height: 60px; ">
+                    <span style="margin-left: 2%" class="methodLocation"></span>
                 </div>
                 <br>
 
                 <h3>服务入参</h3>
-                <table class="layui-table" lay-skin="row" lay-size="lg">
+                <table class="layui-table inParamTable" lay-skin="row" lay-size="lg">
                     <colgroup>
                         <col width="250">
                         <col width="250">
@@ -66,25 +55,14 @@
                         <th>参数说明</th>
                     </tr>
                     </thead>
-                    <tbody>
-                    <tr th:if="${doc.paramDescriptors != null && !doc.paramDescriptors.isEmpty()}"
-                        th:each="paramDescriptor:${doc.paramDescriptors}">
-                        <td th:text="${paramDescriptor.name}"></td>
-                        <td th:text="${paramDescriptor.type}"></td>
-                        <td th:text="${paramDescriptor.sampleValue}"></td>
-                        <td th:utext="${paramDescriptor.description}"></td>
-                    </tr>
-                    <tr th:if="${doc.paramDescriptors == null || doc.paramDescriptors.isEmpty()}">
-                        <td>无入参</td>
-                    </tr>
-
+                    <tbody class="inParamTableBody">
                     </tbody>
                 </table>
                 <br>
                 <!--方法出参-->
                 <h3>服务出参</h3>
                 <br>
-                <table class="layui-table" lay-skin="row" lay-size="lg">
+                <table class="layui-table outParamTable" lay-skin="row" lay-size="lg">
                     <colgroup>
                         <col width="300">
                         <col width="300">
@@ -97,31 +75,187 @@
                         <th>参数备注</th>
                     </tr>
                     </thead>
-                    <tbody>
-                    <tr th:if="${doc.returnValueDescriptor == null }">
-                        <td th:text="${doc.returnValueDescriptor.type}"></td>
-                        <td th:text="${doc.returnValueDescriptor.sampleValue}"></td>
-                        <td th:utext="${doc.returnValueDescriptor.description}"></td>
-                    </tr>
+                    <tbody class="outParamTableBody">
                     </tbody>
                 </table>
                 <br>
                 <h3>服务备注信息</h3>
                 <br>
-                <blockquote class="layui-elem-quote" th:text="${doc.desc}"></blockquote>
+                <blockquote class="layui-elem-quote docDescription"></blockquote>
             </div>
-            <button class="layui-btn layui-btn-lg">调用服务API</button>
 
             <br>
 
         </fieldset>
-        <br>
-        <br>
-        <br>
+    </div>
+</div>
+
+<div class="layui-fluid">
+    <br>
+    <h2 th:text="${resourceName}"></h2>
+    <br>
+    <br>
+    <div id="content">
+
     </div>
 </div>
 <script th:src="@{/layui/layui.js}"></script>
 <script th:src="@{/admin/js/jquery.js}"></script>
 <script th:src="@{/admin/js/util.js}"></script>
+<script type="text/javascript" th:inline="javascript">
+
+    var docs = [[${docs}]];
+
+    var lay = null;
+
+    layui.config({
+        base: '/restdoc/layui/lay/extends/'
+    }).use([
+        'util',
+        'layer',
+        'element',
+        'jquery',
+        'table',
+        'tree'], function () {
+        var tree = layui.tree;
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var util = layui.util;
+        var table = layui.table;
+        lay = layer;
+
+        util.fixbar({
+            bar1: true,
+            click: function (type) {
+                if (type === 'bar1') {
+                    alert('点击了bar1')
+                }
+            },
+            css: {right: 10, top: 20}
+        });
+
+        renderDocs(docs)
+    });
+
+    function renderDocs(allDocs) {
+        var allRows = "";
+        let html = $('#hideDocDiv').html();
+        let length = allDocs.length;
+
+        for (let i = 0; i < allDocs.length; i++) {
+            allRows = allRows + html
+        }
+        $('#content').html(allRows);
+
+        let docLines = $('#content').find('.one-row');
+
+        for (let i = 0; i < length; i++) {
+            renderDoc(allDocs[i], docLines[i])
+        }
+    }
+
+    function renderDoc(doc, docHtmlLine) {
+        var jqLine = $(docHtmlLine);
+        jqLine.find('fieldset').attr('id', doc['id']);
+        jqLine.find('.methodName').html(doc['methodName']);
+        jqLine.find('.methodLocation').html(doc['javaClassName'] + '#' + doc['methodName']);
+        jqLine.find('.docDescription').html(doc['desc']);
+        renderInParamTable(doc, jqLine);
+        renderOutParamTable(doc, jqLine);
+    }
+
+    function renderInParamTable(doc, jqLine) {
+        var paramDescriptors = doc['paramDescriptors'];
+        var tr = jqLine.find('.inParamTableBody');
+        var allTrLine = "";
+        if (paramDescriptors != null && paramDescriptors.length > 0) {
+            for (let i = 0; i < paramDescriptors.length; i++) {
+                var param = "'" + doc['id'] + "'," + "'" + paramDescriptors[i]['name'] + "'";
+                var fun = "openEditInParamPage(" + param + ")";
+                var start = "<tr ondblclick=" + fun + ">", end = "</tr>";
+                var line = "<td>" + paramDescriptors[i].name + "</td><td>" + paramDescriptors[i].type + "</td><td>" + paramDescriptors[i].sampleValue + "</td><td>" + paramDescriptors[i].description + "</td>";
+                var trLine = start + line + end;
+                allTrLine = allTrLine + trLine;
+            }
+        } else {
+            allTrLine = "<tr><td colspan='4' style='color: #FF5722;text-align: center'>无入参</td></tr>"
+        }
+        $(tr).html(allTrLine)
+    }
+
+    function renderOutParamTable(doc, jqLine) {
+        var returnValueDescriptor = doc['returnValueDescriptor'];
+        var tr = jqLine.find('.outParamTableBody');
+        var param = "'" + doc['id'] + "'";
+        var fun = "openEditOutParamPage(" + param + ")";
+        var allTrLine = "<tr ondblclick=" + fun + "><td>" + returnValueDescriptor['type'] + "</td><td>" + returnValueDescriptor['sampleValue'] + "</td><td>" + returnValueDescriptor['description'] + "</td></tr>";
+        $(tr).html(allTrLine)
+    }
+
+    function openEditInParamPage(docId, paramName) {
+        lay.open({
+            type: 2,
+            title: "编辑服务入参",
+            area: ['800px', '600px'],
+            content: ['/restdoc/dubboDocument/' + docId + '/snippet/view?type=in&paramName=' + paramName, 'no'],
+            btn: ["保存", "取消"],
+            yes: function (index, dom) {
+                var res = window["layui-layer-iframe" + index].getValue();
+                var doc = updateDocument(docId, {"paramDescriptor": res});
+
+                if (doc != null) {
+                    var id = doc['id'];
+                    renderInParamTable(doc, $('#' + id))
+                }
+                console.info(doc);
+                lay.close(index)
+            }
+        });
+    }
+
+    function openEditOutParamPage(docId) {
+        lay.open({
+            type: 2,
+            title: "编辑服务出参",
+            area: ['800px', '600px'],
+            content: ['/restdoc/dubboDocument/' + docId + '/snippet/view?type=out', 'no'],
+            btn: ["保存", "取消"],
+            yes: function (index, dom) {
+                var res = window["layui-layer-iframe" + index].getValue();
+                var doc = updateDocument(docId, {"returnValueDescriptor": res});
+
+                if (doc != null) {
+                    var id = doc['id'];
+                    renderOutParamTable(doc, $('#' + id))
+                }
+                console.info(doc);
+                lay.close(index)
+            }
+        });
+    }
+
+    function updateDocument(docId, data) {
+        var returnValue = null;
+        $.ajax({
+            method: 'PATCH',
+            url: '/restdoc/dubboDocument/' + docId + '/',
+            contentType: 'application/json;charset=utf-8',
+            dataType: 'json',
+            data: JSON.stringify(data),
+            async: false,
+            success: function (data) {
+                if ('200' === data['code']) {
+                    returnValue = data['data'];
+                    layer.msg("文档修改成功");
+                } else {
+                    layer.msg(data['message']);
+                }
+            }
+        });
+        return returnValue;
+    }
+</script>
+
+
 </body>
 </html>

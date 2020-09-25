@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestParam
 import restdoc.web.core.Status
 import restdoc.web.repository.DubboDocumentRepository
 import restdoc.web.repository.ResourceRepository
@@ -39,6 +40,27 @@ class DubboDocumentViewController {
         model.addAttribute("resourceName", resource.name)
 
         return "docs/dubbo_doc_detail"
+    }
+
+
+    @Suppress("ThrowableNotThrown")
+    @GetMapping("/dubboDocument/{documentId}/snippet/view")
+    @Throws(exceptionClasses = [Throwable::class])
+    fun editInParamPage(@PathVariable documentId: String,
+                        @RequestParam(required = false, defaultValue = "") paramName: String,
+                        @RequestParam type: String,
+                        model: Model): String {
+
+        val document =
+                dubboDocumentRepository.findById(documentId).orElseThrow { Status.BAD_REQUEST.instanceError("documentId参数错误") }
+
+        return if (type == "in") {
+            model.addAttribute("descriptor", document.paramDescriptors.first { it.name == paramName })
+            "docs/edit_inparam"
+        } else {
+            model.addAttribute("descriptor", document.returnValueDescriptor)
+            "docs/edit_outparam"
+        }
     }
 
 }

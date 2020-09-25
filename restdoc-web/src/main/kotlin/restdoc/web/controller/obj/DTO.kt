@@ -1,12 +1,10 @@
 package restdoc.web.controller.obj
 
-import restdoc.web.model.BodyFieldDescriptor
-import restdoc.web.model.HeaderFieldDescriptor
-import restdoc.web.model.ProjectType
-import restdoc.web.model.URIVarDescriptor
+import restdoc.web.model.*
 import restdoc.web.util.FieldType
 import java.net.URI
 import javax.validation.constraints.NotBlank
+import javax.validation.metadata.ReturnValueDescriptor
 
 data class CreateProjectDto(val name: String, val desc: String?, val type: ProjectType)
 
@@ -169,3 +167,6 @@ data class UpdateRequestHeaderSnippetDto(val field: String, val value: String, v
 data class UpdateRequestBodySnippetDto(val path: String, val value: Any, val optional: Any, val description: String)
 data class UpdateResponseBodySnippetDto(val path: String, val value: Any, val description: String)
 data class UpdateDescriptionSnippetDto(val description: String)
+
+data class UpdateDubboDocumentDto(val description: String? = null, val paramDescriptor: MethodParamDescriptor? = null,
+                                  val returnValueDescriptor: MethodReturnValueDescriptor? = null)
