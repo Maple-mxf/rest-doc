@@ -96,15 +96,21 @@ class DubboDocumentController {
                 timeoutMills = 10000L,
                 invokeCallback = InvokeCallback {})
 
+        val start = System.currentTimeMillis()
         // DubboInvocationResult
         val response = scheduleController.executeRemotingTask(applicationClientInfo.clientId, remotingTask)
+        val end = System.currentTimeMillis()
 
         return if (response.success && response.response != null) {
             val invocationResult = RemotingSerializable.decode(response.response.body, DubboInvocationResult::class.java)
             ok(TestDubboMicroserviceResult(
+                    method = document.methodName,
+                    paramTypes = document.paramDescriptors.map { it.type }.joinToString(separator = ","),
                     success = invocationResult.isSuccessful,
-                    errorMessage = invocationResult.exceptionMsg,
-                    returnType = invocationResult.returnValueType.toString()
+                    errorMessage = if (invocationResult.exceptionMsg == null || invocationResult.exceptionMsg!!.isBlank()) "无异常信息" else invocationResult.exceptionMsg,
+                    returnType = invocationResult.returnValueType,
+                    returnValue = if (invocationResult.returnValue == null || invocationResult.returnValue!!.isBlank()) "无返回值" else invocationResult.returnValue,
+                    time = end - start
             ))
         } else {
             error("远程服务无响应")

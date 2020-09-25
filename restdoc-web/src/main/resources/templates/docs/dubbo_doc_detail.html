@@ -28,6 +28,45 @@
 </head>
 <body>
 
+<div class="layui-container" style="display: none" id="dubboExecuteResult">
+    <table class="layui-table" >
+        <colgroup>
+            <col width="150">
+            <col>
+        </colgroup>
+        <tbody>
+        <tr>
+            <td>耗时</td>
+            <td id="execute-result-time"></td>
+        </tr>
+        <tr>
+            <td>服务方法</td>
+            <td id="execute-result-method"></td>
+        </tr>
+        <tr>
+            <td>入参类型</td>
+            <td id="execute-result-paramTypes"></td>
+        </tr>
+        <tr>
+            <td>出参类型</td>
+            <td id="execute-result-returnType"></td>
+        </tr>
+        <tr>
+            <td>是否成功</td>
+            <td id="execute-result-isSuccess"></td>
+        </tr>
+        <tr>
+            <td>异常信息</td>
+            <td id="execute-result-errorMessage"></td>
+        </tr>
+        <tr>
+            <td>返回结果</td>
+            <td id="execute-result-print"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
 <div style="display: none" id="hideDocDiv">
     <div class="layui-row one-row">
         <fieldset class="layui-elem-field onedocument">
@@ -125,7 +164,6 @@
         'jquery',
         'table',
         'tree'], function () {
-        var tree = layui.tree;
         var $ = layui.jquery;
         var layer = layui.layer;
         var util = layui.util;
@@ -271,7 +309,6 @@
         return returnValue;
     }
 
-
     function testNonInParamService(docId) {
     }
 
@@ -279,16 +316,21 @@
         lay.open({
             type: 2,
             title: "填充服务参数",
-            area: ['800px', '600px'],
+            area: ['1000px', '500px'],
             content: '/restdoc/dubboDocument/' + docId + '/param/fill/view',
             btn: ["确定", "取消"],
             yes: function (index, dom) {
                 var res = window["layui-layer-iframe" + index].getValue();
 
-                // 打开新窗口
-                testWithData(docId, res);
+                console.info(res);
 
-                lay.close(index)
+                if (res['clientId'] == null) {
+                    layer.msg("请选择服务实例")
+                } else {
+                    // 打开新窗口
+                    testWithData(docId, res);
+                    lay.close(index)
+                }
             }
         });
     }
@@ -303,14 +345,34 @@
             async: false,
             success: function (data) {
                 if ('200' === data['code']) {
-                    console.info(data)
+                    console.info(data);
+
+                    var resdata = data['data'];
+
+                    $('#execute-result-method').html(resdata['method']);
+                    $('#execute-result-isSuccess').html(resdata['success']);
+                    $('#execute-result-time').html(resdata['time']+'毫秒');
+                    $('#execute-result-returnType').html(resdata['returnType']);
+                    $('#execute-result-errorMessage').html(resdata['errorMessage']);
+                    $('#execute-result-print').html(resdata['returnValue']);
+                    $('#execute-result-paramTypes').html(resdata['paramTypes']);
+
+                    lay.open({
+                        type: 1,
+                        title: "填充服务参数",
+                        area: ['1000px', '600px'],
+                        content: $('#dubboExecuteResult'),
+                        btn: ["关闭"],
+                        yes: function (index, dom) {
+                            lay.closeAll();
+                        }
+                    });
                 } else {
                     layer.msg(data['message']);
                 }
             }
         });
     }
-
 
 </script>
 

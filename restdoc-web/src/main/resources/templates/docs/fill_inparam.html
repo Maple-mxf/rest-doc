@@ -9,8 +9,9 @@
 </head>
 <body>
 <div class="layui-container">
-    <form class="layui-form" style="margin-top: 2%" lay-skin="line">
 
+    <h3>填充参数</h3>
+    <form class="layui-form" style="margin-top: 2%" lay-skin="line">
         <table class="layui-table">
             <colgroup>
                 <col width="150">
@@ -40,24 +41,60 @@
             </tbody>
         </table>
     </form>
+
+    <h3>选择服务实例</h3>
+    <table class="layui-hide" style="font-family: Roboto,serif;font-size: 15px"
+           id="serviceListTable" lay-filter="serviceListTable"></table>
 </div>
 
 <script th:src="@{/layui/layui.js}"></script>
 <script th:src="@{/admin/js/jquery.js}"></script>
 <script th:src="@{/ace/ace.js}"></script>
 <script type="text/javascript" th:inline="javascript">
-
-    var description = [[${description}]];
-    var contentFunction = null;
+    var remoteAddress = null;
 
     layui.use([
         'util', 'layer',
         'form',
-        'jquery'], function () {
+        'jquery',
+        'table'], function () {
 
         var $ = layui.jquery;
         var layer = layui.layer;
         var form = layui.form;
+        var table = layui.table;
+
+        table.render({
+
+            elem: '#serviceListTable'
+            , id: 'serviceListTable'
+            , url: '/restdoc/serviceClient/list'
+            , size: 'lg'
+            , skin: 'row'
+            , cols: [
+                [
+                    {
+                        type: 'radio'
+                    },
+                    {
+                        field: 'applicationType', title: '应用类型'
+                    }
+                    ,
+                    {
+                        field: 'service', title: '服务名称'
+                    }
+                    ,
+                    {
+                        field: 'remoteAddress', title: '服务远程地址'
+                    }
+                ]
+            ]
+        });
+
+        table.on('radio(serviceListTable)', function (obj) {
+            remoteAddress = obj.data.remoteAddress;
+        });
+
 
     });
 
@@ -76,6 +113,8 @@
                 param[inputs[i].id] = inputs[i].value;
             }
         }
+
+        param['clientId'] = remoteAddress;
         return param;
     }
 </script>
