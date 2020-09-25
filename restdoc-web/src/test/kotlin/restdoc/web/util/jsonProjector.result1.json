@@ -1,56 +1,12 @@
 {
-  "content": [
+  "methodName": "echo3",
+  "parameters": [
     {
-      "type": "LAYOUT_CONTENT",
-      "title": "布局",
-      "id": "06452982-9d33-4649-b31f-4eb849f8f910",
-      "style": {
-        "height": 725,
-        "width": 1123
-      },
-      "path": [
-        "06452982-9d33-4649-b31f-4eb849f8f910"
-      ],
-      "display": true,
-      "childNodes": [
-        {
-          "type": "DETAIL",
-          "title": "详情",
-          "id": "06452982-9d33-4649-b31f-4eb849f8f912",
-          "style": {
-            "minWidth": 760,
-            "padding": 20,
-            "left": 0,
-            "top": 0,
-            "width": 1193,
-            "height": 617,
-            "paddingTop": "0px",
-            "paddingBottom": "0px",
-            "paddingLeft": "10px",
-            "paddingRight": "10px",
-            "borderColor": "rgba(190,190,190,1)",
-            "borderWidth": "0px",
-            "borderStyle": "solid",
-            "opacity": 1,
-            "marginTop": "5px",
-            "marginLeft": "5px",
-            "marginBottom": "5px",
-            "marginRight": "5px",
-            "backgroundColor": "rgba(255,255,255,1)"
-          },
-          "path": [
-            "06452982-9d33-4649-b31f-4eb849f8f910",
-            "06452982-9d33-4649-b31f-4eb849f8f912"
-          ],
-          "keyProp": "content",
-          "showTime": true,
-          "showCategory": true,
-          "showAuthor": true,
-          "showOriginal": true,
-          "showShare": true,
-          "showNext": true
-        }
-      ]
+      "className": "java.lang.String",
+      "value": "12321312312"
     }
-  ]
-}
+  ],
+  "refName": "restdoc.client.dubbo.test.service.EchoServiceImpl",
+  "returnType": "void"
+},"returnValue": "", "returnValueType": "void", "successful":true
+}"

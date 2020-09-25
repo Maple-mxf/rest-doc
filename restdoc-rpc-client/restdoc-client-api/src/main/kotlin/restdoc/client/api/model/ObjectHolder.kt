@@ -8,7 +8,7 @@ class ObjectHolder<T> {
 
     constructor()
 
-    constructor(className: String, value: T) {
+    constructor(className: String, value: T?) {
         this.className = className
         this.value = value
     }

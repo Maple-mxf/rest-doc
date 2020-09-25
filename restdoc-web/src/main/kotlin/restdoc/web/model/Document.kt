@@ -42,6 +42,10 @@ class MethodParamDescriptor {
      */
     var description: String? = ""
 
+    /**
+     * Is Primitive
+     */
+    public var primitive: Boolean = true
 }
 
 

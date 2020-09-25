@@ -8,6 +8,7 @@ import restdoc.web.model.*
 import restdoc.web.repository.DubboDocumentRepository
 import restdoc.web.repository.ResourceRepository
 import restdoc.web.util.IDUtil.now
+import restdoc.web.util.ReflectUtils
 
 
 /**
@@ -64,6 +65,13 @@ open class DubboDocumentServiceImpl : DubboDocumentService {
                                     val descriptor = MethodParamDescriptor()
                                     descriptor.name = it.first
                                     descriptor.type = it.second
+
+                                    try {
+                                        descriptor.primitive = ReflectUtils.isPrimitive(Class.forName(descriptor.type))
+                                    } catch (ignored: Exception) {
+                                        descriptor.primitive = false
+                                    }
+
                                     descriptor
                                 }
                     }

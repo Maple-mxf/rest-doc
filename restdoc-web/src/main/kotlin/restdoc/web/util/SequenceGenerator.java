@@ -6,8 +6,6 @@ import java.time.Instant;
 import java.util.Enumeration;
 
 /**
- * @author maxuefeng
- * @since 2019-05-09
  */
 public class SequenceGenerator {
 

@@ -39,9 +39,11 @@ class ClientChannelManager(var mapper: ObjectMapper) : CommandLineRunner {
         clients.filter { it.value.clientId == address }.forEach {
             println(it.key)
         }
-
-
         return clients.filter { it.value.clientId == address }.map { it.value }.first()
+    }
+
+    fun anyClient(): ApplicationClientInfo {
+        return clients.values.first()
     }
 
     fun list(): List<ApplicationClientInfo?> {

@@ -24,8 +24,8 @@ import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.StreamSupport.stream;
-import static org.apache.dubbo.common.function.Predicates.and;
-import static org.apache.dubbo.common.function.Predicates.or;
+import static restdoc.web.util.Predicates.and;
+import static restdoc.web.util.Predicates.or;
 
 /**
  * The utilities class for {@link Stream}

@@ -272,7 +272,6 @@
     }
 
 
-
     function testNonInParamService(docId) {
     }
 
@@ -285,11 +284,34 @@
             btn: ["确定", "取消"],
             yes: function (index, dom) {
                 var res = window["layui-layer-iframe" + index].getValue();
-                console.info(res);
+
+                // 打开新窗口
+                testWithData(docId, res);
+
                 lay.close(index)
             }
         });
     }
+
+    function testWithData(docId, data) {
+        $.ajax({
+            method: 'POST',
+            url: '/restdoc/dubboDocument/' + docId + '/test',
+            contentType: 'application/json;charset=utf-8',
+            dataType: 'json',
+            data: JSON.stringify(data),
+            async: false,
+            success: function (data) {
+                if ('200' === data['code']) {
+                    console.info(data)
+                } else {
+                    layer.msg(data['message']);
+                }
+            }
+        });
+    }
+
+
 </script>
 
 

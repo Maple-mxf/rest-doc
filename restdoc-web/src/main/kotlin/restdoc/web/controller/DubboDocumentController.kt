@@ -1,14 +1,23 @@
 package restdoc.web.controller
 
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.web.bind.annotation.PatchMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
+import restdoc.client.api.model.DubboInvocation
+import restdoc.client.api.model.DubboInvocationResult
+import restdoc.client.api.model.ObjectHolder
+import restdoc.remoting.InvokeCallback
+import restdoc.remoting.common.RequestCode
+import restdoc.remoting.protocol.RemotingCommand
+import restdoc.remoting.protocol.RemotingSerializable
+import restdoc.web.controller.obj.TestDubboMicroserviceResult
 import restdoc.web.controller.obj.UpdateDubboDocumentDto
 import restdoc.web.core.Result
 import restdoc.web.core.Status
 import restdoc.web.core.ok
+import restdoc.web.core.schedule.ClientChannelManager
+import restdoc.web.core.schedule.RemotingTask
+import restdoc.web.core.schedule.RemotingTaskType
+import restdoc.web.core.schedule.ScheduleController
 import restdoc.web.repository.DubboDocumentRepository
 
 /**
@@ -18,6 +27,12 @@ class DubboDocumentController {
 
     @Autowired
     lateinit var dubboDocumentRepository: DubboDocumentRepository
+
+    @Autowired
+    lateinit var clientChannelManager: ClientChannelManager
+
+    @Autowired
+    lateinit var scheduleController: ScheduleController
 
     @PatchMapping("/dubboDocument/{id}")
     fun patch(@PathVariable id: String,
@@ -44,5 +59,55 @@ class DubboDocumentController {
         dubboDocumentRepository.update(oldDocument)
 
         return ok(oldDocument)
+    }
+
+
+    /**
+     * Invoke remote microservice
+     */
+    @PostMapping("/dubboDocument/{id}/test")
+    fun testMicroservice(@PathVariable id: String,
+                         @RequestBody params: Map<String, Any?>): Result {
+
+        val document = dubboDocumentRepository.findById(id).orElseThrow { Status.BAD_REQUEST.instanceError("id参数错误") }
+
+        // TODO  Temp code
+        val applicationClientInfo = clientChannelManager.anyClient()
+        // applicationClientInfo.channel
+
+        val request = RemotingCommand.createRequestCommand(RequestCode.INVOKE_API, null)
+
+        val invocation = DubboInvocation()
+
+        invocation.apply {
+            this.methodName = document.methodName
+            this.parameters = document.paramDescriptors
+                    .map { ObjectHolder(it.type, params[it.name]) }
+
+            this.refName = document.javaClassName
+            this.returnType = document.returnValueDescriptor.type
+        }
+
+        request.body = invocation.encode()
+
+        val remotingTask = RemotingTask(
+                type = RemotingTaskType.SYNC,
+                request = request,
+                timeoutMills = 10000L,
+                invokeCallback = InvokeCallback {})
+
+        // DubboInvocationResult
+        val response = scheduleController.executeRemotingTask(applicationClientInfo.clientId, remotingTask)
+
+        return if (response.success && response.response != null) {
+            val invocationResult = RemotingSerializable.decode(response.response.body, DubboInvocationResult::class.java)
+            ok(TestDubboMicroserviceResult(
+                    success = invocationResult.isSuccessful,
+                    errorMessage = invocationResult.exceptionMsg,
+                    returnType = invocationResult.returnValueType.toString()
+            ))
+        } else {
+            error("远程服务无响应")
+        }
     }
 }

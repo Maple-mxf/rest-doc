@@ -1,6 +1,8 @@
 package restdoc.web.util;
 
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.lang.reflect.*;
@@ -18,6 +20,7 @@ import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableSet;
+import static restdoc.web.util.ArrayUtils.isEmpty;
 
 /**
  * ReflectUtils
@@ -328,7 +331,6 @@ public final class ReflectUtils {
      *
      * @param c class.
      * @return desc.
-     * @throws NotFoundException
      */
     public static String getDesc(Class<?> c) {
         StringBuilder ret = new StringBuilder();
@@ -373,7 +375,6 @@ public final class ReflectUtils {
      *
      * @param cs class array.
      * @return desc.
-     * @throws NotFoundException
      */
     public static String getDesc(final Class<?>[] cs) {
         if (cs.length == 0) {

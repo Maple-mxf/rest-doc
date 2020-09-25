@@ -9,20 +9,36 @@
 </head>
 <body>
 <div class="layui-container">
-    <form class="layui-form" style="margin-top: 2%;margin-left: 30%">
-        <div class="layui-form-item" th:each="descriptor:${paramDescriptors}">
-            <div class="layui-inline">
-                <div class="layui-input-inline">
-                    <input type="text" th:value="${descriptor.name}" readonly th:name="${descriptor.name}"
-                           autocomplete="off" class="layui-input">
-                </div>
-            </div>
-            <div class="layui-inline">
-                <div class="layui-input-inline">
-                    <input type="text" th:name="${descriptor.name} +'-value'" autocomplete="off" class="layui-input value">
-                </div>
-            </div>
-        </div>
+    <form class="layui-form" style="margin-top: 2%" lay-skin="line">
+
+        <table class="layui-table">
+            <colgroup>
+                <col width="150">
+                <col width="200">
+                <col>
+            </colgroup>
+            <thead>
+            <tr>
+                <th>参数名称</th>
+                <th>参数类型</th>
+                <th>参数值</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="descriptor:${paramDescriptors}">
+                <td th:text="${descriptor.name}"></td>
+                <td th:text="${descriptor.type}"></td>
+                <td th:if="${descriptor.primitive}">
+                    <input type="text" th:id="${descriptor.name}" autocomplete="off" placeholder="若可为空则请忽略"
+                           class="layui-input value">
+                </td>
+                <td th:if="${!descriptor.primitive}">
+                    <textarea th:id="${descriptor.name}" name="" id="" cols="30" rows="10"
+                              placeholder="若可为空则请忽略"></textarea>
+                </td>
+            </tr>
+            </tbody>
+        </table>
     </form>
 </div>
 
@@ -46,11 +62,21 @@
     });
 
     function getValue() {
-        return {
-            "name": $('#name').val(),
-            "sampleValue": $('#sampleValue').val(),
-            "description": contentFunction()
+        var param = {};
+        var inputs = $('input');
+        var text_areas = $('textarea');
+
+        if (inputs != null) {
+            for (let i = 0; i < inputs.length; i++) {
+                param[inputs[i].id] = inputs[i].value;
+            }
         }
+        if (text_areas != null) {
+            for (let i = 0; i < text_areas.length; i++) {
+                param[inputs[i].id] = inputs[i].value;
+            }
+        }
+        return param;
     }
 </script>
 

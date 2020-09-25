@@ -1,10 +1,12 @@
 package restdoc.client.api.model
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo
 import restdoc.remoting.protocol.RemotingSerializable
 
 /**
  * Invocation
  */
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "className")
 interface Invocation
 
 
@@ -17,6 +19,7 @@ class DubboInvocation : Invocation, RemotingSerializable {
 
     lateinit var parameters: List<ObjectHolder<Any>>
 
+    @Deprecated(message = "refName")
     lateinit var refName: String
 
     lateinit var returnType: String

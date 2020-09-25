@@ -18,7 +18,7 @@ class DubboInvokerImpl(private val beanManager: DubboRefBeanManager) : Invoker<D
 
     private val mapper: ObjectMapper = ObjectMapper()
 
-    override fun rpcInvoke(t: DubboInvocation): DubboInvocationResult<Any> {
+    override fun rpcInvoke(t: DubboInvocation): DubboInvocationResult {
         val bean = beanManager.getRefBean(t.refName)
 
         val paramTypes = t.parameters.map { Class.forName(it.className) }.toTypedArray()
@@ -28,21 +28,25 @@ class DubboInvokerImpl(private val beanManager: DubboRefBeanManager) : Invoker<D
         method.isAccessible = true
 
         try {
-            val returnValue = method.invoke(bean, *params)
+            val returnValue: Any? = method.invoke(bean, *params)
+
+            val serializedReturnValue = if (returnValue != null) mapper.writeValueAsString(returnValue)
+            else ""
+
             return if (returnValue == null) {
                 DubboInvocationResult(
                         isSuccessful = true,
                         exceptionMsg = null,
                         invocation = t,
-                        returnValue = null,
-                        returnValueType = method.returnType)
+                        returnValue = "",
+                        returnValueType = method.returnType.toString())
             } else {
                 DubboInvocationResult(
                         isSuccessful = false,
                         exceptionMsg = null,
                         invocation = t,
-                        returnValue = returnValue,
-                        returnValueType = method.returnType)
+                        returnValue = serializedReturnValue,
+                        returnValueType = method.returnType.toString())
 
             }
         } catch (e: Exception) {
@@ -51,8 +55,8 @@ class DubboInvokerImpl(private val beanManager: DubboRefBeanManager) : Invoker<D
                     isSuccessful = false,
                     exceptionMsg = e.message,
                     invocation = t,
-                    returnValue = null,
-                    returnValueType = method.returnType)
+                    returnValue = "",
+                    returnValueType = method.returnType.toString())
         }
     }
 

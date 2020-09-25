@@ -8,6 +8,8 @@ import restdoc.remoting.protocol.RemotingSerializable
 open class InvocationResult : RemotingSerializable {
     var isSuccessful: Boolean = true
     var exceptionMsg: String? = null
+
+
     lateinit var invocation: Invocation
 
     constructor()
@@ -21,22 +23,20 @@ open class InvocationResult : RemotingSerializable {
 /**
  * T must be serilizable
  */
-class DubboInvocationResult<T> : InvocationResult {
+class DubboInvocationResult : InvocationResult {
 
-    var returnValue: T? = null
-    var returnValueType: Class<*> = Any::class.java
+    var returnValue: String? = ""
+    var returnValueType: String = Void::class.java.name
 
     constructor()
     constructor(isSuccessful: Boolean, exceptionMsg: String?,
                 invocation: Invocation,
-                returnValueType: Class<*>,
-                returnValue: T?
+                returnValueType: String,
+                returnValue: String?
     ) : super(isSuccessful, exceptionMsg, invocation) {
         this.returnValue = returnValue
         this.returnValueType = returnValueType
-
     }
-
 }
 
 

@@ -182,3 +182,9 @@ fun transformRestDocumentToVO(doc: RestWebDocument) = RestWebDocumentVO(
 )
 
 data class ResourcePath(val path: String, val id: String)
+
+data class TestDubboMicroserviceResult(val success: Boolean,
+                                       val errorMessage: String? = "",
+                                       val returnValue: Any? = "",
+                                       val returnType: String = "void"
+)
