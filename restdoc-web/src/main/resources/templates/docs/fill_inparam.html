@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>编辑dubbo服务入参</title>
+
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}"/>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="layui-container">
+    <form class="layui-form" style="margin-top: 2%;margin-left: 30%">
+        <div class="layui-form-item" th:each="descriptor:${paramDescriptors}">
+            <div class="layui-inline">
+                <div class="layui-input-inline">
+                    <input type="text" th:value="${descriptor.name}" readonly th:name="${descriptor.name}"
+                           autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <div class="layui-input-inline">
+                    <input type="text" th:name="${descriptor.name} +'-value'" autocomplete="off" class="layui-input value">
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script th:src="@{/layui/layui.js}"></script>
+<script th:src="@{/admin/js/jquery.js}"></script>
+<script th:src="@{/ace/ace.js}"></script>
+<script type="text/javascript" th:inline="javascript">
+
+    var description = [[${description}]];
+    var contentFunction = null;
+
+    layui.use([
+        'util', 'layer',
+        'form',
+        'jquery'], function () {
+
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var form = layui.form;
+
+    });
+
+    function getValue() {
+        return {
+            "name": $('#name').val(),
+            "sampleValue": $('#sampleValue').val(),
+            "description": contentFunction()
+        }
+    }
+</script>
+
+</body>
+</html>

@@ -82,11 +82,19 @@
                 <h3>服务备注信息</h3>
                 <br>
                 <blockquote class="layui-elem-quote docDescription"></blockquote>
+
+                <div class="layui-btn-container" style="margin-top: 10px">
+
+                </div>
+                <br>
             </div>
-
             <br>
-
         </fieldset>
+        <hr class="layui-bg-green">
+        <br>
+        <br>
+        <br>
+        <br>
     </div>
 </div>
 
@@ -160,6 +168,14 @@
         jqLine.find('.methodName').html(doc['methodName']);
         jqLine.find('.methodLocation').html(doc['javaClassName'] + '#' + doc['methodName']);
         jqLine.find('.docDescription').html(doc['desc']);
+
+        var fun;
+        if (doc['paramDescriptors'] != null && doc['paramDescriptors'].length > 0)
+            fun = "testHasInParamService(" + doc['id'] + ")";
+        else fun = "testNonInParamService(" + doc['id'] + ")";
+
+
+        jqLine.find('.layui-btn-container').html('<br><button onclick=' + fun + ' style="margin-left: 90%" class="layui-btn  layui-btn-lg">测试服务</button>');
         renderInParamTable(doc, jqLine);
         renderOutParamTable(doc, jqLine);
     }
@@ -253,6 +269,26 @@
             }
         });
         return returnValue;
+    }
+
+
+
+    function testNonInParamService(docId) {
+    }
+
+    function testHasInParamService(docId) {
+        lay.open({
+            type: 2,
+            title: "填充服务参数",
+            area: ['800px', '600px'],
+            content: '/restdoc/dubboDocument/' + docId + '/param/fill/view',
+            btn: ["确定", "取消"],
+            yes: function (index, dom) {
+                var res = window["layui-layer-iframe" + index].getValue();
+                console.info(res);
+                lay.close(index)
+            }
+        });
     }
 </script>
 

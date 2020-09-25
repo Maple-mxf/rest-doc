@@ -63,4 +63,15 @@ class DubboDocumentViewController {
         }
     }
 
+    @Suppress("ThrowableNotThrown")
+    @GetMapping("/dubboDocument/{documentId}/param/fill/view")
+    fun fillInParamPage(@PathVariable documentId: String, model: Model): String {
+        val document =
+                dubboDocumentRepository.findById(documentId).orElseThrow { Status.BAD_REQUEST.instanceError("documentId参数错误") }
+
+        model.addAttribute("paramDescriptors", document.paramDescriptors)
+
+        return "docs/fill_inparam"
+    }
+
 }
