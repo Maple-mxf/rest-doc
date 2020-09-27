@@ -69,11 +69,12 @@ class DubboDocumentController {
     fun testMicroservice(@PathVariable id: String,
                          @RequestBody params: Map<String, Any?>): Result {
 
-        val document = dubboDocumentRepository.findById(id).orElseThrow { Status.BAD_REQUEST.instanceError("id参数错误") }
+        val document = dubboDocumentRepository.findById(id)
+                .orElseThrow { Status.BAD_REQUEST.instanceError("id参数错误") }
 
-        // TODO  Temp code
-        val applicationClientInfo = clientChannelManager.anyClient()
-        // applicationClientInfo.channel
+        if (params["clientId"] == null) Status.BAD_REQUEST.error()
+        val clientId = params["clientId"].toString().replace("tcp://", "")
+        val applicationClientInfo = clientChannelManager.findClient(clientId)
 
         val request = RemotingCommand.createRequestCommand(RequestCode.INVOKE_API, null)
 
@@ -98,7 +99,7 @@ class DubboDocumentController {
 
         val start = System.currentTimeMillis()
         // DubboInvocationResult
-        val response = scheduleController.executeRemotingTask(applicationClientInfo.clientId, remotingTask)
+        val response = scheduleController.executeRemotingTask(applicationClientInfo!!.clientId, remotingTask)
         val end = System.currentTimeMillis()
 
         return if (response.success && response.response != null) {

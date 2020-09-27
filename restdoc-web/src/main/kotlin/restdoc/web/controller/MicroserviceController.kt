@@ -33,8 +33,8 @@ class MicroserviceController {
 
     @PostMapping("/{projectId}/microservice/api/sync")
     fun syncAPI(@PathVariable projectId: String,
-                @RequestParam service: String,
-                @RequestParam(required = false) address: String
+                @RequestParam service: String/*,
+                @RequestParam id: String*/
     ): Result {
         val (_, _, _, _, _, type) =
                 projectRepository.findById(projectId).orElseThrow { Status.BAD_REQUEST.instanceError("projectId错误") }

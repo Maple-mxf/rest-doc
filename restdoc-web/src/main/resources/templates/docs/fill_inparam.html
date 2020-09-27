@@ -51,7 +51,7 @@
 <script th:src="@{/admin/js/jquery.js}"></script>
 <script th:src="@{/ace/ace.js}"></script>
 <script type="text/javascript" th:inline="javascript">
-    var remoteAddress = null;
+    var clientId = null;
 
     layui.use([
         'util', 'layer',
@@ -92,7 +92,7 @@
         });
 
         table.on('radio(serviceListTable)', function (obj) {
-            remoteAddress = obj.data.remoteAddress;
+            clientId = obj.data.remoteAddress;
         });
 
 
@@ -114,7 +114,7 @@
             }
         }
 
-        param['clientId'] = remoteAddress;
+        param['clientId'] = clientId;
         return param;
     }
 </script>

@@ -102,9 +102,9 @@
             , data: treeData
             , edit: ['update', 'del']
             , click: function (obj) {
-                if (obj.data.type === "API") {
+               /* if (obj.data.type === "API") {
                     // $("#docContentFrame").attr("src", '/restdoc/microservice/' + service + '/view/document/' + obj.data.id);
-                }
+                }*/
 
                 $('#methodsDoc').attr("src", "/restdoc/" + obj.data.id + "/dubboDocument")
             }
@@ -198,7 +198,7 @@
                 var index = layer.load(2, {time: 10 * 1000});
                 $.ajax({
                     method: 'POST',
-                    url: '/restdoc/' + projectId + '/microservice/api/sync?service=' + obj.data.service + '&address=' + obj.data.remoteAddress,
+                    url: '/restdoc/' + projectId + '/microservice/api/sync?service=' + obj.data.service + '&id=' + obj.data.id,
                     async: false,
                     success: function (data) {
                         if (data['code'] === "200") {
