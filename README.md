@@ -4,7 +4,7 @@
 [3 RESTdoc目前提供了那些功能](#RESTdoc目前提供了那些功能)<br/>
 [4 快速开始](#快速开始)<br/>
 [5 后续支持](#后续支持)<br/>
-
+[6 RESTdoc功能展示](#RESTdoc功能展示)<br/>
 
 ## 为什么需要RESTdoc
 REST doc主要解决的问题如下
@@ -75,3 +75,18 @@ http://127.0.0.1:8432/restdoc/project/view
 -  兼容swagger并且生成swagger生成文档的JSON
 -  兼容spring restdoc，并且生成spring restdoc mock测试用例
 -  目前仅提供了spring boot应用的sdk，RESTdoc2.0中新增python应用/go应用的客户端sdk
+
+### RESTdoc功能展示
+web/springcloud 文档生成/测试/导入概览图
+![avatar](https://github.com/Overman-mxf/rest-doc/blob/master/static/img/httpdoc-overview.png?raw=true)
+![avatar](https://github.com/Overman-mxf/rest-doc/blob/master/static/img/http-client.png?raw=true)
+![avatar](https://github.com/Overman-mxf/rest-doc/blob/master/static/img/http-test.png?raw=true)
+![avatar](https://github.com/Overman-mxf/rest-doc/blob/master/static/img/code-gen.png?raw=true)
+
+
+### RESTdoc功能展示
+dubbo 文档生成/测试/导入概览图
+![avatar](https://github.com/Overman-mxf/rest-doc/blob/master/static/img/dubbodoc-overview.png?raw=true)
+![avatar](https://github.com/Overman-mxf/rest-doc/blob/master/static/img/dubbo-client.png?raw=true)
+![avatar](https://github.com/Overman-mxf/rest-doc/blob/master/static/img/dubbo-test.png?raw=true)
+![avatar](https://github.com/Overman-mxf/rest-doc/blob/master/static/img/dubbo-test-result.png?raw=true)
