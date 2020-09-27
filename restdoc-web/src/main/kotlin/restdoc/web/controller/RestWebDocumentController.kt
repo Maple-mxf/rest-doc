@@ -18,14 +18,18 @@ import org.springframework.web.bind.annotation.*
 import restdoc.client.api.model.InvocationResult
 import restdoc.client.api.model.RestWebInvocation
 import restdoc.client.api.model.RestWebInvocationResult
+import restdoc.remoting.common.ApplicationType
+import restdoc.remoting.common.RestWebExposedAPI
 import restdoc.web.controller.obj.*
 import restdoc.web.core.Result
 import restdoc.web.core.Status
 import restdoc.web.core.failure
 import restdoc.web.core.ok
+import restdoc.web.core.schedule.ClientExposedAPIManager
 import restdoc.web.core.schedule.ScheduleController
 import restdoc.web.model.*
 import restdoc.web.repository.ProjectRepository
+import restdoc.web.repository.ResourceRepository
 import restdoc.web.repository.RestWebDocumentRepository
 import restdoc.web.util.IDUtil
 import restdoc.web.util.IDUtil.now
@@ -62,7 +66,13 @@ class RestWebDocumentController {
     private lateinit var mapper: ObjectMapper
 
     @Autowired
+    private lateinit var exposedAPIManager: ClientExposedAPIManager
+
+    @Autowired
     private lateinit var httpTaskExecutor: HttpTaskExecutor
+
+    @Autowired
+    private lateinit var resourceRepository: ResourceRepository
 
     @GetMapping("/list/{projectId}")
     fun list(@PathVariable projectId: String): Result {
@@ -342,16 +352,65 @@ class RestWebDocumentController {
         return ok()
     }
 
-    @PostMapping("/")
+    /**
+     * 同步Http服务
+     */
+    @PostMapping("/sync")
     fun syncDocument(@RequestBody dto: SyncApiEmptyTemplateDto): Result {
-        // Invoke remote client api info
-        val emptyApiTemplates = scheduleController.syncGetEmptyApiTemplates(dto.clientId)
+        val apiList = exposedAPIManager.get(ApplicationType.REST_WEB, dto.service, dto.remoteAddress.replace("tcp://",""))
+                as List<RestWebExposedAPI>
 
+        val groupByResourceAPIList = apiList.groupBy { it.controller }.toMap()
+
+        for (controller in groupByResourceAPIList.keys) {
+            val resourceId = controller.hashCode().toString()
+            val resourceExist = resourceRepository.existsById(resourceId)
+
+            if (!resourceExist) {
+                val resource = Resource(
+                        id = resourceId,
+                        tag = controller,
+                        name = controller,
+                        pid = ROOT_NAV.id,
+                        projectId = dto.projectId,
+                        createTime = now(),
+                        createBy = ""
+                )
+                mongoTemplate.save(resource)
+            }
+
+            val apiList = groupByResourceAPIList[controller]
+            apiList!!.forEach { api ->
+                val id = (api.controller + api.pattern + api.supportMethod.joinToString(separator = ",")).hashCode().toString()
+                val documentExist = restWebDocumentRepository.existsById(id)
+                if (!documentExist) {
+                    val document = RestWebDocument(
+                            id = id,
+                            projectId = dto.projectId,
+                            name = api.pattern,
+                            resource = resourceId,
+                            url = api.pattern,
+                            description = api.pattern,
+                            requestBodyDescriptor = null,
+                            requestHeaderDescriptor = null,
+                            responseBodyDescriptors = null,
+                            queryParam = null,
+                            method = HttpMethod.valueOf(api.supportMethod[0]),
+                            uriVarDescriptors = null,
+                            executeResult = null,
+                            content = null,
+                            responseHeaderDescriptor = null,
+                            docType = DocType.API)
+
+                    mongoTemplate.save(document)
+                }
+            }
+        }
 
         return ok()
     }
 
-    private suspend fun optimizationAndAutocomplete(projectId: String, doc: RestWebDocument) {
+    private fun optimizationAndAutocomplete(projectId: String, doc: RestWebDocument) {
         try {
             // 1 Optimization
             this.optimization(projectId, doc)

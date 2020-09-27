@@ -4,13 +4,15 @@ import org.springframework.core.env.Environment
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
-import org.springframework.stereotype.Component
 import org.springframework.web.client.RestTemplate
 import restdoc.client.api.Invoker
 import restdoc.client.api.model.InvocationResult
 import restdoc.client.api.model.RestWebInvocation
 import restdoc.client.api.model.RestWebInvocationResult
 
+/**
+ * RestWebInvokerImpl
+ */
 class RestWebInvokerImpl(environment: Environment, private val restTemplate: RestTemplate) : Invoker<RestWebInvocation> {
 
     private val port: Int = environment.getProperty("server.port", "8080").toInt()

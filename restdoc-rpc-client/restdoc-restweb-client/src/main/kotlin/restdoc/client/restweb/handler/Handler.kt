@@ -1,7 +1,8 @@
 package restdoc.client.restweb.handler
 
 import io.netty.channel.ChannelHandlerContext
-import org.springframework.stereotype.Component
+import org.springframework.boot.info.BuildProperties
+import org.springframework.core.env.Environment
 import restdoc.client.api.AgentConfigurationProperties
 import restdoc.client.api.model.ClientInfo
 import restdoc.client.api.model.RestWebInvocation
@@ -9,7 +10,6 @@ import restdoc.client.restweb.RestWebInvokerImpl
 import restdoc.client.restweb.context.EndpointsListener
 import restdoc.remoting.common.ApplicationType
 import restdoc.remoting.common.RemotingUtil
-import restdoc.remoting.common.RequestCode
 import restdoc.remoting.common.body.RestWebExposedAPIBody
 import restdoc.remoting.netty.NettyRequestProcessor
 import restdoc.remoting.protocol.RemotingCommand
@@ -35,16 +35,25 @@ open class InvokerAPIHandler(private val restWebInvokerImpl: RestWebInvokerImpl)
 /**
  * ReportClientInfoHandler
  */
-open class ReportClientInfoHandler(private val agentConfigurationProperties: AgentConfigurationProperties) : NettyRequestProcessor {
+open class ReportClientInfoHandler(private val agentConfigurationProperties: AgentConfigurationProperties,
+                                   private val environment: Environment
+) : NettyRequestProcessor {
     override fun rejectRequest(): Boolean = false
     override fun processRequest(ctx: ChannelHandlerContext, request: RemotingCommand): RemotingCommand {
         val response = RemotingCommand.createResponseCommand(RemotingSysResponseCode.SUCCESS, null)
         val serializationProtocol = "http"
 
+        var service = environment.getProperty("server.servlet.context-path", "")
+
+        if (service == null || service.isBlank()) service = agentConfigurationProperties.service
+        if (service == null || service.isBlank()) service = "未命名的服务"
+
+        /*if (service.isBlank()) service = buildProperties.artifact*/
+
         val body = ClientInfo(
                 osname = System.getProperty("os.name", "Windows 10"),
                 hostname = RemotingUtil.getHostname(),
-                service = if (agentConfigurationProperties.service == null) "" else agentConfigurationProperties.service!!,
+                service = service,
                 type = ApplicationType.REST_WEB,
                 serializationProtocol = serializationProtocol)
 
@@ -56,11 +65,20 @@ open class ReportClientInfoHandler(private val agentConfigurationProperties: Age
 /**
  * ExportAPIHandler
  */
-open class ExportAPIHandler(private val endpointsListener: EndpointsListener) : NettyRequestProcessor {
+open class ExportAPIHandler(
+        private val agentConfigurationProperties: AgentConfigurationProperties,
+        private val endpointsListener: EndpointsListener,
+        private val environment: Environment) : NettyRequestProcessor {
+
     override fun rejectRequest(): Boolean = false
-    override fun processRequest(ctx: ChannelHandlerContext?, request: RemotingCommand?): RemotingCommand {
+    override fun processRequest(ctx: ChannelHandlerContext, request: RemotingCommand?): RemotingCommand {
         val body = RestWebExposedAPIBody()
         body.apiList = endpointsListener.restWebExposedAPIList
+        var service = environment.getProperty("server.servlet.context-path", "")
+
+        if (service == null || service.isBlank()) service = agentConfigurationProperties.service
+        if (service == null || service.isBlank()) service = "未命名的服务"
+        body.service = service
 
         val response = RemotingCommand.createResponseCommand(RemotingSysResponseCode.SUCCESS, null)
         response.body = body.encode()

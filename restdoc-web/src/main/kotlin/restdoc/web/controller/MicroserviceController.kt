@@ -55,7 +55,7 @@ class MicroserviceController {
     }
 
 
-    @GetMapping("/microservice/{id}/exposedapi")
+    /*@GetMapping("/microservice/{id}/exposedapi")
     fun getExposedAPI(@PathVariable id: String,
                       @RequestParam ap: String): Any {
 
@@ -94,5 +94,5 @@ class MicroserviceController {
                 throw Throwable("參數錯誤")
             }
         }
-    }
+    }*/
 }

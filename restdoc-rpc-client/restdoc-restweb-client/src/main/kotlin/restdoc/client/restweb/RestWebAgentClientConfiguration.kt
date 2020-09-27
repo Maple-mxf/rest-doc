@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties
+import org.springframework.boot.info.BuildProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
@@ -21,11 +22,7 @@ import restdoc.remoting.netty.NettyRequestProcessor
  * @author Overman
  */
 @Configuration
-/*@Import(value = [AgentConfiguration::class, EndpointsListener::class,
-    InvokerAPIHandler::class, ReportClientInfoHandler::class, ExportAPIHandler::class,
-    RestWebInvokerImpl::class])*/
 @Import(value = [EnvConfiguration::class])
-//@ConditionalOnClass(value = [EnvConfiguration::class])
 open class RestWebAgentClientConfiguration : AgentClientConfiguration {
 
     @Autowired
@@ -55,7 +52,9 @@ open class RestWebAgentClientConfiguration : AgentClientConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    open fun reportClientInfoHandler(agentConfigurationProperties: AgentConfigurationProperties) = ReportClientInfoHandler(agentConfigurationProperties)
+    open fun reportClientInfoHandler(agentConfigurationProperties: AgentConfigurationProperties,
+                                     environment: Environment) =
+            ReportClientInfoHandler(agentConfigurationProperties, environment)
 
     @Bean
     @ConditionalOnMissingBean
@@ -63,7 +62,8 @@ open class RestWebAgentClientConfiguration : AgentClientConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    open fun exportAPIHandler(endpointsListener: EndpointsListener) = ExportAPIHandler(endpointsListener)
+    open fun exportAPIHandler(environment: Environment, endpointsListener: EndpointsListener,
+                              agentConfigurationProperties: AgentConfigurationProperties) = ExportAPIHandler(agentConfigurationProperties, endpointsListener, environment)
 
     override fun getInvokeAPIHandler(): NettyRequestProcessor = this.invokerAPIHandler
 

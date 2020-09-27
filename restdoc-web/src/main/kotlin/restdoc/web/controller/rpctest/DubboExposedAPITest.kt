@@ -28,7 +28,7 @@ class DubboExposedAPITest {
     lateinit var scheduleController: ScheduleController
 
 
-    @GetMapping("/invokeSimpleDubboAPI")
+   /* @GetMapping("/invokeSimpleDubboAPI")
     fun invokeSimpleDubboAPI(): Any {
         val apiList = clientExposedAPIManager.listBy(ApplicationType.DUBBO, "echo-service-provider") as List<DubboExposedAPI>
 
@@ -70,5 +70,5 @@ class DubboExposedAPITest {
             }
         }
         return ok()
-    }
+    }*/
 }

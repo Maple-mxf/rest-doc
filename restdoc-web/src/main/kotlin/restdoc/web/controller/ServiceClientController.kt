@@ -2,7 +2,6 @@ package restdoc.web.controller
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpMethod
-import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
 import restdoc.remoting.common.ApplicationType
 import restdoc.web.controller.obj.SyncApiEmptyTemplateDto
@@ -68,7 +67,7 @@ class ServiceClientController {
 
 
 
-    @PostMapping("/serviceClient/apiEmptyTemplate/sync")
+  /*  @PostMapping("/serviceClient/apiEmptyTemplate/sync")
     fun syncClientApiEmptyTemplateToExistProject(
             @RequestBody dto: SyncApiEmptyTemplateDto
     ): Any {
@@ -80,7 +79,7 @@ class ServiceClientController {
                 createTime = now(),
                 accessPwd = null)
 
-        val resourceKeyDocumentMap = syncApiEmptyTemplates(dto.clientId, project.id)
+        val resourceKeyDocumentMap = syncApiEmptyTemplates(dto.remoteAddress, project.id)
 
         resourceRepository.saveAll(resourceKeyDocumentMap.keys)
         restWebDocumentRepository.saveAll(resourceKeyDocumentMap.values.flatten())
@@ -88,12 +87,12 @@ class ServiceClientController {
         projectRepository.save(project)
 
         return ok(project.id)
-    }
+    }*/
 
     @PostMapping("/{projectId}/serviceClient/apiEmptyTemplate/sync")
     fun syncClientApiEmptyTemplate(@RequestBody dto: SyncApiEmptyTemplateDto): Any {
 
-        val resourceKeyDocumentMap = syncApiEmptyTemplates(dto.clientId, dto.projectId!!)
+        val resourceKeyDocumentMap = syncApiEmptyTemplates(dto.remoteAddress, dto.projectId!!)
 
         resourceRepository.saveAll(resourceKeyDocumentMap.keys)
         restWebDocumentRepository.saveAll(resourceKeyDocumentMap.values.flatten())

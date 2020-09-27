@@ -24,7 +24,7 @@ class MicroserviceViewController {
     @GetMapping("/microservice/view/index")
     fun index() = "microservice/index"
 
-    @GetMapping("/microservice/{service}/view/document/{id}")
+   /* @GetMapping("/microservice/{service}/view/document/{id}")
     fun detail(@PathVariable service: String, @PathVariable id: String,
                @RequestParam ap: ApplicationType, model: Model): String {
 
@@ -36,7 +36,7 @@ class MicroserviceViewController {
         model.addAttribute("methodDetail", methodDetail)
 
         return "microservice/dubbo-method-detail"
-    }
+    }*/
 
     @GetMapping("/microservice/view/{clientId}/list")
     fun list(@PathVariable clientId: String,

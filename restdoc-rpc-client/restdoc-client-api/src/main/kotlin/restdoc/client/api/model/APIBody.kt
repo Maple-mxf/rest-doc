@@ -5,7 +5,6 @@ import restdoc.remoting.protocol.RemotingSerializable
 
 /**
  * @author Overman
- * @since 2020/9/24
  */
 class APIBody : RemotingSerializable() {
 
