@@ -1,6 +1,9 @@
-# REST doc
+# REST doc 预览版本
 [为什么需要REST doc](#为什么需要RESTdoc) <br/>
-[快速开始](#快速开始)
+[RESTdoc基于CS模式的原理](#RESTdoc基于CS模式的原理)<br/>
+[RESTdoc目前提供了那些功能](#RESTdoc目前提供了那些功能)<br/>
+[快速开始](#快速开始)<br/>
+[后续支持](#后续支持)<br/>
 
 
 ## 为什么需要RESTdoc
@@ -14,4 +17,61 @@ REST doc主要解决的问题如下
 - REST doc提供了快速构建API文档的功能，不论针对于Http API项目还是Rpc API项目，支持一键导入API并且生成一个半成品的模板；
 
 
+## RESTdoc基于CS模式的原理
+![avatar](https://raw.githubusercontent.com/Overman-mxf/rest-doc/master/static/img/agent-struct.png)
+
+RESTdoc作为一款文档工具，在保证不侵入开发者代码的情况下进行文档的生成与测试，这与swagger是相反的；当在本地开发环境或者
+测试环境时，无论使用内网或者外网和RESTdoc控制台建立长连接，都可以达到测试服务API与API文档的自动生成。
+
+
+## RESTdoc目前提供了那些功能
+- HTTP API/Dubbo API/SpringCloud API的在线测试
+- HTTP API/Dubbo API/SpringCloud API文档的导入生成
+- HTTP API代码测试用例的生成
+- 文档字段备注的自动补齐
+- 在测试API时，RESTdoc会提示API路径设计
+
+
 ## 快速开始
+
+##### 1 克隆REST doc项目
+```
+git clone https://github.com/Overman-mxf/rest-doc.git
+```
+
+##### 2 构建项目
+```
+cd rest-doc
+mvn clean install -Dmaven.test.skip=true
+```
+
+##### 3 运行RESTdoc控制台项目
+```
+cd rest-doc/restdoc-web/target 
+java -jar restdoc-web-1.0-SNAPSHOT.jar
+```
+
+##### 4 运行测试客户端应用
+```
+cd rest-doc/restdoc-client-test/restdoc-client-dubbo-test/target 
+java -jar restdoc-client-dubbo-test-1.0-SNAPSHOT.jar
+```
+
+
+##### 5 访问控制台
+```
+http://127.0.0.1:8432/restdoc/project/view
+```
+### 后续支持
+
+### 后续2.0支持
+
+目前RESTdoc仅仅处于第一个版本的预览版，部分UI和功能还没有完善；
+在未来2.0正式版本会加入以下几个功能
+-  提供docker镜像安装与测试
+-  微服务网格的监控和测试
+-  应用指标的监控
+-  各类语言的API opensdk生成
+-  兼容swagger并且生成swagger生成文档的JSON
+-  兼容spring restdoc，并且生成spring restdoc mock测试用例
+-  目前仅提供了spring boot应用的sdk，RESTdoc2.0中新增python应用/go应用的客户端sdk

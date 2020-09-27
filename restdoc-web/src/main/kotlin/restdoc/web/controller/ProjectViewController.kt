@@ -17,7 +17,7 @@ class ProjectViewController {
     lateinit var mongoTemplate: MongoTemplate
 
     @GetMapping("/project/view")
-    fun list(@RequestParam type: ProjectType, model: Model): String {
+    fun list(@RequestParam(required = false, defaultValue = "REST_WEB") type: ProjectType, model: Model): String {
         model.addAttribute("projectType", type)
         return "project/list"
     }
