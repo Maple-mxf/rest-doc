@@ -31,6 +31,7 @@
 <div th:include="nav::nav"></div>
 <input type="hidden" id="projectId" th:value="${projectId}">
 
+
 <div class="layui-fluid">
     <div class="layui-row">
         <div class="layui-col-md8">
@@ -82,7 +83,6 @@
         var layer = layui.layer;
         var util = layui.util;
         var table = layui.table;
-
 
 
         var projectId = $("#projectId").val();
@@ -180,6 +180,15 @@
 
         table.on('tool(serviceListTable)', function (obj) {
             if (obj.event === 'getDetail') {
+
+                layer.open({
+                    type: 2,
+                    title: '服务实例详情',
+                    content: ['/restdoc/serviceClient/' + obj.data.id+'/view', 'no'],
+                    area: ['600px', '600px'],
+
+                });
+
             } else if (obj.event === 'syncAPI') {
                 var index = layer.load(2, {time: 10 * 1000});
                 $.ajax({
@@ -188,7 +197,7 @@
                     async: false,
                     success: function (data) {
                         if (data['code'] === "200") {
-                            tree.reload('dubboTableContent',{});
+                            tree.reload('dubboTableContent', {});
                             layer.msg("API同步成功")
                         } else {
                             layer.msg(data['message'])

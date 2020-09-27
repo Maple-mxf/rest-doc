@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestParam
 import restdoc.web.controller.obj.*
+import restdoc.web.core.schedule.ClientChannelManager
 import restdoc.web.model.DocType
 import restdoc.web.model.RestWebDocument
 import restdoc.web.repository.ResourceRepository
@@ -57,6 +58,8 @@ class RestWebDocumentViewController {
         model.addAttribute("taskId", taskId)
         return "docs/executeResult"
     }
+
+
 
     @GetMapping("/document/view/desc")
     fun desc(): String {

@@ -4,7 +4,6 @@ import restdoc.web.model.*
 import restdoc.web.util.FieldType
 import java.net.URI
 import javax.validation.constraints.NotBlank
-import javax.validation.metadata.ReturnValueDescriptor
 
 data class CreateProjectDto(val name: String, val desc: String?, val type: ProjectType)
 

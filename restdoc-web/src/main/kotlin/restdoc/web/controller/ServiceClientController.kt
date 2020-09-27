@@ -2,6 +2,7 @@ package restdoc.web.controller
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpMethod
+import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
 import restdoc.remoting.common.ApplicationType
 import restdoc.web.controller.obj.SyncApiEmptyTemplateDto
@@ -64,6 +65,8 @@ class ServiceClientController {
 
         return res
     }
+
+
 
     @PostMapping("/serviceClient/apiEmptyTemplate/sync")
     fun syncClientApiEmptyTemplateToExistProject(
