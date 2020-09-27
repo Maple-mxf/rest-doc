@@ -5,10 +5,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Import
 import restdoc.client.dubbo.DubboAgentClientConfiguration
+import restdoc.client.restweb.RestWebAgentClientConfiguration
 
 @EnableDubbo
 @SpringBootApplication
-@Import(value = [DubboAgentClientConfiguration::class])
+@Import(value = [DubboAgentClientConfiguration::class, RestWebAgentClientConfiguration::class])
 open class DubboApplication
 
 /**

@@ -19,7 +19,6 @@ import restdoc.remoting.protocol.RemotingSysResponseCode
 /**
  * InvokerAPIHandler
  */
-@Component
 open class InvokerAPIHandler(private val restWebInvokerImpl: RestWebInvokerImpl) : NettyRequestProcessor {
 
     override fun rejectRequest() = false
@@ -36,7 +35,6 @@ open class InvokerAPIHandler(private val restWebInvokerImpl: RestWebInvokerImpl)
 /**
  * ReportClientInfoHandler
  */
-@Component
 open class ReportClientInfoHandler(private val agentConfigurationProperties: AgentConfigurationProperties) : NettyRequestProcessor {
     override fun rejectRequest(): Boolean = false
     override fun processRequest(ctx: ChannelHandlerContext, request: RemotingCommand): RemotingCommand {
@@ -58,7 +56,6 @@ open class ReportClientInfoHandler(private val agentConfigurationProperties: Age
 /**
  * ExportAPIHandler
  */
-@Component
 open class ExportAPIHandler(private val endpointsListener: EndpointsListener) : NettyRequestProcessor {
     override fun rejectRequest(): Boolean = false
     override fun processRequest(ctx: ChannelHandlerContext?, request: RemotingCommand?): RemotingCommand {

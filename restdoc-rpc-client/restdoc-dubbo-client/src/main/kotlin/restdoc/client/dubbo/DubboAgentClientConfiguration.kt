@@ -1,7 +1,9 @@
 package restdoc.client.dubbo
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass
+import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
 import restdoc.client.api.*
@@ -15,12 +17,14 @@ import restdoc.remoting.netty.NettyRequestProcessor
  * DubboAgentClientConfiguration
  */
 @Configuration
-@Import(AgentConfiguration::class, DubboInvokerImpl::class,
+@Import(DubboInvokerImpl::class,
         InvokeAPIHandler::class,
         ReportClientInfoHandler::class,
         ExportAPIHandler::class,
-        DubboRefBeanManager::class)
-@ConditionalOnClass(value = [AgentConfiguration::class])
+        DubboRefBeanManager::class,
+        EnvConfiguration::class)
+@EnableConfigurationProperties(value = [AgentConfigurationProperties::class])
+//@ConditionalOnClass(value = [EnvConfiguration::class])
 open class DubboAgentClientConfiguration : AgentClientConfiguration {
 
     @Autowired
@@ -33,6 +37,7 @@ open class DubboAgentClientConfiguration : AgentClientConfiguration {
     lateinit var exportAPIHandler: ExportAPIHandler
 
     @Autowired
+    @Qualifier(value = "dubboAgentImpl")
     lateinit var agentImpl: AgentImpl
 
     override fun getInvokeAPIHandler(): NettyRequestProcessor = this.invokeAPIHandler

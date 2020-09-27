@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
  *
  * @author Overman
  */
-@Component
 public class EndpointsListener implements ApplicationListener<ContextRefreshedEvent> {
 
     private static Logger log = LoggerFactory.getLogger(EndpointsListener.class);
