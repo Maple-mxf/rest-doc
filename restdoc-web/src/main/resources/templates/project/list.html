@@ -14,7 +14,6 @@
             cursor: pointer;
         }
 
-
         body {
             /*margin: 10px;*/
             font-family: 'Roboto', sans-serif;
@@ -36,7 +35,23 @@
     </style>
 </head>
 <body>
-<div th:include="nav::nav"></div>
+<!--<div th:include="nav::nav"></div>-->
+<div class="layui-row" style="width: 100%">
+    <ul class="layui-nav layui-bg-green" id="navigation" lay-filter="" style="font-size: 17px">
+        <li class="layui-nav-item">REST Doc</li>
+        <li class="layui-nav-item" id="restweb-project-nav">
+            <a href="/restdoc/project/view?type=REST_WEB" target="_self">RESTweb项目</a>
+        </li>
+        <li class="layui-nav-item" id="dubbo-project-nav">
+            <a href="/restdoc/project/view?type=DUBBO" target="_self">Dubbo项目</a>
+        </li>
+        <li class="layui-nav-item" id="springcloud-projct-nav">
+            <a href="/restdoc/project/view?type=SPRINGCLOUD" target="_self">SpringCloud项目</a>
+        </li>
+    </ul>
+</div>
+
+<input type="hidden" th:value="${projectType}" id="projectType">
 <div class="layui-container" style="margin-top: 10px;">
     <div class="layui-row">
         <div class="layui-row layui-col-space20 layui-col-md-offset3">
@@ -45,12 +60,8 @@
             </div>
         </div>
     </div>
-    <!--    /project/view/add-->
-
     <div class="layui-row layui-col-space20" id="content">
     </div>
-
-
     <div class="layui-row layui-col-space12">
         <div class="layui-inline">
             <button class="layui-btn layui-btn-primary  layui-btn-lg" id="previousBtn">上一页</button>
@@ -102,9 +113,6 @@
         var totalElements = parseInt($('#totalElements').val());
         var hasNext = (((page + 1) * size) < totalElements);
 
-        console.info((page + 1) * size);
-        console.info(hasNext)
-
         if (!hasNext) {
             disableNext();
             return;
@@ -124,7 +132,7 @@
         $.ajax({
             type: 'GET',
             dataType: 'JSON',
-            url: '/restdoc/project/list?page=' + page + '&size=' + size,
+            url: '/restdoc/project/list?type=' + $('#projectType').val() + '& page = ' + page + ' & size = ' + size,
             async: false,
             success: function (data) {
                 if (data.code === "200") {
@@ -169,13 +177,6 @@
 
     function renderProjectContent(content) {
         var html = "";
-
-
-        /*var i = 0;
-
-        var prefix = "<div class='layui-row '>";
-        var suffix = "</div>";*/
-
         for (var key in content) {
             var name = content[key].name;
             var desc = content[key].desc;
@@ -200,17 +201,6 @@
                 "<label> <a title='查看项目文档' href='/restdoc/" + projectId + "/document/nav/view'><i class=\"layui-icon layui-icon-home\" style=\"font-size: 22px; color: #393D49;\"></i></a>  \n</label>        </div>\n" +
                 "            </div>\n" +
                 "        </div>";
-
-            /*if (i === 0) {
-                html = html + prefix + snippet;
-                ++i;
-            } else if (i === 3) {
-                html = html + snippet + suffix;
-                i = 0;
-            } else {
-                html = html + snippet;
-                ++i;
-            }*/
             html = html + snippet;
         }
 
@@ -238,7 +228,8 @@
                     var res = window["layui-layer-iframe" + index].getFormData();
 
                     if (res['name'] === '') {
-                        layer.msg("请填写项目名称"); return;
+                        layer.msg("请填写项目名称");
+                        return;
                     }
 
 
@@ -298,7 +289,8 @@
                 var res = window["layui-layer-iframe" + index].getFormData();
 
                 if (res['name'] === '') {
-                    lay.msg("请填写项目名称"); return;
+                    lay.msg("请填写项目名称");
+                    return;
                 }
 
 
@@ -343,7 +335,16 @@
         });
     }
 
-    $("#projectNav").addClass("layui-this")
+    var type = $('#projectType').val();
+
+    if (type === 'REST_WEB') {
+        $("#restweb-project-nav").addClass("layui-this")
+    } else if (type === 'DUBBO') {
+        $("#dubbo-project-nav").addClass("layui-this")
+    } else {
+        $("#springcloud-projct-nav").addClass("layui-this")
+    }
+
 
     function disableNext() {
         $("#nextBtn").addClass("layui-btn-disabled")

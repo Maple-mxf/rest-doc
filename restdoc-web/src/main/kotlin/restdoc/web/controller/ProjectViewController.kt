@@ -6,7 +6,9 @@ import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestParam
 import restdoc.web.model.Project
+import restdoc.web.model.ProjectType
 
 @Controller
 class ProjectViewController {
@@ -15,7 +17,8 @@ class ProjectViewController {
     lateinit var mongoTemplate: MongoTemplate
 
     @GetMapping("/project/view")
-    fun list(): String {
+    fun list(@RequestParam type: ProjectType, model: Model): String {
+        model.addAttribute("projectType", type)
         return "project/list"
     }
 

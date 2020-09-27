@@ -20,8 +20,11 @@ class DocumentNavViewController {
 
         model.addAttribute("projectId", projectId)
 
+
         val project = projectRepository.findById(projectId)
                 .orElseThrow(restdoc.web.core.Status.BAD_REQUEST::instanceError)
+
+        model.addAttribute("projectName", project.name)
 
         return when {
             ProjectType.REST_WEB == project.type -> {

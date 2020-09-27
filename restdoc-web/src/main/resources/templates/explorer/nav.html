@@ -13,7 +13,18 @@
     <link rel="stylesheet" th:href="@{/admin/css/nav.css}"/>
 </head>
 <body>
-<div th:include="nav::nav"></div>
+<div class="layui-row" style="width: 100%">
+    <ul class="layui-nav layui-bg-green" id="navigation" lay-filter="" style="font-size: 17px">
+        <li class="layui-nav-item">REST Doc</li>
+        <li class="layui-nav-item" id="restweb-project-nav">
+            <a href="/restdoc/project/view?type=REST_WEB" target="_self">
+                RESTweb项目</a>
+        </li>
+        <li class="layui-nav-item" id="dubbo-project-nav">
+            <a href="#" target="_self" th:text="${projectName}"></a>
+        </li>
+    </ul>
+</div>
 
 <input type="hidden" id="projectId" th:value="${projectId}">
 
@@ -30,7 +41,7 @@
         </div>
         <div id="navTableOfContent" style="font-size: 14px"></div>
     </div>
-    <div class="layui-col-md10" id="docContent" >
+    <div class="layui-col-md10" id="docContent">
         <iframe src="" id="docContentFrame" frameborder="0" style="width: 100%;height: 1000px;"></iframe>
     </div>
 </div>
@@ -41,15 +52,16 @@
 <script>
     // $("#projectNav").addClass("layui-this");
 
-    function initNav() {
-        var lis = $("#navigation").find("li");
-        for (let i = 0; i < lis.length; i++) {
-            $(lis[i]).removeClass("layui-this")
+    /*    function initNav() {
+            var lis = $("#navigation").find("li");
+            for (let i = 0; i < lis.length; i++) {
+                $(lis[i]).removeClass("layui-this")
+            }
         }
-    }
 
-    initNav();
+        initNav();*/
 
+    $('#restweb-project-nav').addClass("layui-this");
 
     /**
      *

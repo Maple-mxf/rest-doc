@@ -11,6 +11,7 @@ import restdoc.web.controller.obj.UpdateProjectDto
 import restdoc.web.core.Result
 import restdoc.web.core.ok
 import restdoc.web.model.Project
+import restdoc.web.model.ProjectType
 import restdoc.web.repository.ProjectRepository
 import restdoc.web.util.IDUtil
 import java.util.*
@@ -32,9 +33,10 @@ class ProjectController {
      */
     @GetMapping("/list")
     fun list(@RequestParam(required = false, defaultValue = "0") page: Int,
-             @RequestParam(required = false, defaultValue = "12") size: Int
+             @RequestParam(required = false, defaultValue = "12") size: Int,
+             @RequestParam type: ProjectType
     ): Result {
-        return ok(projectRepository.page(Query(), PageRequest.of(page, size)))
+        return ok(projectRepository.page(Query().addCriteria(Criteria("type").`is`(type)), PageRequest.of(page, size)))
     }
 
 
@@ -68,7 +70,7 @@ class ProjectController {
                 createTime = null,
                 desc = dto.desc,
                 type = dto.type
-                ))
+        ))
         return ok()
     }
 }

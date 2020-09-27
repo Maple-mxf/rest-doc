@@ -16,7 +16,7 @@
             font-family: Roboto, serif;
         }
 
-        #navigation{
+        #navigation {
             font-family: Roboto, serif;
             font-size: 18px;
         }
@@ -28,10 +28,14 @@
     <div class="layui-row" style="width: 100%">
         <ul class="layui-nav layui-bg-green" id="navigation" lay-filter="" style="font-size: 17px">
             <li class="layui-nav-item">REST Doc</li>
-            <li class="layui-nav-item" id="projectNav"><a href="/restdoc/project/view" target="_self">REST doc项目</a>
+            <li class="layui-nav-item" id="restweb-project-nav">
+                <a href="/restdoc/project/view?type=REST_WEB" target="_self">RESTweb项目</a>
             </li>
-            <li class="layui-nav-item" id="microservice">
-                <a target="_self" href="/restdoc/microservice/view/index">Agent服务实例</a>
+            <li class="layui-nav-item" id="dubbo-project-nav">
+                <a href="/restdoc/project/view?type=DUBBO" target="_self">Dubbo项目</a>
+            </li>
+            <li class="layui-nav-item" id="springcloud-projct-nav">
+                <a href="/restdoc/project/view?type=SPRINGCLOUD" target="_self">SpringCloud项目</a>
             </li>
         </ul>
     </div>
