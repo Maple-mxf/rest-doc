@@ -224,9 +224,11 @@
                         </div>
                         <div class="layui-row"
                              th:if="${document.responseBodyDescriptors!=null and !document.responseBodyDescriptors.isEmpty()}">
-                            <h3 class="headerTitle">响应参数列表 <i class="layui-icon layui-icon-rate"
-                                                              style="font-size: 18px; color: #FF5722;font-weight: normal">
-                                <span style="font-size: 14px;color: #FF5722">Tip：双击行可以编辑文档 </span></i></h3>
+                            <h3 class="headerTitle">响应参数列表
+                                <i class="layui-icon layui-icon-rate"
+                                   style="font-size: 18px; color: #FF5722;font-weight: normal">
+                                    <span style="font-size: 14px;color: #FF5722">Tip：双击行可以编辑文档 </span></i>
+                            </h3>
                             <p>
                             <table class="layui-table" id="responseBodyFieldListTable" lay-size="lg">
                                 <colgroup>

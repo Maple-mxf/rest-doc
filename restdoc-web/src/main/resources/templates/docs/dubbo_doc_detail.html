@@ -29,7 +29,7 @@
 <body>
 
 <div class="layui-container" style="display: none" id="dubboExecuteResult">
-    <table class="layui-table" >
+    <table class="layui-table">
         <colgroup>
             <col width="150">
             <col>
@@ -78,7 +78,9 @@
                 </div>
                 <br>
 
-                <h3>服务入参</h3>
+                <h3>服务入参<i class="layui-icon layui-icon-rate"
+                           style="font-size: 18px; color: #FF5722;font-weight: normal">
+                    <span style="font-size: 14px;color: #FF5722">Tip：双击行可以编辑文档 </span></i></h3>
                 <table class="layui-table inParamTable" lay-skin="row" lay-size="lg">
                     <colgroup>
                         <col width="250">
@@ -99,7 +101,9 @@
                 </table>
                 <br>
                 <!--方法出参-->
-                <h3>服务出参</h3>
+                <h3>服务出参<i class="layui-icon layui-icon-rate"
+                           style="font-size: 18px; color: #FF5722;font-weight: normal">
+                    <span style="font-size: 14px;color: #FF5722">Tip：双击行可以编辑文档 </span></i></h3>
                 <br>
                 <table class="layui-table outParamTable" lay-skin="row" lay-size="lg">
                     <colgroup>
@@ -118,9 +122,16 @@
                     </tbody>
                 </table>
                 <br>
-                <h3>服务备注信息</h3>
+                <h3>服务备注信息<i class="layui-icon layui-icon-rate"
+                             style="font-size: 18px; color: #FF5722;font-weight: normal">
+                    <span style="font-size: 14px;color: #FF5722">Tip：双击内容区可以编辑文档 </span></i></h3>
                 <br>
-                <blockquote class="layui-elem-quote docDescription"></blockquote>
+
+
+                <div class="dubboDocDescription">
+
+                </div>
+
 
                 <div class="layui-btn-container" style="margin-top: 10px">
 
@@ -216,6 +227,7 @@
         jqLine.find('.layui-btn-container').html('<br><button onclick=' + fun + ' style="margin-left: 90%" class="layui-btn  layui-btn-lg">测试服务</button>');
         renderInParamTable(doc, jqLine);
         renderOutParamTable(doc, jqLine);
+        renderDubboDocDescription(doc, jqLine);
     }
 
     function renderInParamTable(doc, jqLine) {
@@ -244,6 +256,35 @@
         var fun = "openEditOutParamPage(" + param + ")";
         var allTrLine = "<tr ondblclick=" + fun + "><td>" + returnValueDescriptor['type'] + "</td><td>" + returnValueDescriptor['sampleValue'] + "</td><td>" + returnValueDescriptor['description'] + "</td></tr>";
         $(tr).html(allTrLine)
+    }
+
+    function renderDubboDocDescription(doc, jqLine) {
+        var param = "'" + doc['id'] + "'";
+        var fun = "openEditDescriptionPage(" + param + ")";
+        var line = "<blockquote ondblclick=" + fun + " class=\"layui-elem-quote docDescription\">" + doc['desc'] + "</blockquote>";
+        $(jqLine.find(".dubboDocDescription")).html(line)
+
+    }
+
+    function openEditDescriptionPage(docId) {
+        lay.open({
+            type: 2,
+            title: "编辑服务描述",
+            area: ['800px', '600px'],
+            content: ['/restdoc/dubboDocument/' + docId + '/description/view', 'no'],
+            btn: ["保存", "取消"],
+            yes: function (index, dom) {
+                // return string
+                var res = window["layui-layer-iframe" + index].getValue();
+                var doc = updateDocument(docId, res);
+
+                if (doc != null) {
+                    var id = doc['id'];
+                    renderDubboDocDescription(doc, $('#' + id))
+                }
+                lay.close(index)
+            }
+        });
     }
 
     function openEditInParamPage(docId, paramName) {
@@ -345,13 +386,11 @@
             async: false,
             success: function (data) {
                 if ('200' === data['code']) {
-                    console.info(data);
-
                     var resdata = data['data'];
 
                     $('#execute-result-method').html(resdata['method']);
                     $('#execute-result-isSuccess').html(resdata['success']);
-                    $('#execute-result-time').html(resdata['time']+'毫秒');
+                    $('#execute-result-time').html(resdata['time'] + '毫秒');
                     $('#execute-result-returnType').html(resdata['returnType']);
                     $('#execute-result-errorMessage').html(resdata['errorMessage']);
                     $('#execute-result-print').html(resdata['returnValue']);

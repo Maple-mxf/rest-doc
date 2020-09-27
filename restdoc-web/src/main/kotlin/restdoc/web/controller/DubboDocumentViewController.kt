@@ -74,4 +74,12 @@ class DubboDocumentViewController {
         return "docs/fill_inparam"
     }
 
+    @GetMapping("/dubboDocument/{documentId}/description/view")
+    fun editDescriptionPage(@PathVariable documentId: String, model: Model): String{
+        val document =
+                dubboDocumentRepository.findById(documentId).orElseThrow { Status.BAD_REQUEST.instanceError("documentId参数错误") }
+        model.addAttribute("field", document.desc)
+        return "docs/edit_description"
+    }
+
 }
