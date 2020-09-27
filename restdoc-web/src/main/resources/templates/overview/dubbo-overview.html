@@ -69,6 +69,9 @@
 <script th:src="@{/admin/js/jquery.js}"></script>
 <script th:src="@{/admin/js/util.js}"></script>
 <script th:inline="javascript">
+
+    var treeData = null;
+
     layui.config({
         base: '/restdoc/layui/lay/extends/'
     }).use([
@@ -87,10 +90,16 @@
 
         var projectId = $("#projectId").val();
 
+        treeData = getTreeData();
+
+        if (treeData != null && treeData.length > 0) {
+            $('#methodsDoc').attr("src", "/restdoc/" + treeData[0].id + "/dubboDocument")
+        }
+
         tree.render({
             elem: '#nav'
             , id: "dubboTableContent"
-            , data: getTreeData()
+            , data: treeData
             , edit: ['update', 'del']
             , click: function (obj) {
                 if (obj.data.type === "API") {
@@ -111,10 +120,6 @@
                     }
                 } else if (type == 'update') {
                     var body = {"name": data.title};
-
-                    console.info(body);
-
-                    console.info(data)
 
                     if (data.type == 'WIKI' || data.type == 'API') {
                         editTreeNode('/restdoc/document/' + data.id, body)
@@ -184,7 +189,7 @@
                 layer.open({
                     type: 2,
                     title: '服务实例详情',
-                    content: ['/restdoc/serviceClient/' + obj.data.id+'/view', 'no'],
+                    content: ['/restdoc/serviceClient/' + obj.data.id + '/view', 'no'],
                     area: ['600px', '600px'],
 
                 });
