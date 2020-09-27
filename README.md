@@ -1,9 +1,9 @@
 # REST doc 预览版本
-[为什么需要REST doc](#为什么需要RESTdoc) <br/>
-[RESTdoc基于CS模式的原理](#RESTdoc基于CS模式的原理)<br/>
-[RESTdoc目前提供了那些功能](#RESTdoc目前提供了那些功能)<br/>
-[快速开始](#快速开始)<br/>
-[后续支持](#后续支持)<br/>
+[1 为什么需要REST doc](#为什么需要RESTdoc) <br/>
+[2 RESTdoc基于CS模式的原理](#RESTdoc基于CS模式的原理)<br/>
+[3 RESTdoc目前提供了那些功能](#RESTdoc目前提供了那些功能)<br/>
+[4 快速开始](#快速开始)<br/>
+[5 后续支持](#后续支持)<br/>
 
 
 ## 为什么需要RESTdoc
