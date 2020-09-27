@@ -102,9 +102,9 @@
             , data: treeData
             , edit: ['update', 'del']
             , click: function (obj) {
-               /* if (obj.data.type === "API") {
-                    // $("#docContentFrame").attr("src", '/restdoc/microservice/' + service + '/view/document/' + obj.data.id);
-                }*/
+                /* if (obj.data.type === "API") {
+                     // $("#docContentFrame").attr("src", '/restdoc/microservice/' + service + '/view/document/' + obj.data.id);
+                 }*/
 
                 $('#methodsDoc').attr("src", "/restdoc/" + obj.data.id + "/dubboDocument")
             }
@@ -202,7 +202,18 @@
                     async: false,
                     success: function (data) {
                         if (data['code'] === "200") {
+
+                            // 刷新目录树
                             tree.reload('dubboTableContent', {});
+
+                            // 刷新文档页面
+                            var link = $('#methodsDoc').attr('src');
+
+                            if (link != null) {
+                                $('#methodsDoc').attr('src', link);
+                            }
+
+
                             layer.msg("API同步成功")
                         } else {
                             layer.msg(data['message'])

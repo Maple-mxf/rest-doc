@@ -131,11 +131,16 @@
                         </div>
                         <div class="layui-row">
 
-                            <h3 class="headerTitle">备注 <span><i class="layui-icon layui-icon-edit"
-                                                                id="editDocDescriptionBtn"
-                                                                style="font-size: 20px; color: #FF5722;font-weight: normal"></i></span>
+                            <h3 class="headerTitle">备注
+
+                                <span>
+                                      <i class="layui-icon layui-icon-rate"
+                                         style="font-size: 18px; color: #FF5722;font-weight: normal">
+                                    <span style="font-size: 14px;color: #FF5722">Tip：双击内容区域可以编辑文档 </span></i>
+                                </span>
+
                             </h3>
-                            <blockquote class="layui-elem-quote">
+                            <blockquote class="layui-elem-quote" id="editDocDescriptionBtn">
                                 <div class="layui-text	" th:utext="${document.description}"
                                      id="descriptionArea"></div>
                             </blockquote>
@@ -323,7 +328,7 @@
             renderResponseBodyTable(doc['responseBodyDescriptors']);
 
 
-            $("#editDocDescriptionBtn").click(function (event) {
+            $("#editDocDescriptionBtn").on('dblclick', function (event) {
                 layer.open({
                     type: 2,
                     title: "编辑文档备注",

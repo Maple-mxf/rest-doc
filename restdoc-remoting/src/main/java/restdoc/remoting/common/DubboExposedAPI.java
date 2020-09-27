@@ -6,6 +6,7 @@ public class DubboExposedAPI implements ExposedAPI {
 
     private String name;
     private List<ExposedMethod> exposedMethods;
+    @Deprecated
     private String uniqueKey;
     private String refName;
 

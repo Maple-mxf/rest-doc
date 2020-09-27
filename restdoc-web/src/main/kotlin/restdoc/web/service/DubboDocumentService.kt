@@ -49,7 +49,8 @@ open class DubboDocumentServiceImpl : DubboDocumentService {
 
             for (method in api.exposedMethods) {
                 // id = javaClass+method+paramType
-                val id = "${api.refName}${method.methodName}${method.parameterClasses}".hashCode().toString()
+//                val id = "${api.refName}${method.methodName}${method.parameterClasses}".hashCode().toString()
+                val id = (api.name + method.methodName + method.parameterClasses).hashCode().toString();
                 val exist = dubboDocumentRepository.existsById(id)
 
                 val doc = DubboDocument()
