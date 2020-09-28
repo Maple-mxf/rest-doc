@@ -1,3 +1,0 @@
-package restdoc.web.model
-
-
