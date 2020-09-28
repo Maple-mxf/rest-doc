@@ -1,13 +1,13 @@
 # REST doc 预览版本
-[1 RESTdoc开发背景](#RESTdoc开发背景) <br/>
-[2 RESTdoc额外功能](#RESTdoc亮点) <br/>
-[2 RESTdoc基于CS模式的原理](#RESTdoc基于CS模式的原理)<br/>
-[3 RESTdoc目前提供了那些功能](#RESTdoc目前提供了那些功能)<br/>
+[1 开发背景](#开发背景) <br/>
+[2 额外功能](#额外功能) <br/>
+[2 架构图](#架构图)<br/>
+[3 目前提供的功能](#目前提供的功能)<br/>
 [4 快速开始](#快速开始)<br/>
 [5 后续支持](#后续支持)<br/>
 [6 RESTdoc功能展示](#RESTdoc功能展示)<br/>
 
-## RESTdoc开发背景
+## 开发背景
 在软件开发中时常遇到以下的问题
 
 - 快速的编写API文档是具有一定的体力输出，REST doc可以简化切加速这个过程；
@@ -16,19 +16,19 @@
 - 编写测试用例是需要花费一定时间的，因为REST doc提供了测试功能，在测试完成之后会依据整个测试过程数据生成多语言测试用例；
 
 
-## RESTdoc额外功能
+## 额外功能
 - REST doc增加了微服务测试和微服务文档的生成，目前只支持springcloud和dubbo框架；
 - REST doc提供了快速构建API文档的功能，不论针对于Http API项目还是Rpc API项目，支持一键导入API并且生成一个半成品的模板；
 
 
-## RESTdoc基于CS模式的原理
+## 架构图
 ![avatar](https://raw.githubusercontent.com/Overman-mxf/rest-doc/master/static/img/agent-struct.png)
 
 RESTdoc作为一款文档工具，在保证不侵入开发者代码的情况下进行文档的生成与测试，这与swagger是相反的；当在本地开发环境或者
 测试环境时，无论使用内网或者外网和RESTdoc控制台建立长连接，都可以达到测试服务API与API文档的自动生成。
 
 
-## RESTdoc目前提供了那些功能
+## 目前提供的功能
 - HTTP API/Dubbo API/SpringCloud API的在线测试
 - HTTP API/Dubbo API/SpringCloud API文档的导入生成
 - HTTP API代码测试用例的生成
