@@ -114,9 +114,9 @@ open class ApplicationConfiguration : WebMvcConfigurer {
     open fun authenticationInterceptor(): AuthenticationInterceptor {
         val authMetadata = AuthMetadataImpl(redisTemplate)
         val authenticationInterceptor = AuthenticationInterceptor(authContext, authMetadata)
-        authenticationInterceptor.setPathPatterns(arrayOf("/**"))
-        authenticationInterceptor.setOrder(0)
-        authenticationInterceptor.setExcludePathPatterns(arrayOf<String>())
+        authenticationInterceptor.pathPatterns = arrayOf("/**")
+        authenticationInterceptor.order = 0
+        authenticationInterceptor.excludePathPatterns = arrayOf<String>()
         return authenticationInterceptor
     }
 
@@ -137,18 +137,18 @@ open class ApplicationConfiguration : WebMvcConfigurer {
     }
 
     @Bean
-    open fun validator(): Validator? {
+    open fun validator(): Validator {
         val validatorFactory: ValidatorFactory = Validation.byProvider(HibernateValidator::class.java)
                 .configure()
                 .addProperty("hibernate.validator.fail_fast", "true")
                 .buildValidatorFactory()
-        return validatorFactory.getValidator()
+        return validatorFactory.validator
     }
 
     @Bean
-    open fun methodValidationPostProcessor(): MethodValidationPostProcessor? {
+    open fun methodValidationPostProcessor(validator: Validator): MethodValidationPostProcessor? {
         val postProcessor = MethodValidationPostProcessor()
-        postProcessor.setValidator(validator())
+        postProcessor.setValidator(validator)
         return postProcessor
     }
 
