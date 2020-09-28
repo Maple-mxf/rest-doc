@@ -4,6 +4,10 @@ import org.springframework.boot.CommandLineRunner
 import restdoc.remoting.common.RequestCode
 import restdoc.remoting.netty.NettyRequestProcessor
 
+
+/**
+ * AgentClientConfiguration
+ */
 interface AgentClientConfiguration : CommandLineRunner {
 
     /**
