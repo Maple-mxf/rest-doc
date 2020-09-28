@@ -18,7 +18,9 @@ interface DubboDocumentService {
     fun sync(projectId: String, apiList: List<DubboExposedAPI>)
 }
 
-
+/**
+ * DubboDocumentServiceImpl
+ */
 @Service
 open class DubboDocumentServiceImpl : DubboDocumentService {
 
