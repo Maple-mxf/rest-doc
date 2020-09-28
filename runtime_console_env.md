@@ -1,6 +1,6 @@
 # REST doc console控制台运行环境说明
 [1 安装JDK](#安装JDK) <br/>
-[2 RESTdoc基于CS模式的原理](#RESTdoc基于CS模式的原理)<br/>
+[2 安装maven](#安装maven)<br/>
 
 ## 安装JDK
 - 下载JDK1.8+ [下载地址](https://www.oracle.com/java/technologies/javase-downloads.html)

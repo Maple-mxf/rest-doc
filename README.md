@@ -34,6 +34,9 @@ RESTdoc作为一款文档工具，在保证不侵入开发者代码的情况下�
 
 ## 快速开始
 
+##### 0 RESTdoc console控制台运行环境说明
+[运行环境说明](https://github.com/Overman-mxf/rest-doc/blob/master/runtime_console_env.md)
+
 ##### 1 克隆REST doc项目
 ```
 git clone https://github.com/Overman-mxf/rest-doc.git
