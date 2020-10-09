@@ -74,7 +74,7 @@ open class PythonCodeSampleGenerator : MapToCodeSample {
     }
 
     override fun invoke(doc: RestWebDocument): String {
-        val uriFormatStr = doc.uriVarDescriptors?.map { "'${it.field}' = '${it.value}'" }?.joinToString(separator = ",")
+        val uriFormatStr = doc.uriVarDescriptors?.joinToString(separator = ",") { "'${it.field}' = '${it.value}'" }
 
         val codeTemplate: Template = ve.getTemplate("codesample/PythonCodeUnitTestCaseSample.py")
         val pathValues = doc.requestBodyDescriptor?.map { PathValue(it.path, it.value) }
@@ -95,9 +95,7 @@ open class PythonCodeSampleGenerator : MapToCodeSample {
         writer.flush()
         writer.close()
 
-        val result = writer.buffer.toString()
-
-        return result
+        return writer.buffer.toString()
     }
 }
 
@@ -131,9 +129,7 @@ open class JavaCodeSampleGenerator : MapToCodeSample {
         writer.flush()
         writer.close()
 
-        val result = writer.buffer.toString()
-
-        return result
+        return writer.buffer.toString()
     }
 }
 

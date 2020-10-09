@@ -6,6 +6,10 @@ import org.springframework.stereotype.Component
 
 lateinit var applicationContext: ApplicationContext
 
+
+/**
+ * ApplicationContextProvider
+ */
 @Component
 open class ApplicationContextProvider : ApplicationContextAware {
 
