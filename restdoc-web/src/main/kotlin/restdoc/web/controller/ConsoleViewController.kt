@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.ResponseBody
 import restdoc.web.model.Menu
 
 @Deprecated(message = "ConsoleViewController")
-@Controller
+//@Controller
 class ConsoleViewController {
 
     @GetMapping("/index1")
