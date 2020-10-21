@@ -217,7 +217,7 @@ class RestWebDocumentController {
             rpcExecuteTask(dto)
         } else {
             if (!dto.url.startsWith("http") && !dto.url.startsWith("https"))
-                Status.BAD_REQUEST.error("链接无效")
+                Status.BAD_REQUEST.error("请填写完整的API请求地址")
             outExecuteTask(dto)
         }
     }

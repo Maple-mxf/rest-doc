@@ -1,6 +1,5 @@
 package restdoc.web.core.schedule
 
-import com.sun.org.apache.regexp.internal.RE
 import org.springframework.stereotype.Component
 import restdoc.remoting.common.*
 import java.util.concurrent.ConcurrentHashMap
