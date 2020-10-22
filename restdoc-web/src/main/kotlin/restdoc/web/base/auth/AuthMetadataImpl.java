@@ -1,5 +1,6 @@
 package restdoc.web.base.auth;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableSet;
 import org.springframework.data.redis.core.RedisTemplate;
 import restdoc.web.core.Status;
@@ -8,6 +9,7 @@ import restdoc.web.model.User;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;
+import java.util.LinkedHashMap;
 
 /**
  * <p>说明</p>
@@ -24,8 +26,11 @@ public class AuthMetadataImpl implements AuthMetadata {
 
     private RedisTemplate<String, Object> redisTemplate;
 
-    public AuthMetadataImpl(RedisTemplate<String, Object> redisTemplate) {
+    private ObjectMapper mapper;
+
+    public AuthMetadataImpl(RedisTemplate<String, Object> redisTemplate,ObjectMapper mapper) {
         this.redisTemplate = redisTemplate;
+        this.mapper = mapper;
     }
 
 
@@ -51,7 +56,8 @@ public class AuthMetadataImpl implements AuthMetadata {
 
         @Override
         public Credential mapCookieToCredential(HttpServletRequest request, Cookie cookie) {
-            User user = (User) redisTemplate.opsForValue().get(cookie.getValue());
+            LinkedHashMap<String,Object> map = (LinkedHashMap<String, Object>) redisTemplate.opsForValue().get(cookie.getValue());
+            User user =  mapper.convertValue(map,User.class);
             if (user == null) Status.UNAUTHORIZED.error();
 
             return Credential.builder(true)

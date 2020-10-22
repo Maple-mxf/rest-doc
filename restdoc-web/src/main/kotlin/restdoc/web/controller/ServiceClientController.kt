@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpMethod
 import org.springframework.web.bind.annotation.*
 import restdoc.remoting.common.ApplicationType
+import restdoc.web.base.auth.Verify
 import restdoc.web.controller.obj.SyncApiEmptyTemplateDto
 import restdoc.web.core.ok
 import restdoc.web.core.schedule.ClientChannelManager
@@ -21,6 +22,7 @@ import restdoc.web.util.IDUtil.now
 
 @Deprecated(message = "ServiceClientController")
 @RestController
+@Verify
 class ServiceClientController {
 
     @Autowired

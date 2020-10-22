@@ -7,12 +7,13 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestParam
 import restdoc.remoting.common.ApplicationType
-import restdoc.remoting.common.DubboExposedAPI
+import restdoc.web.base.auth.Verify
 import restdoc.web.core.Status
 import restdoc.web.core.schedule.ClientChannelManager
 import restdoc.web.core.schedule.ClientExposedAPIManager
 
 @Controller
+@Verify
 class MicroserviceViewController {
 
     @Autowired

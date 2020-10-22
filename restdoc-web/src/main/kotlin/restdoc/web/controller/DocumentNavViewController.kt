@@ -5,11 +5,12 @@ import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
-import restdoc.remoting.Status
+import restdoc.web.base.auth.Verify
 import restdoc.web.model.ProjectType
 import restdoc.web.repository.ProjectRepository
 
 @Controller
+@Verify
 class DocumentNavViewController {
 
     @Autowired

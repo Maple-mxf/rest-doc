@@ -47,7 +47,7 @@ import javax.validation.Valid
  */
 @RestController
 @RequestMapping("/document")
-//@Verify
+@Verify
 class RestWebDocumentController {
 
     @Autowired

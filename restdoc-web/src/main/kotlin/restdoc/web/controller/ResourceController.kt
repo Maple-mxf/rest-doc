@@ -5,13 +5,14 @@ import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.data.mongodb.core.query.Update
 import org.springframework.web.bind.annotation.*
+import restdoc.web.base.auth.Verify
 import restdoc.web.controller.obj.*
 import restdoc.web.core.Result
 import restdoc.web.core.ok
 import restdoc.web.model.DocType
 import restdoc.web.model.Resource
-import restdoc.web.repository.RestWebDocumentRepository
 import restdoc.web.repository.ResourceRepository
+import restdoc.web.repository.RestWebDocumentRepository
 import restdoc.web.util.IDUtil
 import restdoc.web.util.IDUtil.now
 import javax.validation.Valid
@@ -21,6 +22,7 @@ import javax.validation.Valid
  *
  */
 @RestController
+@Verify
 class ResourceController {
 
     @Autowired

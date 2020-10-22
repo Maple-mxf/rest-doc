@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 import restdoc.remoting.common.ApplicationType
 import restdoc.remoting.common.DubboExposedAPI
+import restdoc.web.base.auth.Verify
 import restdoc.web.controller.obj.NavNode
 import restdoc.web.controller.obj.NodeType
 import restdoc.web.controller.obj.ROOT_NAV
@@ -17,6 +18,7 @@ import restdoc.web.service.DubboDocumentService
 import kotlin.RuntimeException
 
 @RestController
+@Verify
 class MicroserviceController {
 
     @Autowired

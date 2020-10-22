@@ -9,6 +9,7 @@ import restdoc.remoting.InvokeCallback
 import restdoc.remoting.common.RequestCode
 import restdoc.remoting.protocol.RemotingCommand
 import restdoc.remoting.protocol.RemotingSerializable
+import restdoc.web.base.auth.Verify
 import restdoc.web.controller.obj.TestDubboMicroserviceResult
 import restdoc.web.controller.obj.UpdateDubboDocumentDto
 import restdoc.web.core.Result
@@ -23,6 +24,7 @@ import restdoc.web.repository.DubboDocumentRepository
 /**
  */
 @RestController
+@Verify
 class DubboDocumentController {
 
     @Autowired
