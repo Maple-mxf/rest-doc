@@ -20,6 +20,7 @@ import restdoc.client.api.model.RestWebInvocation
 import restdoc.client.api.model.RestWebInvocationResult
 import restdoc.remoting.common.ApplicationType
 import restdoc.remoting.common.RestWebExposedAPI
+import restdoc.web.base.auth.Verify
 import restdoc.web.controller.obj.*
 import restdoc.web.core.Result
 import restdoc.web.core.Status
