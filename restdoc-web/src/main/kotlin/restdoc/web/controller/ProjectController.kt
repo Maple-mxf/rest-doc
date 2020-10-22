@@ -6,6 +6,7 @@ import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.web.bind.annotation.*
+import restdoc.web.base.auth.Verify
 import restdoc.web.controller.obj.CreateProjectDto
 import restdoc.web.controller.obj.UpdateProjectDto
 import restdoc.web.core.Result
@@ -19,7 +20,7 @@ import javax.validation.Valid
 
 @RestController
 @RequestMapping("/project")
-//@Verify
+@Verify
 class ProjectController {
 
     @Autowired

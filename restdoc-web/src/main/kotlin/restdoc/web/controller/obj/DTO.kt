@@ -171,3 +171,5 @@ data class UpdateDescriptionSnippetDto(val description: String)
 
 data class UpdateDubboDocumentDto(val description: String? = null, val paramDescriptor: MethodParamDescriptor? = null,
                                   val returnValueDescriptor: MethodReturnValueDescriptor? = null)
+
+data class AuthDto(val account: String, val password: String)

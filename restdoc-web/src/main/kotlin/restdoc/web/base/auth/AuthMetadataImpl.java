@@ -1,11 +1,11 @@
 package restdoc.web.base.auth;
 
 import com.google.common.collect.ImmutableSet;
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.springframework.data.redis.core.RedisTemplate;
 import restdoc.web.core.Status;
 import restdoc.web.model.User;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;
 
@@ -38,13 +38,31 @@ public class AuthMetadataImpl implements AuthMetadata {
         AuthRegistration defaultAuthRule = AuthRegistration.builder()
                 .group("Default")
                 .addAuthPathPattern("/**")
-                .setupCredentialFunction(new DefaultTokenVerify())
+                .setupCredentialFunction(new DefaultBaseCookieVerify())
                 .build();
 
         return ImmutableSet.of(defaultAuthRule);
     }
 
-    private class DefaultTokenVerify extends AbstractHeaderCredentialFunction {
+    private class DefaultBaseCookieVerify extends AbstractCookieCredentialFunction {
+        DefaultBaseCookieVerify() {
+            super(Token.ACCESS_TOKEN);
+        }
+
+        @Override
+        public Credential mapCookieToCredential(HttpServletRequest request, Cookie cookie) {
+            User user = (User) redisTemplate.opsForValue().get(cookie.getValue());
+            if (user == null) Status.UNAUTHORIZED.error();
+
+            return Credential.builder(true)
+                    .identity(user.getId())
+                    .roles("*")
+                    .userInfo(user)
+                    .build();
+        }
+    }
+
+    /*private class DefaultTokenVerify extends AbstractHeaderCredentialFunction {
 
         public DefaultTokenVerify() {
             super(Token.ACCESS_TOKEN);
@@ -67,5 +85,5 @@ public class AuthMetadataImpl implements AuthMetadata {
         public RuntimeException ifErrorThrowing() {
             return Status.UNAUTHORIZED.instanceError();
         }
-    }
+    }*/
 }
