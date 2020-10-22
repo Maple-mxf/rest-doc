@@ -1,47 +1,42 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>登录RESTdoc文档平台</title>
+    <title>RESTdoc登录</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/admin/css/login.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/main.css}"  media="all">
     <link rel="stylesheet" th:href="@{/layui/css/layui.css}"/>
-    <!--    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">-->
-
-    <style type="text/css">
-        body {
-            /*font-family: Roboto,serif;*/
-            font-size: 17px;
-        }
-    </style>
-
 </head>
-<body>
-<div class="layui-container">
-    <div class="layui-row">
-        <form class="layui-form layui-form-pane" action="">
-            <div class="layui-form-item">
-                <label class="layui-form-label">账户</label>
-                <div class="layui-input-inline">
-                    <input type="text" name="phone" lay-verify="required|phone" autocomplete="off" class="layui-input">
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">密码</label>
-                <div class="layui-input-inline">
-                    <input type="text" name="phone" lay-verify="required|phone" autocomplete="off" class="layui-input">
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <div class="layui-input-inline">
-                    <button class="layui-btn layui-btn-lg">登录</button>
-                </div>
-            </div>
-        </form>
-    </div>
+<body class="layui-layout-login">
+<div class="login-bg">
+    <div class="cover"></div>
 </div>
-
+<div class="login-content">
+    <h1 class="login-box-title"><i class="fa fa-fw fa-user"></i>RESTdoc控制台登录</h1>
+    <form class="layui-form" th:action="@{/login}" method="post">
+        <div class="layui-form-item">
+            <label class="layui-icon layui-icon-username" for="username"></label>
+            <input class="layui-input" type="text" name="username" id="username" placeholder="用户名">
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-icon layui-icon-password" for="password"></label>
+            <input class="layui-input" type="password" name="password" id="password" placeholder="密码">
+        </div>
+        <!--<div th:if="${isCaptcha}" class="layui-form-item captcha-item">
+            <label class="layui-icon layui-icon-vercode"></label>
+            <input class="layui-input" type="text" name="captcha" autocomplete="off" placeholder="验证码">
+            <img class="captcha-img" th:src="@{/captcha}" />
+        </div>
+        <div class="layui-form-item">
+            <input type="checkbox" name="rememberMe" title="记住我" lay-skin="primary">
+            <a class="layui-layout-right forget-password" href="javascript:alert('请联系超级管理员！')">忘记密码?</a>
+        </div>-->
+        <button type="submit" class="layui-btn layui-btn-fluid ajax-login"><i class="fa fa-sign-in fa-lg fa-fw"></i> 登录</button>
+    </form>
+<!--    <div class="layui-layer-loading login-page-loading"><div class="layui-layer-content"></div></div>-->
+</div>
+<!--<script th:replace="/common/template :: script"></script>-->
+<!--<script th:src="@{/js/login.js}" charset="utf-8"></script>-->
 <script th:src="@{/layui/layui.js}"></script>
-<script th:src="@{/admin/js/jquery.js}"></script>
-<script th:src="@{/admin/js/util.js}"></script>
-<script type="text/javascript" th:inline="javascript"></script>
+<script th:src="@{/admin/js/main.js}"></script>
 </body>
 </html>
