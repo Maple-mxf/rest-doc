@@ -15,14 +15,20 @@
 <body>
 <div class="layui-row" style="width: 100%">
     <ul class="layui-nav layui-bg-green" id="navigation" lay-filter="" style="font-size: 17px">
-        <li class="layui-nav-item">REST Doc</li>
-        <li class="layui-nav-item" id="restweb-project-nav">
+
+        <!--<li class="layui-nav-item" id="restweb-project-nav">
             <a href="/restdoc/project/view?type=REST_WEB" target="_self">
                 RESTweb项目</a>
         </li>
         <li class="layui-nav-item" id="dubbo-project-nav">
             <a href="#" target="_self" th:text="${projectName}"></a>
+        </li>-->
+        <li class="layui-nav-item">
+            <a href="/restdoc/project/view"> <i class="layui-icon layui-icon-left"
+                                                style="font-size: 17px;/*margin-top: 5px;*/ color: white;"></i>&nbsp;返回项目列表</a>
         </li>
+
+        <li class="layui-nav-item" th:text="${projectName}"></li>
     </ul>
 </div>
 
