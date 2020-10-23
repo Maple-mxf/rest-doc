@@ -93,7 +93,8 @@
         treeData = getTreeData();
 
         if (treeData != null && treeData.length > 0) {
-            $('#methodsDoc').attr("src", "/restdoc/" + treeData[0].id + "/dubboDocument")
+            $('#methodsDoc').attr("src", "/restdoc/" + treeData[0].id + "/dubboDocument");
+            $('#methodsDocContent').addClass("layui-show");
         }
 
         tree.render({
@@ -102,10 +103,6 @@
             , data: treeData
             , edit: ['update', 'del']
             , click: function (obj) {
-                /* if (obj.data.type === "API") {
-                     // $("#docContentFrame").attr("src", '/restdoc/microservice/' + service + '/view/document/' + obj.data.id);
-                 }*/
-
                 $('#methodsDoc').attr("src", "/restdoc/" + obj.data.id + "/dubboDocument")
             }
             , operate: function (obj) {
@@ -190,15 +187,15 @@
                             // 刷新目录树
                             tree.reload('dubboTableContent', {});
 
+                            console.info("刷新成功");
+
                             // 刷新文档页面
                             var link = $('#methodsDoc').attr('src');
 
                             if (link != null) {
                                 $('#methodsDoc').attr('src', link);
                             }
-
-
-                            layer.msg("API同步成功")
+                            layer.msg("Dubbo API同步成功")
                         } else {
                             layer.msg(data['message'])
                         }

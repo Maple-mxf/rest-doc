@@ -34,6 +34,14 @@ open class DubboDocumentServiceImpl : DubboDocumentService {
 
     override fun sync(projectId: String, apiList: List<DubboExposedAPI>) {
 
+        // 0 同步resource(删除不存在的resource)
+        val apiIds = apiList.map { it.name.hashCode().toString() }
+        val resources = resourceRepository.list(Query().addCriteria(Criteria("projectId").`is`(projectId)))
+        val nonExistResources = resources.filter { apiIds.any { id -> id != it.id } }
+        for (nonExistResource in nonExistResources) {
+            resourceRepository.deleteById(nonExistResource.id)
+        }
+
         // 1 同步API
         for (api in apiList) {
             val resourceId = api.name.hashCode().toString()
@@ -52,7 +60,17 @@ open class DubboDocumentServiceImpl : DubboDocumentService {
                 resourceRepository.save(resource)
             }
 
-            //
+            // 0 删除不存在的文档
+            val dubboOldExposedDocuments =
+                    dubboDocumentRepository.list(Query().addCriteria(Criteria("resource").`is`(resourceId)))
+            // 获取dubboOldExposedDocuments中不存在的文档数据
+            dubboOldExposedDocuments.filter {
+                api.exposedMethods.any { t ->
+                    it.id != (api.name + t.methodName + t.parameterClasses.joinToString(separator = ",")).hashCode().toString()
+                }
+            }.forEach { dubboDocumentRepository.deleteById(it.id) }
+
+            // 1 更新文档
             for (method in api.exposedMethods) {
                 val id = (api.name + method.methodName + method.parameterClasses.joinToString(separator = ",")).hashCode().toString()
                 val exist = dubboDocumentRepository.existsById(id)
@@ -101,31 +119,6 @@ open class DubboDocumentServiceImpl : DubboDocumentService {
                     dubboDocumentRepository.save(doc)
                 }
             }
-
-            // TODO  删除不存在的方法与接口
-
-            val dubboOldExposedDocuments =
-                    dubboDocumentRepository.list(Query().addCriteria(Criteria("resource").`is`(resourceId)))
-
-            // 获取dubboOldExposedDocuments中不存在的文档数据
-            val nonExistDocuments = dubboOldExposedDocuments.filter {
-                api.exposedMethods.any { t ->
-                    it.id != (api.name + t.methodName + t.parameterClasses.joinToString(separator = ",")).hashCode().toString()
-                }
-            }
-
-            for (nonExistDocument in nonExistDocuments) {
-                dubboDocumentRepository.deleteById(nonExistDocument.id)
-            }
-        }
-
-        // 2 同步resource(删除不存在的resource)
-        val apiIds = apiList.map { it.name.hashCode().toString() }
-        val resources = resourceRepository.list(Query().addCriteria(Criteria("projectId").`is`(projectId)))
-        val nonExistResources = resources.filter { apiIds.any { id -> id != it.id } }
-
-        for (nonExistResource in nonExistResources) {
-            resourceRepository.deleteById(nonExistResource.id)
         }
     }
 
