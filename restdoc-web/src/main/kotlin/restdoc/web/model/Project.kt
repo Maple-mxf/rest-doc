@@ -41,7 +41,7 @@ data class Project(
         /**
          * Access password
          */
-        val accessPassword: String?
+        val accessPassword: String? = null
 )
 
 enum class ProjectType {

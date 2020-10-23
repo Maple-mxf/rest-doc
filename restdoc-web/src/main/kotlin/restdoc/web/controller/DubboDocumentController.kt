@@ -108,7 +108,7 @@ class DubboDocumentController {
             val invocationResult = RemotingSerializable.decode(response.response.body, DubboInvocationResult::class.java)
             ok(TestDubboMicroserviceResult(
                     method = document.methodName,
-                    paramTypes = document.paramDescriptors.map { it.type }.joinToString(separator = ","),
+                    paramTypes = document.paramDescriptors.joinToString(separator = ",") { it.type },
                     success = invocationResult.isSuccessful,
                     errorMessage = if (invocationResult.exceptionMsg == null || invocationResult.exceptionMsg!!.isBlank()) "无异常信息" else invocationResult.exceptionMsg,
                     returnType = invocationResult.returnValueType,
