@@ -111,13 +111,13 @@ data class RequestDto(
 data class UriVarFieldDto(
         val field: String?,
         val value: Any?,
-        val desc: String?
+        val desc: String? = null
 )
 
 data class HeaderDto(
         val headerKey: String,
         val headerValue: String,
-        val headerDescription: String,
+        val headerDescription: String? = null,
         val headerConstraint: Boolean
 )
 
@@ -125,15 +125,15 @@ data class RequestFieldsDto(
         val requestFieldPath: String,
         val requestFieldValue: Any,
         val requestFieldType: String,
-        val requestFieldDescription: String,
+        val requestFieldDescription: String? = null,
         val requestFieldConstraint: Boolean
 )
 
 data class ResponseFieldDto(
         val responseFieldPath: String,
-        val responseFieldValue: Any,
+        val responseFieldValue: Any? = null,
         val responseFieldType: String,
-        val responseFieldDescription: String,
+        val responseFieldDescription: String? = null,
         val responseFieldConstraint: Boolean
 )
 

@@ -34,7 +34,6 @@ var oneline = "        <div class=\"layui-form-item one-line multi-request-body\
     "                </div>\n" +
     "            </div>\n" +
 
-    "<textarea name='requestFieldDescription' style='display: none' cols='30' rows='10'></textarea>" +
     "            <div class=\"layui-inline\" style=\"width: 5%\">\n" +
     "                <div class=\"layui-input-inline\">\n" +
     "                    <input type=\"checkbox\" checked\n" +
@@ -42,10 +41,6 @@ var oneline = "        <div class=\"layui-form-item one-line multi-request-body\
     "                </div>\n" +
     "            </div>\n" +
     "            <div class=\"layui-inline\">\n" +
-    "                    <button title='点击显示字段备注' type=\"button\" class=\"layui-btn layui-btn-sm layui-btn-primary\" id=\"deleteHeaderBtn\"\n" +
-    "                            style=\"margin-left: 40px\"\n" +
-    "                            onclick=\"addRequestParamDescBtn(this)\">\n" +
-    "                        <i class=\"layui-icon layui-icon-tips\" style=\"font-size: 30px; color: black;\"></i></button>" +
     "                <button title='删除当前字段' type=\"button\" class=\"layui-btn layui-btn-sm layui-btn-primary\" style=\"margin-left: 10px\"\n" +
     "                        onclick=\"deleteRequestBodyBtn(this)\">\n" +
     "                    <i class=\"layui-icon layui-icon-subtraction\" style=\"font-size: 30px; color: black;\"></i></button>" +

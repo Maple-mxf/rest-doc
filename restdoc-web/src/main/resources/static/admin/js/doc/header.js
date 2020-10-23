@@ -19,9 +19,6 @@ var oneheaderline = "\n" +
     "                               class=\"layui-input\">\n" +
     "                    </div>\n" +
     "                </div>\n" +
-
-    "<textarea name='headerDescription' style='display: none' cols='30' rows='10'></textarea>" +
-
     "                <div class=\"layui-inline\">\n" +
     "                    <div class=\"layui-input-inline\" style=\"width: 5%\">\n" +
     "                        <input type=\"checkbox\" checked name=\"headerConstraint\" title=\"必选\">\n" +
@@ -29,11 +26,6 @@ var oneheaderline = "\n" +
     "                </div>\n" +
     "\n" +
     "                <div class=\"layui-inline\">\n" +
-    "                    <button type=\"button\" title='点击显示字段备注' onclick='addHeaderDescBtn(this)' class=\"layui-btn layui-btn-sm layui-btn-primary" +
-    "                            style=\"margin-left: 10px\"\n" +
-    "                           >\n" +
-    "                        <i class=\"layui-icon layui-icon-tips\" style=\"font-size: 30px; color: black;\"></i>\n" +
-    "                    </button>\n" +
     "                    <button title='删除当前字段' type=\"button\" class=\"layui-btn layui-btn-sm layui-btn-primary\" id=\"deleteHeaderBtn\"\n" +
     "                            style=\"margin-left: 10px\"\n" +
     "                            onclick=\"deleteHeaderFieldLine(this)\">\n" +

@@ -10,6 +10,7 @@ import restdoc.web.base.auth.Verify
 import restdoc.web.controller.obj.CreateProjectDto
 import restdoc.web.controller.obj.UpdateProjectDto
 import restdoc.web.core.Result
+import restdoc.web.core.Status
 import restdoc.web.core.ok
 import restdoc.web.model.Project
 import restdoc.web.model.ProjectType
@@ -52,6 +53,7 @@ class ProjectController {
 
     @PostMapping("")
     fun create(@RequestBody dto: CreateProjectDto): Result {
+        if (dto.type == ProjectType.SPRINGCLOUD) Status.BAD_REQUEST.error("暂不支持SpringCloud项目")
         val project = Project(
                 id = IDUtil.id(),
                 name = dto.name,

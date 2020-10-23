@@ -688,7 +688,7 @@
         function getHeaderKeyValueJsonArray() {
             var headerKeyNodes = $('input[name=headerKey]');
             var headerValueNodes = $('input[name=headerValue]');
-            var headerDescriptionNodes = $('textarea[name=headerDescription]');
+            /*var headerDescriptionNodes = $('textarea[name=headerDescription]');*/
             var headerConstraintNodes = $('input[name=headerConstraint]');
 
             var array = [];
@@ -697,7 +697,7 @@
                 var map = new Map();
                 map["headerKey"] = headerKeyNodes[i].value;
                 map["headerValue"] = headerValueNodes[i].value;
-                map["headerDescription"] = easyeditor.content(headerDescriptionNodes[i].value);
+                /*map["headerDescription"] = easyeditor.content(headerDescriptionNodes[i].value);*/
                 map["headerConstraint"] = (headerConstraintNodes[i].value === 'on');
 
                 array[i] = map
@@ -709,7 +709,7 @@
             var requestFieldPathNodes = $('input[name=requestFieldPath]')
             var requestFieldValueNodes = $('input[name=requestFieldValue]')
             var requestFieldTypeNodes = $('select[name=requestFieldType]')
-            var requestFieldDescriptionNodes = $('textarea[name=requestFieldDescription]')
+            /*var requestFieldDescriptionNodes = $('textarea[name=requestFieldDescription]')*/
             var requestFieldConstraintNodes = $('input[name=requestFieldConstraint]')
             var array = [];
 
@@ -719,7 +719,7 @@
                 map["requestFieldValue"] = requestFieldValueNodes[i].value
 
                 map["requestFieldType"] = requestFieldTypeNodes[i].value;
-                map["requestFieldDescription"] = easyeditor.content(requestFieldDescriptionNodes[i].value);
+                /*map["requestFieldDescription"] = easyeditor.content(requestFieldDescriptionNodes[i].value);*/
                 map["requestFieldConstraint"] = (requestFieldConstraintNodes[i].value === 'on');
 
                 array[i] = map
@@ -730,13 +730,13 @@
         function getUriVarJsonArray() {
             var uriFields = $('input[name=uriField]');
             var uriValueFields = $('input[name=uriValue]');
-            var uriDescFields = $('textarea[name=uriDesc]');
+            /*var uriDescFields = $('textarea[name=uriDesc]');*/
             var array = new Array();
             for (let i = 0; i < uriFields.length; i++) {
                 var map = new Map();
                 map['field'] = uriFields[i].value;
                 map['value'] = uriValueFields[i].value;
-                map['desc'] = easyeditor.content(uriDescFields[i].value);
+                /*map['desc'] = easyeditor.content(uriDescFields[i].value);*/
                 array[i] = map;
             }
             return array
@@ -745,16 +745,16 @@
         function getResponseBodyKeyValueJsonArray() {
             var responseFieldPathNodes = $('input[name=responseFieldPath]');
             var responseFieldTypeNodes = $('select[name=responseFieldType]');
-            var responseFieldDescriptionNodes = $('textarea[name=responseFieldDescription]');
+            /*var responseFieldDescriptionNodes = $('textarea[name=responseFieldDescription]');*/
             var responseFieldConstraintNodes = $('input[name=responseFieldConstraint]');
             var array = new Array();
             for (let i = 0; i < responseFieldPathNodes.length; i++) {
                 var map = new Map()
                 map["responseFieldPath"] = responseFieldPathNodes[i].value;
-                map["responseFieldValue"] = responseFieldDescriptionNodes[i].value;
+                /*map["responseFieldValue"] = responseFieldDescriptionNodes[i].value;*/
 
                 map["responseFieldType"] = responseFieldTypeNodes[i].value;
-                map["responseFieldDescription"] = easyeditor.content(responseFieldDescriptionNodes[i].value);
+                /*map["responseFieldDescription"] = easyeditor.content(responseFieldDescriptionNodes[i].value);*/
                 map["responseFieldConstraint"] = (responseFieldConstraintNodes[i].value === 'on')
                 array[i] = map
             }
