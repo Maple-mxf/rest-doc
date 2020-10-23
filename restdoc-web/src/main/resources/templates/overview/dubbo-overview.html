@@ -104,6 +104,9 @@
             , edit: ['update', 'del']
             , click: function (obj) {
                 $('#methodsDoc').attr("src", "/restdoc/" + obj.data.id + "/dubboDocument")
+
+                //
+                /*$('#methodsDocContent').addClass("layui-show");*/
             }
             , operate: function (obj) {
                 var type = obj.type;
@@ -172,7 +175,6 @@
                     title: '服务实例详情',
                     content: ['/restdoc/serviceClient/' + obj.data.id + '/view', 'no'],
                     area: ['600px', '600px'],
-
                 });
 
             } else if (obj.event === 'syncAPI') {
@@ -183,11 +185,9 @@
                     async: false,
                     success: function (data) {
                         if (data['code'] === "200") {
-
+                            treeData = getTreeData();
                             // 刷新目录树
-                            tree.reload('dubboTableContent', {});
-
-                            console.info("刷新成功");
+                            tree.reload('dubboTableContent'  ,{ data: treeData} );
 
                             // 刷新文档页面
                             var link = $('#methodsDoc').attr('src');

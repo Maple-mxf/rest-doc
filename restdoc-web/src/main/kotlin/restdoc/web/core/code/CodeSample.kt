@@ -41,13 +41,19 @@ open class CURLCodeSampleGenerator(private val restTemplate: RestTemplate) : Map
             doc.requestBodyDescriptor?.let { ds ->
                 val pathValues = ds.map { PathValue(it.path, it.value) }
                 val json = ObjectMapper().writeValueAsString(JsonProjector(pathValues).projectToMap())
-                cmd.append("   -d   '${json}'")
+                cmd.append("   -d   '$json'")
             }
         }
 
         // 4 Expand URL
         val afterExpandURL: String =
-                if (doc.uriVarDescriptors != null) restTemplate.uriTemplateHandler.expand(doc.url, doc.uriVarDescriptors).toASCIIString()
+                if (doc.uriVarDescriptors != null)
+                {
+                    val uriValues = doc.uriVarDescriptors!!.map { it.field to it.value }.toMap()
+                    restTemplate.uriTemplateHandler.expand(doc.url, uriValues)
+
+                            .toASCIIString()
+                }
                 else doc.url
 
         cmd.append("   ${afterExpandURL}")
