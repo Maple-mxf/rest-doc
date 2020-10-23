@@ -9,7 +9,9 @@ import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
+import restdoc.web.base.auth.Verify
 import restdoc.web.controller.obj.AuthDto
+import restdoc.web.core.HolderKit
 import restdoc.web.model.User
 import restdoc.web.util.MD5Util
 import java.util.concurrent.TimeUnit
@@ -25,11 +27,16 @@ open class AdminLoginController {
     @Autowired
     lateinit var redisTemplate: RedisTemplate<String, Any>
 
+    @Autowired
+    lateinit var holderKit: HolderKit
+
     @GetMapping("")
-    fun loginView() = "auth/admin_login"
+    @Verify(require = false)
+    fun loginView() = if (holderKit.user != null) "redirect:project/view" else "auth/admin_login"
 
     @GetMapping("/auth")
-    fun auth() = "auth/admin_login"
+    @Verify(require = false)
+    fun auth() = if (holderKit.user != null) "redirect:project/view" else "auth/admin_login"
 
     @PostMapping("/auth")
     fun auth(dto: AuthDto, model: Model, response: HttpServletResponse, request: HttpServletRequest): String {

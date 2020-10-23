@@ -1,38 +1,46 @@
-package restdoc.web.base.auth;
+package restdoc.web.core;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import restdoc.web.core.Status;
+import restdoc.web.base.auth.AuthContext;
+import restdoc.web.base.auth.Credential;
 import restdoc.web.model.User;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 /**
- *
+ * @author maxuefeng
+ * @since 2020/5/28
  */
 @Component
 public class HolderKit {
 
-    @Autowired
-    protected RedisTemplate<String, Object> redisTemplate;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     /**
      * @see AuthContext
      */
-    @Autowired
-    private AuthContext authContext;
+    private final AuthContext authContext;
 
-    public User getUser() {
-        Credential credential = authContext.getCredential(request());
-        return Optional.ofNullable(credential)
-                .map(c -> (User) c.getUserInfo())
-                .orElseThrow(() -> Status.UNAUTHORIZED.instanceError("请先登录"));
+    private final
+    ObjectMapper mapper;
+
+    public HolderKit(RedisTemplate<String, Object> redisTemplate, AuthContext authContext, ObjectMapper mapper) {
+        this.redisTemplate = redisTemplate;
+        this.authContext = authContext;
+        this.mapper = mapper;
     }
 
+    public User getUser()  {
+        Credential credential = authContext.getCredential(request());
+        return Optional.ofNullable(credential)
+                .map(c -> mapper.convertValue(c.getUserInfo(),User.class))
+                .orElse(null);
+    }
 
     /**
      *
