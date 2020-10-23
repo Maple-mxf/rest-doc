@@ -3,5 +3,4 @@ restdoc:
   port: 4321
   service: Mall-Service
 server:
-
   port: 5545

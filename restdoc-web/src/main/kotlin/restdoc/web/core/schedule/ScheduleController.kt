@@ -156,9 +156,11 @@ class ScheduleController @Autowired constructor(scheduleProperties: ScheduleProp
                                  taskId: String?,
                                  invocation: RestWebInvocation): RestWebInvocationResult {
 
-        val request = RemotingCommand.createRequestCommand(RequestCode.SUBMIT_HTTP_PROCESS, null)
+        val request = RemotingCommand.createRequestCommand(RequestCode.INVOKE_API, null)
         request.body = invocation.encode()
         val clientChannelInfo = clientManager.findClient(clientId)
+
+        if (clientChannelInfo == null) Status.BAD_REQUEST.error("找不到对应的客户端$clientId")
 
         val response = remotingServer.invokeSync(clientChannelInfo!!.channel, request,
                 this.httpTaskExecuteTimeout)

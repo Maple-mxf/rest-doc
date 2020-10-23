@@ -1,44 +1,24 @@
 {
-  "127.0.0.1:64992": {
-    "id": "6bfb70d4c8f542bdb57331f3d60cc8ae",
-    "channel": {
-      "registered": true,
-      "active": true,
-      "shutdown": false,
-      "inputShutdown": false,
-      "outputShutdown": false,
-      "open": true,
-      "writable": true
+  "status": "OK",
+  "code": "200",
+  "message": null,
+  "data": {
+    "exceptionMsg": null,
+    "invocation": {
+      "className": "restdoc.client.api.model.RestWebInvocation",
+      "url": "/echo",
+      "method": "GET",
+      "requestHeaders": {},
+      "queryParam": {},
+      "requestBody": {},
+      "uriVariable": {}
     },
-    "clientId": "tcp://127.0.0.1:64992",
-    "language": "JAVA",
-    "version": 1,
-    "lastUpdateTimestamp": 1601185371006,
-    "hostname": "DESKTOP-53RSP17",
-    "osname": "Windows 10",
-    "service": "",
-    "applicationType": "REST_WEB",
-    "serializationProtocol": "http"
-  },
-  "127.0.0.1:64991": {
-    "id": "df8578f2fe2d412bbf76f8d2ef5755b7",
-    "channel": {
-      "registered": true,
-      "active": true,
-      "shutdown": false,
-      "inputShutdown": false,
-      "outputShutdown": false,
-      "open": true,
-      "writable": true
+    "status": 200,
+    "responseHeaders": {},
+    "responseBody": {
+      "msg": "欢迎测试Http服务",
+      "applicationType": "DUBBO"
     },
-    "clientId": "tcp://127.0.0.1:64991",
-    "language": "JAVA",
-    "version": 1,
-    "lastUpdateTimestamp": 1601185371007,
-    "hostname": "DESKTOP-53RSP17",
-    "osname": "Windows 10",
-    "service": "echo-service-provider",
-    "applicationType": "DUBBO",
-    "serializationProtocol": "dubbo"
+    "successful": true
   }
 }

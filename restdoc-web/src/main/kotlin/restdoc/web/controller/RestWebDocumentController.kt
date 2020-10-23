@@ -236,16 +236,16 @@ class RestWebDocumentController {
     fun submitHttpTask(@RequestBody @Valid dto: RequestDto): Result {
         return if (dto.remoteAddress != null) {
 
-            if (!dto.remoteAddress!!.matches(Regex("^([/][a-zA-Z0-9])+[/]?$")))
-                Status.BAD_REQUEST.error("RPC测试请直接输入项目的contextPath")
-
-            // Record history url address
-            maintainHistoryAddress(dto.url, dto.documentId!!)
-
+            /*if (!dto.remoteAddress!!.matches(Regex("^([/][a-zA-Z0-9])+[/]?$")))
+                Status.BAD_REQUEST.error("RPC测试请直接输入项目的contextPath")*/
             rpcExecuteTask(dto)
         } else {
             if (!dto.url.startsWith("http") && !dto.url.startsWith("https"))
                 Status.BAD_REQUEST.error("请填写完整的API请求地址")
+
+            // Record history url address
+            maintainHistoryAddress(dto.url, dto.documentId!!)
+
             outExecuteTask(dto)
         }
     }
@@ -269,7 +269,8 @@ class RestWebDocumentController {
         }
 
         try {
-            val executeResult = scheduleController.syncSubmitRemoteHttpTask(dto.remoteAddress, taskId, invocation)
+            val executeResult = scheduleController
+                    .syncSubmitRemoteHttpTask(dto.remoteAddress!!.replaceFirst("tcp://", ""), taskId, invocation)
             redisTemplate.opsForValue().set(taskId, executeResult)
             redisTemplate.expire(taskId, 1000, TimeUnit.SECONDS)
         } catch (e: Throwable) {
@@ -385,7 +386,8 @@ class RestWebDocumentController {
      */
     @PostMapping("/sync")
     fun syncDocument(@RequestBody dto: SyncApiEmptyTemplateDto): Result {
-        val apiList = APIMemoryUnit.get(ApplicationType.REST_WEB, dto.service, dto.remoteAddress.replace("tcp://", ""))
+        val apiList = APIMemoryUnit.get(ApplicationType.REST_WEB, dto.service,
+                dto.remoteAddress.replace("tcp://", ""))
                 as List<RestWebExposedAPI>
 
         val groupByResourceAPIList = apiList.groupBy { it.controller }.toMap()
