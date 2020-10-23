@@ -4,5 +4,7 @@ import restdoc.client.dubbo.test.model.DuplicatePojo;
 
 public interface DuplicateService {
 
-    DuplicatePojo transfter(String type);
+    /*DuplicatePojo transfter(String type);*/
+
+    DuplicatePojo convert();
 }

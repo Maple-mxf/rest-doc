@@ -1,28 +1,15 @@
 package restdoc.web.controller.rpctest
 
-import com.fasterxml.jackson.databind.node.ObjectNode
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
-import restdoc.client.api.model.DubboInvocation
-import restdoc.client.api.model.ObjectHolder
-import restdoc.remoting.InvokeCallback
-import restdoc.remoting.common.ApplicationType
-import restdoc.remoting.common.DubboExposedAPI
-import restdoc.remoting.common.RequestCode
-import restdoc.remoting.protocol.RemotingCommand
-import restdoc.remoting.protocol.RemotingSerializable
-import restdoc.web.core.ok
-import restdoc.web.core.schedule.ClientExposedAPIManager
-import restdoc.web.core.schedule.RemotingTask
-import restdoc.web.core.schedule.RemotingTaskType
+import restdoc.web.core.schedule.ClientAPIMemoryUnit
 import restdoc.web.core.schedule.ScheduleController
 
 @RestController
 class DubboExposedAPITest {
 
     @Autowired
-    lateinit var clientExposedAPIManager: ClientExposedAPIManager
+    lateinit var clientAPIMemoryUnit: ClientAPIMemoryUnit
 
     @Autowired
     lateinit var scheduleController: ScheduleController

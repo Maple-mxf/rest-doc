@@ -9,7 +9,7 @@ import restdoc.web.base.auth.Verify
 import restdoc.web.core.Result
 import restdoc.web.core.Status
 import restdoc.web.core.ok
-import restdoc.web.core.schedule.ClientExposedAPIManager
+import restdoc.web.core.schedule.ClientAPIMemoryUnit
 import restdoc.web.model.ProjectType
 import restdoc.web.repository.ProjectRepository
 import restdoc.web.service.DubboDocumentService
@@ -22,7 +22,7 @@ class MicroserviceController {
     lateinit var projectRepository: ProjectRepository
 
     @Autowired
-    lateinit var exposedAPIManager: ClientExposedAPIManager
+    lateinit var APIMemoryUnit: ClientAPIMemoryUnit
 
     @Autowired
     lateinit var dubboDocumentService: DubboDocumentService
@@ -36,8 +36,8 @@ class MicroserviceController {
                 projectRepository.findById(projectId).orElseThrow { Status.BAD_REQUEST.instanceError("projectId错误") }
         when (type) {
             ProjectType.DUBBO -> {
-                val apiContext = exposedAPIManager.dubboExposedExposedAPI.keys.first { it.service == service }
-                val apiList = exposedAPIManager.dubboExposedExposedAPI[apiContext]
+                val apiContext = APIMemoryUnit.dubboExposedExposedAPI.keys.first { it.service == service }
+                val apiList = APIMemoryUnit.dubboExposedExposedAPI[apiContext]
                 if (apiList != null) {
                     // Convert Dubbo Exposed API to document
                     dubboDocumentService.sync(projectId = projectId, apiList = apiList)

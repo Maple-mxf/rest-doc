@@ -34,7 +34,7 @@ import java.net.InetSocketAddress
 @Component
 class ScheduleController @Autowired constructor(scheduleProperties: ScheduleProperties,
                                                 private val clientManager: ClientChannelManager,
-                                                private val exposedAPIManager: ClientExposedAPIManager
+                                                private val APIMemoryUnit: ClientAPIMemoryUnit
 ) : CommandLineRunner {
 
     private val log: Logger = LoggerFactory.getLogger(ScheduleController::class.java)
@@ -54,13 +54,20 @@ class ScheduleController @Autowired constructor(scheduleProperties: ScheduleProp
                         callClient(channel)
                     }
 
-                    override fun onChannelException(remoteAddr: String, channel: Channel) {}
-                    override fun onChannelIdle(remoteAddr: String, channel: Channel) {}
+                    override fun onChannelException(remoteAddr: String, channel: Channel) {
+                        // unregisterAPI
+                    }
+                    override fun onChannelIdle(remoteAddr: String, channel: Channel) {
+                        // unregisterAPI
+                    }
                     override fun onChannelClose(remoteAddr: String, channel: Channel) {
-                        clientManager.unregisterClient(RemotingHelper.parseChannelRemoteAddr(channel));
+                        val remoteAddr = RemotingHelper.parseChannelRemoteAddr(channel)
+                        clientManager.unregisterClient(remoteAddr)
+                        APIMemoryUnit.unregisterAPI(APIMemoryUnit.getByClient(remoteAddr))
                     }
                 })
     }
+
 
     private fun callClient(channel: Channel) {
         val getClientInfoRequest =
@@ -104,7 +111,7 @@ class ScheduleController @Autowired constructor(scheduleProperties: ScheduleProp
                         RemotingSerializable.decode(it.responseCommand.body, SpringCloudExposeAPIBody::class.java) as SpringCloudExposeAPIBody
                     }
                 }
-                exposedAPIManager.registerAPI(at, RemotingHelper.parseChannelRemoteAddr(channel), exposedAPIBody.service, exposedAPIBody.apiList)
+                APIMemoryUnit.registerAPI(at, RemotingHelper.parseChannelRemoteAddr(channel), exposedAPIBody.service, exposedAPIBody.apiList)
             }
         }
     }

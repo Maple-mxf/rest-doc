@@ -26,7 +26,7 @@ import restdoc.web.core.Result
 import restdoc.web.core.Status
 import restdoc.web.core.failure
 import restdoc.web.core.ok
-import restdoc.web.core.schedule.ClientExposedAPIManager
+import restdoc.web.core.schedule.ClientAPIMemoryUnit
 import restdoc.web.core.schedule.ScheduleController
 import restdoc.web.model.*
 import restdoc.web.repository.ProjectRepository
@@ -67,7 +67,7 @@ class RestWebDocumentController {
     private lateinit var mapper: ObjectMapper
 
     @Autowired
-    private lateinit var exposedAPIManager: ClientExposedAPIManager
+    private lateinit var APIMemoryUnit: ClientAPIMemoryUnit
 
     @Autowired
     private lateinit var httpTaskExecutor: HttpTaskExecutor
@@ -358,7 +358,7 @@ class RestWebDocumentController {
      */
     @PostMapping("/sync")
     fun syncDocument(@RequestBody dto: SyncApiEmptyTemplateDto): Result {
-        val apiList = exposedAPIManager.get(ApplicationType.REST_WEB, dto.service, dto.remoteAddress.replace("tcp://",""))
+        val apiList = APIMemoryUnit.get(ApplicationType.REST_WEB, dto.service, dto.remoteAddress.replace("tcp://",""))
                 as List<RestWebExposedAPI>
 
         val groupByResourceAPIList = apiList.groupBy { it.controller }.toMap()

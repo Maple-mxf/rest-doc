@@ -10,7 +10,7 @@ import restdoc.remoting.common.ApplicationType
 import restdoc.web.base.auth.Verify
 import restdoc.web.core.Status
 import restdoc.web.core.schedule.ClientChannelManager
-import restdoc.web.core.schedule.ClientExposedAPIManager
+import restdoc.web.core.schedule.ClientAPIMemoryUnit
 
 @Controller
 @Verify
@@ -20,7 +20,7 @@ class MicroserviceViewController {
     lateinit var clientChannelManager: ClientChannelManager
 
     @Autowired
-    lateinit var clientExposedAPIManager: ClientExposedAPIManager
+    lateinit var clientAPIMemoryUnit: ClientAPIMemoryUnit
 
     @GetMapping("/microservice/view/index")
     fun index() = "microservice/index"

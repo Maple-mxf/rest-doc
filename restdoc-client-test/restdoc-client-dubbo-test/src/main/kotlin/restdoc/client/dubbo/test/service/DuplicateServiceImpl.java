@@ -8,11 +8,20 @@ import restdoc.client.dubbo.test.model.DuplicatePojo;
 @Component
 public class DuplicateServiceImpl implements DuplicateService {
 
-    @Override
+    /*@Override
     public DuplicatePojo transfter(String type) {
 
         DuplicatePojo duplicatePojo = new DuplicatePojo();
-        duplicatePojo.setAttribute("Maple");
+        duplicatePojo.setAttribute("Maple-transfter");
+
+        return duplicatePojo;
+    }*/
+
+    @Override
+    public DuplicatePojo convert() {
+
+        DuplicatePojo duplicatePojo = new DuplicatePojo();
+        duplicatePojo.setAttribute("Maple-convert");
 
         return duplicatePojo;
     }
