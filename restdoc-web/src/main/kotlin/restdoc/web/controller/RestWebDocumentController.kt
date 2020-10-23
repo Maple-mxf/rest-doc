@@ -160,11 +160,38 @@ class RestWebDocumentController {
 
         if (dto.documentId == null) return failure(Status.INVALID_REQUEST, "缺少ID参数")
 
+        val oldDocument = restWebDocumentRepository.findById(dto.documentId!!)
+                .orElseThrow { Status.BAD_REQUEST.instanceError("文档不存在") }
+
         dto.url = dto.lookupPath()
         val requestHeaderDescriptor = dto.mapToHeaderDescriptor()
         val requestBodyDescriptor = dto.mapToRequestDescriptor()
         val responseBodyDescriptor = dto.mapToResponseDescriptor()
         val uriVarDescriptor = dto.mapToURIVarDescriptor()
+
+        oldDocument.requestHeaderDescriptor?.forEach {
+            requestHeaderDescriptor
+                    .filter { d -> d.field == it.field }
+                    .forEach { d -> d.description = it.description }
+        }
+
+        oldDocument.requestBodyDescriptor?.forEach {
+            requestBodyDescriptor
+                    .filter { d -> d.path == it.path }
+                    .forEach { d -> d.description = it.description }
+        }
+
+        oldDocument.responseBodyDescriptors?.forEach {
+            responseBodyDescriptor
+                    .filter { d -> d.path == it.path }
+                    .forEach { d -> d.description = it.description }
+        }
+
+        oldDocument.uriVarDescriptors?.forEach {
+            uriVarDescriptor
+                    .filter { d -> d.field == it.field }
+                    .forEach { d -> d.description = it.description }
+        }
 
         val uriVars = uriVarDescriptor.map { it.field to it.value }.toMap()
 
@@ -358,7 +385,7 @@ class RestWebDocumentController {
      */
     @PostMapping("/sync")
     fun syncDocument(@RequestBody dto: SyncApiEmptyTemplateDto): Result {
-        val apiList = APIMemoryUnit.get(ApplicationType.REST_WEB, dto.service, dto.remoteAddress.replace("tcp://",""))
+        val apiList = APIMemoryUnit.get(ApplicationType.REST_WEB, dto.service, dto.remoteAddress.replace("tcp://", ""))
                 as List<RestWebExposedAPI>
 
         val groupByResourceAPIList = apiList.groupBy { it.controller }.toMap()
