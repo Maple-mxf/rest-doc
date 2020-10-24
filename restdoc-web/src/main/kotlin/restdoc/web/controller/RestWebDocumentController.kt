@@ -286,14 +286,15 @@ class RestWebDocumentController {
 
         val bodyMap = JsonProjector(requestBodyDescriptor.map { PathValue(it.path, it.value) }).projectToMap()
 
-        val restWebInvocation = RestWebInvocation().apply {
-            url = dto.lookupPath()
-            method = dto.method
-            requestHeaders = requestHeaderDescriptor.map { bd -> bd.field to bd.value }.toMap().toMutableMap()
-            queryParam = if (dto.queryParams == null) mutableMapOf() else dto.queryParams!!
-            requestBody = bodyMap
-            uriVariable = uriVarDescriptor.map { it.field to it.value }.toMap().toMutableMap()
-        }
+        val restWebInvocation = RestWebInvocation()
+                .apply {
+                    url = dto.lookupPath()
+                    method = dto.method
+                    requestHeaders = requestHeaderDescriptor.map { bd -> bd.field to bd.value }.toMap().toMutableMap()
+                    queryParam = if (dto.queryParams == null) mutableMapOf() else dto.queryParams!!
+                    requestBody = bodyMap
+                    uriVariable = uriVarDescriptor.map { it.field to it.value }.toMap().toMutableMap()
+                }
 
         var invocationResult: InvocationResult
         try {

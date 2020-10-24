@@ -26,12 +26,9 @@
 <script th:src="@{/admin/js/jquery.js}"></script>
 <script th:src="@{/admin/js/util.js}"></script>
 <script type="text/javascript" th:inline="javascript">
-
-
     var tb = null;
     layui.use('table', function () {
         var table = layui.table;
-
         table.render({
             elem: '#test'
             , url: '/restdoc/serviceClient/list?type=REST_WEB'
@@ -50,18 +47,16 @@
                         field: 'remoteAddress', width: 200, title: '服务远程地址', sort: true
                     }
                     ,
-                    {
+                   /* {
                         field: 'osname', width: 200, title: '运行平台'
                     }
-                    ,
+                    ,*/
                     {
-                        field: 'hostname', width: 200, title: '计算机名称'
+                        field: 'hostname', /*width: 200,*/ title: '计算机名称'
                     }
                 ]
             ]
-
         });
-
         tb = table;
     });
 

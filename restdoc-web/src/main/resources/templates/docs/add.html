@@ -154,7 +154,7 @@
     </form>
 </div>
 
-<div id="consolePage"  class="layui-container" style="display: none;width: 400px">
+<div id="consolePage" class="layui-container" style="display: none;width: 400px">
 
 </div>
 
@@ -486,7 +486,7 @@
                 type: 2,
                 title: '请选择运行服务实例',
                 content: '/restdoc/serviceClient/view/list',
-                area: ['1000px', '800px'],
+                area: ['600px', '400px'],
                 btn: ['确定', '取消'],
                 yes: function (index, dom) {
                     var res = window["layui-layer-iframe" + index].getCheckData();
@@ -606,7 +606,7 @@
                     dataType: 'JSON',
                     contentType: 'application/json;charset=utf-8',
                     url: '/restdoc/document/deProject',
-                    data: body,
+                    data: JSON.stringify(body),
                     async: false,
                     success: function (data) {
                         if (data.code === '200') {
@@ -646,29 +646,101 @@
         }
 
         function openConsolePage(data) {
-            // 拼接Table
-            var start = "<table lay-size='sm' style='width: 90%' class='layui-table' lay-skin='nob'><tbody>";
-            var end = "</tbody></table>";
-            start = start + '<tr><td>status</td><td>' + data['status'] + '</td></tr>';
-            start = start + "<tr style='text-align: center'><td>Response Headers</td></tr>";
+            var start = "<div class='layui-collapse'>";
+            var end = "</div>";
 
-            if (data.responseHeaders != null ) {
-                for (const [key, value] of Object.entries(data.responseHeaders)) {
-                    start = start + "<tr><td rowspan='2'>" + key + "</td><td>" + value + "</td></tr>";
+            // General
+            start = start + "  <div class='layui-colla-item'><h2 class='layui-colla-title'>General</h2>" +
+                "<div class='layui-colla-content layui-show'><strong>Status Code:&nbsp;&nbsp;&nbsp;</strong>" + data.status +
+                "<br><strong>Request URL:&nbsp;&nbsp;&nbsp;</strong>" + data.invocation.url +
+                "<br><strong>Request Method:&nbsp;&nbsp;&nbsp;</strong>" + data.invocation.method +
+                "</div></div>";
+
+            // RequestHeader
+            var requestHeaderH5Text ="";
+            if (data.invocation.requestHeaders != null) {
+                for (const [key, value] of Object.entries(data.invocation.requestHeaders)) {
+                    requestHeaderH5Text = requestHeaderH5Text + "<strong>" + key + "&nbsp;&nbsp;&nbsp;</strong>" + value + "<br>";
                 }
             }
-            var table = start + end;
-            $('#consolePage').html(table);
+            start = start + "  <div class='layui-colla-item'><h2 class='layui-colla-title'>Request Headers</h2>" +
+                "<div class='layui-colla-content'>" + requestHeaderH5Text + "</div></div>";
+
+            // URI var
+            var uriVarH5Text = "";
+            if (data.invocation.uriVariable != null) {
+                for (const [key, value] of Object.entries(data.invocation.uriVariable)) {
+                    uriVarH5Text = uriVarH5Text + "<strong>" + key + "&nbsp;&nbsp;&nbsp;</strong>" + value + "<br>";
+                }
+            }
+            start = start + "  <div class='layui-colla-item'><h2 class='layui-colla-title'>URI Variable</h2>" +
+                "<div class='layui-colla-content'>" + uriVarH5Text + "</div></div>";
+
+            // Query Param
+            var queryParamH5Text = "";
+            if (data.invocation.queryParam != null) {
+                for (const [key, value] of Object.entries(data.invocation.queryParam)) {
+                    queryParamH5Text = queryParamH5Text + "<strong>" + key + "&nbsp;&nbsp;&nbsp;</strong>" + value + "<br>";
+                }
+            }
+            start = start + "  <div class='layui-colla-item'><h2 class='layui-colla-title'>Query Param</h2>" +
+                "<div class='layui-colla-content'>" + queryParamH5Text + "</div></div>";
+
+            // RequestBody
+            var requestBodyH5Text = "";
+            if (data.invocation.requestBody != null) {
+                for (const [key, value] of Object.entries(data.invocation.requestBody)) {
+                    requestBodyH5Text = requestBodyH5Text + "<strong>" + key + "&nbsp;&nbsp;&nbsp;</strong>" + value + "<br>";
+                }
+            }
+            start = start + "  <div class='layui-colla-item'><h2 class='layui-colla-title'>Request Body</h2>" +
+                "<div class='layui-colla-content'>" + requestBodyH5Text + "</div></div>";
+
+            // ResponseHeader
+            var responseHeadersH5Text = "";
+            if (data.responseHeaders != null) {
+                for (const [key, value] of Object.entries(data.responseHeaders)) {
+                    responseHeadersH5Text = responseHeadersH5Text + "<strong>" + key + "&nbsp;&nbsp;&nbsp;</strong>" + value + "<br>";
+                }
+            }
+            start = start + "  <div class='layui-colla-item'><h2 class='layui-colla-title'>Response Headers</h2>" +
+                "<div class='layui-colla-content'>" + responseHeadersH5Text + "</div></div>";
+
+            // ResponseBody
+            var responseBodyH5Text = "";
+            if (data.responseBody != null) {
+                var isJSON = false;
+                var isXML = false;
+                for (let i = 0; i < data.responseHeaders['Content-Type'].length; i++) {
+                    if (data.responseHeaders['Content-Type'][i].includes('json')) {
+                        isJSON = true;
+                    } else if (data.responseHeaders['Content-Type'][i].includes('xml')) {
+                        isXML = true;
+                    }
+                }
+                if (isJSON) {
+                    responseBodyH5Text = responseBodyH5Text+ "<pre>"+formatJson(data.responseBody) +"</pre>";
+                }else{
+                    responseBodyH5Text = responseBodyH5Text+ "<pre style='font-size: 17px'>"+data.responseBody +"</pre>";
+                }
+            }
+
+            start = start + "  <div class='layui-colla-item'><h2 class='layui-colla-title'>Response Body</h2>" +
+                "<div class='layui-colla-content'>" + responseBodyH5Text + "</div></div>";
+
+
+            $('#consolePage').html(start + end);
+            element.render('collapse');
 
             layer.open({
                 type: 1,
                 title: '执行结果',
-                scrollbar:false,
+                /*scrollbar: false,*/
                 content: $('#consolePage'),
-                area: ['600px', '800px'],
-                btn: ['记录结果'],
+                area: ['600px', '500px'],
+                btn: ['记录结果','取消'],
                 yes: function (index, doc) {
-                    completeExecuteCallback(data['responseBody']);
+                    completeExecuteCallback(data.responseBody);
                     layer.close(index);
                 }
             });
