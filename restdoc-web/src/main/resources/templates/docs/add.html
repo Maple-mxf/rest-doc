@@ -662,39 +662,47 @@
                 for (const [key, value] of Object.entries(data.invocation.requestHeaders)) {
                     requestHeaderH5Text = requestHeaderH5Text + "<strong>" + key + "&nbsp;&nbsp;&nbsp;</strong>" + value + "<br>";
                 }
+                if (requestHeaderH5Text !== ''){
+                    start = start + "  <div class='layui-colla-item'><h2 class='layui-colla-title'>Request Headers</h2>" +
+                        "<div class='layui-colla-content'>" + requestHeaderH5Text + "</div></div>";
+                }
             }
-            start = start + "  <div class='layui-colla-item'><h2 class='layui-colla-title'>Request Headers</h2>" +
-                "<div class='layui-colla-content'>" + requestHeaderH5Text + "</div></div>";
 
-            // URI var
-            var uriVarH5Text = "";
             if (data.invocation.uriVariable != null) {
+                // URI var
+                var uriVarH5Text = "";
                 for (const [key, value] of Object.entries(data.invocation.uriVariable)) {
                     uriVarH5Text = uriVarH5Text + "<strong>" + key + "&nbsp;&nbsp;&nbsp;</strong>" + value + "<br>";
                 }
+                if (uriVarH5Text !== ''){
+                    start = start + "  <div class='layui-colla-item'><h2 class='layui-colla-title'>URI Variable</h2>" +
+                        "<div class='layui-colla-content'>" + uriVarH5Text + "</div></div>";
+                }
             }
-            start = start + "  <div class='layui-colla-item'><h2 class='layui-colla-title'>URI Variable</h2>" +
-                "<div class='layui-colla-content'>" + uriVarH5Text + "</div></div>";
+
 
             // Query Param
-            var queryParamH5Text = "";
             if (data.invocation.queryParam != null) {
+                var queryParamH5Text = "";
                 for (const [key, value] of Object.entries(data.invocation.queryParam)) {
                     queryParamH5Text = queryParamH5Text + "<strong>" + key + "&nbsp;&nbsp;&nbsp;</strong>" + value + "<br>";
                 }
+                if (queryParamH5Text !== ''){
+                    start = start + "  <div class='layui-colla-item'><h2 class='layui-colla-title'>Query Param</h2>" +
+                        "<div class='layui-colla-content'>" + queryParamH5Text + "</div></div>";
+                }
             }
-            start = start + "  <div class='layui-colla-item'><h2 class='layui-colla-title'>Query Param</h2>" +
-                "<div class='layui-colla-content'>" + queryParamH5Text + "</div></div>";
-
             // RequestBody
-            var requestBodyH5Text = "";
             if (data.invocation.requestBody != null) {
+                var requestBodyH5Text = "";
                 for (const [key, value] of Object.entries(data.invocation.requestBody)) {
                     requestBodyH5Text = requestBodyH5Text + "<strong>" + key + "&nbsp;&nbsp;&nbsp;</strong>" + value + "<br>";
                 }
+                if (requestBodyH5Text !== ''){
+                    start = start + "  <div class='layui-colla-item'><h2 class='layui-colla-title'>Request Body</h2>" +
+                        "<div class='layui-colla-content'>" + requestBodyH5Text + "</div></div>";
+                }
             }
-            start = start + "  <div class='layui-colla-item'><h2 class='layui-colla-title'>Request Body</h2>" +
-                "<div class='layui-colla-content'>" + requestBodyH5Text + "</div></div>";
 
             // ResponseHeader
             var responseHeadersH5Text = "";
@@ -727,14 +735,12 @@
 
             start = start + "  <div class='layui-colla-item'><h2 class='layui-colla-title'>Response Body</h2>" +
                 "<div class='layui-colla-content'>" + responseBodyH5Text + "</div></div>";
-
-
             $('#consolePage').html(start + end);
             element.render('collapse');
 
             layer.open({
                 type: 1,
-                title: '执行结果',
+                title: '测试结果',
                 /*scrollbar: false,*/
                 content: $('#consolePage'),
                 area: ['600px', '500px'],
