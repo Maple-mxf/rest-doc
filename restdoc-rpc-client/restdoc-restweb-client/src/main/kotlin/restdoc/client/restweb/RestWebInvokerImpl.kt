@@ -32,10 +32,12 @@ class RestWebInvokerImpl(environment: Environment, private val restTemplate: Res
         val responseEntity: ResponseEntity<Any>?
         return try {
             responseEntity = restTemplate.exchange(url, HttpMethod.valueOf(t.method), httpEntity, Any::class.java, t.uriVariable)
-
-            RestWebInvocationResult(true, null,
+            val responseHeaders = responseEntity.headers.map { it.key to it.value }.toMap().toMutableMap()
+            RestWebInvocationResult(
+                    true,
+                    null,
                     t, responseEntity.statusCodeValue,
-                    mutableMapOf(),
+                    responseHeaders,
                     responseEntity.body)
 
         } catch (e: RestClientException) {

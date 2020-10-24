@@ -302,7 +302,8 @@ class RestWebDocumentController {
             invocationResult = RestWebInvocationResult().apply {
                 isSuccessful = true
                 status = responseEntity?.statusCodeValue ?: -1
-                responseHeaders = responseEntity?.headers ?: mutableMapOf()
+                responseHeaders = responseEntity?.headers?.map { it.key to it.value }?.toMap()?.toMutableMap()
+                        ?: mutableMapOf()
                 responseBody = responseEntity?.body
                 invocation = restWebInvocation
             }

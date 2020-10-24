@@ -154,6 +154,10 @@
     </form>
 </div>
 
+<div id="consolePage"  class="layui-container" style="display: none;width: 400px">
+
+</div>
+
 <script th:src="@{/layui/layui.js}"></script>
 <script th:src="@{/admin/js/jquery.js}"></script>
 <script th:src="@{/admin/js/doc/content.js}"></script>
@@ -526,7 +530,8 @@
                         if (invocationResult != null) {
                             if (invocationResult['status'] === 200) {
                                 if (invocationResult['responseBody'] != null) {
-                                    completeExecuteCallback(JSON.stringify(invocationResult['responseBody']))
+                                    // completeExecuteCallback(JSON.stringify(invocationResult['responseBody']))
+                                    openConsolePage(invocationResult)
                                 }
                             } else {
                                 layer.msg(invocationResult['exceptionMsg'])
@@ -638,6 +643,35 @@
             }
             form.render();
             element.render('collapse');
+        }
+
+        function openConsolePage(data) {
+            // 拼接Table
+            var start = "<table lay-size='sm' style='width: 90%' class='layui-table' lay-skin='nob'><tbody>";
+            var end = "</tbody></table>";
+            start = start + '<tr><td>status</td><td>' + data['status'] + '</td></tr>';
+            start = start + "<tr style='text-align: center'><td>Response Headers</td></tr>";
+
+            if (data.responseHeaders != null ) {
+                for (const [key, value] of Object.entries(data.responseHeaders)) {
+                    start = start + "<tr><td rowspan='2'>" + key + "</td><td>" + value + "</td></tr>";
+                }
+            }
+            var table = start + end;
+            $('#consolePage').html(table);
+
+            layer.open({
+                type: 1,
+                title: '执行结果',
+                scrollbar:false,
+                content: $('#consolePage'),
+                area: ['600px', '800px'],
+                btn: ['记录结果'],
+                yes: function (index, doc) {
+                    completeExecuteCallback(data['responseBody']);
+                    layer.close(index);
+                }
+            });
         }
 
         function getExecuteResult(taskId) {
@@ -769,83 +803,6 @@
             element.render('collapse');
         }
     });
-
-
-    function addResponseParamDescBtn(obj) {
-        var input = $($(obj).parent()).parent().find("textarea[name='responseFieldDescription']");
-        var desc = $(input[0]).val();
-        $("#L_content").val(desc);
-        msg.open({
-            type: 1,
-            title: '字段描述',
-            content: $('#desc-hidden-div'),
-            area: ['600px', '400px'],
-            btn: ['确定'],
-            yes: function (index, layero) {
-                var res = $("#L_content").val();
-                $(input[0]).val(res);
-                $('#L_content').val("");
-                msg.close(index)
-            }
-        });
-    }
-
-    function addRequestParamDescBtn(obj) {
-        var input = $($(obj).parent()).parent().find("textarea[name='requestFieldDescription']");
-        var desc = $(input[0]).val();
-        $("#L_content").val(desc);
-        msg.open({
-            type: 1,
-            title: '字段描述',
-            content: $('#desc-hidden-div'),
-            area: ['600px', '400px'],
-            btn: ['确定'],
-            yes: function (index, layero) {
-                var res = $("#L_content").val();
-                $(input[0]).val(res);
-                $('#L_content').val("");
-                msg.close(index)
-            }
-        });
-    }
-
-    function addHeaderDescBtn(obj) {
-        var input = $($(obj).parent()).parent().find("textarea[name='headerDescription']");
-        var desc = $(input[0]).val();
-        $("#L_content").val(desc);
-        msg.open({
-            type: 1,
-            title: '字段描述',
-            content: $('#desc-hidden-div'),
-            area: ['600px', '400px'],
-            btn: ['确定'],
-            yes: function (index, layero) {
-                var res = $("#L_content").val();
-                $(input[0]).val(res);
-                $('#L_content').val("");
-                msg.close(index)
-            }
-        });
-    }
-
-    function addUriVarDescBtn(obj) {
-        var input = $($(obj).parent()).parent().find("textarea[name='uriDesc']");
-        var desc = $(input[0]).val();
-        $("#L_content").val(desc);
-        msg.open({
-            type: 1,
-            title: '字段描述',
-            content: $('#desc-hidden-div'),
-            area: ['600px', '400px'],
-            btn: ['确定'],
-            yes: function (index, layero) {
-                var res = $("#L_content").val();
-                $(input[0]).val(res);
-                $('#L_content').val("");
-                msg.close(index)
-            }
-        });
-    }
 
     function deleteResponseBodyBtn(obj) {
         var parent = obj.parentNode.parentNode.parentNode;
