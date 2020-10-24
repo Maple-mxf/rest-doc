@@ -16,6 +16,30 @@
         <module>restdoc-bom</module>
     </modules>
 
+    <licenses>
+        <license>
+            <name>Server Side Public License</name>
+            <url>https://github.com/Open-source-sharing/REST-doc</url>
+            <distribution>repo</distribution>
+            <comments>A not business-friendly OSS license</comments>
+        </license>
+    </licenses>
+    <scm>
+        <url>https://github.com/Open-source-sharing/REST-doc</url>
+        <connection>https://github.com/Open-source-sharing/REST-doc.git</connection>
+    </scm>
+    <developers>
+        <developer>
+            <name>Maple</name>
+            <id>Maple</id>
+            <email>m17793873123@163.com</email>
+            <roles>
+                <role>Developer</role>
+            </roles>
+            <timezone>+8</timezone>
+        </developer>
+    </developers>
+
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
