@@ -24,12 +24,12 @@
 <input type="hidden" name="projectId" id="projectId" th:value="${projectId}"/>
 <div class="layui-fluid" style="margin-top: 10px">
     <div class="layui-row">
-        <div class="layui-col-md4" id="command-div">
+        <!--<div class="layui-col-md4" id="command-div">
                <pre id="test-result" class="common-command" style="height: 700px;">
             </pre>
-        </div>
+        </div>-->
 
-        <div class="layui-col-md8">
+        <div class="layui-col-md10">
             <form class="layui-form layui-form-pane" action="" id="request_form">
                 <fieldset class="layui-elem-field site-demo-button" style="margin-top: 10px;">
                     <div class="layui-form-item">
@@ -52,15 +52,15 @@
                                    class="layui-input">
                         </div>
 
-                        <button class="layui-btn" style="margin-left: 23%;float: left" lay-submit
+                        <!--<button class="layui-btn" style="margin-left: 23%;float: left" lay-submit
                                 lay-filter="rpcExecute">
                             RPC远程调试
-                        </button>
-                        <button class="layui-btn" style="margin-left: 10px;float: left" lay-submit lay-filter="execute">
-                            外网调试
+                        </button>-->
+                        <button class="layui-btn" style="margin-left: 23%;float: left" lay-submit lay-filter="execute">
+                            <i class="layui-icon layui-icon-triangle-r" style="font-size: 17px; color: white;"></i>调试
                         </button>
                         <button class="layui-btn" lay-submit lay-filter="save">
-                            保存文档
+                            <i class="layui-icon layui-icon-email" style="font-size: 18px; color: white;"></i> 保存
                         </button>
                     </div>
                 </fieldset>
@@ -139,14 +139,19 @@
                 </div>
             </form>
         </div>
-
     </div>
-
 </div>
-<div id="desc-hidden-div" style="display: none">
-    <textarea id="L_content" name="content" required lay-verify="required" placeholder="请输入字段备注"
-              class="layui-textarea editor">
-</textarea>
+
+<div id="testMode" style="display: none">
+    <form class="layui-form" action="">
+        <div class="layui-form-item">
+            <label class="layui-form-label">调试模式选择</label>
+            <div class="layui-input-block">
+                <input type="radio" name="executeMode" value="out" title="外网调试" checked>
+                <input type="radio" name="executeMode" value="rpc" title="RPC远程调试">
+            </div>
+        </div>
+    </form>
 </div>
 
 <script th:src="@{/layui/layui.js}"></script>
@@ -305,12 +310,15 @@
             $("#header-fieldset").append(oneheaderline);
             form.render();
         });
+
         function addRequestParamInput() {
             $("#body-fieldset").append(oneline);
         }
+
         function addResponseParamInput() {
             $("#response-fieldset").append(responseoneline);
         }
+
         function clearResponseParamInput() {
             var all_input_line = $("#response-fieldset").children(".one-response-body-line");
             var line_length = all_input_line.length;
@@ -323,6 +331,7 @@
                 }
             }
         }
+
         function clearRequestParamInput() {
             var all_input_line = $("#body-fieldset").children(".multi-request-body");
             var line_length = all_input_line.length;
@@ -359,23 +368,17 @@
                 map['description'] = easyeditor.content(map['description'])
             }
             var method;
-
             var did = $("#documentId").val();
 
             map["projectId"] = projectId;
             map["documentId"] = did;
             var isNewDoc = true;
-
-            console.info(did);
-
             if (did === undefined || did === "") {
                 method = "POST"
             } else {
                 method = "PUT";
                 isNewDoc = false;
             }
-
-            console.info(isNewDoc);
 
             if (isNewDoc) {
                 layer.open({
@@ -453,7 +456,27 @@
             }
             return false;
         });
-        form.on('submit(rpcExecute)', function (data) {
+
+        form.on('submit(execute)', function (data) {
+            layer.open({
+                type: 1,
+                content: $('#testMode'),
+                title: '调试模式选择',
+                btn: ['确定', '取消'],
+                area: ['300px', '200px'],
+                yes: function (index, layero) {
+                    if ("out" === $("input[name='executeMode']:checked").val()) {
+                        outExecute(data);
+                    } else {
+                        rpcExecute(data);
+                    }
+                    layer.close(index);
+                }
+            });
+            return false;
+        });
+
+        function rpcExecute(data) {
             var map = getFormData(data.field);
             layer.open({
                 type: 2,
@@ -500,12 +523,12 @@
                             if (invocationResult != null) break;
                         }
 
-                        if (invocationResult != null){
-                            if (invocationResult['status'] === 200){
+                        if (invocationResult != null) {
+                            if (invocationResult['status'] === 200) {
                                 if (invocationResult['responseBody'] != null) {
                                     completeExecuteCallback(JSON.stringify(invocationResult['responseBody']))
                                 }
-                            }else{
+                            } else {
                                 layer.msg(invocationResult['exceptionMsg'])
                             }
                         }
@@ -513,20 +536,15 @@
                     layer.close(index)
                 }
             });
-            return false;
-        });
+        }
 
-        form.on('submit(execute)', function (data) {
+        function outExecute(data) {
             var map = getFormData(data.field);
             if (!/^https?:\/\/.+/.test(map['url'])) {
                 layer.msg("请填写完整的URL地址，缺少IP地址端口或者域名")
-            }
-
-            else{
+            } else {
                 map['projectId'] = $("#projectId").val();
                 var httpTaskId = null;
-                $('pre').html("Http Task Executing; Please waiting...\n");
-
                 $.ajax({
                     type: 'POST',
                     dataType: 'JSON',
@@ -553,40 +571,30 @@
                 });
 
                 if (httpTaskId != null) {
-                    var responseBody = null;
+                    var invocationResult = null;
                     for (let i = 0; i < 100; i++) {
                         var executeResult = getExecuteResult(httpTaskId);
                         globalExecuteResult = executeResult;
 
-                        responseBody = executeResult['data']['responseBody'];
+                        invocationResult = executeResult['data'];
+                        if (invocationResult != null) break;
+                    }
 
-                        if (executeResult['code'] === "200") {
-                            $("pre").append("url : " + executeResult['data']['url'] + '\n')
-                            $("pre").append("status code : " + executeResult['data']['status'] + '\n\n')
-                            $("pre").append("request header : \n" + formatJson(executeResult['data']['requestHeaders']) + '\n\n')
-                            $("pre").append("request param : \n" + formatJson(executeResult['data']['requestBody']) + '\n\n')
-                            $("pre").append("response header : \n" + formatJson(executeResult['data']['responseHeader']) + '\n\n')
-                            $("pre").append("response body : \n" + formatJson(executeResult['data']['responseBody']))
-                            break;
+                    if (invocationResult != null) {
+                        if (invocationResult['status'] === 200) {
+                            if (invocationResult['responseBody'] != null) {
+                                completeExecuteCallback(JSON.stringify(invocationResult))
+                            }
                         } else {
-                            console.info(data)
+                            layer.msg(invocationResult['exceptionMsg'])
                         }
                     }
-
-                    if (responseBody != null) {
-                        completeExecuteCallback(JSON.stringify(responseBody))
-                    }
-                    $('pre').append("<br>Execute Complete")
                 }
             }
-
-            return false;
-        });
-
+        }
 
         function completeExecuteCallback(body) {
-            console.info('completeExecuteCallback');
-            if (body != null){
+            if (body != null) {
                 $("#response-fieldset").addClass("layui-show");
                 $.ajax({
                     type: 'POST',
@@ -862,8 +870,6 @@
         var children = obj.parentNode.parentNode;
         parent.removeChild(children);
     }
-
-
 </script>
 </body>
 </html>
