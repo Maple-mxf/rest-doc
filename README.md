@@ -6,6 +6,7 @@
 [4 快速开始](#快速开始)<br/>
 [5 后续支持](#后续支持)<br/>
 [6 RESTdoc功能展示](#RESTdoc功能展示)<br/>
+[7 快速docker安装](#快速docker安装)<br/>
 
 ## 开发背景
 在软件开发中时常遇到以下的问题
@@ -90,10 +91,5 @@ web/springcloud 文档生成/测试/导入概览图
 ![avatar](https://github.com/Overman-mxf/rest-doc/blob/master/static/img/http-test.png?raw=true)
 ![avatar](https://github.com/Overman-mxf/rest-doc/blob/master/static/img/code-gen.png?raw=true)
 
-
-### RESTdoc功能展示
-dubbo 文档生成/测试/导入概览图
-![avatar](https://github.com/Overman-mxf/rest-doc/blob/master/static/img/dubbodoc-overview.png?raw=true)
-![avatar](https://github.com/Overman-mxf/rest-doc/blob/master/static/img/dubbo-client.png?raw=true)
-![avatar](https://github.com/Overman-mxf/rest-doc/blob/master/static/img/dubbo-test.png?raw=true)
-![avatar](https://github.com/Overman-mxf/rest-doc/blob/master/static/img/dubbo-test-result.png?raw=true)
+### 快速docker安装
+```docker pull registry.cn-beijing.aliyuncs.com/opensource-sharing/restdoc-console:1.0preview```
