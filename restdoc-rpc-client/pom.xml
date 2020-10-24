@@ -4,13 +4,15 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>rest-doc</artifactId>
-        <groupId>restdoc</groupId>
-        <version>1.0-SNAPSHOT</version>
+        <groupId>com.github.open-source-sharing</groupId>
+        <version>1.0preview</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>restdoc-rpc-client</artifactId>
+    <version>1.0preview</version>
     <packaging>pom</packaging>
+
     <modules>
         <module>restdoc-dubbo-client</module>
         <module>restdoc-client-api</module>
