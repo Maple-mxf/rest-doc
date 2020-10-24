@@ -3,22 +3,41 @@
   "code": "200",
   "message": null,
   "data": {
-    "exceptionMsg": null,
+    "exceptionMsg": "NotFound",
     "invocation": {
       "className": "restdoc.client.api.model.RestWebInvocation",
-      "url": "/echo",
-      "method": "GET",
-      "requestHeaders": {},
+      "url": "/cloudwebsite/api/{componentId}",
+      "method": "POST",
+      "requestHeaders": {
+        "Content-Type": [
+          "application/json;utf-8",
+          "application/xml"
+        ],
+        "Host": [
+          "localhost"
+        ]
+      },
       "queryParam": {},
-      "requestBody": {},
-      "uriVariable": {}
+      "requestBody": {
+        "footer": {
+          "style": "..."
+        },
+        "header": {
+          "style": "..."
+        },
+        "body": {
+          "style": "..."
+        },
+        "nodeId": "747646353965846528",
+        "platform": "PC"
+      },
+      "uriVariable": {
+        "componentId": "componentIdValue"
+      }
     },
-    "status": 200,
+    "status": 404,
     "responseHeaders": {},
-    "responseBody": {
-      "msg": "欢迎测试Http服务",
-      "applicationType": "DUBBO"
-    },
-    "successful": true
+    "responseBody": null,
+    "successful": false
   }
 }

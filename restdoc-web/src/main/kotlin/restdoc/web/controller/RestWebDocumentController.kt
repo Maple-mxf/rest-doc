@@ -15,6 +15,8 @@ import org.springframework.data.mongodb.core.query.Update
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.http.HttpMethod
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.client.HttpClientErrorException
+import org.springframework.web.client.HttpServerErrorException
 import restdoc.client.api.model.InvocationResult
 import restdoc.client.api.model.RestWebInvocation
 import restdoc.client.api.model.RestWebInvocationResult
@@ -235,17 +237,12 @@ class RestWebDocumentController {
     @PostMapping("/httpTask/submit")
     fun submitHttpTask(@RequestBody @Valid dto: RequestDto): Result {
         return if (dto.remoteAddress != null) {
-
-            /*if (!dto.remoteAddress!!.matches(Regex("^([/][a-zA-Z0-9])+[/]?$")))
-                Status.BAD_REQUEST.error("RPC测试请直接输入项目的contextPath")*/
             rpcExecuteTask(dto)
         } else {
             if (!dto.url.startsWith("http") && !dto.url.startsWith("https"))
                 Status.BAD_REQUEST.error("请填写完整的API请求地址")
-
             // Record history url address
             maintainHistoryAddress(dto.url, dto.documentId!!)
-
             outExecuteTask(dto)
         }
     }
@@ -313,13 +310,24 @@ class RestWebDocumentController {
             redisTemplate.opsForValue().set(taskId, invocationResult)
             redisTemplate.expire(taskId, 1000, TimeUnit.SECONDS)
         } catch (e: Throwable) {
-            invocationResult = RestWebInvocationResult().apply {
-                isSuccessful = false
-                exceptionMsg = e.message
-                status = -1
-                responseHeaders = mutableMapOf()
-                responseBody = null
-                invocation = restWebInvocation
+            invocationResult = when (e) {
+                is HttpServerErrorException.BadGateway -> RestWebInvocationResult(false, "BadGateway", restWebInvocation, e.rawStatusCode, mutableMapOf(), null)
+                is HttpClientErrorException.BadRequest -> RestWebInvocationResult(false, "BadRequest", restWebInvocation, e.rawStatusCode, mutableMapOf(), null)
+                is HttpClientErrorException.Conflict -> RestWebInvocationResult(false, "Conflict", restWebInvocation, e.rawStatusCode, mutableMapOf(), null)
+                is HttpClientErrorException.Forbidden -> RestWebInvocationResult(false, "Forbidden", restWebInvocation, e.rawStatusCode, mutableMapOf(), null)
+                is HttpServerErrorException.GatewayTimeout -> RestWebInvocationResult(false, "GatewayTimeout", restWebInvocation, e.rawStatusCode, mutableMapOf(), null)
+                is HttpClientErrorException.Gone -> RestWebInvocationResult(false, "Gone", restWebInvocation, e.rawStatusCode, mutableMapOf(), null)
+                is HttpClientErrorException.NotFound -> RestWebInvocationResult(false, "NotFound", restWebInvocation, e.rawStatusCode, mutableMapOf(), null)
+                is HttpClientErrorException.MethodNotAllowed -> RestWebInvocationResult(false, "MethodNotAllowed", restWebInvocation, e.rawStatusCode, mutableMapOf(), null)
+                is HttpClientErrorException.NotAcceptable -> RestWebInvocationResult(false, "NotAcceptable", restWebInvocation, e.rawStatusCode, mutableMapOf(), null)
+                is HttpClientErrorException.UnsupportedMediaType -> RestWebInvocationResult(false, "UnsupportedMediaType", restWebInvocation, e.rawStatusCode, mutableMapOf(), null)
+                is HttpClientErrorException.UnprocessableEntity -> RestWebInvocationResult(false, "UnprocessableEntity", restWebInvocation, e.rawStatusCode, mutableMapOf(), null)
+                is HttpClientErrorException.TooManyRequests -> RestWebInvocationResult(false, "TooManyRequests", restWebInvocation, e.rawStatusCode, mutableMapOf(), null)
+                is HttpClientErrorException.Unauthorized -> RestWebInvocationResult(false, "Unauthorized", restWebInvocation, e.rawStatusCode, mutableMapOf(), null)
+                is HttpServerErrorException.InternalServerError -> RestWebInvocationResult(false, "InternalServerError", restWebInvocation, e.rawStatusCode, mutableMapOf(), null)
+                is HttpServerErrorException.NotImplemented -> RestWebInvocationResult(false, "NotImplemented", restWebInvocation, e.rawStatusCode, mutableMapOf(), null)
+                is HttpServerErrorException.ServiceUnavailable -> RestWebInvocationResult(false, "ServiceUnavailable", restWebInvocation, e.rawStatusCode, mutableMapOf(), null)
+                else -> RestWebInvocationResult(false, "未知错误${e.message}", restWebInvocation, -1, mutableMapOf(), null)
             }
 
             redisTemplate.opsForValue().set(taskId, invocationResult)
