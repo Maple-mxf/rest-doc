@@ -48,10 +48,11 @@ open class DubboDocumentServiceImpl : DubboDocumentService {
             val resourceExist = resourceRepository.existsById(resourceId)
 
             if (!resourceExist) {
+                val simpleName = api.name.split('.').last()
                 val resource = Resource(
                         id = resourceId,
                         tag = api.name,
-                        name = api.name,
+                        name = simpleName,
                         pid = ROOT_NAV.id,
                         projectId = projectId,
                         createTime = now(),

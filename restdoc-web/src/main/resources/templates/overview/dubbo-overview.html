@@ -28,7 +28,18 @@
 
 </head>
 <body>
-<div th:include="nav::nav"></div>
+<!--<div th:include="nav::nav"></div>-->
+<div class="layui-row" style="width: 100%">
+    <ul class="layui-nav layui-bg-green" id="navigation" lay-filter="" style="font-size: 17px">
+        <li class="layui-nav-item">
+            <a href="/restdoc/project/view"> <i class="layui-icon layui-icon-left"
+                                                style="font-size: 17px;/*margin-top: 5px;*/ color: white;"></i>&nbsp;返回项目列表</a>
+        </li>
+        <li class="layui-nav-item" th:text="${projectName}"></li>
+    </ul>
+</div>
+
+
 <input type="hidden" id="projectId" th:value="${projectId}">
 
 

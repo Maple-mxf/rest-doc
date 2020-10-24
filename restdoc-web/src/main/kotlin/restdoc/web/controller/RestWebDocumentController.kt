@@ -405,12 +405,12 @@ class RestWebDocumentController {
         for (controller in groupByResourceAPIList.keys) {
             val resourceId = controller.hashCode().toString()
             val resourceExist = resourceRepository.existsById(resourceId)
-
+            val simpleName = controller.split('.').last()
             if (!resourceExist) {
                 val resource = Resource(
                         id = resourceId,
                         tag = controller,
-                        name = controller,
+                        name = simpleName,
                         pid = ROOT_NAV.id,
                         projectId = dto.projectId,
                         createTime = now(),
@@ -446,7 +446,6 @@ class RestWebDocumentController {
                 }
             }
         }
-
         return ok()
     }
 

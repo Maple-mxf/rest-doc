@@ -14,12 +14,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-/**
- * The RemotingCommand provided common communicate data format
- * <p>
- * <p>
- * RemotingCommand is The request && response
- */
 public class RemotingCommand {
 
     public static final String SERIALIZE_TYPE_PROPERTY = "restdoc.serialize.type";

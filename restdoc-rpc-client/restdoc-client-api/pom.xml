@@ -30,9 +30,9 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>restdoc</groupId>
             <artifactId>restdoc-remoting</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <groupId>com.github.open-source-sharing</groupId>
+            <version>1.0preview</version>
         </dependency>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>

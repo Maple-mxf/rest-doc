@@ -527,13 +527,8 @@
                         }
 
                         if (invocationResult != null) {
-                            if (invocationResult['status'] === 200) {
-                                if (invocationResult['responseBody'] != null) {
-                                    // completeExecuteCallback(JSON.stringify(invocationResult['responseBody']))
-                                    openConsolePage(invocationResult)
-                                }
-                            } else {
-                                layer.msg(invocationResult['exceptionMsg'])
+                            if (invocationResult['responseBody'] != null) {
+                                openConsolePage(invocationResult)
                             }
                         }
                     }
@@ -585,12 +580,8 @@
                     }
 
                     if (invocationResult != null) {
-                        if (invocationResult['status'] === 200) {
-                            if (invocationResult['responseBody'] != null) {
-                                completeExecuteCallback(JSON.stringify(invocationResult))
-                            }
-                        } else {
-                            layer.msg(invocationResult['exceptionMsg'])
+                        if (invocationResult['responseBody'] != null) {
+                            completeExecuteCallback(JSON.stringify(invocationResult))
                         }
                     }
                 }

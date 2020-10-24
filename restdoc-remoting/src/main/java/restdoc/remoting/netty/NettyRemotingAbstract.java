@@ -100,22 +100,6 @@ public abstract class NettyRemotingAbstract {
         this.nettyEventExecutor.putNettyEvent(event);
     }
 
-    /**
-     * Entry of incoming command processing.
-     *
-     * <p>
-     * <strong>Note:</strong>
-     * The incoming remoting command may be
-     * <ul>
-     * <li>An inquiry request from a remote peer component;</li>
-     * <li>A response to a previous request issued by this very participant.</li>
-     * </ul>
-     * </p>
-     *
-     * @param ctx Channel handler context.
-     * @param msg incoming remoting command.
-     * @throws Exception if there were any error while processing the incoming command.
-     */
     public void processMessageReceived(ChannelHandlerContext ctx, RemotingCommand msg) throws Exception {
         final RemotingCommand cmd = msg;
         if (cmd != null) {
