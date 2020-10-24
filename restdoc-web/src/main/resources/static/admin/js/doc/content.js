@@ -41,8 +41,8 @@ var oneline = "        <div class=\"layui-form-item one-line multi-request-body\
     "                </div>\n" +
     "            </div>\n" +
     "            <div class=\"layui-inline\">\n" +
-    "                <button title='删除当前字段' type=\"button\" class=\"layui-btn layui-btn-sm layui-btn-primary\" style=\"margin-left: 10px\"\n" +
-    "                        onclick=\"deleteRequestBodyBtn(this)\">\n" +
+    "                <button title='删除当前字段' type=\"button\" class=\"layui-btn layui-btn-sm layui-btn-primary\" style=\"margin-left: 30px\"\n" +
+    "                        onclick=\"                                                  (this)\">\n" +
     "                    <i class=\"layui-icon layui-icon-subtraction\" style=\"font-size: 30px; color: black;\"></i></button>" +
 
 
