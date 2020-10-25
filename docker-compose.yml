@@ -11,19 +11,18 @@ services:
       MONGO_INITDB_ROOT_USERNAME: front_biz
       MONGO_INITDB_ROOT_PASSWORD: qmbxfrontbizStorage
       MONGO_INITDB_DATABASE: non_standard
-    command: mongod --auth true
+    command: --auth
     ports:
       - 27017:27017
     volumes:
       - mongodb_data_container:/data/db
       - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
-  service:
+  restdoc-console:
     image: registry.cn-beijing.aliyuncs.com/opensource-sharing/restdoc-console:1.0.RELEASE
-      container_name: restdoc-console
-      ports:
-        - "8432:8432"
-      depends_on:
-        - mongodb_container
-        - redis
+    ports:
+      - "8432:8432"
+    depends_on:
+      - mongodb_container
+      - redis
 volumes:
   mongodb_data_container:
