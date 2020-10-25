@@ -1,17 +1,22 @@
+# author:Maple
+# date: 2020/10/25
 version: '3.7'
 services:
   redis:
     image: 'redis:4-alpine'
     command: redis-server --requirepass overman@@2020 --bind 0.0.0.0
     ports:
-      - '6377:6377'
-  mongodb_container:
-    image: mongo:4.2.0
+      - 6377:6377
+    hostname: redis
+  mongodb:
+    image: mongo:4.0.10
+    hostname: mongodb
     environment:
       MONGO_INITDB_ROOT_USERNAME: front_biz
       MONGO_INITDB_ROOT_PASSWORD: qmbxfrontbizStorage
       MONGO_INITDB_DATABASE: non_standard
-    command: --auth
+    command: [--auth]
+    restart: always
     ports:
       - 27017:27017
     volumes:
@@ -20,9 +25,12 @@ services:
   restdoc-console:
     image: registry.cn-beijing.aliyuncs.com/opensource-sharing/restdoc-console:1.0.RELEASE
     ports:
-      - "8432:8432"
+      - 8432:8432
+    environment:
+      REDIS-HOST: redis
+      MONGO-HOST: mongodb
     depends_on:
-      - mongodb_container
+      - mongodb
       - redis
 volumes:
   mongodb_data_container:

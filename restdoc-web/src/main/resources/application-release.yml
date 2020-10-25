@@ -15,7 +15,7 @@ spring:
 
   redis:
     database: 10
-    host: 127.0.0.1
+    host: ${REDIS-HOST}
     lettuce:
       pool:
         max-active: 200   #最大连接数据库连接数,设 0 为没有限制
@@ -25,12 +25,20 @@ spring:
       shutdown-timeout: 100ms
     password: 'overman@@2020'
     port: 6377
-
   data:
     mongodb:
-      uri: mongodb://front_biz:qmbxfrontbizStorage@127.0.0.1:27017/non_standard
-      authenticationDatabase: non_standard
+      authentication-database: non_standard
+      username: front_biz
+      password: qmbxfrontbizStorage
       database: non_standard
+      host: ${MONGO-HOST}
+      port: 6377
+
+#  data:
+#    mongodb:
+#      uri: mongodb://front_biz:qmbxfrontbizStorage@${MONGO-HOST}:27017/non_standard
+#      authenticationDatabase: non_standard
+#      database: non_standard
 
 restdoc:
   schedule:
