@@ -9,7 +9,7 @@ curl -LJO https://github.com/Open-source-sharing/REST-doc/blob/master/docker-com
 curl -LJO https://github.com/Open-source-sharing/REST-doc/blob/master/mongo-init.js
 ```
 
-2 安装RESTdoc-console
+2 安装RESTdoc-console并且后台启动
 ```
 docker-compose up -d
 ```
