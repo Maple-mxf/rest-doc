@@ -1,7 +1,9 @@
 
 # 前提：安装docker和docker-compose
 
-0 配置docker加速器您可以通过修改daemon配置文件/etc/docker/daemon.json来使用加速器
+-1 [安装docker和docker-compose](https://github.com/Open-source-sharing/REST-doc/blob/master/docker-install.md "安装docker和docker-compose")
+
+0 配置docker加速器您可以通过修改daemon配置文件/etc/docker/daemon.json来使用加速器（可选步骤）
 ```
 sudo mkdir -p /etc/docker
 sudo tee /etc/docker/daemon.json <<-'EOF'
