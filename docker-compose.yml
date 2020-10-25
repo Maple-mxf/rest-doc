@@ -1,15 +1,18 @@
-version: '1.0.RELEASE'
+version: '3'
 services:
-  web:
-    build: .
-    ports:
-    - "5000:5000"
-      volumes:
-    - .:/code
-      - logvolume01:/var/log
-      links:
-    - redis
   redis:
-    image: redis
-volumes:
-  logvolume01: {}
+    image: "registry.cn-hangzhou.aliyuncs.com/redisl/redis"
+    container_name: "redis"
+    restart: unless-stopped
+    command: sh -c 'java -Xms1g -Xmx1g -cp /app/resources:/app/classes:/app/libs/* com.bolingcavalry.waitforitdemo.ServiceApplication'
+  mongodb:
+    image: "registry.cn-hangzhou.aliyuncs.com/zhangzihong/mongodb"
+    restart: unless-stopped
+  service:
+    image: "registry.cn-beijing.aliyuncs.com/opensource-sharing/restdoc-console:1.0.RELEASE"
+      container_name: restdoc-console
+      restart: unless-stopped
+      command: sh -c 'java -Xms1g -Xmx1g -cp /app/resources:/app/classes:/app/libs/* com.bolingcavalry.waitforitdemo.ServiceApplication'
+      depends_on:
+        - mongodb
+        - redis
