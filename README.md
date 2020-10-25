@@ -7,6 +7,7 @@
 [RESTdoc的架构图](#RESTdoc的架构图) <br/>
 [快速安装RESTdoc-console](#快速安装RESTdoc-console) <br/>
 [快速接入你的应用](#快速接入你的应用) <br/>
+[RESTdoc-console内置账户](#RESTdoc-console内置账户) <br/>
 
 ## RESTdoc的工作模式
 RESTdoc分为两个模块，RESTdoc-console和RESTdoc-client，您可以选择只使用RESTdoc-console模块，RESTdoc-console跟传统的showdoc其实是
@@ -50,6 +51,10 @@ restdoc.port: 4321   # 固定端口
 ```
 
 3 启动你的应用
+
+## RESTdoc-console内置账户
+账户：Maple <br>
+密码：Maple
 
 
 
