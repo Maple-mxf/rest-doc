@@ -1,6 +1,19 @@
 
 # 前提：安装docker和docker-compose
 
+0 配置docker加速器您可以通过修改daemon配置文件/etc/docker/daemon.json来使用加速器
+```
+sudo mkdir -p /etc/docker
+sudo tee /etc/docker/daemon.json <<-'EOF'
+{
+  "registry-mirrors": ["https://hksq8cy4.mirror.aliyuncs.com"]
+}
+EOF
+sudo systemctl daemon-reload
+sudo systemctl restart docker
+```
+
+
 1 下载docker-compose.yml和初始化数据文件
 ```
 cd ~
