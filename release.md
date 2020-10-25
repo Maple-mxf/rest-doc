@@ -3,7 +3,7 @@
 [RESTdoc的工作模式](#RESTdoc的工作模式) <br/>
 [RESTdoc的架构图](#RESTdoc的架构图) <br/>
 [快速安装RESTdoc-console](#快速安装RESTdoc-console) <br/>
-[快速接入你的应用](#快速接入你的应用-console) <br/>
+[快速接入你的应用](#快速接入你的应用) <br/>
 
 ## RESTdoc是什么?
 RESTdoc是一款提升研发效能的文档软件，集测试与文档生成于一体，快速导入应用的Http API或者RPC API来快速生成文档。
@@ -18,11 +18,36 @@ RESTdoc分为两个模块，RESTdoc-console和RESTdoc-client，您可以选择�
 
 ## 快速安装RESTdoc-console
 
+- [docker-compose一键安装](https://www.jianshu.com/u/7ecaba2d594c "docker-compose一键安装")
+- [源码安装](https://www.jianshu.com/u/7ecaba2d594c "源码安装")
+
 
 ## 快速接入你的应用
 
+1 加入sdk依赖
 
+```
+ <dependency>
+      <groupId>com.github.open-source-sharing</groupId>
+      <version>1.0.RELEASE</version>
+      <artifactId>restdoc-dependencies-bom</artifactId>
+ </dependency>
+```
 
+2 配置application.yml/application.properties
+
+application.yml
+```
+restdoc:
+  host: 127.0.0.1  # RESTdoc-console的IP地址
+  port: 4321   # 固定端口
+```
+
+application.properties
+```
+restdoc.host=127.0.0.1  # RESTdoc-console的IP地址
+restdoc.port: 4321   # 固定端口
+```
 
 
 

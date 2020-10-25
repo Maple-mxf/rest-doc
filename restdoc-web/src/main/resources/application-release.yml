@@ -32,7 +32,7 @@ spring:
       password: qmbxfrontbizStorage
       database: non_standard
       host: ${MONGO-HOST}
-      port: 6377
+      port: 27017
 
 #  data:
 #    mongodb:
