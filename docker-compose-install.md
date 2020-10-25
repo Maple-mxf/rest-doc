@@ -16,7 +16,7 @@ docker-compose up -d
 
 3 查看应用启动日志
 ```
-docker-compose logs services
+docker-compose logs -f
 ```
 
 4 启动成功访问

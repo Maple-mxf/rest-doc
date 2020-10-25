@@ -4,7 +4,7 @@ version: '3.7'
 services:
   redis:
     image: 'redis:4-alpine'
-    command: redis-server --requirepass overman@@2020 --bind 0.0.0.0
+    command: redis-server --requirepass overman@@2020 --bind 0.0.0.0 --port 6377
     ports:
       - 6377:6377
     hostname: redis
