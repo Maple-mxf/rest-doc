@@ -1,18 +1,28 @@
-version: '3'
+version: '3.7'
 services:
   redis:
-    image: "registry.cn-hangzhou.aliyuncs.com/redisl/redis"
-    container_name: "redis"
-    restart: unless-stopped
-    command: sh -c 'java -Xms1g -Xmx1g -cp /app/resources:/app/classes:/app/libs/* com.bolingcavalry.waitforitdemo.ServiceApplication'
-  mongodb:
-    image: "registry.cn-hangzhou.aliyuncs.com/zhangzihong/mongodb"
-    restart: unless-stopped
+    image: 'redis:4-alpine'
+    command: redis-server --requirepass overman@@2020
+    ports:
+      - '6377:6377'
+  mongodb_container:
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: front_biz
+      MONGO_INITDB_ROOT_PASSWORD: qmbxfrontbizStorage
+      MONGO_INITDB_DATABASE: non_standard
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodb_data_container:/data/db
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
   service:
-    image: "registry.cn-beijing.aliyuncs.com/opensource-sharing/restdoc-console:1.0.RELEASE"
+    image: registry.cn-beijing.aliyuncs.com/opensource-sharing/restdoc-console:1.0.RELEASE
       container_name: restdoc-console
-      restart: unless-stopped
-      command: sh -c 'java -Xms1g -Xmx1g -cp /app/resources:/app/classes:/app/libs/* com.bolingcavalry.waitforitdemo.ServiceApplication'
+      ports:
+        - "8432:8432"
       depends_on:
-        - mongodb
+        - mongodb_container
         - redis
+volumes:
+  mongodb_data_container:
