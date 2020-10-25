@@ -2,15 +2,16 @@ version: '3.7'
 services:
   redis:
     image: 'redis:4-alpine'
-    command: redis-server --requirepass overman@@2020
+    command: redis-server --requirepass overman@@2020 --bind 0.0.0.0
     ports:
       - '6377:6377'
   mongodb_container:
-    image: mongo:latest
+    image: mongo:4.2.0
     environment:
       MONGO_INITDB_ROOT_USERNAME: front_biz
       MONGO_INITDB_ROOT_PASSWORD: qmbxfrontbizStorage
       MONGO_INITDB_DATABASE: non_standard
+    command: mongod --auth true
     ports:
       - 27017:27017
     volumes:
