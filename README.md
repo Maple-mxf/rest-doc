@@ -49,5 +49,7 @@ restdoc.host=127.0.0.1  # RESTdoc-console的IP地址
 restdoc.port: 4321   # 固定端口
 ```
 
+3 启动你的应用
+
 
 

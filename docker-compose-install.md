@@ -18,3 +18,15 @@ docker-compose up -d
 ```
 docker-compose logs services
 ```
+
+4 启动成功访问
+```
+http://ip:8432/restdoc
+```
+
+5 登录（内置初始化账户）
+```
+账户：Maple
+密码：Maple
+```
+

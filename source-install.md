@@ -43,3 +43,15 @@ auth=true
 3 修改RESTdoc-console配置
 修改源码项目模块的restdoc-web/src/main/resources/application.yml
 将您自己的redis和mongo服务器的配置填入到application.yml中
+
+
+4 启动成功访问
+```
+http://ip:8432/restdoc
+```
+
+5 登录（内置初始化账户）
+```
+账户：Maple
+密码：Maple
+```
