@@ -1,12 +1,8 @@
-# RESTdoc
-[RESTdoc是什么?](#RESTdoc是什么?) <br/>
+# RESTdoc是一款提升研发效能的文档软件，集测试与文档生成于一体，快速导入应用的Http API或者RPC API来快速生成文档。
 [RESTdoc的工作模式](#RESTdoc的工作模式) <br/>
 [RESTdoc的架构图](#RESTdoc的架构图) <br/>
 [快速安装RESTdoc-console](#快速安装RESTdoc-console) <br/>
 [快速接入你的应用](#快速接入你的应用) <br/>
-
-## RESTdoc是什么?
-RESTdoc是一款提升研发效能的文档软件，集测试与文档生成于一体，快速导入应用的Http API或者RPC API来快速生成文档。
 
 ## RESTdoc的工作模式
 RESTdoc分为两个模块，RESTdoc-console和RESTdoc-client，您可以选择只使用RESTdoc-console模块，RESTdoc-console跟传统的showdoc其实是
