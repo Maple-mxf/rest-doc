@@ -3,80 +3,27 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>restdoc-rpc-client</artifactId>
+        <artifactId>rest-doc</artifactId>
         <groupId>com.github.open-source-sharing</groupId>
         <version>1.0.RELEASE</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>restdoc-client-api</artifactId>
     <version>1.0.RELEASE</version>
-    <packaging>jar</packaging>
-
-    <properties>
-        <kotlin.version>1.3.72</kotlin.version>
-    </properties>
-
+    <artifactId>restdoc-dependencies-bom</artifactId>
+    
     <dependencies>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-configuration-processor</artifactId>
-            <optional>true</optional>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <artifactId>restdoc-remoting</artifactId>
             <groupId>com.github.open-source-sharing</groupId>
+            <artifactId>restdoc-dubbo-client</artifactId>
             <version>1.0.RELEASE</version>
         </dependency>
         <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-stdlib-jdk8</artifactId>
-            <version>${kotlin.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-test</artifactId>
-            <version>${kotlin.version}</version>
-            <scope>test</scope>
+            <groupId>com.github.open-source-sharing</groupId>
+            <artifactId>restdoc-restweb-client</artifactId>
+            <version>1.0.RELEASE</version>
         </dependency>
     </dependencies>
-
-    <build>
-        <sourceDirectory>src/main/kotlin</sourceDirectory>
-        <plugins>
-            <plugin>
-                <groupId>org.jetbrains.kotlin</groupId>
-                <artifactId>kotlin-maven-plugin</artifactId>
-                <version>${kotlin.version}</version>
-                <executions>
-                    <execution>
-                        <id>compile</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>test-compile</id>
-                        <phase>test-compile</phase>
-                        <goals>
-                            <goal>test-compile</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <jvmTarget>1.8</jvmTarget>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 
     <licenses>
         <license>
@@ -111,7 +58,7 @@
             </activation>
             <build>
                 <plugins>
-                    <!--<plugin>
+                    <plugin>
                         <groupId>org.sonatype.plugins</groupId>
                         <artifactId>nexus-staging-maven-plugin</artifactId>
                         <version>1.6.3</version>
@@ -121,7 +68,7 @@
                             <nexusUrl>https://oss.sonatype.org/</nexusUrl>
                             <autoReleaseAfterClose>false</autoReleaseAfterClose>
                         </configuration>
-                    </plugin>-->
+                    </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
@@ -195,5 +142,4 @@
             <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
     </distributionManagement>
-
 </project>

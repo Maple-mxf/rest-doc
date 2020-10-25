@@ -5,11 +5,11 @@
     <parent>
         <artifactId>restdoc-client-test</artifactId>
         <groupId>com.github.open-source-sharing</groupId>
-        <version>1.0preview</version>
+        <version>1.0.RELEASE</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <version>1.0preview</version>
+    <version>1.0.RELEASE</version>
     <artifactId>restdoc-client-dubbo-test</artifactId>
 
     <properties>
@@ -66,7 +66,7 @@
         <dependency>
             <artifactId>restdoc-client-api</artifactId>
             <groupId>com.github.open-source-sharing</groupId>
-            <version>1.0preview</version>
+            <version>1.0.RELEASE</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.apache.dubbo/dubbo-spring-boot-starter -->
@@ -146,13 +146,13 @@
         <dependency>
             <artifactId>restdoc-dubbo-client</artifactId>
             <groupId>com.github.open-source-sharing</groupId>
-            <version>1.0preview</version>
+            <version>1.0.RELEASE</version>
         </dependency>
 
         <dependency>
             <artifactId>restdoc-restweb-client</artifactId>
             <groupId>com.github.open-source-sharing</groupId>
-            <version>1.0preview</version>
+            <version>1.0.RELEASE</version>
         </dependency>
 
         <dependency>

@@ -5,12 +5,12 @@
     <parent>
         <artifactId>rest-doc</artifactId>
         <groupId>com.github.open-source-sharing</groupId>
-        <version>1.0preview</version>
+        <version>1.0.RELEASE</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>restdoc-web</artifactId>
-    <version>1.0preview</version>
+    <version>1.0.RELEASE</version>
 
     <properties>
         <java.version>1.8</java.version>
@@ -96,13 +96,13 @@
         <dependency>
             <artifactId>restdoc-remoting</artifactId>
             <groupId>com.github.open-source-sharing</groupId>
-            <version>1.0preview</version>
+            <version>1.0.RELEASE</version>
         </dependency>
 
         <dependency>
             <artifactId>restdoc-client-api</artifactId>
             <groupId>com.github.open-source-sharing</groupId>
-            <version>1.0preview</version>
+            <version>1.0.RELEASE</version>
         </dependency>
 
         <dependency>
