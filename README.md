@@ -15,7 +15,7 @@ RESTdoc分为两个模块，RESTdoc-console和RESTdoc-client，您可以选择�
 建立长连接，这样子RESTdoc-console可以快速导入应用的API的文档。
 
 ## 架构图(Architecture)
-![avatar](https://raw.githubusercontent.com/Overman-mxf/rest-doc/master/static/img/struct.png)
+![avatar](https://restdoc.oss-cn-beijing.aliyuncs.com/struct.png)
 
 ## 快速安装RESTdoc-console
 
