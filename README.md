@@ -16,9 +16,9 @@ RESTdoc分为两个模块，RESTdoc-console和RESTdoc-client，RESTdoc-console�
 
 ## 快速接入你的应用
 
-- Maven依赖
+- Maven dependency <br>
 
-如果是普通web应用，加入以下依赖
+普通web应用
 
 ```
 <dependency>
@@ -28,13 +28,23 @@ RESTdoc分为两个模块，RESTdoc-console和RESTdoc-client，RESTdoc-console�
 </dependency>
 ```
 
-如果是普通dubbo应用，加入以下依赖
+dubbo应用
 ```
 <dependency>
   <groupId>com.github.open-source-sharing</groupId>
   <artifactId>restdoc-dubbo-client</artifactId>
   <version>1.0.RELEASE</version>
 </dependency>
+```
+
+- Gradle dependency <br>
+普通web应用
+```
+implementation 'com.github.open-source-sharing:restdoc-restweb-client:1.0.RELEASE'
+```
+dubbo应用
+```
+implementation 'com.github.open-source-sharing:restdoc-dubbo-client:1.0.RELEASE'
 ```
 
 - 配置application.yml/application.properties
