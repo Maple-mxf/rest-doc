@@ -18,12 +18,23 @@ RESTdoc分为两个模块，RESTdoc-console和RESTdoc-client，RESTdoc-console�
 
 - Maven依赖
 
+如果是普通web应用，加入以下依赖
+
 ```
- <dependency>
-      <groupId>com.github.open-source-sharing</groupId>
-      <version>1.0.RELEASE</version>
-      <artifactId>restdoc-dependencies-bom</artifactId>
- </dependency>
+<dependency>
+  <groupId>com.github.open-source-sharing</groupId>
+  <artifactId>restdoc-restweb-client</artifactId>
+  <version>1.0.RELEASE</version>
+</dependency>
+```
+
+如果是普通dubbo应用，加入以下依赖
+```
+<dependency>
+  <groupId>com.github.open-source-sharing</groupId>
+  <artifactId>restdoc-dubbo-client</artifactId>
+  <version>1.0.RELEASE</version>
+</dependency>
 ```
 
 - 配置application.yml/application.properties
