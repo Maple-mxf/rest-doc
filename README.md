@@ -1,14 +1,6 @@
 # RESTdoc Project
 RESTdoc Project是一款提升研发效能的文档软件，集测试与文档生成于一体，快速导入应用的Http API或者RPC API来快速生成文档。
 
-[RESTdoc线上体验地址](http://152.136.104.144:8432/restdoc/ "RESTdoc线上体验地址")
-
-[RESTdoc的工作模式](#RESTdoc的工作模式) <br/>
-[RESTdoc的架构图](#RESTdoc的架构图) <br/>
-[快速安装RESTdoc-console](#快速安装RESTdoc-console) <br/>
-[快速接入你的应用](#快速接入你的应用) <br/>
-[RESTdoc-console内置账户](#RESTdoc-console内置账户) <br/>
-
 ## 工作模式(Work mode)
 RESTdoc分为两个模块，RESTdoc-console和RESTdoc-client，您可以选择只使用RESTdoc-console模块，RESTdoc-console跟传统的showdoc其实是
 一样的，可以正常编写API文档和WIKI，但是如果您想简化文档的生成，可以选择在您的应用中加速RESTdoc-client的依赖，并且和RESTdoc-console
@@ -52,7 +44,9 @@ restdoc.port: 4321   # 固定端口
 
 3 启动你的应用
 
-## RESTdoc-console内置账户
+## RESTdoc-console线上体验
+[RESTdoc线上体验地址](http://152.136.104.144:8432/restdoc/ "RESTdoc线上体验地址")<br>
+登录账户: <br>
 账户：Maple <br>
 密码：Maple
 
