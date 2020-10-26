@@ -10,7 +10,7 @@ RESTdoc分为两个模块，RESTdoc-console和RESTdoc-client，RESTdoc-console�
 
 ## 快速安装RESTdoc-console
 
-- [docker-compose一键安装](https://github.com/Open-source-sharing/REST-doc/blob/master/docker-compose-install.md "docker-compose一键安装")
+- [docker-compose一键安装(推荐)](https://github.com/Open-source-sharing/REST-doc/blob/master/docker-compose-install.md "docker-compose一键安装")
 - [源码安装](https://github.com/Open-source-sharing/REST-doc/blob/master/source-install.md "源码安装")
 
 
