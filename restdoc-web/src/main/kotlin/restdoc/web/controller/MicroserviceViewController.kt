@@ -19,26 +19,10 @@ class MicroserviceViewController {
     @Autowired
     lateinit var clientChannelManager: ClientChannelManager
 
-    @Autowired
-    lateinit var clientAPIMemoryUnit: ClientAPIMemoryUnit
-
     @GetMapping("/microservice/view/index")
     fun index() = "microservice/index"
 
-   /* @GetMapping("/microservice/{service}/view/document/{id}")
-    fun detail(@PathVariable service: String, @PathVariable id: String,
-               @RequestParam ap: ApplicationType, model: Model): String {
-
-        val apiList = clientExposedAPIManager.listBy(ap, service) as List<DubboExposedAPI>
-
-        val methodDetail = apiList.flatMap { it.exposedMethods }
-                .first { id == it.methodName + "->" + it.parameterClasses.joinToString("-") }
-
-        model.addAttribute("methodDetail", methodDetail)
-
-        return "microservice/dubbo-method-detail"
-    }*/
-
+    @Deprecated(message = "list")
     @GetMapping("/microservice/view/{clientId}/list")
     fun list(@PathVariable clientId: String,
              @RequestParam ap: ApplicationType,
@@ -51,5 +35,11 @@ class MicroserviceViewController {
         model.addAttribute("service", client!!.service)
 
         return "microservice/dubbo-list"
+    }
+
+    @GetMapping("/microservice/view/list")
+    fun listPage(@RequestParam ap: ApplicationType, model: Model): String {
+        model.addAttribute("ap", ap)
+        return "client/list"
     }
 }

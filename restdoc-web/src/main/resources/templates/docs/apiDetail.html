@@ -116,7 +116,6 @@
         <ul class="layui-tab-title">
             <li class="layui-this">文档</li>
             <li>调试</li>
-            <li>服务实例列表</li>
         </ul>
         <div class="layui-tab-content">
             <div class="layui-tab-item layui-show layui-container">
@@ -289,10 +288,10 @@
                         marginheight=”0″></iframe>
             </div>
 
-            <div class="layui-tab-item">
+            <!--<div class="layui-tab-item">
                 <table class="layui-hide" style="font-family: Roboto,serif;font-size: 15px"
                        id="serviceListTable" lay-filter="serviceListTable"></table>
-            </div>
+            </div>-->
         </div>
     </div>
 </div>
@@ -327,7 +326,7 @@
                 }
             });
 
-            table.render({
+            /*table.render({
                 elem: '#serviceListTable'
                 // ,id:'serviceListTable'
                 , url: '/restdoc/serviceClient/list?type=REST_WEB'
@@ -337,8 +336,7 @@
                     [
                         {
                             field: 'applicationType', width: 200, title: '应用类型'
-                        }
-                        ,
+                        },
                         {
                             field: 'service', width: 300, title: '服务名称'
                         },
@@ -351,8 +349,6 @@
             });
 
             table.on('tool(serviceListTable)', function (obj) {
-
-
                 if (obj.event === 'getDetail') {
                     layer.open({
                         type: 2,
@@ -360,7 +356,6 @@
                         content: ['/restdoc/serviceClient/' + obj.data.id + '/view', 'no'],
                         area: ['600px', '600px']
                     });
-
                 } else if (obj.event === 'syncAPI') {
                     var index = layer.load(2, {time: 10 * 1000});
 
@@ -380,9 +375,9 @@
                         success: function (data) {
                             if (data['code'] === "200") {
                                 // 刷新目录树
-                                /*tree.reload('dubboTableContent', {});*/
+                                /!*tree.reload('dubboTableContent', {});*!/
 
-                                /*如何刷新目錄？*/
+                                /!*如何刷新目錄？*!/
 
                                 // 刷新文档页面
                                 var link = $('#testApiFrame').attr('src');
@@ -402,7 +397,7 @@
                     });
                     layer.close(index);
                 }
-            });
+            });*/
 
             renderURITable(doc['uriVarDescriptors']);
             renderRequestHeaderTable(doc['requestHeaderDescriptor']);

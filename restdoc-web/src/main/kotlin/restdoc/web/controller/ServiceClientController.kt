@@ -67,8 +67,6 @@ class ServiceClientController {
         return res
     }
 
-
-
   /*  @PostMapping("/serviceClient/apiEmptyTemplate/sync")
     fun syncClientApiEmptyTemplateToExistProject(
             @RequestBody dto: SyncApiEmptyTemplateDto

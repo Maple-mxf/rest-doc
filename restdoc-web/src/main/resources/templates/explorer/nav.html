@@ -14,21 +14,14 @@
 </head>
 <body>
 <div class="layui-row" style="width: 100%">
-    <ul class="layui-nav layui-bg-green" id="navigation" lay-filter="" style="font-size: 17px">
-
-        <!--<li class="layui-nav-item" id="restweb-project-nav">
-            <a href="/restdoc/project/view?type=REST_WEB" target="_self">
-                RESTweb项目</a>
-        </li>
-        <li class="layui-nav-item" id="dubbo-project-nav">
-            <a href="#" target="_self" th:text="${projectName}"></a>
-        </li>-->
+    <ul class="layui-nav layui-bg-green" id="navigation" lay-filter="test" style="font-size: 17px">
         <li class="layui-nav-item">
             <a href="/restdoc/project/view"> <i class="layui-icon layui-icon-left"
                                                 style="font-size: 17px;/*margin-top: 5px;*/ color: white;"></i>&nbsp;返回项目列表</a>
         </li>
 
-        <li class="layui-nav-item" th:text="${projectName}"></li>
+        <li class="layui-nav-item"><a href="javascript:;" th:utext="${projectName}"></a></li>
+        <li class="layui-nav-item"><a id="clientServiceList" href="javascript:;">服务实例</a></li>
     </ul>
 </div>
 
@@ -56,70 +49,8 @@
 <script th:src="@{/admin/js/util.js}"></script>
 
 <script>
-    // $("#projectNav").addClass("layui-this");
 
-    /*    function initNav() {
-            var lis = $("#navigation").find("li");
-            for (let i = 0; i < lis.length; i++) {
-                $(lis[i]).removeClass("layui-this")
-            }
-        }
-
-        initNav();*/
-
-    $('#restweb-project-nav').addClass("layui-this");
-
-    /**
-     *
-     * @param array
-     */
-    function getFirstDocument(array) {
-
-        if (array == null || array.length === 0) return null;
-
-        var length = array.length;
-
-
-        var flag = 0;
-
-        for (let i = 0; i < length; i++) {
-            var node = array[i];
-            if ("API" === node['type'] || "WIKI" === node['type']) {
-                if (flag === 0) {
-                    return node['id']
-                }
-            } else {
-                var result = findFirstChildren(node);
-                if (result != null) return result;
-            }
-        }
-        return null;
-    }
-
-    function findFirstChildren(parentNode) {
-        if (parentNode != null && parentNode['children'].length === 0) {
-            return null;
-        } else {
-            var children = parentNode['children'];
-            var length = children.length;
-
-            for (let i = 0; i < length; i++) {
-                if (children[i]['type'] === 'WIKI' || children[i]['type'] === 'API') {
-                    return children[i]['id']
-                } else {
-                    var result = findFirstChildren(children[i]);
-                    if (null != result) {
-                        return result;
-                    }
-                }
-            }
-            return null;
-        }
-    }
-
-    layui.config({
-        base: '/restdoc/layui/lay/extends/'
-    }).use([
+    layui.use([
         'util',
         'layer',
         'element',
@@ -128,10 +59,20 @@
         var tree = layui.tree;
         var $ = layui.jquery;
         var layer = layui.layer;
-
+        var element = layui.element;
         var treeData = null;
         var projectId = $("#projectId").val();
 
+        element.on('nav(test)', function (elem) {
+            if ('clientServiceList' === elem[0].id) {
+                layer.open({
+                    type: 2,
+                    content: '/restdoc/microservice/view/list?ap=REST_WEB',
+                    title: '服务实例列表',
+                    area:['1200px','600px']
+                });
+            }
+        });
         $.ajax({
             type: 'GET',
             url: '/restdoc/' + projectId + '/resource/tree',
@@ -179,8 +120,8 @@
                 if (obj.data.type === "WIKI" || obj.data.type === "API") {
                     $("#docContentFrame").attr("src", '/restdoc/' + projectId + '/document/' + obj.data.id + '/view');
                 }
-            }
-            , operate: function (obj) {
+            },
+            operate: function (obj) {
                 var type = obj.type;
                 var data = obj.data;
 
@@ -240,7 +181,6 @@
             });
         }
 
-
         $('#createTableContentBtn').click(function (event) {
             var projectId = $('#projectId').val();
             layer.open({
@@ -279,6 +219,47 @@
             });
         });
     });
+
+    $('#restweb-project-nav').addClass("layui-this");
+
+    function getFirstDocument(array) {
+        if (array == null || array.length === 0) return null;
+        var length = array.length;
+        var flag = 0;
+        for (let i = 0; i < length; i++) {
+            var node = array[i];
+            if ("API" === node['type'] || "WIKI" === node['type']) {
+                if (flag === 0) {
+                    return node['id']
+                }
+            } else {
+                var result = findFirstChildren(node);
+                if (result != null) return result;
+            }
+        }
+        return null;
+    }
+
+    function findFirstChildren(parentNode) {
+        if (parentNode != null && parentNode['children'].length === 0) {
+            return null;
+        } else {
+            var children = parentNode['children'];
+            var length = children.length;
+
+            for (let i = 0; i < length; i++) {
+                if (children[i]['type'] === 'WIKI' || children[i]['type'] === 'API') {
+                    return children[i]['id']
+                } else {
+                    var result = findFirstChildren(children[i]);
+                    if (null != result) {
+                        return result;
+                    }
+                }
+            }
+            return null;
+        }
+    }
 </script>
 </body>
 </html>

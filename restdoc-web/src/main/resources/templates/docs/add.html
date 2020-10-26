@@ -305,7 +305,7 @@
                 btn: ['转换JSON'],
                 yes: function (index, layero) {
                     var res = window["layui-layer-iframe" + index].getJSONValue();
-                    completeExecuteCallback(res);
+                    completeExecuteCallback(JSON.parse(res));
                     layer.close(index);
                 }
             });
