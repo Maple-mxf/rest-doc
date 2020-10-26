@@ -1,4 +1,4 @@
-# RESTdoc Project
+# Opensource Sharing RESTdoc Project
 RESTdoc Project是一款提升研发效能的文档软件，集测试与文档生成于一体，快速导入应用的Http API或者RPC API来快速生成文档。
 
 ## 工作模式(Work mode)
@@ -16,7 +16,7 @@ RESTdoc分为两个模块，RESTdoc-console和RESTdoc-client，RESTdoc-console�
 
 ## 快速接入你的应用
 
-1 加入sdk依赖
+- Maven依赖
 
 ```
  <dependency>
@@ -26,7 +26,7 @@ RESTdoc分为两个模块，RESTdoc-console和RESTdoc-client，RESTdoc-console�
  </dependency>
 ```
 
-2 配置application.yml/application.properties
+- 配置application.yml/application.properties
 
 application.yml
 ```
