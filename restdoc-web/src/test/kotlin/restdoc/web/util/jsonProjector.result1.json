@@ -2,39 +2,5 @@
   "status": "OK",
   "code": "200",
   "message": null,
-  "data": {
-    "exceptionMsg": null,
-    "invocation": {
-      "className": "restdoc.client.api.model.RestWebInvocation",
-      "url": "/echo",
-      "method": "GET",
-      "requestHeaders": {},
-      "queryParam": {},
-      "requestBody": {},
-      "uriVariable": {}
-    },
-    "status": 200,
-    "responseHeaders": {
-      "Content-Type": [
-        "application/json"
-      ],
-      "Transfer-Encoding": [
-        "chunked"
-      ],
-      "Date": [
-        "Sat, 24 Oct 2020 06:10:58 GMT"
-      ],
-      "Keep-Alive": [
-        "timeout=60"
-      ],
-      "Connection": [
-        "keep-alive"
-      ]
-    },
-    "responseBody": {
-      "msg": "欢迎测试Http服务",
-      "applicationType": "DUBBO"
-    },
-    "successful": true
-  }
+  "data": {}
 }

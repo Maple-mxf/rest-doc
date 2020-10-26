@@ -7,7 +7,9 @@ import restdoc.remoting.exception.RemotingTimeoutException;
 import restdoc.remoting.exception.RemotingTooMuchRequestException;
 
 public interface ChannelEventListener {
-    void onChannelConnect(final String remoteAddr, final Channel channel) throws InterruptedException, RemotingSendRequestException, RemotingTimeoutException, RemotingTooMuchRequestException, RemotingConnectException;
+    void onChannelConnect(final String remoteAddr, final Channel channel)
+            throws InterruptedException, RemotingSendRequestException, RemotingTimeoutException,
+            RemotingTooMuchRequestException, RemotingConnectException;
 
     void onChannelClose(final String remoteAddr, final Channel channel);
 
