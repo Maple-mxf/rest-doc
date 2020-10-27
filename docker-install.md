@@ -7,4 +7,6 @@ sudo systemctl start docker
 ```
 sudo curl -fsSL get.docker.com -o get-docker.sh
 sudo sh get-docker.sh
+sudo chmod +x /usr/local/bin/docker-compose
+
 ```
