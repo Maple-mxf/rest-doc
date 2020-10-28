@@ -65,8 +65,8 @@ class ResourceController {
         findChild(ROOT_NAV, navNodes)
 
         if (onlyResource) return ok(mutableListOf(ROOT_NAV))
-
         val allNode = mutableListOf<NavNode>()
+
         allNode.add(ROOT_NAV)
         allNode.addAll(navNodes)
 

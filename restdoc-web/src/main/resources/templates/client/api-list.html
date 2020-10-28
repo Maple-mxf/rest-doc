@@ -14,14 +14,18 @@
 
     </div>
 </div>
+
+<input type="hidden" th:value="${clientId}" id="clientId">
+<input type="hidden" th:value="${ap}" id="ap">
+
 <script th:src="@{/layui/layui.js}"></script>
 <script th:src="@{/admin/js/jquery.js}"></script>
 <script>
 
     var treeData = null;
 
-    var clientId = [[${clientId}]];
-    var ap = [[${ap}]];
+    var clientId =$("#clientId").val();
+    var ap = $("#ap").val();
 
     var requestURL = "/restdoc/serviceClient/" + clientId + "/apiList?ap=" + ap;
 

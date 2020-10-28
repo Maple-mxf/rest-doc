@@ -9,6 +9,8 @@ import restdoc.web.model.HeaderFieldDescriptor
 import restdoc.web.model.RestWebDocument
 import restdoc.web.model.URIVarDescriptor
 
+
+@Deprecated(message = "Global Var immutable")
 val ROOT_NAV: NavNode = NavNode(
         id = "root",
         title = "一级目录",

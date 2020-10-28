@@ -5,21 +5,21 @@ import org.springframework.http.HttpMethod
 import org.springframework.web.bind.annotation.*
 import restdoc.remoting.common.ApplicationType
 import restdoc.web.base.auth.Verify
-import restdoc.web.controller.obj.SyncApiEmptyTemplateDto
+import restdoc.web.controller.obj.*
 import restdoc.web.core.Status
 import restdoc.web.core.ok
 import restdoc.web.core.schedule.ClientAPIMemoryUnit
 import restdoc.web.core.schedule.ClientChannelManager
 import restdoc.web.core.schedule.ScheduleController
-import restdoc.web.model.Project
-import restdoc.web.model.Resource
-import restdoc.web.model.RestWebDocument
-import restdoc.web.model.URIVarDescriptor
+import restdoc.web.model.*
 import restdoc.web.repository.ProjectRepository
 import restdoc.web.repository.ResourceRepository
 import restdoc.web.repository.RestWebDocumentRepository
 import restdoc.web.util.IDUtil
+import restdoc.web.util.IDUtil.id
 import restdoc.web.util.IDUtil.now
+import restdoc.web.util.MD5Util
+import sun.security.provider.MD5
 
 
 @RestController
@@ -161,13 +161,100 @@ class ServiceClientController {
 
     // 狗屎一样的代码
     @GetMapping("/serviceClient/{clientId}/apiList")
-    fun apiList(@PathVariable clientId: String, @RequestParam(required = false, defaultValue = "REST_WEB") ap: ApplicationType): Any {
+    fun apiList(@PathVariable clientId: String,
+                @RequestParam(required = false, defaultValue = "REST_WEB") ap: ApplicationType): Any {
 
-        //
-        val client = clientChannelManager.findClient(clientId)
-        val apiList = clientAPIMemoryUnit.get(ap, client!!.clientId)
+        val client = clientChannelManager.clients.filter { it.value.id == clientId }.map { it.value }
+                .first()
 
-        //
+        if (ApplicationType.REST_WEB == ap) {
+            val restwebAPIList = clientAPIMemoryUnit.restWebExposedExposedAPI
+                    .filterKeys { it.remoteAddress == client.clientId }
+                    .flatMap { it.value }
+            val resources = restwebAPIList
+                    .groupBy { it.controller }
+                    .map { it.key }
+                    .map {
+                        Resource(
+                                id = it,
+                                tag = it,
+                                name = it.split('.').last(),
+                                pid = ROOT_NAV.id,
+                                projectId = null,
+                                createTime = null,
+                                createBy = null
+                        )
+                    }
+            val navNodes = resources.map {
+                NavNode(id = it.id!!,
+                        title = it.name!!,
+                        field = "name",
+                        children = null,
+                        pid = it.pid!!)
+            }
+
+            // TODO  BUG  ROOT_NAV是一个全局常量
+            findChild(ROOT_NAV, navNodes)
+
+            val allNode = mutableListOf<NavNode>()
+
+            allNode.add(ROOT_NAV)
+            allNode.addAll(navNodes)
+
+            val docs = restwebAPIList.map {
+                RestWebDocument(
+                        id = MD5Util.MD5Encode(it.controller + it.pattern, "UTF-8"),
+                        projectId = null,
+                        name = it.function,
+                        resource = it.controller,
+                        url = it.pattern,
+                        description = null,
+                        requestHeaderDescriptor = null,
+                        requestBodyDescriptor = null,
+                        responseBodyDescriptors = null,
+                        queryParam = null,
+                        method = HttpMethod.valueOf(it.supportMethod[0]),
+                        uriVarDescriptors = null,
+                        executeResult = null,
+                        content = null,
+                        responseHeaderDescriptor = null)
+            }
+
+            for (navNode in allNode) {
+                val childrenDocNode: MutableList<NavNode> = docs
+                        .filter { navNode.id == it.resource }
+                        .map {
+                            val node = NavNode(
+                                    id = it.id!!,
+                                    title = it.name!!,
+                                    field = "",
+                                    children = mutableListOf(),
+                                    href = null,
+                                    pid = navNode.id,
+                                    spread = true,
+                                    checked = false)
+
+                            node.type = if (DocType.API == it.docType) NodeType.API else NodeType.WIKI
+                            node
+                        }.toMutableList()
+
+                if (navNode.children != null) {
+                    navNode.children!!.addAll(childrenDocNode)
+                } else {
+                    navNode.children = childrenDocNode
+                }
+            }
+            return ok(mutableListOf(ROOT_NAV))
+
+        } else if (ApplicationType.DUBBO == ap) {
+            val dubboAPIList = clientAPIMemoryUnit.dubboExposedExposedAPI
+                    .filterKeys { it.remoteAddress == client.clientId }
+                    .flatMap { it.value }
+
+
+        } else {
+            throw RuntimeException("Not support application type $ap")
+        }
 
         return ok()
     }
