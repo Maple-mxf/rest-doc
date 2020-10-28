@@ -5,10 +5,11 @@ import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestParam
+import restdoc.remoting.common.ApplicationType
 import restdoc.web.base.auth.Verify
 import restdoc.web.core.schedule.ClientChannelManager
 
-@Deprecated(message = "ServiceClientViewController")
 @Controller
 @Verify
 class ServiceClientViewController {
@@ -17,14 +18,18 @@ class ServiceClientViewController {
     lateinit var clientChannelManager: ClientChannelManager
 
     @GetMapping("/serviceClient/view/list")
-    fun list(): String {
-        return "cs/list"
-    }
-
+    fun list() = "cs/list"
 
     @GetMapping("/serviceClient/view/index")
-    fun index(): String {
-        return "cs/index"
+    fun index() = "cs/index"
+
+    @GetMapping("/serviceClient/{clientId}/apiList/view")
+    fun apiList(model: Model,
+                @PathVariable clientId: String,
+                @RequestParam(required = false,defaultValue = "REST_WEB") ap: ApplicationType): String {
+        model.addAttribute("clientId", clientId)
+        model.addAttribute("ap", ap)
+        return "client/api-list"
     }
 
     @GetMapping("/serviceClient/{id}/view")

@@ -26,7 +26,8 @@
 </div>
 <script type="text/html" id="barDemo">
     <a class="layui-btn  layui-btn-primary" lay-event="getDetail">详情</a>
-    <a class="layui-btn " lay-event="syncAPI">同步API</a>
+    <a class="layui-btn layui-btn-primary" lay-event="syncAPI">同步API</a>
+    <a class="layui-btn layui-btn-primary" lay-event="apiList">API列表</a>
 </script>
 <script th:src="@{/layui/layui.js}"></script>
 <script th:src="@{/admin/js/jquery.js}"></script>
@@ -49,14 +50,14 @@
             , cols: [
                 [
                     {
-                        field: 'applicationType',  title: '应用类型'
+                        field: 'applicationType', width: 180, title: '应用类型'
                     }
                     ,
                     {
-                        field: 'service',  title: '服务名称'
+                        field: 'service', width: 200, title: '服务名称'
                     },
                     {
-                        field: 'remoteAddress', title: '服务远程地址'
+                        field: 'remoteAddress', width: 220, title: '服务远程地址'
                     },
                     {fixed: 'right', title: '操作', toolbar: '#barDemo'}
                 ]
@@ -77,6 +78,13 @@
                 var index = layer.load(2, {time: 10 * 1000});
 
                 layer.close(index);
+            } else if (obj.event === 'apiList') {
+                layer.open({
+                    type: 2,
+                    title: 'API列表',
+                    content: ['/restdoc/serviceClient/' + obj.data.id + '/apiList/view', 'no'],
+                    area: ['600px', '400px']
+                });
             }
         });
     });

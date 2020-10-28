@@ -90,6 +90,31 @@ class ClientAPIMemoryUnit {
         return keys
     }
 
+    fun get(type: ApplicationType, remoteAddress: String): List<ExposedAPI> {
+        return when (type) {
+            ApplicationType.DUBBO -> {
+                dubboExposedExposedAPI
+                        .filter { it.key.remoteAddress == remoteAddress }
+                        .flatMap { it.value }
+                        .toList()
+            }
+            ApplicationType.REST_WEB -> {
+                restWebExposedExposedAPI
+                        .filter { it.key.remoteAddress == remoteAddress }
+                        .flatMap { it.value }
+                        .toList()
+            }
+
+            ApplicationType.SPRINGCLOUD -> {
+                springcloudExposedExposedAPI
+                        .filter { it.key.remoteAddress == remoteAddress }
+                        .flatMap { it.value }
+                        .toList()
+            }
+        }
+    }
+
+
     @Deprecated(message = "封装过于僵硬")
     fun get(type: ApplicationType, service: String, remoteAddress: String): List<ExposedAPI> {
         return when (type) {

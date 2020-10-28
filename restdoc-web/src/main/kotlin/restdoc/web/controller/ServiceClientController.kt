@@ -6,7 +6,9 @@ import org.springframework.web.bind.annotation.*
 import restdoc.remoting.common.ApplicationType
 import restdoc.web.base.auth.Verify
 import restdoc.web.controller.obj.SyncApiEmptyTemplateDto
+import restdoc.web.core.Status
 import restdoc.web.core.ok
+import restdoc.web.core.schedule.ClientAPIMemoryUnit
 import restdoc.web.core.schedule.ClientChannelManager
 import restdoc.web.core.schedule.ScheduleController
 import restdoc.web.model.Project
@@ -20,7 +22,6 @@ import restdoc.web.util.IDUtil
 import restdoc.web.util.IDUtil.now
 
 
-@Deprecated(message = "ServiceClientController")
 @RestController
 @Verify
 class ServiceClientController {
@@ -36,6 +37,9 @@ class ServiceClientController {
 
     @Autowired
     lateinit var restWebDocumentRepository: RestWebDocumentRepository
+
+    @Autowired
+    lateinit var clientAPIMemoryUnit: ClientAPIMemoryUnit
 
     @Autowired
     lateinit var projectRepository: ProjectRepository
@@ -67,27 +71,27 @@ class ServiceClientController {
         return res
     }
 
-  /*  @PostMapping("/serviceClient/apiEmptyTemplate/sync")
-    fun syncClientApiEmptyTemplateToExistProject(
-            @RequestBody dto: SyncApiEmptyTemplateDto
-    ): Any {
+    /*  @PostMapping("/serviceClient/apiEmptyTemplate/sync")
+      fun syncClientApiEmptyTemplateToExistProject(
+              @RequestBody dto: SyncApiEmptyTemplateDto
+      ): Any {
 
-        val project = Project(
-                id = IDUtil.id(),
-                name = dto.name!!,
-                desc = dto.name,
-                createTime = now(),
-                accessPwd = null)
+          val project = Project(
+                  id = IDUtil.id(),
+                  name = dto.name!!,
+                  desc = dto.name,
+                  createTime = now(),
+                  accessPwd = null)
 
-        val resourceKeyDocumentMap = syncApiEmptyTemplates(dto.remoteAddress, project.id)
+          val resourceKeyDocumentMap = syncApiEmptyTemplates(dto.remoteAddress, project.id)
 
-        resourceRepository.saveAll(resourceKeyDocumentMap.keys)
-        restWebDocumentRepository.saveAll(resourceKeyDocumentMap.values.flatten())
+          resourceRepository.saveAll(resourceKeyDocumentMap.keys)
+          restWebDocumentRepository.saveAll(resourceKeyDocumentMap.values.flatten())
 
-        projectRepository.save(project)
+          projectRepository.save(project)
 
-        return ok(project.id)
-    }*/
+          return ok(project.id)
+      }*/
 
     @PostMapping("/{projectId}/serviceClient/apiEmptyTemplate/sync")
     fun syncClientApiEmptyTemplate(@RequestBody dto: SyncApiEmptyTemplateDto): Any {
@@ -152,5 +156,19 @@ class ServiceClientController {
         if (methods.isEmpty()) return HttpMethod.GET
         if (methods.size == 1) return methods.toTypedArray()[0]
         return if (methods.contains(HttpMethod.GET)) HttpMethod.GET else HttpMethod.POST
+    }
+
+
+    // 狗屎一样的代码
+    @GetMapping("/serviceClient/{clientId}/apiList")
+    fun apiList(@PathVariable clientId: String, @RequestParam(required = false, defaultValue = "REST_WEB") ap: ApplicationType): Any {
+
+        //
+        val client = clientChannelManager.findClient(clientId)
+        val apiList = clientAPIMemoryUnit.get(ap, client!!.clientId)
+
+        //
+
+        return ok()
     }
 }
