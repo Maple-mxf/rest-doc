@@ -8,6 +8,7 @@ import java.util.concurrent.ConcurrentHashMap
  * @author Overman
  */
 @Component
+@Deprecated(message = "ClientAPIMemoryUnit")
 class ClientAPIMemoryUnit {
 
     /**

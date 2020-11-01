@@ -16,6 +16,7 @@ import java.util.concurrent.ConcurrentHashMap
  * @author Overman
  */
 @Component
+@Deprecated(message = "ClientAPIMemoryUnit")
 class ClientChannelManager(var mapper: ObjectMapper) : CommandLineRunner {
 
     private val log: Logger = LoggerFactory.getLogger(ClientChannelManager::class.java)
