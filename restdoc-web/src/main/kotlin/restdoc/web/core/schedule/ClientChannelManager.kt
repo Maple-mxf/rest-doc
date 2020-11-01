@@ -14,6 +14,8 @@ import java.util.concurrent.ConcurrentHashMap
  * ClientChannelManager
  *
  * @author Overman
+ *
+ * @see ClientRegistryCenter
  */
 @Component
 @Deprecated(message = "ClientAPIMemoryUnit")
