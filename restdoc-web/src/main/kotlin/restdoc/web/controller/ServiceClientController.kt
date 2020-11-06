@@ -4,22 +4,19 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpMethod
 import org.springframework.web.bind.annotation.*
 import restdoc.remoting.common.ApplicationType
+import restdoc.remoting.common.DubboExposedAPI
+import restdoc.remoting.common.RestWebExposedAPI
 import restdoc.web.base.auth.Verify
 import restdoc.web.controller.obj.*
-import restdoc.web.core.Status
 import restdoc.web.core.ok
-import restdoc.web.core.schedule.ClientAPIMemoryUnit
-import restdoc.web.core.schedule.ClientChannelManager
+import restdoc.web.core.schedule.ClientRegistryCenter
 import restdoc.web.core.schedule.ScheduleController
 import restdoc.web.model.*
-import restdoc.web.repository.ProjectRepository
 import restdoc.web.repository.ResourceRepository
 import restdoc.web.repository.RestWebDocumentRepository
 import restdoc.web.util.IDUtil
-import restdoc.web.util.IDUtil.id
 import restdoc.web.util.IDUtil.now
 import restdoc.web.util.MD5Util
-import sun.security.provider.MD5
 
 
 @RestController
@@ -27,7 +24,7 @@ import sun.security.provider.MD5
 class ServiceClientController {
 
     @Autowired
-    lateinit var clientChannelManager: ClientChannelManager
+    lateinit var clientRegistryCenter: ClientRegistryCenter
 
     @Autowired
     lateinit var scheduleController: ScheduleController
@@ -38,60 +35,32 @@ class ServiceClientController {
     @Autowired
     lateinit var restWebDocumentRepository: RestWebDocumentRepository
 
-    @Autowired
-    lateinit var clientAPIMemoryUnit: ClientAPIMemoryUnit
-
-    @Autowired
-    lateinit var projectRepository: ProjectRepository
-
+    @Deprecated(message = "")
     @GetMapping("/serviceClient/list")
     fun list(@RequestParam(defaultValue = "DUBBO") type: ApplicationType): Any {
-
-        val services = clientChannelManager.clients
-                .filter { it.value.applicationType == type }
+        val clientKeys = this.clientRegistryCenter.getClientKeysFilterApplicationType(type)
+        val services = this.clientRegistryCenter.getMulti(clientKeys)
                 .map {
                     mapOf(
-                            "id" to it.value.id,
-                            "remoteAddress" to it.value.clientId,
-                            "hostname" to it.value.hostname,
-                            "osname" to it.value.osname,
-                            "service" to it.value.service,
-                            "applicationType" to it.value.applicationType,
-                            "serializationProtocol" to it.value.serializationProtocol
+                            "id" to it.id,
+                            "remoteAddress" to it.clientId,
+                            "hostname" to it.hostname,
+                            "osname" to it.osname,
+                            "service" to it.service,
+                            "applicationType" to it.applicationType,
+                            "serializationProtocol" to it.serializationProtocol
                     )
                 }
                 .toList()
 
         val res = mutableMapOf<String, Any>()
         res["code"] = 0
-        res["count"] = clientChannelManager.clients.size
+        res["count"] = clientRegistryCenter.clientNum
         res["msg"] = ""
         res["data"] = services
 
         return res
     }
-
-    /*  @PostMapping("/serviceClient/apiEmptyTemplate/sync")
-      fun syncClientApiEmptyTemplateToExistProject(
-              @RequestBody dto: SyncApiEmptyTemplateDto
-      ): Any {
-
-          val project = Project(
-                  id = IDUtil.id(),
-                  name = dto.name!!,
-                  desc = dto.name,
-                  createTime = now(),
-                  accessPwd = null)
-
-          val resourceKeyDocumentMap = syncApiEmptyTemplates(dto.remoteAddress, project.id)
-
-          resourceRepository.saveAll(resourceKeyDocumentMap.keys)
-          restWebDocumentRepository.saveAll(resourceKeyDocumentMap.values.flatten())
-
-          projectRepository.save(project)
-
-          return ok(project.id)
-      }*/
 
     @PostMapping("/{projectId}/serviceClient/apiEmptyTemplate/sync")
     fun syncClientApiEmptyTemplate(@RequestBody dto: SyncApiEmptyTemplateDto): Any {
@@ -159,18 +128,16 @@ class ServiceClientController {
     }
 
 
-    // 狗屎一样的代码
     @GetMapping("/serviceClient/{clientId}/apiList")
     fun apiList(@PathVariable clientId: String,
                 @RequestParam(required = false, defaultValue = "REST_WEB") ap: ApplicationType): Any {
 
-        val client = clientChannelManager.clients.filter { it.value.id == clientId }.map { it.value }
-                .first()
+        val client = this.clientRegistryCenter.get(clientId)
 
         if (ApplicationType.REST_WEB == ap) {
-            val restwebAPIList = clientAPIMemoryUnit.restWebExposedExposedAPI
-                    .filterKeys { it.remoteAddress == client.clientId }
-                    .flatMap { it.value }
+            val restwebAPIList= this.clientRegistryCenter.getExposedAPIFilterApplicationTypeByRemote(clientId,ApplicationType.REST_WEB)
+                    as Collection<RestWebExposedAPI>
+
             val resources = restwebAPIList
                     .groupBy { it.controller }
                     .map { it.key }
@@ -247,9 +214,8 @@ class ServiceClientController {
             return ok(mutableListOf(ROOT_NAV))
 
         } else if (ApplicationType.DUBBO == ap) {
-            val dubboAPIList = clientAPIMemoryUnit.dubboExposedExposedAPI
-                    .filterKeys { it.remoteAddress == client.clientId }
-                    .flatMap { it.value }
+            val restwebAPIList= this.clientRegistryCenter.getExposedAPIFilterApplicationTypeByRemote(clientId,ApplicationType.DUBBO)
+                    as Collection<DubboExposedAPI>
 
 
         } else {

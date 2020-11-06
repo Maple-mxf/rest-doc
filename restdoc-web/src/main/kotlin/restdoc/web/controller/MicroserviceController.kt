@@ -5,11 +5,12 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import restdoc.remoting.common.DubboExposedAPI
 import restdoc.web.base.auth.Verify
 import restdoc.web.core.Result
 import restdoc.web.core.Status
 import restdoc.web.core.ok
-import restdoc.web.core.schedule.ClientAPIMemoryUnit
+import restdoc.web.core.schedule.ClientRegistryCenter
 import restdoc.web.model.ProjectType
 import restdoc.web.repository.ProjectRepository
 import restdoc.web.service.DubboDocumentService
@@ -22,7 +23,7 @@ class MicroserviceController {
     lateinit var projectRepository: ProjectRepository
 
     @Autowired
-    lateinit var APIMemoryUnit: ClientAPIMemoryUnit
+    lateinit var clientRegistryCenter: ClientRegistryCenter
 
     @Autowired
     lateinit var dubboDocumentService: DubboDocumentService
@@ -36,11 +37,10 @@ class MicroserviceController {
                 projectRepository.findById(projectId).orElseThrow { Status.BAD_REQUEST.instanceError("projectId错误") }
         when (type) {
             ProjectType.DUBBO -> {
-                val apiContext = APIMemoryUnit.dubboExposedExposedAPI.keys.first { it.service == service }
-                val apiList = APIMemoryUnit.dubboExposedExposedAPI[apiContext]
+                val apiList = this.clientRegistryCenter.getExposedAPIFilterService(service)
                 if (apiList != null) {
                     // Convert Dubbo Exposed API to document
-                    dubboDocumentService.sync(projectId = projectId, apiList = apiList)
+                    dubboDocumentService.sync(projectId = projectId, apiList = apiList as Collection<DubboExposedAPI>)
                 }
             }
             else -> {
@@ -51,44 +51,4 @@ class MicroserviceController {
     }
 
 
-    /*@GetMapping("/microservice/{id}/exposedapi")
-    fun getExposedAPI(@PathVariable id: String,
-                      @RequestParam ap: String): Any {
-
-        val applicationType = ApplicationType.valueOf(ap.toUpperCase())
-
-        val apiList = clientExposedAPIManager.listBy(applicationType, id)
-
-        return when (applicationType) {
-            ApplicationType.DUBBO -> {
-                val dubboAPIList: List<DubboExposedAPI> = apiList as List<DubboExposedAPI>
-                val navTree = dubboAPIList.map {
-                    val children = it.exposedMethods
-                            .map { method ->
-                                NavNode(
-                                        id = method.methodName + "->" + method.parameterClasses.joinToString(separator = "-"),
-                                        title = method.methodName,
-                                        field = null,
-                                        children = mutableListOf(),
-                                        pid = it.name,
-                                        type = NodeType.API
-                                )
-                            }.toMutableList()
-                    val node = NavNode(
-                            id = it.name,
-                            title = it.name,
-                            field = null,
-                            children = children,
-                            pid = ROOT_NAV.id)
-
-                    node.children = children
-                    node
-                }
-                ok(navTree)
-            }
-            else -> {
-                throw Throwable("參數錯誤")
-            }
-        }
-    }*/
 }

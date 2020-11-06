@@ -15,10 +15,7 @@ import restdoc.web.controller.obj.UpdateDubboDocumentDto
 import restdoc.web.core.Result
 import restdoc.web.core.Status
 import restdoc.web.core.ok
-import restdoc.web.core.schedule.ClientChannelManager
-import restdoc.web.core.schedule.RemotingTask
-import restdoc.web.core.schedule.RemotingTaskType
-import restdoc.web.core.schedule.ScheduleController
+import restdoc.web.core.schedule.*
 import restdoc.web.repository.DubboDocumentRepository
 
 /**
@@ -31,7 +28,7 @@ class DubboDocumentController {
     lateinit var dubboDocumentRepository: DubboDocumentRepository
 
     @Autowired
-    lateinit var clientChannelManager: ClientChannelManager
+    lateinit var clientRegistryCenter: ClientRegistryCenter
 
     @Autowired
     lateinit var scheduleController: ScheduleController
@@ -76,7 +73,7 @@ class DubboDocumentController {
 
         if (params["clientId"] == null) Status.BAD_REQUEST.error()
         val clientId = params["clientId"].toString().replace("tcp://", "")
-        val applicationClientInfo = clientChannelManager.findClient(clientId)
+        val applicationClientInfo = clientRegistryCenter.get(clientId)
 
         val request = RemotingCommand.createRequestCommand(RequestCode.INVOKE_API, null)
 

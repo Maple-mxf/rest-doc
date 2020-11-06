@@ -1,19 +1,16 @@
 package restdoc.web.controller.rpctest
 
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.RestController
-import restdoc.web.core.schedule.ClientAPIMemoryUnit
-import restdoc.web.core.schedule.ScheduleController
 
 @RestController
 class DubboExposedAPITest {
 
-    @Autowired
+  /*  @Autowired
     lateinit var clientAPIMemoryUnit: ClientAPIMemoryUnit
 
     @Autowired
     lateinit var scheduleController: ScheduleController
-
+*/
 
    /* @GetMapping("/invokeSimpleDubboAPI")
     fun invokeSimpleDubboAPI(): Any {

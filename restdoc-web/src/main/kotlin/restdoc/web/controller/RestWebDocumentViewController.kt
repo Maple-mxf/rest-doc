@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestParam
 import restdoc.web.base.auth.Verify
 import restdoc.web.controller.obj.*
-import restdoc.web.core.schedule.ClientChannelManager
+import restdoc.web.core.schedule.ClientRegistryCenter
 import restdoc.web.model.DocType
 import restdoc.web.model.RestWebDocument
 import restdoc.web.repository.ResourceRepository

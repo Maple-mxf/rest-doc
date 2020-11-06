@@ -28,17 +28,14 @@ import restdoc.web.core.Result
 import restdoc.web.core.Status
 import restdoc.web.core.failure
 import restdoc.web.core.ok
-import restdoc.web.core.schedule.ClientAPIMemoryUnit
+import restdoc.web.core.schedule.ClientRegistryCenter
 import restdoc.web.core.schedule.ScheduleController
 import restdoc.web.model.*
 import restdoc.web.repository.ProjectRepository
 import restdoc.web.repository.ResourceRepository
 import restdoc.web.repository.RestWebDocumentRepository
-import restdoc.web.util.IDUtil
+import restdoc.web.util.*
 import restdoc.web.util.IDUtil.now
-import restdoc.web.util.JsonDeProjector
-import restdoc.web.util.JsonProjector
-import restdoc.web.util.PathValue
 import java.net.URI
 import java.net.URL
 import java.util.*
@@ -66,10 +63,7 @@ class RestWebDocumentController {
     private lateinit var redisTemplate: RedisTemplate<String, Any>
 
     @Autowired
-    private lateinit var mapper: ObjectMapper
-
-    @Autowired
-    private lateinit var APIMemoryUnit: ClientAPIMemoryUnit
+    private lateinit var clientRegistryCenter: ClientRegistryCenter
 
     @Autowired
     private lateinit var httpTaskExecutor: HttpTaskExecutor
@@ -396,9 +390,11 @@ class RestWebDocumentController {
      */
     @PostMapping("/sync")
     fun syncDocument(@RequestBody dto: SyncApiEmptyTemplateDto): Result {
-        val apiList = APIMemoryUnit.get(ApplicationType.REST_WEB, dto.service,
-                dto.remoteAddress.replace("tcp://", ""))
-                as List<RestWebExposedAPI>
+        val apiList =
+        clientRegistryCenter.getExposedAPIFilterApplicationTypeByRemote(
+                dto.remoteAddress.replace("tcp://", ""),
+                ApplicationType.REST_WEB
+        ) as Collection<RestWebExposedAPI>
 
         val groupByResourceAPIList = apiList.groupBy { it.controller }.toMap()
 

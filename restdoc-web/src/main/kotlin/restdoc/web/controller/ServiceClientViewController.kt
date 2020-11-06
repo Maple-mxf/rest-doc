@@ -8,14 +8,14 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestParam
 import restdoc.remoting.common.ApplicationType
 import restdoc.web.base.auth.Verify
-import restdoc.web.core.schedule.ClientChannelManager
+import restdoc.web.core.schedule.ClientRegistryCenter
 
 @Controller
 @Verify
 class ServiceClientViewController {
 
     @Autowired
-    lateinit var clientChannelManager: ClientChannelManager
+    lateinit var clientRegistryCenter: ClientRegistryCenter
 
     @GetMapping("/serviceClient/view/list")
     fun list() = "cs/list"
@@ -34,8 +34,7 @@ class ServiceClientViewController {
 
     @GetMapping("/serviceClient/{id}/view")
     fun detail(@PathVariable id: String, model: Model): String {
-        val clientInfo = clientChannelManager.clients
-                .values.first { it.id == id }
+        val clientInfo =clientRegistryCenter.get(id)
 
         mapOf(
                 "id" to clientInfo.id,

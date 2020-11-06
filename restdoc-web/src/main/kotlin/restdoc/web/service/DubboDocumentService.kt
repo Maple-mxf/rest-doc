@@ -17,7 +17,7 @@ import restdoc.web.util.ReflectUtils
  * @author Overman
  */
 interface DubboDocumentService {
-    fun sync(projectId: String, apiList: List<DubboExposedAPI>)
+    fun sync(projectId: String, apiList: Collection<DubboExposedAPI>)
 }
 
 /**
@@ -32,7 +32,7 @@ open class DubboDocumentServiceImpl : DubboDocumentService {
     @Autowired
     lateinit var resourceRepository: ResourceRepository
 
-    override fun sync(projectId: String, apiList: List<DubboExposedAPI>) {
+    override fun sync(projectId: String, apiList: Collection<DubboExposedAPI>) {
 
         // 0 同步resource(删除不存在的resource)
         val apiIds = apiList.map { it.name.hashCode().toString() }

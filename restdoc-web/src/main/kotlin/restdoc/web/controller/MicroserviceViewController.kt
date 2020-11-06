@@ -9,15 +9,14 @@ import org.springframework.web.bind.annotation.RequestParam
 import restdoc.remoting.common.ApplicationType
 import restdoc.web.base.auth.Verify
 import restdoc.web.core.Status
-import restdoc.web.core.schedule.ClientChannelManager
-import restdoc.web.core.schedule.ClientAPIMemoryUnit
+import restdoc.web.core.schedule.ClientRegistryCenter
 
 @Controller
 @Verify
 class MicroserviceViewController {
 
     @Autowired
-    lateinit var clientChannelManager: ClientChannelManager
+    lateinit var clientRegistryCenter: ClientRegistryCenter
 
     @GetMapping("/microservice/view/index")
     fun index() = "microservice/index"
@@ -30,7 +29,7 @@ class MicroserviceViewController {
 
         model.addAttribute("clientId", clientId)
         model.addAttribute("ap", ap)
-        val client = clientChannelManager.findClient(clientId)
+        val client = clientRegistryCenter.get(clientId)
         if (client == null) Status.BAD_REQUEST.error("指定client不存在")
         model.addAttribute("service", client!!.service)
 

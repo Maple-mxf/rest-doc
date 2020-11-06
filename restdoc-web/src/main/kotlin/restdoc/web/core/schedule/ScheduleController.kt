@@ -33,8 +33,7 @@ import java.net.InetSocketAddress
  */
 @Component
 class ScheduleController @Autowired constructor(scheduleProperties: ScheduleProperties,
-                                                private val clientManager: ClientChannelManager,
-                                                private val APIMemoryUnit: ClientAPIMemoryUnit
+                                                private val clientRegistryCenter: ClientRegistryCenter
 ) : CommandLineRunner {
 
     private val log: Logger = LoggerFactory.getLogger(ScheduleController::class.java)
@@ -57,13 +56,15 @@ class ScheduleController @Autowired constructor(scheduleProperties: ScheduleProp
                     override fun onChannelException(remoteAddr: String, channel: Channel) {
                         // unregisterAPI
                     }
+
                     override fun onChannelIdle(remoteAddr: String, channel: Channel) {
                         // unregisterAPI
                     }
+
                     override fun onChannelClose(remoteAddr: String, channel: Channel) {
-                        val remoteAddr = RemotingHelper.parseChannelRemoteAddr(channel)
-                        clientManager.unregisterClient(remoteAddr)
-                        APIMemoryUnit.unregisterAPI(APIMemoryUnit.getByClient(remoteAddr))
+                        val remote = RemotingHelper.parseChannelRemoteAddr(channel)
+                        clientRegistryCenter.unregistryClient(remote)
+                        clientRegistryCenter.unregistryAPI(remote)
                     }
                 })
     }
@@ -91,7 +92,8 @@ class ScheduleController @Autowired constructor(scheduleProperties: ScheduleProp
                             serializationProtocol = body.serializationProtocol
                             applicationType = body.type
                         }
-                clientManager.registerClient(RemotingHelper.parseChannelRemoteAddr(channel), clientChannelInfo)
+
+                clientRegistryCenter.registryClient(RemotingHelper.parseChannelRemoteAddr(channel), clientChannelInfo)
             }
         }
 
@@ -111,7 +113,9 @@ class ScheduleController @Autowired constructor(scheduleProperties: ScheduleProp
                         RemotingSerializable.decode(it.responseCommand.body, SpringCloudExposeAPIBody::class.java) as SpringCloudExposeAPIBody
                     }
                 }
-                APIMemoryUnit.registerAPI(at, RemotingHelper.parseChannelRemoteAddr(channel), exposedAPIBody.service, exposedAPIBody.apiList)
+
+                val remote = RemotingHelper.parseChannelRemoteAddr(channel)
+                clientRegistryCenter.registryAPI(remote, at, exposedAPIBody.service, exposedAPIBody.apiList)
             }
         }
     }
@@ -123,7 +127,7 @@ class ScheduleController @Autowired constructor(scheduleProperties: ScheduleProp
 
 
     fun executeRemotingTask(clientId: String, remotingTask: RemotingTask): RemotingTaskExecuteResult {
-        val clientChannelInfo = clientManager.findClientByRemoteAddress(clientId)
+        val clientChannelInfo = clientRegistryCenter.get(clientId)
         val channel = clientChannelInfo!!.channel
 
         return when (remotingTask.type) {
@@ -158,7 +162,7 @@ class ScheduleController @Autowired constructor(scheduleProperties: ScheduleProp
 
         val request = RemotingCommand.createRequestCommand(RequestCode.INVOKE_API, null)
         request.body = invocation.encode()
-        val clientChannelInfo = clientManager.findClient(clientId)
+        val clientChannelInfo = clientRegistryCenter.get(clientId)
 
         if (clientChannelInfo == null) Status.BAD_REQUEST.error("找不到对应的客户端$clientId")
 
@@ -184,7 +188,7 @@ class ScheduleController @Autowired constructor(scheduleProperties: ScheduleProp
     fun syncGetEmptyApiTemplates(clientId: String?): List<RestWebExposedAPI> {
 
         val request = RemotingCommand.createRequestCommand(RequestCode.GET_EMPTY_API_TEMPLATES, null)
-        val clientChannelInfo = clientManager.findClient(clientId)
+        val clientChannelInfo = clientRegistryCenter.get(clientId)
 
         val response = remotingServer.invokeSync(clientChannelInfo!!.channel, request,
                 this.httpTaskExecuteTimeout)
