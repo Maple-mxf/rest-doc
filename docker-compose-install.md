@@ -20,6 +20,7 @@ sudo systemctl restart docker
 ```
 cd ~
 mkdir restdoc-compose
+cd restdoc-compose
 curl -LJO https://raw.githubusercontent.com/Open-source-sharing/REST-doc/master/docker-compose.yml
 curl -LJO https://raw.githubusercontent.com/Open-source-sharing/REST-doc/master/mongo-init.js
 ```
