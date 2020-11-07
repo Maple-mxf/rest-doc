@@ -20,8 +20,8 @@ sudo systemctl restart docker
 ```
 cd ~
 mkdir restdoc-compose
-curl -LJO https://github.com/Open-source-sharing/REST-doc/blob/master/docker-compose.yml
-curl -LJO https://github.com/Open-source-sharing/REST-doc/blob/master/mongo-init.js
+curl -LJO https://raw.githubusercontent.com/Open-source-sharing/REST-doc/master/docker-compose.yml
+curl -LJO https://raw.githubusercontent.com/Open-source-sharing/REST-doc/master/mongo-init.js
 ```
 
 2 安装RESTdoc-console并且后台启动

@@ -75,7 +75,7 @@ open class PythonCodeSampleGenerator : MapToCodeSample {
 
     init {
         ve.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath")
-        ve.setProperty("classpath.resource.loader.class", ClasspathResourceLoader::class.java.name);
+        ve.setProperty("classpath.resource.loader.class", ClasspathResourceLoader::class.java.name)
         ve.init();
     }
 
@@ -112,8 +112,8 @@ open class JavaCodeSampleGenerator : MapToCodeSample {
 
     init {
         ve.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath")
-        ve.setProperty("classpath.resource.loader.class", ClasspathResourceLoader::class.java.name);
-        ve.init();
+        ve.setProperty("classpath.resource.loader.class", ClasspathResourceLoader::class.java.name)
+        ve.init()
     }
 
     override fun invoke(doc: RestWebDocument): String {
