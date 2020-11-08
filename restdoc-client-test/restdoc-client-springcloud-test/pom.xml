@@ -3,19 +3,23 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>rest-doc</artifactId>
+        <artifactId>restdoc-client-test</artifactId>
         <groupId>com.github.open-source-sharing</groupId>
         <version>1.0.RELEASE</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <version>1.0.RELEASE</version>
-    <artifactId>restdoc-client-test</artifactId>
-    <packaging>pom</packaging>
-    <modules>
-        <module>restdoc-client-dubbo-test</module>
-        <module>restdoc-client-springcloud-test</module>
-    </modules>
+    <artifactId>restdoc-client-springcloud-test</artifactId>
 
+
+    <packaging>jar</packaging>
+
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>
