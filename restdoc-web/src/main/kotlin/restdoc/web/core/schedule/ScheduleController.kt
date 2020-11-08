@@ -76,47 +76,47 @@ class ScheduleController @Autowired constructor(scheduleProperties: ScheduleProp
 
         val getClientAPIListRequest = RemotingCommand.createRequestCommand(RequestCode.REPORT_EXPOSED_API, null)
 
-        this.remotingServer.invokeAsync(channel, getClientInfoRequest, 10000L) {
-            if (it.responseCommand.code == RemotingSysResponseCode.SUCCESS) {
-                val address = channel.remoteAddress() as InetSocketAddress
-                val body = RemotingSerializable.decode(it.responseCommand.body, ClientInfo::class.java)
-                val clientChannelInfo = ApplicationClientInfo(
-                        channel,
-                        "tcp://${address.address.hostAddress}:${address.port}",
-                        LanguageCode.JAVA,
-                        1)
-                        .apply {
-                            hostname = body.hostname
-                            osname = body.osname
-                            service = body.service
-                            serializationProtocol = body.serializationProtocol
-                            applicationType = body.type
-                        }
+        val getClientInfoResponse = this.remotingServer.invokeSync(channel, getClientInfoRequest, 10000L)
 
-                clientRegistryCenter.registryClient(RemotingHelper.parseChannelRemoteAddr(channel), clientChannelInfo)
-            }
+        if (getClientInfoResponse.code == RemotingSysResponseCode.SUCCESS){
+            val address = channel.remoteAddress() as InetSocketAddress
+            val body = RemotingSerializable.decode(getClientInfoResponse.body, ClientInfo::class.java)
+            val clientChannelInfo = ApplicationClientInfo(
+                    channel,
+                    "tcp://${address.address.hostAddress}:${address.port}",
+                    LanguageCode.JAVA,
+                    1)
+                    .apply {
+                        hostname = body.hostname
+                        osname = body.osname
+                        service = body.service
+                        serializationProtocol = body.serializationProtocol
+                        applicationType = body.type
+                    }
+
+            clientRegistryCenter.registryClient(RemotingHelper.parseChannelRemoteAddr(channel), clientChannelInfo)
         }
 
-        this.remotingServer.invokeAsync(channel, getClientAPIListRequest, 10000L) {
-            if (it.responseCommand.code == RemotingSysResponseCode.SUCCESS) {
-                val on = RemotingSerializable.decode(it.responseCommand.body, ObjectNode::class.java)
+        val getClientAPIResponse = this.remotingServer.invokeSync(channel, getClientAPIListRequest, 10000L)
 
-                val at = ApplicationType.valueOf(on.get("applicationType").asText())
-                val exposedAPIBody = when {
-                    ApplicationType.DUBBO == at -> {
-                        RemotingSerializable.decode(it.responseCommand.body, DubboExposedAPIBody::class.java) as DubboExposedAPIBody
-                    }
-                    ApplicationType.REST_WEB == at -> {
-                        RemotingSerializable.decode(it.responseCommand.body, RestWebExposedAPIBody::class.java) as RestWebExposedAPIBody
-                    }
-                    else -> {
-                        RemotingSerializable.decode(it.responseCommand.body, SpringCloudExposeAPIBody::class.java) as SpringCloudExposeAPIBody
-                    }
+        if (getClientAPIResponse.code == RemotingSysResponseCode.SUCCESS) {
+            val on = RemotingSerializable.decode(getClientAPIResponse.body, ObjectNode::class.java)
+
+            val at = ApplicationType.valueOf(on.get("applicationType").asText())
+            val exposedAPIBody = when {
+                ApplicationType.DUBBO == at -> {
+                    RemotingSerializable.decode(getClientAPIResponse.body, DubboExposedAPIBody::class.java) as DubboExposedAPIBody
                 }
-
-                val remote = RemotingHelper.parseChannelRemoteAddr(channel)
-                clientRegistryCenter.registryAPI(remote, at, exposedAPIBody.service, exposedAPIBody.apiList)
+                ApplicationType.REST_WEB == at -> {
+                    RemotingSerializable.decode(getClientAPIResponse.body, RestWebExposedAPIBody::class.java) as RestWebExposedAPIBody
+                }
+                else -> {
+                    RemotingSerializable.decode(getClientAPIResponse.body, SpringCloudExposeAPIBody::class.java) as SpringCloudExposeAPIBody
+                }
             }
+
+            val remote = RemotingHelper.parseChannelRemoteAddr(channel)
+            clientRegistryCenter.registryAPI(remote, at, exposedAPIBody.service, exposedAPIBody.apiList)
         }
     }
 

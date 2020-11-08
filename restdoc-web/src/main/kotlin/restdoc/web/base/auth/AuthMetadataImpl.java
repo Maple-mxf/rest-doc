@@ -3,7 +3,6 @@ package restdoc.web.base.auth;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableSet;
 import org.springframework.data.redis.core.RedisTemplate;
-import restdoc.web.core.Status;
 import restdoc.web.model.User;
 
 import javax.servlet.http.Cookie;

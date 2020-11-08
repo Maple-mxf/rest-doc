@@ -2,6 +2,7 @@ package restdoc.web.core.schedule;
 
 import io.netty.channel.Channel;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import restdoc.remoting.annotation.Nullable;
 import restdoc.remoting.common.ApplicationClientInfo;
@@ -26,7 +27,7 @@ import java.util.stream.Collectors;
  * @since 2020/10/30
  */
 @Component
-public class ClientRegistryCenter {
+public class ClientRegistryCenter implements CommandLineRunner {
 
     /**
      * Key is client id is encode string {@link restdoc.web.util.MD5Util#MD5Encode(String, String)}
@@ -164,4 +165,16 @@ public class ClientRegistryCenter {
                 .flatMap(t -> t.getApiList().stream())
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public void run(String... args) throws Exception {
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                System.err.println(clients);
+                System.err.println(apiTable);
+            }
+        }, 1000L, 5000L);
+    }
+
 }
