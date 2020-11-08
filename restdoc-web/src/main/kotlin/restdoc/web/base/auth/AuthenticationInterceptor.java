@@ -117,38 +117,40 @@ public class AuthenticationInterceptor extends BaseInterceptor {
 
             Credential credential = credentialFunction.apply(request);
 
-            checkupCredential(credential, verify, credentialFunction, require);
-
-            authContext.setCredential(request, credential);
+            if (checkupCredential(credential, verify, credentialFunction, require)) {
+                authContext.setCredential(request, credential);
+            }
         }
         return true;
     }
 
-    private void checkupCredential(Credential credential,
-                                   Verify verify,
-                                   CredentialFunction credentialFunction,
-                                   boolean require
+    private boolean checkupCredential(Credential credential,
+                                      Verify verify,
+                                      CredentialFunction credentialFunction,
+                                      boolean require
     ) {
         if (!credential.getValid()) {
             if (require) {
                 throw credentialFunction.ifErrorThrowing();
             }
-            return;
+            return true;
         }
 
         // 没有设定角色 || 或者设定了*号  任何角色都可以访问
         String[] requireAllowRoles = verify.role();
 
-        if (requireAllowRoles.length == 0 || "*" .equals(requireAllowRoles[0])) return;
+        if (requireAllowRoles.length == 0 || "*".equals(requireAllowRoles[0])) return true;
 
         // 用户角色
         String[] roles = credential.getRoles();
         // 求两个数组的交集
         List<String> requireAllowRoleList = Arrays.asList(requireAllowRoles);
-        if (Arrays.stream(roles).anyMatch(requireAllowRoleList::contains)) return;
+        if (Arrays.stream(roles).anyMatch(requireAllowRoleList::contains)) return true;
 
         if (require)
             throw credentialFunction.ifErrorThrowing();
+
+        return true;
     }
 
     /**

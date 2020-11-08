@@ -58,7 +58,7 @@ public class AuthMetadataImpl implements AuthMetadata {
         public Credential mapCookieToCredential(HttpServletRequest request, Cookie cookie) {
             LinkedHashMap<String,Object> map = (LinkedHashMap<String, Object>) redisTemplate.opsForValue().get(cookie.getValue());
             User user =  mapper.convertValue(map,User.class);
-            if (user == null) Status.UNAUTHORIZED.error();
+            if (user == null) return null;
 
             return Credential.builder(true)
                     .identity(user.getId())

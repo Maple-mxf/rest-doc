@@ -35,10 +35,10 @@ public class HolderKit {
         this.mapper = mapper;
     }
 
-    public User getUser()  {
+    public User getUser() {
         Credential credential = authContext.getCredential(request());
         return Optional.ofNullable(credential)
-                .map(c -> mapper.convertValue(c.getUserInfo(),User.class))
+                .map(c -> mapper.convertValue(c.getUserInfo(), User.class))
                 .orElse(null);
     }
 
