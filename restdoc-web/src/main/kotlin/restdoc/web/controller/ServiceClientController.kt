@@ -166,10 +166,11 @@ class ServiceClientController {
                         title = it.name!!,
                         field = "name",
                         children = null,
-                        pid = it.pid!!)
+                        pid = it.pid!!,
+                        checked = true,
+                        spread = false
+                        )
             }
-
-
 
             findChild(rootNav, navNodes)
 
@@ -182,7 +183,7 @@ class ServiceClientController {
                 RestWebDocument(
                         id = MD5Util.MD5Encode(it.controller + it.pattern, "UTF-8"),
                         projectId = null,
-                        name = it.function,
+                        name = it.function.split("#").last(),
                         resource = it.controller,
                         url = it.pattern,
                         description = null,
@@ -209,7 +210,7 @@ class ServiceClientController {
                                     href = null,
                                     pid = navNode.id,
                                     spread = true,
-                                    checked = false)
+                                    checked = true)
 
                             node.type = if (DocType.API == it.docType) NodeType.API else NodeType.WIKI
                             node
@@ -221,12 +222,11 @@ class ServiceClientController {
                     navNode.children = childrenDocNode
                 }
             }
-            return ok(mutableListOf(rootNav))
+            return ok(rootNav.children)
 
         } else if (ApplicationType.DUBBO == ap) {
             val restwebAPIList = this.clientRegistryCenter.getExposedAPIFilterApplicationTypeByRemote(clientId, ApplicationType.DUBBO)
                     as Collection<DubboExposedAPI>
-
 
         } else {
             throw RuntimeException("Not support application type $ap")

@@ -2,5 +2,44 @@
   "status": "OK",
   "code": "200",
   "message": null,
-  "data": {}
+  "data": [
+    {
+      "id": "root",
+      "title": "一级目录",
+      "field": "title",
+      "children": [
+        {
+          "id": "class restdoc.client.dubbo.test.controller.EchoHttpController",
+          "title": "EchoHttpController",
+          "field": "name",
+          "children": [
+            {
+              "id": "af2fe2ffe3938128dbdae3253f092e98",
+              "title": "restdoc.client.dubbo.test.controller.EchoHttpController#echoRestWeb()",
+              "field": "",
+              "children": [],
+              "href": null,
+              "pid": "class restdoc.client.dubbo.test.controller.EchoHttpController",
+              "spread": true,
+              "checked": false,
+              "disabled": false,
+              "type": "API"
+            }
+          ],
+          "href": null,
+          "pid": "root",
+          "spread": true,
+          "checked": false,
+          "disabled": false,
+          "type": "RESOURCE"
+        }
+      ],
+      "href": null,
+      "pid": "0",
+      "spread": true,
+      "checked": true,
+      "disabled": false,
+      "type": "RESOURCE"
+    }
+  ]
 }

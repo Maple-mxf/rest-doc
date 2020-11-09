@@ -11,19 +11,10 @@ import java.util.Map;
  * @since 2020/9/27
  */
 @RestController
-public class EchoHttpController {
+public class EchoHttpController1 {
 
-    @GetMapping(value = "/echo")
+    @GetMapping(value = "/echo1")
     public Object echoRestWeb() {
-        Map<String, Object> map = new HashMap<>();
-        map.put("applicationType", "DUBBO");
-        map.put("msg", "欢迎测试Http服务");
-        return map;
-    }
-
-
-    @GetMapping(value = "/ping")
-    public Object ping() {
         Map<String, Object> map = new HashMap<>();
         map.put("applicationType", "DUBBO");
         map.put("msg", "欢迎测试Http服务");

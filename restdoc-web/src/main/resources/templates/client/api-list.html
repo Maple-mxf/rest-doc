@@ -21,12 +21,9 @@
 <script th:src="@{/layui/layui.js}"></script>
 <script th:src="@{/admin/js/jquery.js}"></script>
 <script>
-
     var treeData = null;
-
-    var clientId =$("#clientId").val();
+    var clientId = $("#clientId").val();
     var ap = $("#ap").val();
-
     var requestURL = "/restdoc/serviceClient/" + clientId + "/apiList?ap=" + ap;
 
     $.ajax({
@@ -46,14 +43,35 @@
         }
     });
 
+    var layuiTree = null;
+
     layui.use('tree', function () {
         var tree = layui.tree;
+        layuiTree = tree;
         //渲染
         var inst1 = tree.render({
             elem: '#test1',
-            data: treeData
+            id: "apiListTree",
+            data: treeData,
+            showCheckbox: true
         });
     });
+
+    function getCheckApi() {
+        var apiList = layuiTree.getChecked('apiListTree');
+        var res = [];
+        for (var i = 0; i < apiList.length; i++) {
+           var api = apiList[i];
+           if (api.children != null && api.children.length > 0 ){
+               for (var j = 0; j < api.children.length; j++) {
+                   var doc = api.children[j];
+                   res.push(doc.id);
+               }
+           }
+        }
+        return res;
+    }
+
 </script>
 </body>
 </html>
