@@ -56,7 +56,6 @@ public class EntityOperations {
      * Creates a new {@link Entity} for the given bean.
      *
      * @param entity must not be {@literal null}.
-     * @return
      */
     @SuppressWarnings({"unchecked", "rawtypes"})
     public <T> Entity<T> forEntity(T entity) {

@@ -4,6 +4,7 @@ import io.netty.channel.Channel;
 import restdoc.remoting.protocol.LanguageCode;
 
 import java.net.InetSocketAddress;
+import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -20,12 +21,10 @@ public class ApplicationClientInfo {
     private ApplicationType applicationType = ApplicationType.REST_WEB;
     private String serializationProtocol;
 
-    public ApplicationClientInfo(Channel channel) {
-        this(channel, null, null, 0);
-    }
+    public ApplicationClientInfo(String id, Channel channel, String clientId, LanguageCode language, int version) {
 
-    public ApplicationClientInfo(Channel channel, String clientId, LanguageCode language, int version) {
-        id = UUID.randomUUID().toString().replaceAll("-", "");
+        // id = UUID.randomUUID().toString().replaceAll("-", "");
+        this.id = id;
         this.channel = channel;
         this.clientId = clientId;
         this.language = language;

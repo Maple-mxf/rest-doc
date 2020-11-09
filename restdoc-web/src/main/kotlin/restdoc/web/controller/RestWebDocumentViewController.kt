@@ -217,12 +217,21 @@ class RestWebDocumentViewController {
                     pid = it.pid!!)
         }
 
-        findChild(ROOT_NAV, navNodes)
+        val rootNav: NavNode = NavNode(
+                id = "root",
+                title = "一级目录",
+                field = "title",
+                children = mutableListOf(),
+                href = null,
+                pid = "0",
+                checked = true)
+
+        findChild(rootNav, navNodes)
 
         val resourcePaths = mutableListOf<ResourcePath>()
-        resourcePaths.add(ResourcePath(ROOT_NAV.title, ROOT_NAV.id))
+        resourcePaths.add(ResourcePath(rootNav.title, rootNav.id))
 
-        ROOT_NAV.children?.forEach {
+        rootNav.children?.forEach {
             mapToResourcePath("一级目录", it, resourcePaths)
         }
         model.addAttribute("resourcePaths", resourcePaths)

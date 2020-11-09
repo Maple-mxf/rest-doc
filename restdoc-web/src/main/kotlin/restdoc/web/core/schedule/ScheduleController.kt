@@ -26,7 +26,9 @@ import restdoc.remoting.protocol.RemotingSerializable
 import restdoc.remoting.protocol.RemotingSysResponseCode
 import restdoc.web.core.ServiceException
 import restdoc.web.core.Status
+import restdoc.web.util.MD5Util
 import java.net.InetSocketAddress
+import java.nio.charset.StandardCharsets
 
 /**
  * ScheduleServer provided the tcp server dashboard
@@ -81,7 +83,11 @@ class ScheduleController @Autowired constructor(scheduleProperties: ScheduleProp
         if (getClientInfoResponse.code == RemotingSysResponseCode.SUCCESS){
             val address = channel.remoteAddress() as InetSocketAddress
             val body = RemotingSerializable.decode(getClientInfoResponse.body, ClientInfo::class.java)
+            val remote = RemotingHelper.parseChannelRemoteAddr(channel)
+            val id =  MD5Util.MD5Encode(remote, StandardCharsets.UTF_8.name())
+
             val clientChannelInfo = ApplicationClientInfo(
+                    id,
                     channel,
                     "tcp://${address.address.hostAddress}:${address.port}",
                     LanguageCode.JAVA,
@@ -94,7 +100,7 @@ class ScheduleController @Autowired constructor(scheduleProperties: ScheduleProp
                         applicationType = body.type
                     }
 
-            clientRegistryCenter.registryClient(RemotingHelper.parseChannelRemoteAddr(channel), clientChannelInfo)
+            clientRegistryCenter.registryClient(remote, clientChannelInfo)
         }
 
         val getClientAPIResponse = this.remotingServer.invokeSync(channel, getClientAPIListRequest, 10000L)

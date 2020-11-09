@@ -398,6 +398,15 @@ class RestWebDocumentController {
 
         val groupByResourceAPIList = apiList.groupBy { it.controller }.toMap()
 
+        val rootNav: NavNode = NavNode(
+                id = "root",
+                title = "一级目录",
+                field = "title",
+                children = mutableListOf(),
+                href = null,
+                pid = "0",
+                checked = true)
+
         for (controller in groupByResourceAPIList.keys) {
             val resourceId = controller.hashCode().toString()
             val resourceExist = resourceRepository.existsById(resourceId)
@@ -407,7 +416,7 @@ class RestWebDocumentController {
                         id = resourceId,
                         tag = controller,
                         name = simpleName,
-                        pid = ROOT_NAV.id,
+                        pid = rootNav.id,
                         projectId = dto.projectId,
                         createTime = now(),
                         createBy = ""

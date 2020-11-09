@@ -5,7 +5,7 @@ import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.stereotype.Service
 import restdoc.remoting.common.DubboExposedAPI
-import restdoc.web.controller.obj.ROOT_NAV
+import restdoc.web.controller.obj.NavNode
 import restdoc.web.model.*
 import restdoc.web.repository.DubboDocumentRepository
 import restdoc.web.repository.ResourceRepository
@@ -42,6 +42,15 @@ open class DubboDocumentServiceImpl : DubboDocumentService {
             resourceRepository.deleteById(nonExistResource.id)
         }
 
+        val rootNav: NavNode = NavNode(
+                id = "root",
+                title = "一级目录",
+                field = "title",
+                children = mutableListOf(),
+                href = null,
+                pid = "0",
+                checked = true)
+
         // 1 同步API
         for (api in apiList) {
             val resourceId = api.name.hashCode().toString()
@@ -53,7 +62,7 @@ open class DubboDocumentServiceImpl : DubboDocumentService {
                         id = resourceId,
                         tag = api.name,
                         name = simpleName,
-                        pid = ROOT_NAV.id,
+                        pid = rootNav.id,
                         projectId = projectId,
                         createTime = now(),
                         createBy = "System")

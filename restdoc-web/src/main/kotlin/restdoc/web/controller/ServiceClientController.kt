@@ -132,11 +132,20 @@ class ServiceClientController {
     fun apiList(@PathVariable clientId: String,
                 @RequestParam(required = false, defaultValue = "REST_WEB") ap: ApplicationType): Any {
 
-        val client = this.clientRegistryCenter.get(clientId)
+        val rootNav: NavNode = NavNode(
+                id = "root",
+                title = "一级目录",
+                field = "title",
+                children = mutableListOf(),
+                href = null,
+                pid = "0",
+                checked = true)
 
         if (ApplicationType.REST_WEB == ap) {
-            val restwebAPIList= this.clientRegistryCenter.getExposedAPIFilterApplicationTypeByRemote(clientId,ApplicationType.REST_WEB)
-                    as Collection<RestWebExposedAPI>
+
+            val restwebAPIList =
+                    this.clientRegistryCenter.getExposedAPIFilterApplicationType(
+                            clientId, ApplicationType.REST_WEB) as Collection<RestWebExposedAPI>
 
             val resources = restwebAPIList
                     .groupBy { it.controller }
@@ -146,7 +155,7 @@ class ServiceClientController {
                                 id = it,
                                 tag = it,
                                 name = it.split('.').last(),
-                                pid = ROOT_NAV.id,
+                                pid = rootNav.id,
                                 projectId = null,
                                 createTime = null,
                                 createBy = null
@@ -160,12 +169,13 @@ class ServiceClientController {
                         pid = it.pid!!)
             }
 
-            // TODO  BUG  ROOT_NAV是一个全局常量
-            findChild(ROOT_NAV, navNodes)
+
+
+            findChild(rootNav, navNodes)
 
             val allNode = mutableListOf<NavNode>()
 
-            allNode.add(ROOT_NAV)
+            allNode.add(rootNav)
             allNode.addAll(navNodes)
 
             val docs = restwebAPIList.map {
@@ -211,10 +221,10 @@ class ServiceClientController {
                     navNode.children = childrenDocNode
                 }
             }
-            return ok(mutableListOf(ROOT_NAV))
+            return ok(mutableListOf(rootNav))
 
         } else if (ApplicationType.DUBBO == ap) {
-            val restwebAPIList= this.clientRegistryCenter.getExposedAPIFilterApplicationTypeByRemote(clientId,ApplicationType.DUBBO)
+            val restwebAPIList = this.clientRegistryCenter.getExposedAPIFilterApplicationTypeByRemote(clientId, ApplicationType.DUBBO)
                     as Collection<DubboExposedAPI>
 
 

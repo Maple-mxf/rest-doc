@@ -62,12 +62,21 @@ class ResourceController {
                     pid = it.pid!!)
         }
 
-        findChild(ROOT_NAV, navNodes)
+        val rootNav: NavNode = NavNode(
+                id = "root",
+                title = "一级目录",
+                field = "title",
+                children = mutableListOf(),
+                href = null,
+                pid = "0",
+                checked = true)
 
-        if (onlyResource) return ok(mutableListOf(ROOT_NAV))
+        findChild(rootNav, navNodes)
+
+        if (onlyResource) return ok(mutableListOf(rootNav))
         val allNode = mutableListOf<NavNode>()
 
-        allNode.add(ROOT_NAV)
+        allNode.add(rootNav)
         allNode.addAll(navNodes)
 
         val nodeIds = allNode.map { it.id }.toMutableList()
@@ -98,7 +107,7 @@ class ResourceController {
                 navNode.children = childrenDocNode
             }
         }
-        return ok(mutableListOf(ROOT_NAV))
+        return ok(mutableListOf(rootNav))
     }
 
 

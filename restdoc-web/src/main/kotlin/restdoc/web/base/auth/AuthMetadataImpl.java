@@ -11,13 +11,6 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 
 /**
- * <p>说明</p>
- *
- * <p>作用</p>
- *
- * <ul>
- *   <li>作用1</li>
- * </ul>
  *
  * @since 2.0
  */
