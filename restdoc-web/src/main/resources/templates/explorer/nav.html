@@ -20,8 +20,10 @@
                                                 style="font-size: 17px;/*margin-top: 5px;*/ color: white;"></i>&nbsp;返回项目列表</a>
         </li>
 
-        <li class="layui-nav-item"><a href="javascript:;" th:utext="${projectName}"></a></li>
-        <li class="layui-nav-item"><a id="clientServiceList" href="javascript:;">服务实例</a></li>
+        <li class="layui-nav-item"><a id="projectDetail" href="javascript:;" th:utext="${projectName}"></a></li>
+        <li class="layui-nav-item"><a id="clientServiceList" href="javascript:;">服务实例<span class="layui-badge"
+                                                                                           th:text="${instanceNumber}"></span></a>
+        </li>
     </ul>
 </div>
 
@@ -69,7 +71,15 @@
                     type: 2,
                     content: '/restdoc/microservice/view/list?ap=REST_WEB',
                     title: '服务实例列表',
-                    area:['1200px','600px']
+                    area: ['1200px', '600px']
+                });
+            } else if ('projectDetail' === elem[0].id) {
+                layer.open({
+                    title: '项目详情',
+                    area: ['800px', '500px'],
+                    scrollbar: false,
+                    type: 2,
+                    content: '/restdoc/project/' + projectId + '/view'
                 });
             }
         });
