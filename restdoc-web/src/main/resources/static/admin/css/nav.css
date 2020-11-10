@@ -1,13 +1,13 @@
 .layui-nav .layui-nav-item {
-    line-height: 70px;
+    /*line-height: 70px;*/
 }
 
 .layui-nav * {
     font-family: 'Roboto', sans-serif;
-    font-size: 17px;
+    /*font-size: 17px;*/
 }
 
 #navigation {
     font-family: Roboto, serif;
-    font-size: 18px;
+    /*font-size: 18px;*/
 }

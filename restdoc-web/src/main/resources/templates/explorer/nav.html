@@ -14,15 +14,17 @@
 </head>
 <body>
 <div class="layui-row" style="width: 100%">
-    <ul class="layui-nav layui-bg-green" id="navigation" lay-filter="test" style="font-size: 17px">
+    <ul class="layui-nav layui-bg-green" id="navigation" lay-filter="test">
         <li class="layui-nav-item">
             <a href="/restdoc/project/view"> <i class="layui-icon layui-icon-left"
-                                                style="font-size: 17px;/*margin-top: 5px;*/ color: white;"></i>&nbsp;返回项目列表</a>
+                                                style="/*font-size: 15px; */ color: white;"></i>&nbsp;返回项目列表</a>
         </li>
 
         <li class="layui-nav-item"><a id="projectDetail" href="javascript:;" th:utext="${projectName}"></a></li>
         <li class="layui-nav-item"><a id="clientServiceList" href="javascript:;">服务实例<span class="layui-badge"
                                                                                            th:text="${instanceNumber}"></span></a>
+        </li>
+        <li class="layui-nav-item"><a id="clientServiceList1" href="javascript:;">新建文档</a>
         </li>
     </ul>
 </div>
@@ -38,7 +40,7 @@
             <a th:href="@{'/'+${projectId}+'/document/view/api/add'}" class="layui-btn layui-btn-primary"
                target="_blank">创建REST doc</a>
             <a th:href="@{'/'+${projectId}+'/document/view/wiki/add'}" class="layui-btn layui-btn-primary"
-               target="_blank">创建WIKI</a>
+                                             target="_blank">创建WIKI</a>
         </div>
         <div id="navTableOfContent" style="font-size: 14px"></div>
     </div>
