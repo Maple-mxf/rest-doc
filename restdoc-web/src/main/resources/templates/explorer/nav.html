@@ -24,7 +24,7 @@
         <li class="layui-nav-item"><a id="clientServiceList" href="javascript:;">服务实例<span class="layui-badge"
                                                                                            th:text="${instanceNumber}"></span></a>
         </li>
-        <li class="layui-nav-item"><a id="tableContentManage" href="javascript:;">目录管理</a>
+        <li class="layui-nav-item"><a id="tableContentManage" href="javascript:;">目录管理-
         <li class="layui-nav-item"><a id="clientServiceList1" href="javascript:;">创建文档</a>
         </li>
     </ul>
@@ -33,22 +33,10 @@
 <input type="hidden" id="projectId" th:value="${projectId}">
 
 <div id="tableContents" style="display: none">
-    <!--<div>
-        <button class="layui-btn" id="createTableContentBtn">创建目录</button>
-
-        <a th:href="@{'/'+${projectId}+'/document/view/api/add'}" class="layui-btn layui-btn-primary"
-           target="_blank">创建REST doc</a>
-        <a th:href="@{'/'+${projectId}+'/document/view/wiki/add'}" class="layui-btn layui-btn-primary"
-                                         target="_blank">创建WIKI</a>
-    </div>-->
     <div id="navTableOfContent" style="font-size: 14px"></div>
 </div>
 
 <div class="layui-fluid">
-    <!--<div class="layui-col-md10" id="docContent">
-        <iframe src="" id="docContentFrame" frameborder="0" style="width: 100%;height: 1000px;"></iframe>
-    </div>-->
-
     <iframe src="" id="docContentFrame" frameborder="0" style="width: 100%;height: 1000px;"></iframe>
 </div>
 <script th:src="@{/layui/layui.js}"></script>
@@ -147,10 +135,6 @@
                 layer.msg("网络异常")
             }
         });
-
-        function getNavTreeData() {
-
-        }
 
         //执行
         util.fixbar({

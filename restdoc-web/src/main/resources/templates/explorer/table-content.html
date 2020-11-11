@@ -69,6 +69,8 @@
 
         treeTable.on('tree(add)', function (data) {
             var pid = data.item.id;
+
+
             layer.open({
                 type: 1,
                 title: "创建目录/资源",
@@ -76,11 +78,18 @@
                 area: ['400px', '200px'],
                 btn: ['确定', '取消'],
                 yes: function (index, layerDoc) {
+                    var title = $("#tableContentName").val();
+                    if (title === '') {
+                        layer.msg("请填写完整");
+                        return;
+                    }
+
                     var body = {
-                        name: $("#tableContentName").val(),
+                        name: title,
                         tag: "",
                         pid: pid
                     };
+
                     $.ajax({
                         type: 'POST',
                         url: '/restdoc/' + projectId + '/resource',
@@ -99,10 +108,56 @@
                             layer.msg("网络异常");
                         }
                     });
+                },
+                end: function () {
+                    $("#tableContentName").val("");
                 }
             });
         });
         treeTable.on('tree(edit)', function (data) {
+            var id = data.item.id;
+            $("#tableContentName").val(data.item.title);
+            layer.open({
+                type: 1,
+                title: "修改目录/资源",
+                content: $('#tableContentModifyDiv'),
+                area: ['400px', '200px'],
+                btn: ['确定', '取消'],
+                yes: function (index, layerDoc) {
+                    var title = $("#tableContentName").val();
+                    if (title === '') {
+                        layer.msg("请填写完整");
+                        return;
+                    }
+
+                    var body = {
+                        name: $("#tableContentName").val()
+                    };
+                    $.ajax({
+                        type: 'PATCH',
+                        url: '/restdoc/resource/' + id,
+                        data: JSON.stringify(body),
+                        contentType: 'application/json;charset=utf-8',
+                        async: false,
+                        success: function (data) {
+                            if (data['code'] === "200") {
+                                treeTable.render(re);
+                                layer.close(index);
+                            } else {
+                                layer.msg(data['message']);
+                            }
+                        },
+                        error: function () {
+                            layer.msg("网络异常");
+                        }
+                    });
+                },
+                end: function () {
+                    $("#tableContentName").val("");
+                }
+            });
+        });
+        treeTable.on('tree(delete)', function (data) {
             layer.msg(JSON.stringify(data));
         });
     });
