@@ -45,10 +45,36 @@ class ResourceController {
         return ok()
     }
 
+    @GetMapping("/{projectId}/resource/flatten")
+    fun getFlattenResource(@PathVariable projectId: String): Any {
+
+        val resources = resourceRepository.list(Query(Criteria("projectId").`is`(projectId)))
+
+        val navNodes = resources.map {
+            NavNode(id = it.id!!,
+                    title = it.name!!,
+                    field = "name",
+                    children = null,
+                    pid = it.pid!!)
+        }.toMutableList()
+
+        val rootNav: NavNode = NavNode(
+                id = "root",
+                title = "一级目录(虚拟)",
+                field = "title",
+                children = mutableListOf(),
+                href = null,
+                pid = "0",
+                checked = true)
+
+        navNodes.add(rootNav)
+
+        return navNodes
+    }
 
     /**
      *
-     * TODO   code reveiw
+     * TODO   code review
      */
     @GetMapping("/{projectId}/resource/tree")
     fun getTree(@PathVariable projectId: String, @RequestParam(required = false, defaultValue = "false") onlyResource: Boolean): Result {

@@ -24,7 +24,7 @@
         <li class="layui-nav-item"><a id="clientServiceList" href="javascript:;">服务实例<span class="layui-badge"
                                                                                            th:text="${instanceNumber}"></span></a>
         </li>
-        <li class="layui-nav-item"><a id="clientServiceList2" href="javascript:;">目录管理</a>
+        <li class="layui-nav-item"><a id="tableContentManage" href="javascript:;">目录管理</a>
         <li class="layui-nav-item"><a id="clientServiceList1" href="javascript:;">创建文档</a>
         </li>
     </ul>
@@ -45,8 +45,6 @@
 </div>
 
 <div class="layui-fluid">
-
-
     <!--<div class="layui-col-md10" id="docContent">
         <iframe src="" id="docContentFrame" frameborder="0" style="width: 100%;height: 1000px;"></iframe>
     </div>-->
@@ -91,22 +89,56 @@
                     type: 2,
                     content: '/restdoc/project/' + projectId + '/view'
                 });
+            } else if ('tableContentManage' === elem[0].id) {
+                layer.open({
+                    title: '目录管理',
+                    area: ['800px', '500px'],
+                    scrollbar: false,
+                    type: 2,
+                    content: '/restdoc/' + projectId + '/resource/view/table',
+                    end: function () {
+                        resetNavData();
+                        tree.reload("navTableOfContent", {data: treeData});
+                    }
+                });
             }
         });
+
+        function resetNavData() {
+            $.ajax({
+                type: 'GET',
+                url: '/restdoc/' + projectId + '/resource/tree',
+                async: false,
+                success: function (data) {
+                    if (data['code'] === "200") {
+                        treeData = data['data'];
+                    } else {
+                        layer.msg(data['message']);
+                    }
+                },
+                error: function () {
+                    layer.msg("网络异常")
+                }
+            });
+        }
+
+        resetNavData();
+        var docId = getFirstDocument(treeData);
+        if (null != docId) {
+            $("#docContentFrame").attr("src", '/restdoc/' + projectId + '/document/' + docId + '/view');
+        }
+
         $.ajax({
             type: 'GET',
             url: '/restdoc/' + projectId + '/resource/tree',
             async: false,
             success: function (data) {
                 if (data['code'] === "200") {
-                    // treeData = data['data'][0].children;
                     treeData = data['data'];
-
                     var docId = getFirstDocument(treeData);
                     if (null != docId) {
                         $("#docContentFrame").attr("src", '/restdoc/' + projectId + '/document/' + docId + '/view');
                     }
-
                 } else {
                     layer.msg(data['message']);
                 }
@@ -115,6 +147,10 @@
                 layer.msg("网络异常")
             }
         });
+
+        function getNavTreeData() {
+
+        }
 
         //执行
         util.fixbar({
@@ -126,7 +162,6 @@
                 }
             }
         });
-
         openTableContent();
 
         function openTableContent() {
@@ -152,6 +187,7 @@
 
         tree.render({
             elem: '#navTableOfContent'
+            , id: "navTableOfContent"
             , data: treeData
             , edit: ['update', 'del']
             , click: function (obj) {

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>文档中心</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}"/>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+</head>
+<body>
+<table class="layui-table layui-form" id="navTree" lay-size="lg" lay-skin="line"></table>
+<input type="hidden" th:value="${projectId}" id="projectId">
+
+<div class="layui-form-item layui-fluid " id="tableContentModifyDiv" style="display: none;margin-top: 20px">
+    <div class="layui-inline">
+        <label class="layui-form-label">目录</label>
+        <div class="layui-input-inline" style="width: 100px;">
+            <input type="text" name="" id="tableContentName" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+</div>
+
+<script th:src="@{/layui/layui.js}"></script>
+<script th:src="@{/admin/js/jquery.js}"></script>
+<script>
+
+    var projectId = $("#projectId").val();
+    var requestTreeURL = "/restdoc/" + projectId + "/resource/flatten";
+
+    layui.config({
+        base: '/restdoc/layui/lay/extends/'
+    }).use(['treeTable', 'layer', 'code', 'form'], function () {
+        var $ = layui.$, form = layui.form, layer = layui.layer, treeTable = layui.treeTable;
+        var re = treeTable.render({
+            elem: '#navTree',
+            url: requestTreeURL,
+            icon_key: 'title',
+            end: function (e) {
+                form.render();
+            },
+            cols: [
+                {
+                    key: 'title',
+                    title: '名称',
+                    align: 'center'
+                },
+                /*{
+                    key: 'id',
+                    title: 'ID',
+                    width: '100px',
+                    align: 'center',
+                },*/
+                /*{
+                    key: 'pid',
+                    title: '父ID',
+                    width: '100px',
+                    align: 'center',
+                },*/
+                {
+                    title: '操作',
+                    align: 'center',
+                    template: function (item) {
+                        return '<a lay-filter="add">添加</a> | <a   lay-filter="edit" >编辑</a> | <a   lay-filter="delete" >删除</a>';
+                    }
+                }
+            ]
+        });
+
+        treeTable.on('tree(add)', function (data) {
+            var pid = data.item.id;
+            layer.open({
+                type: 1,
+                title: "创建目录/资源",
+                content: $('#tableContentModifyDiv'),
+                area: ['400px', '200px'],
+                btn: ['确定', '取消'],
+                yes: function (index, layerDoc) {
+                    var body = {
+                        name: $("#tableContentName").val(),
+                        tag: "",
+                        pid: pid
+                    };
+                    $.ajax({
+                        type: 'POST',
+                        url: '/restdoc/' + projectId + '/resource',
+                        data: JSON.stringify(body),
+                        contentType: 'application/json;charset=utf-8',
+                        async: false,
+                        success: function (data) {
+                            if (data['code'] === "200") {
+                                treeTable.render(re);
+                                layer.close(index);
+                            } else {
+                                layer.msg(data['message']);
+                            }
+                        },
+                        error: function () {
+                            layer.msg("网络异常");
+                        }
+                    });
+                }
+            });
+        });
+        treeTable.on('tree(edit)', function (data) {
+            layer.msg(JSON.stringify(data));
+        });
+    });
+</script>
+</body>
+</html>
