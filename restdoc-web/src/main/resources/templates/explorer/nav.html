@@ -25,7 +25,8 @@
                                                                                            th:text="${instanceNumber}"></span></a>
         </li>
         <li class="layui-nav-item"><a id="tableContentManage" href="javascript:;">目录管理</a></li>
-        <li class="layui-nav-item"><a id="clientServiceList1" href="javascript:;">创建文档</a>
+        <li class="layui-nav-item"><a id="createAPI" target="_blank" th:href="@{'/'+${projectId}+'/document/view/api/add'}">创建API</a>
+        <li class="layui-nav-item"><a id="createWIKI" target="_blank" th:href="@{'/'+${projectId}+'/document/view/wiki/add'}">创建WIKI</a>
         </li>
     </ul>
 </div>
@@ -81,8 +82,8 @@
             } else if ('projectDetail' === elem[0].id) {
                 layer.open({
                     title: '项目详情',
-                    area: ['800px', '500px'],
-                    scrollbar: false,
+                    area: ['500px', '400px'],
+                    // scrollbar: false,
                     type: 2,
                     content: '/restdoc/project/' + projectId + '/view'
                 });
