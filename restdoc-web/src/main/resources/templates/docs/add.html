@@ -22,13 +22,8 @@
 <input id="documentId" name="documentId" th:value="${documentId}" type="hidden"/>
 
 <input type="hidden" name="projectId" id="projectId" th:value="${projectId}"/>
-<div class="layui-fluid" style="margin-top: 10px">
+<div class="layui-container" style="margin-top: 10px">
     <div class="layui-row">
-        <!--<div class="layui-col-md4" id="command-div">
-               <pre id="test-result" class="common-command" style="height: 700px;">
-            </pre>
-        </div>-->
-
         <div class="layui-col-md10">
             <form class="layui-form layui-form-pane" action="" id="request_form">
                 <fieldset class="layui-elem-field site-demo-button" style="margin-top: 10px;">
@@ -51,11 +46,6 @@
                                    style="width: 220%"
                                    class="layui-input">
                         </div>
-
-                        <!--<button class="layui-btn" style="margin-left: 23%;float: left" lay-submit
-                                lay-filter="rpcExecute">
-                            RPC远程调试
-                        </button>-->
                         <button class="layui-btn" style="margin-left: 23%;float: left" lay-submit lay-filter="execute">
                             <i class="layui-icon layui-icon-triangle-r" style="font-size: 17px; color: white;"></i>调试
                         </button>

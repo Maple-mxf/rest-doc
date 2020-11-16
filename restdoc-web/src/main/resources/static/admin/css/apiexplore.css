@@ -4,6 +4,9 @@ body {
     font-family: 'Roboto', sans-serif;
     font-size: 14px;
 }
+html{
+    background-color: white;
+}
 
 .common-command {
     background: black;
