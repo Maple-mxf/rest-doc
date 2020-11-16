@@ -8,9 +8,13 @@ import org.springframework.web.bind.annotation.*
 import restdoc.web.base.auth.Verify
 import restdoc.web.controller.obj.*
 import restdoc.web.core.Result
+import restdoc.web.core.Status
 import restdoc.web.core.ok
 import restdoc.web.model.DocType
+import restdoc.web.model.ProjectType
 import restdoc.web.model.Resource
+import restdoc.web.repository.DubboDocumentRepository
+import restdoc.web.repository.ProjectRepository
 import restdoc.web.repository.ResourceRepository
 import restdoc.web.repository.RestWebDocumentRepository
 import restdoc.web.util.IDUtil
@@ -30,6 +34,12 @@ class ResourceController {
 
     @Autowired
     lateinit var restWebDocumentRepository: RestWebDocumentRepository
+
+    @Autowired
+    lateinit var dubboDocumentRepository: DubboDocumentRepository
+
+    @Autowired
+    lateinit var projectRepository: ProjectRepository
 
     @PostMapping("/{projectId}/resource")
     fun create(@PathVariable projectId: String, @Valid @RequestBody dto: CreateResourceDto): Result {
@@ -137,8 +147,18 @@ class ResourceController {
     }
 
 
-    @DeleteMapping("/resource/{id}")
-    fun delete(@PathVariable id: String): Result {
+    @DeleteMapping("/{projectId}/resource/{id}")
+    fun delete(@PathVariable id: String, @PathVariable projectId: String): Result {
+        val project = projectRepository.findById(projectId)
+                .orElseThrow { Status.BAD_REQUEST.instanceError("${projectId}项目不存在") }
+        
+        val quantity = if (project.type == ProjectType.REST_WEB) {
+            restWebDocumentRepository.count(Query(Criteria("resource").`is`(id)))
+        } else if (project.type == ProjectType.DUBBO) {
+            dubboDocumentRepository.count(Query(Criteria("resource").`is`(id)))
+        } else 0
+
+        if (quantity != 0L) Status.BAD_REQUEST.error("当前目录下存在关联的文档，无法删除")
         resourceRepository.deleteById(id)
         return ok()
     }

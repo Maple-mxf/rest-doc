@@ -69,8 +69,6 @@
 
         treeTable.on('tree(add)', function (data) {
             var pid = data.item.id;
-
-
             layer.open({
                 type: 1,
                 title: "创建目录/资源",
@@ -158,7 +156,27 @@
             });
         });
         treeTable.on('tree(delete)', function (data) {
-            layer.msg(JSON.stringify(data));
+
+            layer.confirm('确认删除目录' + data.item.title + "?", {icon: 3, title: '提示'}, function (index) {
+                $.ajax({
+                    type: "DELETE",
+                    url: '/restdoc/' + projectId + '/resource/' + data.item.id,
+                    async: false,
+                    success: function (data) {
+                        if (data['code'] === "200") {
+                            layer.msg("操作成功")
+                        } else {
+                            layer.msg(data['message']);
+                        }
+                    },
+                    error: function () {
+                        layer.msg("网络异常")
+                    }
+                });
+                layer.close(index);
+                treeTable.render(re);
+            });
+
         });
     });
 </script>

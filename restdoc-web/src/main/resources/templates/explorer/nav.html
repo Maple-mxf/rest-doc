@@ -19,8 +19,9 @@
             <a href="/restdoc/project/view"> <i class="layui-icon layui-icon-left"
                                                 style="/*font-size: 15px; */ color: white;"></i>&nbsp;返回项目列表</a>
         </li>
-        <li class="layui-nav-item layui-this"><a id="home" th:href="@{'/'+${projectId}+'/document/nav/view'}" >文档</a></li>
-        <li class="layui-nav-item"><a id="projectDetail" href="javascript:;" th:utext="${projectName}"></a></li>
+        <li class="layui-nav-item layui-this"><a id="home" th:href="@{'/'+${projectId}+'/document/nav/view'}">文档</a>
+        </li>
+        <li class="layui-nav-item"><a id="projectDetail" href="javascript:;">项目详情</a></li>
         <li class="layui-nav-item"><a id="clientServiceList" href="javascript:;">服务实例<span class="layui-badge"
                                                                                            th:text="${instanceNumber}"></span></a>
         </li>
@@ -204,9 +205,9 @@
 
                 if (type == 'del') {
                     if (data.type == 'WIKI' || data.type == 'API') {
-                        deleteTreeNode('/restdoc/document/' + data.id)
+                        deleteTreeNode('/restdoc/document/' + data.id);
                     } else {
-                        deleteTreeNode('/restdoc/resource/' + data.id)
+                        deleteTreeNode('/restdoc/' + projectId + '/resource/' + data.id);
                     }
                 } else if (type == 'update') {
                     var body = {"name": data.title};
