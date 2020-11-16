@@ -1,4 +1,4 @@
-package restdoc.web.controller
+package restdoc.web.controller.console
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.mongodb.core.query.Criteria
@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.core.query.Query
 import org.springframework.data.mongodb.core.query.Update
 import org.springframework.web.bind.annotation.*
 import restdoc.web.base.auth.Verify
-import restdoc.web.controller.obj.*
+import restdoc.web.controller.console.obj.*
 import restdoc.web.core.Result
 import restdoc.web.core.Status
 import restdoc.web.core.ok
@@ -98,7 +98,7 @@ class ResourceController {
                     pid = it.pid!!)
         }
 
-        val rootNav: NavNode = NavNode(
+        val rootNav = NavNode(
                 id = "root",
                 title = "一级目录",
                 field = "title",

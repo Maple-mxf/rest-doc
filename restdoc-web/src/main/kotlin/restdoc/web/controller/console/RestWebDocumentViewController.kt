@@ -1,4 +1,4 @@
-package restdoc.web.controller
+package restdoc.web.controller.console
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
@@ -11,8 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestParam
 import restdoc.web.base.auth.Verify
-import restdoc.web.controller.obj.*
-import restdoc.web.core.schedule.ClientRegistryCenter
+import restdoc.web.controller.console.obj.*
 import restdoc.web.model.DocType
 import restdoc.web.model.RestWebDocument
 import restdoc.web.repository.ResourceRepository

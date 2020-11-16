@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}"/>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 15px;
+        }
+
+        pre {
+            background-color: #283142;
+            color: white;
+            font-size: 16px;
+            font-family: Roboto, serif;
+        }
+
+        .code-block {
+            background-color: #283142;
+            color: white;
+            font-size: 16px;
+            font-family: Roboto, serif;
+        }
+
+        .layui-table td, .layui-table th {
+            color: #0C0C0C;
+            font-size: 15px;
+        }
+
+        .layui-table th {
+            text-align: center;
+        }
+
+        /* .layui-table th {
+             font-weight: bold;
+         }*/
+
+        .headerTitle {
+            font-family: Roboto, serif;
+            margin-top: 30px;
+            font-weight: bold;
+        }
+
+        #urlSpan:hover {
+            cursor: pointer;
+        }
+
+
+        /*.layui-tab-title li {
+            font-size: 18px;
+            font-family: Roboto, serif;
+            padding: 0 5%;
+        }*/
+
+        .layui-code {
+            font-size: 14px;
+            font-family: Roboto, serif;
+        }
+
+        #editDocDescriptionBtn:hover {
+            cursor: pointer;
+        }
+
+        tr:hover {
+            cursor: pointer;
+        }
+
+        body {
+            background-color: white;
+        }
+
+    </style>
+</head>
+<body>
+<ul class="layui-nav layui-nav-tree" lay-filter="test">
+    <!-- 侧边导航: <ul class="layui-nav layui-nav-tree layui-nav-side"> -->
+    <li class="layui-nav-item layui-nav-itemed">
+        <a href="javascript:;">默认展开</a>
+        <dl class="layui-nav-child">
+            <dd><a href="javascript:;">选项1</a></dd>
+            <dd><a href="javascript:;">选项2</a></dd>
+            <dd><a href="">跳转</a></dd>
+        </dl>
+    </li>
+    <li class="layui-nav-item">
+        <a href="javascript:;">解决方案</a>
+        <dl class="layui-nav-child">
+            <dd><a href="">移动模块</a></dd>
+            <dd><a href="">后台模版</a></dd>
+            <dd><a href="">电商平台</a></dd>
+        </dl>
+    </li>
+    <li class="layui-nav-item"><a href="">产品</a></li>
+    <li class="layui-nav-item"><a href="">大数据</a></li>
+</ul>
+
+<script th:src="@{/layui/layui.js}"></script>
+<script th:src="@{/admin/js/jquery.js}"></script>
+<script>
+
+</script>
+</body>
+</html>

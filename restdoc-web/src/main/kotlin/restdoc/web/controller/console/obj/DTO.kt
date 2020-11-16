@@ -1,4 +1,4 @@
-package restdoc.web.controller.obj
+package restdoc.web.controller.console.obj
 
 import restdoc.web.model.*
 import restdoc.web.util.FieldType

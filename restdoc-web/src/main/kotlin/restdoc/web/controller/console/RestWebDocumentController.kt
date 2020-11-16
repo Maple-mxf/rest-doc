@@ -1,4 +1,4 @@
-package restdoc.web.controller
+package restdoc.web.controller.console
 
 import com.fasterxml.jackson.databind.JsonNode
 import kotlinx.coroutines.GlobalScope
@@ -23,7 +23,7 @@ import restdoc.remoting.common.ApplicationType
 import restdoc.remoting.common.DubboExposedAPI
 import restdoc.remoting.common.RestWebExposedAPI
 import restdoc.web.base.auth.Verify
-import restdoc.web.controller.obj.*
+import restdoc.web.controller.console.obj.*
 import restdoc.web.core.Result
 import restdoc.web.core.Status
 import restdoc.web.core.failure

@@ -1,4 +1,4 @@
-package restdoc.web.controller
+package restdoc.web.controller.console
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.mongodb.core.MongoTemplate
@@ -10,7 +10,7 @@ import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import restdoc.web.base.auth.Verify
-import restdoc.web.controller.obj.AuthDto
+import restdoc.web.controller.console.obj.AuthDto
 import restdoc.web.core.HolderKit
 import restdoc.web.model.User
 import restdoc.web.util.MD5Util

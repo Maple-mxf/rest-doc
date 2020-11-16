@@ -1,4 +1,4 @@
-package restdoc.web.controller
+package restdoc.web.controller.console
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.PathVariable

@@ -1,4 +1,4 @@
-package restdoc.web.controller.rpctest
+package restdoc.web.controller.console.rpctest
 
 import org.springframework.web.bind.annotation.RestController
 

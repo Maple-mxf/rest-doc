@@ -1,4 +1,4 @@
-package restdoc.web.controller.obj
+package restdoc.web.controller.console.obj
 
 import restdoc.web.base.getBean
 import restdoc.web.core.code.CURLCodeSampleGenerator
