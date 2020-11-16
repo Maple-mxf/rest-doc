@@ -1,7 +1,6 @@
 package restdoc.web.controller
 
 import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.ObjectMapper
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.springframework.beans.factory.annotation.Autowired
@@ -21,6 +20,7 @@ import restdoc.client.api.model.InvocationResult
 import restdoc.client.api.model.RestWebInvocation
 import restdoc.client.api.model.RestWebInvocationResult
 import restdoc.remoting.common.ApplicationType
+import restdoc.remoting.common.DubboExposedAPI
 import restdoc.remoting.common.RestWebExposedAPI
 import restdoc.web.base.auth.Verify
 import restdoc.web.controller.obj.*
@@ -385,75 +385,6 @@ class RestWebDocumentController {
         return ok()
     }
 
-    /**
-     * 同步Http服务
-     */
-    @PostMapping("/sync")
-    fun syncDocument(@RequestBody dto: SyncApiEmptyTemplateDto): Result {
-        val apiList =
-        clientRegistryCenter.getExposedAPIFilterApplicationTypeByRemote(
-                dto.remoteAddress.replace("tcp://", ""),
-                ApplicationType.REST_WEB
-        ) as Collection<RestWebExposedAPI>
-
-        val groupByResourceAPIList = apiList.groupBy { it.controller }.toMap()
-
-        val rootNav: NavNode = NavNode(
-                id = "root",
-                title = "一级目录",
-                field = "title",
-                children = mutableListOf(),
-                href = null,
-                pid = "0",
-                checked = true)
-
-        for (controller in groupByResourceAPIList.keys) {
-            val resourceId = controller.hashCode().toString()
-            val resourceExist = resourceRepository.existsById(resourceId)
-            val simpleName = controller.split('.').last()
-            if (!resourceExist) {
-                val resource = Resource(
-                        id = resourceId,
-                        tag = controller,
-                        name = simpleName,
-                        pid = rootNav.id,
-                        projectId = dto.projectId,
-                        createTime = now(),
-                        createBy = ""
-                )
-                mongoTemplate.save(resource)
-            }
-
-            val apiList = groupByResourceAPIList[controller]
-            apiList!!.forEach { api ->
-                val id = (api.controller + api.pattern + api.supportMethod.joinToString(separator = ",")).hashCode().toString()
-                val documentExist = restWebDocumentRepository.existsById(id)
-                if (!documentExist) {
-                    val document = RestWebDocument(
-                            id = id,
-                            projectId = dto.projectId,
-                            name = api.pattern,
-                            resource = resourceId,
-                            url = api.pattern,
-                            description = api.pattern,
-                            requestBodyDescriptor = null,
-                            requestHeaderDescriptor = null,
-                            responseBodyDescriptors = null,
-                            queryParam = null,
-                            method = HttpMethod.valueOf(api.supportMethod[0]),
-                            uriVarDescriptors = null,
-                            executeResult = null,
-                            content = null,
-                            responseHeaderDescriptor = null,
-                            docType = DocType.API)
-
-                    mongoTemplate.save(document)
-                }
-            }
-        }
-        return ok()
-    }
-
     private fun optimizationAndAutocomplete(projectId: String, doc: RestWebDocument) {
         try {
             // 1 Optimization
@@ -702,6 +633,190 @@ class RestWebDocumentController {
         restWebDocumentRepository.update(doc)
 
         return ok(transformRestDocumentToVO(doc))
+    }
+
+    @GetMapping("/serviceClient/{clientId}/apiList")
+    fun apiList(@PathVariable clientId: String,
+                @RequestParam(required = false, defaultValue = "REST_WEB") ap: ApplicationType): Any {
+
+        val rootNav = NavNode(
+                id = "root",
+                title = "一级目录",
+                field = "title",
+                children = mutableListOf(),
+                href = null,
+                pid = "0",
+                checked = true)
+
+        if (ApplicationType.REST_WEB == ap) {
+
+            val restwebAPIList =
+                    this.clientRegistryCenter.getExposedAPIFilterApplicationType(
+                            clientId, ApplicationType.REST_WEB) as Collection<RestWebExposedAPI>
+
+            val resources = restwebAPIList
+                    .groupBy { it.controller }
+                    .map { it.key }
+                    .map {
+                        Resource(
+                                id = it,
+                                tag = it,
+                                name = it.split('.').last(),
+                                pid = rootNav.id,
+                                projectId = null,
+                                createTime = null,
+                                createBy = null
+                        )
+                    }
+            val navNodes = resources.map {
+                NavNode(id = it.id!!,
+                        title = it.name!!,
+                        field = "name",
+                        children = null,
+                        pid = it.pid!!,
+                        checked = true,
+                        spread = false
+                )
+            }
+
+            findChild(rootNav, navNodes)
+
+            val allNode = mutableListOf<NavNode>()
+
+            allNode.add(rootNav)
+            allNode.addAll(navNodes)
+
+            val docs = restwebAPIList.map {
+                RestWebDocument(
+                        id = MD5Util.MD5Encode(it.controller + it.pattern, "UTF-8"),
+                        projectId = null,
+                        name = it.function.split("#").last(),
+                        resource = it.controller,
+                        url = it.pattern,
+                        description = null,
+                        requestHeaderDescriptor = null,
+                        requestBodyDescriptor = null,
+                        responseBodyDescriptors = null,
+                        queryParam = null,
+                        method = HttpMethod.valueOf(it.supportMethod[0]),
+                        uriVarDescriptors = null,
+                        executeResult = null,
+                        content = null,
+                        responseHeaderDescriptor = null)
+            }
+
+            for (navNode in allNode) {
+                val childrenDocNode: MutableList<NavNode> = docs
+                        .filter { navNode.id == it.resource }
+                        .map {
+
+                            val node = NavNode(
+                                    id = it.id!!,
+                                    /*title = it.name!!,*/
+                                    title = it.url,
+                                    field = "",
+                                    children = mutableListOf(),
+                                    href = null,
+                                    pid = navNode.id,
+                                    spread = true,
+                                    checked = true)
+
+                            node.type = if (DocType.API == it.docType) NodeType.API else NodeType.WIKI
+                            node
+                        }.toMutableList()
+
+                if (navNode.children != null) {
+                    navNode.children!!.addAll(childrenDocNode)
+                } else {
+                    navNode.children = childrenDocNode
+                }
+            }
+            return ok(rootNav.children)
+
+        } else if (ApplicationType.DUBBO == ap) {
+            val restwebAPIList = this.clientRegistryCenter.getExposedAPIFilterApplicationTypeByRemote(clientId, ApplicationType.DUBBO)
+                    as Collection<DubboExposedAPI>
+
+        } else {
+            throw RuntimeException("Not support application type $ap")
+        }
+
+        return ok()
+    }
+
+
+    @PostMapping("/serviceClient/{clientId}/syncApi")
+    fun syncServiceInstanceApi(@PathVariable clientId: String,@RequestBody dto: SyncRestApiDto): Any {
+        val apiList =
+                clientRegistryCenter.getExposedAPIFilterApplicationType(clientId, ApplicationType.REST_WEB) as Collection<RestWebExposedAPI>
+
+        val groupByResourceAPIList = apiList.groupBy { it.controller }.toMap()
+
+        val rootNav = NavNode(
+                id = "root",
+                title = "一级目录",
+                field = "title",
+                children = mutableListOf(),
+                href = null,
+                pid = "0",
+                checked = true)
+
+        var totalQuantity = 0
+        var savedQuantity = 0
+
+        for (controller in groupByResourceAPIList.keys) {
+            val resourceId = controller.hashCode().toString()
+            val resourceExist = resourceRepository.existsById(resourceId)
+            val simpleName = controller.split('.').last()
+            if (!resourceExist) {
+                val resource = Resource(
+                        id = resourceId,
+                        tag = controller,
+                        name = simpleName,
+                        pid = rootNav.id,
+                        projectId = dto.projectId,
+                        createTime = now(),
+                        createBy = ""
+                )
+                mongoTemplate.save(resource)
+            }
+
+            val apiList = groupByResourceAPIList[controller]
+
+            totalQuantity += apiList!!.size
+
+            apiList.forEach { api ->
+                val id = MD5Util.MD5Encode(api.controller + api.pattern, "UTF-8")
+
+                if (dto.docIds.contains(id)) {
+                    val documentExist = restWebDocumentRepository.existsById(id)
+                    if (!documentExist) {
+                        savedQuantity++
+                        val document = RestWebDocument(
+                                id = id,
+                                projectId = dto.projectId,
+                                name = api.pattern,
+                                resource = resourceId,
+                                url = api.pattern,
+                                description = api.pattern,
+                                requestBodyDescriptor = null,
+                                requestHeaderDescriptor = null,
+                                responseBodyDescriptors = null,
+                                queryParam = null,
+                                method = HttpMethod.valueOf(api.supportMethod[0]),
+                                uriVarDescriptors = null,
+                                executeResult = null,
+                                content = null,
+                                responseHeaderDescriptor = null,
+                                docType = DocType.API)
+
+                        mongoTemplate.save(document)
+                    }
+                }
+            }
+        }
+
+        return ok(SyncDocumentResultVo(totalQuantity = totalQuantity, savedQuantity = savedQuantity))
     }
 }
 

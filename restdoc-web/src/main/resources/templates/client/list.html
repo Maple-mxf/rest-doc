@@ -17,16 +17,17 @@
     </style>
 </head>
 <body>
-
+<input type="hidden" th:value="${projectId}" id="projectId">
 <div class="layui-fluid">
     <div class="layui-row">
         <table style="font-family: Roboto,serif;font-size: 15px"
                id="serviceListTable" lay-filter="serviceListTable"></table>
     </div>
 </div>
+
 <script type="text/html" id="barDemo">
     <a class="layui-btn  layui-btn-primary" lay-event="getDetail">实例详情</a>
-<!--    <a class="layui-btn layui-btn-primary" lay-event="syncAPI">同步API</a>-->
+    <!--    <a class="layui-btn layui-btn-primary" lay-event="syncAPI">同步API</a>-->
     <a class="layui-btn layui-btn-primary" lay-event="apiList">API列表</a>
 </script>
 <script th:src="@{/layui/layui.js}"></script>
@@ -34,10 +35,9 @@
 <script th:src="@{/admin/js/util.js}"></script>
 <script type="text/javascript" th:inline="javascript">
     var ap = [[${ap}]];
-
-    console.info(ap);
-
     var pageURL = '/restdoc/serviceClient/list?type=' + ap;
+
+    var projectId = $("#projectId").val();
 
     layui.use('table', function () {
         var table = layui.table;
@@ -79,17 +79,48 @@
 
                 layer.close(index);
             } else if (obj.event === 'apiList') {
+
+                var clientId = obj.data.id;
+
                 layer.open({
                     type: 2,
                     title: 'API列表',
                     content: ['/restdoc/serviceClient/' + obj.data.id + '/apiList/view', 'no'],
                     area: ['600px', '400px'],
                     btn: ['同步API', '取消'],
-                    yes:function (index, dom) {
+                    yes: function (index, dom) {
                         var res = window["layui-layer-iframe" + index].getCheckApi();
                         var loadIndex = layer.load(1);
 
-                        layer.close(loadIndex)
+                        var syncDto = {
+                            projectId: projectId,
+                            docIds: res
+                        };
+
+                        $.ajax({
+                            type: 'POST',
+                            contentType: 'application/json;charset=utf-8',
+                            url: '/restdoc/document/serviceClient/' + clientId + '/syncApi',
+                            async: false,
+                            data: JSON.stringify(syncDto),
+                            success: function (data) {
+
+                                if (data['code'] === "200") {
+                                    layer.close(loadIndex);
+                                    layer.alert('API总数量：<strong style="color: red">' + data['data']['totalQuantity'] + '</strong><br>已同步数量：<strong style="color: red">' + data['data']['savedQuantity'] + "</strong>",
+                                        function (ai) {
+                                            layer.close(ai);
+                                            layer.close(index);
+                                        });
+
+                                } else {
+                                    layer.msg(data['message']);
+                                }
+                            },
+                            error: function () {
+                                layer.msg("网络异常")
+                            }
+                        });
 
                     }
                 });

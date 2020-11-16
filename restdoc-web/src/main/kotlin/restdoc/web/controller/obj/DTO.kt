@@ -173,3 +173,6 @@ data class UpdateDubboDocumentDto(val description: String? = null, val paramDesc
                                   val returnValueDescriptor: MethodReturnValueDescriptor? = null)
 
 data class AuthDto(val account: String, val password: String)
+
+data class SyncRestApiDto(val projectId: String, val docIds: List<String>)
+

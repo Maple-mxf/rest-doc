@@ -37,8 +37,10 @@ class MicroserviceViewController {
     }
 
     @GetMapping("/microservice/view/list")
-    fun listPage(@RequestParam ap: ApplicationType, model: Model): String {
+    fun listPage(@RequestParam ap: ApplicationType,
+                 @RequestParam projectId: String, model: Model): String {
         model.addAttribute("ap", ap)
+        model.addAttribute("projectId", projectId)
         return "client/list"
     }
 }

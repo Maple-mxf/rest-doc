@@ -4,10 +4,12 @@ import io.netty.channel.Channel;
 import restdoc.remoting.protocol.LanguageCode;
 
 import java.net.InetSocketAddress;
-import java.nio.charset.StandardCharsets;
 import java.util.Objects;
-import java.util.UUID;
 
+
+/**
+ * ApplicationClientInfo
+ */
 public class ApplicationClientInfo {
     private final String id;
     private final Channel channel;

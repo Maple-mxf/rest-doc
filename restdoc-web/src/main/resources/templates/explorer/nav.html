@@ -65,9 +65,14 @@
             if ('clientServiceList' === elem[0].id) {
                 layer.open({
                     type: 2,
-                    content: '/restdoc/microservice/view/list?ap=REST_WEB',
+                    content: '/restdoc/microservice/view/list?ap=REST_WEB&projectId=' + projectId,
                     title: '服务实例列表',
-                    area: ['1200px', '600px']
+                    area: ['1200px', '600px'],
+                    end: function (index, doc) {
+                        resetNavData();
+                        tree.reload("navTableOfContent", {data: treeData});
+                        layer.close(index);
+                    }
                 });
             } else if ('projectDetail' === elem[0].id) {
                 layer.open({

@@ -194,3 +194,5 @@ data class TestDubboMicroserviceResult(
         val returnType: String = "void",
         val time: Long = 0L
 )
+
+data class SyncDocumentResultVo(val totalQuantity: Int, val savedQuantity: Int)

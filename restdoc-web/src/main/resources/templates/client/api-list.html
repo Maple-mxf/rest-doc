@@ -24,7 +24,7 @@
     var treeData = null;
     var clientId = $("#clientId").val();
     var ap = $("#ap").val();
-    var requestURL = "/restdoc/serviceClient/" + clientId + "/apiList?ap=" + ap;
+    var requestURL = "/restdoc/document/serviceClient/" + clientId + "/apiList?ap=" + ap;
 
     $.ajax({
         type: 'GET',
