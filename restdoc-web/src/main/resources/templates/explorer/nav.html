@@ -68,7 +68,11 @@
                     content: '/restdoc/microservice/view/list?ap=REST_WEB&projectId=' + projectId,
                     title: '服务实例列表',
                     area: ['1200px', '600px'],
-                    end: function (index, doc) {
+                    btn: ['确定'],
+                    yes: function (index, doc) {
+                        layer.close(index)
+                    },
+                    end: function (index) {
                         resetNavData();
                         tree.reload("navTableOfContent", {data: treeData});
                         layer.close(index);

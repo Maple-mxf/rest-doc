@@ -1,6 +1,7 @@
 package restdoc.web.core.schedule
 
 import com.fasterxml.jackson.databind.node.ObjectNode
+import com.sun.org.apache.regexp.internal.RE
 import io.netty.channel.Channel
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -162,15 +163,15 @@ class ScheduleController @Autowired constructor(scheduleProperties: ScheduleProp
             RemotingSendRequestException::class,
             RemotingCommandException::class)
     @Deprecated(message = "syncSubmitRemoteHttpTask")
-    fun syncSubmitRemoteHttpTask(clientId: String?,
+    fun syncSubmitRemoteHttpTask(remote: String?,
                                  taskId: String?,
                                  invocation: RestWebInvocation): RestWebInvocationResult {
 
         val request = RemotingCommand.createRequestCommand(RequestCode.INVOKE_API, null)
         request.body = invocation.encode()
-        val clientChannelInfo = clientRegistryCenter.get(clientId)
+        val clientChannelInfo = clientRegistryCenter.getByRemote(remote)
 
-        if (clientChannelInfo == null) Status.BAD_REQUEST.error("找不到对应的客户端$clientId")
+        if (clientChannelInfo == null) Status.BAD_REQUEST.error("找不到对应的客户端${remote}")
 
         val response = remotingServer.invokeSync(clientChannelInfo!!.channel, request,
                 this.httpTaskExecuteTimeout)
