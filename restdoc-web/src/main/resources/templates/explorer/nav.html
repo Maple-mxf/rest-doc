@@ -19,14 +19,15 @@
             <a href="/restdoc/project/view"> <i class="layui-icon layui-icon-left"
                                                 style="/*font-size: 15px; */ color: white;"></i>&nbsp;返回项目列表</a>
         </li>
-
+        <li class="layui-nav-item layui-this"><a id="home" th:href="@{'/'+${projectId}+'/document/nav/view'}" >文档</a></li>
         <li class="layui-nav-item"><a id="projectDetail" href="javascript:;" th:utext="${projectName}"></a></li>
         <li class="layui-nav-item"><a id="clientServiceList" href="javascript:;">服务实例<span class="layui-badge"
                                                                                            th:text="${instanceNumber}"></span></a>
         </li>
         <li class="layui-nav-item"><a id="tableContentManage" href="javascript:;">目录管理</a></li>
-        <li class="layui-nav-item"><a id="createAPI" target="_blank" th:href="@{'/'+${projectId}+'/document/view/api/add'}">创建API</a>
-        <li class="layui-nav-item"><a id="createWIKI" target="_blank" th:href="@{'/'+${projectId}+'/document/view/wiki/add'}">创建WIKI</a>
+        <!--        <li class="layui-nav-item"><a id="createAPI" target="_blank" th:href="@{'/'+${projectId}+'/document/view/api/add'}">创建API</a>-->
+        <li class="layui-nav-item"><a id="createAPI" href="javascript:;">创建API</a>
+        <li class="layui-nav-item"><a id="createWIKI" href="javascript:;">创建WIKI</a>
         </li>
     </ul>
 </div>
@@ -99,6 +100,14 @@
                         tree.reload("navTableOfContent", {data: treeData});
                     }
                 });
+            } else if ('createAPI' === elem[0].id) {
+                // http://localhost:8432/restdoc/746946688983240704/document/view/api/add
+                layer.closeAll();
+                $("#docContentFrame").attr("src", '/restdoc/' + projectId + '/document/view/api/add');
+            } else if ('createWIKI' === elem[0].id) {
+                // http://localhost:8432/restdoc/746946688983240704/document/view/wiki/add
+                layer.closeAll();
+                $("#docContentFrame").attr("src", '/restdoc/' + projectId + '/document/view/wiki/add');
             }
         });
 
