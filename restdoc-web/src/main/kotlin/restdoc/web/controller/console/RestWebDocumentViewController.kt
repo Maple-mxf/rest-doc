@@ -160,6 +160,7 @@ class RestWebDocumentViewController {
 
     inner class PageView(val pageLocation: String, val field: Any?)
 
+    // data[1]
     @GetMapping("/document/{id}/snippet/view")
     fun editSnippetField(@PathVariable id: String,
                          @RequestParam type: String,
