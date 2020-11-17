@@ -541,11 +541,13 @@
     }
 
     function openEditRequestBodyPage(field) {
+        console.info(encodeURIComponent(field));
+
         lay.open({
             type: 2,
             title: "编辑请求体参数",
             area: ['800px', '600px'],
-            content: ['/restdoc/document/' + documentId + '/snippet/view?type=requestBody&field=' + field, 'no'],
+            content: ['/restdoc/document/' + documentId + '/snippet/view?type=requestBody&field=' + encodeURIComponent(field), 'no'],
             btn: ["保存", "取消"],
             yes: function (index, dom) {
                 var res = window["layui-layer-iframe" + index].getValue();

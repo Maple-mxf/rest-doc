@@ -16,6 +16,8 @@ import restdoc.web.model.DocType
 import restdoc.web.model.RestWebDocument
 import restdoc.web.repository.ResourceRepository
 import restdoc.web.repository.RestWebDocumentRepository
+import java.net.URLDecoder
+import java.nio.charset.StandardCharsets
 
 @Controller
 @Verify
@@ -59,7 +61,6 @@ class RestWebDocumentViewController {
         model.addAttribute("taskId", taskId)
         return "docs/executeResult"
     }
-
 
 
     @GetMapping("/document/view/desc")
@@ -160,12 +161,13 @@ class RestWebDocumentViewController {
 
     inner class PageView(val pageLocation: String, val field: Any?)
 
-    // data[1]
     @GetMapping("/document/{id}/snippet/view")
     fun editSnippetField(@PathVariable id: String,
                          @RequestParam type: String,
-                         @RequestParam field: String,
+                         @RequestParam(name = "field") path: String,
                          model: Model): String {
+
+        val field = URLDecoder.decode(path, StandardCharsets.UTF_8.name())
 
         val restWebDocument: RestWebDocument = restWebDocumentRepository.findById(id)
                 .orElse(null)
