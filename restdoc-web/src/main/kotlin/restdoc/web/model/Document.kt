@@ -45,7 +45,7 @@ class MethodParamDescriptor {
     /**
      * Is Primitive
      */
-    public var primitive: Boolean = true
+    var primitive: Boolean = true
 }
 
 
