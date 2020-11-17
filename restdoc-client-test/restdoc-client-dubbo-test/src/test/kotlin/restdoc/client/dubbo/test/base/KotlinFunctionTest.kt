@@ -48,4 +48,6 @@ class KotlinFunctionTest {
     fun defineFunType2(type: (input: String) -> Unit) {
         // ....
     }
+
+
 }

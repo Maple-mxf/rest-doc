@@ -11,7 +11,7 @@ import restdoc.web.controller.show.obj.NavbarVO
 import restdoc.web.repository.ResourceRepository
 import restdoc.web.repository.RestWebDocumentRepository
 
-@RestController
+//@RestController
 class ResourceController {
 
     @Autowired
