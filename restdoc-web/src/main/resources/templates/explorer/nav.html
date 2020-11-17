@@ -66,7 +66,7 @@
 
         element.on('nav(test)', function (elem) {
             if ('clientServiceList' === elem[0].id) {
-                layer.open({
+                /*layer.open({
                     type: 2,
                     content: '/restdoc/microservice/view/list?ap=REST_WEB&projectId=' + projectId,
                     title: '服务实例列表',
@@ -80,17 +80,22 @@
                         tree.reload("navTableOfContent", {data: treeData});
                         layer.close(index);
                     }
-                });
+                });*/
+                layer.closeAll();
+                $("#docContentFrame").attr("src", '/restdoc/microservice/view/list?ap=REST_WEB&projectId=' + projectId);
             } else if ('projectDetail' === elem[0].id) {
-                layer.open({
+               /* layer.open({
                     title: '项目详情',
                     area: ['500px', '400px'],
                     // scrollbar: false,
                     type: 2,
                     content: '/restdoc/project/' + projectId + '/view'
-                });
+                });*/
+                layer.closeAll();
+                $("#docContentFrame").attr("src", '/restdoc/project/' + projectId + '/view');
+
             } else if ('tableContentManage' === elem[0].id) {
-                layer.open({
+                /*layer.open({
                     title: '目录管理',
                     area: ['800px', '500px'],
                     scrollbar: false,
@@ -100,7 +105,9 @@
                         resetNavData();
                         tree.reload("navTableOfContent", {data: treeData});
                     }
-                });
+                });*/
+                layer.closeAll();
+                $("#docContentFrame").attr("src", '/restdoc/' + projectId + '/resource/view/table');
             } else if ('createAPI' === elem[0].id) {
                 // http://localhost:8432/restdoc/746946688983240704/document/view/api/add
                 layer.closeAll();
