@@ -54,13 +54,17 @@ data class RequestDto(
         } else mutableListOf()
     }
 
+    /**
+     * Deduplication field path
+     */
     fun mapToRequestDescriptor(): List<BodyFieldDescriptor> {
+
         return if (!(requestFields == null || this.requestFields.isEmpty())) {
             requestFields
                     .filter { it.requestFieldPath.isNotBlank() }
                     .map {
                         BodyFieldDescriptor(
-                                path = it.requestFieldPath,
+                                path = it.requestFieldPath.replace(Regex("\\[\\d\\]"), "[]"),
                                 value = it.requestFieldValue,
                                 description = it.requestFieldDescription,
                                 type = FieldType.valueOf(it.requestFieldType.toUpperCase()),
@@ -73,13 +77,16 @@ data class RequestDto(
         } else mutableListOf()
     }
 
+    /**
+     * Deduplication field path
+     */
     fun mapToResponseDescriptor(): List<BodyFieldDescriptor> {
         return if (!(responseFields == null || this.responseFields.isEmpty())) {
             responseFields
                     .filter { it.responseFieldPath.isNotBlank() }
                     .map {
                         BodyFieldDescriptor(
-                                path = it.responseFieldPath,
+                                path = it.responseFieldPath.replace(Regex("\\[\\d\\]"), "[]"),
                                 value = it.responseFieldValue,
                                 description = it.responseFieldDescription,
                                 type = FieldType.valueOf(it.responseFieldType.toUpperCase()),

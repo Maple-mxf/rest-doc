@@ -36,6 +36,8 @@ import restdoc.web.repository.ResourceRepository
 import restdoc.web.repository.RestWebDocumentRepository
 import restdoc.web.util.*
 import restdoc.web.util.IDUtil.now
+import restdoc.web.util.dp.JsonDeProjector
+import restdoc.web.util.dp.JsonProjector
 import java.net.URI
 import java.net.URL
 import java.util.*
@@ -93,6 +95,7 @@ class RestWebDocumentController {
         }
     }
 
+    @Deprecated(message = "maintainHistoryAddress")
     private fun maintainHistoryAddress(url: String, documentId: String) {
         val uri = URI(url)
         val address = "${uri.scheme}://${uri.authority}"

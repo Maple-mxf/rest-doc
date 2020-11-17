@@ -1,4 +1,4 @@
-package restdoc.web.util;
+package restdoc.web.util.dp;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -8,6 +8,9 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import restdoc.web.core.Status;
+import restdoc.web.util.FieldType;
+import restdoc.web.util.Node;
+import restdoc.web.util.PathValue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -169,7 +172,7 @@ public class JsonProjector {
      * Review The resolve code
      */
     @VisibleForTesting
-    protected static List<PathValue> resolve(List<PathValue> pathValues) {
+    public static List<PathValue> resolve(List<PathValue> pathValues) {
 
         return pathValues.stream()
                 .flatMap(t -> {

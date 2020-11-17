@@ -1,8 +1,8 @@
 package restdoc.web.util;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
+import restdoc.web.util.dp.JsonProjector;
 
 import java.io.File;
 import java.io.IOException;

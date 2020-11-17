@@ -7,7 +7,6 @@ import org.springframework.data.mongodb.core.mapping.Document
 import org.springframework.http.HttpMethod
 import restdoc.web.util.FieldType
 import restdoc.web.util.IDUtil.now
-import kotlin.properties.Delegates
 
 
 class MethodParamDescriptor {
@@ -79,7 +78,8 @@ class DubboDocument {
     /**
      *
      */
-    @Id var id: String = ""
+    @Id
+    var id: String = ""
 
     /**
      *
@@ -274,6 +274,7 @@ data class HistoryFieldDescription(
  * API test uri history
  */
 @Document(collection = "restdoc_history_address")
+@Deprecated(message = "HistoryAddress")
 data class HistoryAddress(@Id val id: String, val address: String,
                           @HashIndexed val documentId: String, val createTime: Long)
 
@@ -312,8 +313,4 @@ data class URIVarDescriptor(
         var description: String?
 )
 
-/**
- * Test case record
- */
-data class TestCaseLog(val id: String)
 

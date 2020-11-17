@@ -1,4 +1,4 @@
-package restdoc.web.util;
+package restdoc.web.util.dp;
 
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.*;
 import restdoc.web.core.Status;
 import restdoc.web.model.BodyFieldDescriptor;
+import restdoc.web.util.FieldType;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -22,7 +23,7 @@ import static java.lang.String.format;
  * @see JsonProjector
  * @since 1.0
  */
-public class JsonDeProjector {
+public class JsonDeProjector implements DeProjector {
 
     private final List<BodyFieldDescriptor> descriptors = new ArrayList<>();
 
@@ -59,6 +60,7 @@ public class JsonDeProjector {
         }
     }
 
+    @Override
     public List<BodyFieldDescriptor> deProject() {
 
         // 1 Translate
@@ -67,14 +69,10 @@ public class JsonDeProjector {
         // 2 Mapper
         this.mapToDescriptor();
 
-        try {
-            System.err.println(mapper.writeValueAsString(this.nodes));
-        } catch (Throwable ignored) {
-        }
-
         // 3 End Return
         return this.descriptors;
     }
+
 
     private void mapToDescriptor() {
         List<BodyFieldDescriptor> descriptors = this.nodes

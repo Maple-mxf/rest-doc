@@ -177,10 +177,8 @@ class ScheduleController @Autowired constructor(scheduleProperties: ScheduleProp
                 this.httpTaskExecuteTimeout)
 
         return if (response.code == RemotingSysResponseCode.SUCCESS) {
-            val responseBody = RemotingSerializable.decode(response.body,
+            RemotingSerializable.decode(response.body,
                     RestWebInvocationResult::class.java)
-
-            responseBody
         } else {
             throw ServiceException(response.remark, Status.INTERNAL_SERVER_ERROR)
         }

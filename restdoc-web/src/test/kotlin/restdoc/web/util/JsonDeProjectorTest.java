@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import restdoc.web.model.BodyFieldDescriptor;
+import restdoc.web.util.dp.JsonDeProjector;
 
 import java.io.File;
 import java.io.IOException;
