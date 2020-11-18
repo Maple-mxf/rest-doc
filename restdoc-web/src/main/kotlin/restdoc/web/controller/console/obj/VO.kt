@@ -197,4 +197,9 @@ data class TestDubboMicroserviceResult(
 
 data class SyncDocumentResultVo(val totalQuantity: Int, val savedQuantity: Int)
 
-data class DTreeVO(val id: String, val title: String, val parentId: String, var children: List<Any> = listOf(), val tag: Int = 1)
+data class DTreeVO(val id: String,
+                   val title: String,
+                   val parentId: String,
+                   var children: List<Any> = listOf(),
+                   var type: NodeType = NodeType.RESOURCE,
+                   var iconClass: String? = null)

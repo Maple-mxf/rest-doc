@@ -5,6 +5,7 @@ import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.data.mongodb.core.query.Update
 import org.springframework.web.bind.annotation.*
+import restdoc.remoting.common.ApplicationType
 import restdoc.web.base.auth.Verify
 import restdoc.web.controller.console.obj.*
 import restdoc.web.core.Result
@@ -56,14 +57,51 @@ class ResourceController {
     }
 
     @RequestMapping("/{projectId}/resource/dtree")
-    fun getResourceDTree(@PathVariable projectId: String): Any {
-//        val resources = resourceRepository.list(Query(Criteria("projectId").`is`(projectId)))
+    fun getResourceDTree(@PathVariable projectId: String,
+                         @RequestParam at: ApplicationType): Any {
 
-        val child2 =  DTreeVO(id = "003", title = "三级目录", parentId = "002")
-        val child1 =  DTreeVO(id = "002", title = "二级目录", parentId = "001",children = listOf(child2))
-        val parent = DTreeVO(id = "001", title = "一级目录", parentId = "0",children = listOf(child1))
+        val resources = resourceRepository.list(Query(Criteria("projectId").`is`(projectId)))
+        val resourceIds = resources.map { it.id }.toMutableList()
+        resourceIds.add("root")
 
-        return layuiTableOK(data = mutableListOf(parent), count = 1)
+        val resourceNodes = resources.map {
+            DTreeVO(id = it.id!!,
+                    title = it.name!!,
+                    parentId = it.pid!!,
+                    type = NodeType.RESOURCE,
+                    iconClass = "dtree-icon-weibiaoti5")
+        }
+
+        val docQuery = Query(Criteria("resource").`in`(resourceIds))
+
+
+        val apiNodes = if (at == ApplicationType.REST_WEB) {
+            docQuery.fields().exclude("requestHeaderDescriptor").exclude("requestBodyDescriptor").exclude("responseBodyDescriptors")
+            val webDocs = restWebDocumentRepository.list(docQuery)
+            webDocs.map {
+                DTreeVO(id = it.id!!,
+                        title = it.name!!,
+                        parentId = it.resource,
+                        type = if (it.docType == DocType.API) NodeType.API else NodeType.WIKI,
+                        iconClass = "dtree-icon-normal-file")
+            }
+        } else {
+            docQuery.fields().exclude("paramDescriptors").exclude("returnValueDescriptor")
+            val dubboDocs = dubboDocumentRepository.list(docQuery)
+            dubboDocs.map {
+                DTreeVO(id = it.id,
+                        title = it.name,
+                        parentId = it.resource,
+                        type = if (it.docType == DocType.API) NodeType.API else NodeType.WIKI,
+                        iconClass = "dtree-icon-normal-file")
+            }
+        }
+
+        val nodes = mutableListOf<DTreeVO>()
+        nodes.addAll(resourceNodes)
+        nodes.addAll(apiNodes)
+
+        return layuiTableOK(data = nodes, count = 1)
     }
 
     @GetMapping("/{projectId}/resource/flatten")
