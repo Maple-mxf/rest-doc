@@ -29,12 +29,24 @@
 .dtree-laySimple-item:hover{background-color: #eaeceb!important;}
 .dtree-laySimple-item cite{font-size:12px!important;}
 .dtree-laySimple-item:hover cite{color:#01AAED!important;}
-
 .dtree-laySimple-dtreefont{font-size: 16px!important;}
 .dtree-laySimple-ficon{font-size: 14px!important;color:#393D49!important;}
 .dtree-laySimple-icon{color:#393D49!important;}
 .dtree-laySimple-checkbox:hover{color:#01AAED!important;}
 .dtree-laySimple-choose{color:#01AAED!important;}
+
+/* zdy主题风格*/
+.dtree-zdy-item-this{background-color: #c2c2c2!important;} /* 当前选中行样式*/
+.dtree-zdy-item:hover{background-color: #f2f2f2!important;} /* 行悬停样式*/
+.dtree-zdy-item cite{font-size:14px!important;} /* 行文字样式*/
+.dtree-zdy-item:hover cite{color:#5FB878!important;} /* 行悬停文字样式*/
+.dtree-zdy-dtreefont{font-size: 18px!important;} /* 一级图标、二级图标、复选框样式*/
+.dtree-zdy-ficon{color:#2F4056!important;}  /*一级图标特定样式*/
+.dtree-zdy-icon{color:#2F4056!important;}  /*二级图标特定样式*/
+.dtree-zdy-checkbox:hover{color:#5FB878!important;}  /*复选框悬停样式*/
+.dtree-zdy-choose{color:#5FB878!important;} /* 复选框选中样式*/
+
+
 /**************** 树基础  ****************/
 /* 菜单栏*/
 .dtree-menubar {padding-left: 10px;}
@@ -106,6 +118,8 @@
 @media screen and (max-width:1700px) and (min-width:1300px){	
 	.dtree-nav-item {padding-left: 15px;}
 }
+
+
 
 
 

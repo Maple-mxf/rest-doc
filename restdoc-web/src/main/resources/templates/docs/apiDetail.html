@@ -14,9 +14,15 @@
     <link rel="stylesheet" th:href="@{/admin/css/doc-common.css}"/>
     <link rel="stylesheet" th:href="@{/admin/css/code.css}"/>
     <link rel="stylesheet" th:href="@{/admin/css/nav.css}"/>
-
+    <link rel="stylesheet" th:href="@{/admin/css/pear-tree/dtree.css}"/>
+    <link rel="stylesheet" th:href="@{/admin/css/pear-tree/font/dtreefont.css}"/>
     <style>
         body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 15px;
+        }
+
+        .dtree-nav-div cite {
             font-family: 'Roboto', sans-serif;
             font-size: 15px;
         }
@@ -100,7 +106,6 @@
         }
 
     </style>
-
 </head>
 <body>
 <input id="projectId" type="hidden" th:value="${projectId}">
@@ -112,15 +117,15 @@
 </script>
 
 <div class="layui-fluid">
-    <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
-        <ul class="layui-tab-title">
-            <li class="layui-this">文档</li>
-            <li>调试</li>
-        </ul>
-        <div class="layui-tab-content">
-            <div class="layui-tab-item layui-show layui-container">
-                <div class="layui-row">
-                    <div class="layui-col-md12">
+    <div class="layui-row">
+        <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+            <ul class="layui-tab-title">
+                <li class="layui-this">文档</li>
+                <li>调试</li>
+            </ul>
+            <div class="layui-tab-content">
+                <div class="layui-tab-item layui-show">
+                    <div class="layui-row">
                         <span style="margin-left: 2%"><h2 th:text="${document.name}"></h2></span>
                         <div class="layui-row code-block" style="margin-top: 1%; height: 60px;line-height: 60px; ">
                             <span style="margin-left: 2%">HTTP1.1 GET <span th:text="${document.url}"></span></span>
@@ -129,15 +134,12 @@
                                     title="复制URL" id="copyURL"></i></span>
                         </div>
                         <div class="layui-row">
-
                             <h3 class="headerTitle">备注
-
                                 <span>
                                       <i class="layui-icon layui-icon-rate"
                                          style="font-size: 18px; color: #FF5722;font-weight: normal">
                                     <span style="font-size: 14px;color: #FF5722">Tip：双击内容区域可以编辑文档 </span></i>
                                 </span>
-
                             </h3>
                             <blockquote class="layui-elem-quote" id="editDocDescriptionBtn">
                                 <div class="layui-text	" th:utext="${document.description}"
@@ -281,17 +283,12 @@
                         </div>
                     </div>
                 </div>
+                <div class="layui-tab-item">
+                    <iframe id="testApiFrame" th:src="@{'/'+${projectId}+'/document/view/'+${document.id}+'/test'}"
+                            style="width: 100%;height: 900px" frameborder=”no” border=”0″ marginwidth=”0″
+                            marginheight=”0″></iframe>
+                </div>
             </div>
-            <div class="layui-tab-item">
-                <iframe id="testApiFrame" th:src="@{'/'+${projectId}+'/document/view/'+${document.id}+'/test'}"
-                        style="width: 100%;height: 900px" frameborder=”no” border=”0″ marginwidth=”0″
-                        marginheight=”0″></iframe>
-            </div>
-
-            <!--<div class="layui-tab-item">
-                <table class="layui-hide" style="font-family: Roboto,serif;font-size: 15px"
-                       id="serviceListTable" lay-filter="serviceListTable"></table>
-            </div>-->
         </div>
     </div>
 </div>
@@ -307,15 +304,18 @@
     var documentId = [[${document.id}]];
     var doc = [[${document}]];
     var url = [[${document.url}]];
+    var projectId = $("#projectId").val();
 
     var lay = null;
 
-    layui.use(['table', 'util', 'layer', 'element', 'jquery', 'layedit', 'form'],
+    layui.config({
+        base: '/restdoc/layui/lay/extends/'
+    }).use(['table', 'util', 'layer', 'element', 'jquery', 'layedit', 'form', 'dtree'],
         function () {
+
             var $ = layui.jquery;
             var layer = layui.layer;
             var element = layui.element;
-            var table = layui.table;
             util = layui.util;
             lay = layer;
 
@@ -325,85 +325,10 @@
                     $("#testApiFrame").attr("src", "/restdoc/" + projectId + '/document/view/' + documentId + "/test")
                 }
             });
-
-            /*table.render({
-                elem: '#serviceListTable'
-                // ,id:'serviceListTable'
-                , url: '/restdoc/serviceClient/list?type=REST_WEB'
-                , size: 'lg'
-                , skin: 'row'
-                , cols: [
-                    [
-                        {
-                            field: 'applicationType', width: 200, title: '应用类型'
-                        },
-                        {
-                            field: 'service', width: 300, title: '服务名称'
-                        },
-                        {
-                            field: 'remoteAddress', width: 300, title: '服务远程地址'
-                        },
-                        {fixed: 'right', title: '操作', toolbar: '#barDemo'}
-                    ]
-                ]
-            });
-
-            table.on('tool(serviceListTable)', function (obj) {
-                if (obj.event === 'getDetail') {
-                    layer.open({
-                        type: 2,
-                        title: '服务实例详情',
-                        content: ['/restdoc/serviceClient/' + obj.data.id + '/view', 'no'],
-                        area: ['600px', '600px']
-                    });
-                } else if (obj.event === 'syncAPI') {
-                    var index = layer.load(2, {time: 10 * 1000});
-
-                    var body = {
-                        'projectId': $('#projectId').val(),
-                        'service': obj.data.service,
-                        'remoteAddress': obj.data.remoteAddress
-                    };
-
-                    $.ajax({
-                        method: 'POST',
-                        url: '/restdoc/document/sync',
-                        async: false,
-                        data: JSON.stringify(body),
-                        dataType: 'JSON',
-                        contentType: 'application/json',
-                        success: function (data) {
-                            if (data['code'] === "200") {
-                                // 刷新目录树
-                                /!*tree.reload('dubboTableContent', {});*!/
-
-                                /!*如何刷新目錄？*!/
-
-                                // 刷新文档页面
-                                var link = $('#testApiFrame').attr('src');
-
-                                if (link != null) {
-                                    $('#testApiFrame').attr('src', link);
-                                }
-
-                                layer.msg("API同步成功")
-                            } else {
-                                layer.msg(data['message'])
-                            }
-                        },
-                        error: function () {
-                            layer.msg("网络异常")
-                        }
-                    });
-                    layer.close(index);
-                }
-            });*/
-
             renderURITable(doc['uriVarDescriptors']);
             renderRequestHeaderTable(doc['requestHeaderDescriptor']);
             renderRequestBodyTable(doc['requestBodyDescriptor']);
             renderResponseBodyTable(doc['responseBodyDescriptors']);
-
 
             $("#editDocDescriptionBtn").on('dblclick', function (event) {
                 layer.open({
@@ -541,8 +466,6 @@
     }
 
     function openEditRequestBodyPage(field) {
-        console.info(encodeURIComponent(field));
-
         lay.open({
             type: 2,
             title: "编辑请求体参数",

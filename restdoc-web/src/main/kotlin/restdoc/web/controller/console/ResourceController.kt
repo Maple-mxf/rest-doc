@@ -55,11 +55,20 @@ class ResourceController {
         return ok()
     }
 
+    @RequestMapping("/{projectId}/resource/dtree")
+    fun getResourceDTree(@PathVariable projectId: String): Any {
+//        val resources = resourceRepository.list(Query(Criteria("projectId").`is`(projectId)))
+
+        val child2 =  DTreeVO(id = "003", title = "三级目录", parentId = "002")
+        val child1 =  DTreeVO(id = "002", title = "二级目录", parentId = "001",children = listOf(child2))
+        val parent = DTreeVO(id = "001", title = "一级目录", parentId = "0",children = listOf(child1))
+
+        return layuiTableOK(data = mutableListOf(parent), count = 1)
+    }
+
     @GetMapping("/{projectId}/resource/flatten")
     fun getFlattenResource(@PathVariable projectId: String): Any {
-
         val resources = resourceRepository.list(Query(Criteria("projectId").`is`(projectId)))
-
         val navNodes = resources.map {
             NavNode(id = it.id!!,
                     title = it.name!!,
@@ -68,7 +77,7 @@ class ResourceController {
                     pid = it.pid!!)
         }.toMutableList()
 
-        val rootNav: NavNode = NavNode(
+        val rootNav = NavNode(
                 id = "root",
                 title = "一级目录(虚拟)",
                 field = "title",
@@ -151,7 +160,7 @@ class ResourceController {
     fun delete(@PathVariable id: String, @PathVariable projectId: String): Result {
         val project = projectRepository.findById(projectId)
                 .orElseThrow { Status.BAD_REQUEST.instanceError("${projectId}项目不存在") }
-        
+
         val quantity = if (project.type == ProjectType.REST_WEB) {
             restWebDocumentRepository.count(Query(Criteria("resource").`is`(id)))
         } else if (project.type == ProjectType.DUBBO) {

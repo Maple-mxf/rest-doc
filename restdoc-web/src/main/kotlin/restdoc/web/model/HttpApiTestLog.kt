@@ -11,8 +11,8 @@ import org.springframework.data.mongodb.core.mapping.Document
  *
  * WebApiTestLog => {HeaderFieldDescriptor, BodyFieldDescriptor}
  */
-@Document(collection = "restdoc_webapi_test_log")
-class WebApiTestLog {
+@Document(collection = "restdoc_http_api_test_log")
+class HttpApiTestLog {
 
     @Id
     var id: String? = null
@@ -41,6 +41,6 @@ class WebApiTestLog {
     var responseBody: Any? = null
 
     var testTime: Long? = null
-    
+
     var testMode: TestMode = TestMode.RPC
 }

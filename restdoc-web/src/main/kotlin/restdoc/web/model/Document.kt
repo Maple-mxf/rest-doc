@@ -229,6 +229,10 @@ data class RestWebDocument(
 
 )
 
+
+/**
+ * FieldDescType
+ */
 enum class FieldDescType {
     HEADER, REQUEST_PARAM, RESPONSE_PARAM
 }
