@@ -13,9 +13,7 @@ import restdoc.client.api.model.InvocationResult
 import restdoc.client.api.model.RestWebInvocation
 import restdoc.client.api.model.RestWebInvocationResult
 import restdoc.web.controller.console.obj.RequestDto
-import restdoc.web.core.Result
 import restdoc.web.core.Status
-import restdoc.web.core.failure
 import restdoc.web.core.ok
 import restdoc.web.core.schedule.ScheduleController
 import restdoc.web.model.HttpApiTestLog
@@ -27,7 +25,7 @@ import restdoc.web.util.PathValue
 import restdoc.web.util.dp.JsonProjector
 import java.net.URI
 import java.util.*
-import java.util.concurrent.TimeUnit
+import java.util.regex.Pattern.compile
 import javax.validation.Valid
 
 @RequestMapping("/httptask")
@@ -50,7 +48,7 @@ class HttpTaskController {
     private lateinit var httpApiTestLogService: HttpApiTestLogService
 
     @PostMapping("/submit")
-    fun submitHttpTask(@RequestBody @Valid dto: RequestDto): RestWebInvocationResult {
+    fun submitHttpTask(@RequestBody @Valid dto: RequestDto): Any {
 
         val log = log(dto)
         val startTime = Date().time
@@ -65,8 +63,10 @@ class HttpTaskController {
                 Status.BAD_REQUEST.error("请填写完整的API请求地址")
             val result = publicNetExecuteTask(dto)
             log.testMode = TestMode.PUBLIC_NET
-            val uri = URI(dto.url)
-            log.remote = "${uri.host}:${uri.port}"
+
+            val p = compile("(\\d+\\.\\d+\\.\\d+\\.\\d+)\\:(\\d+)")
+            val matcher = p.matcher(dto.url)
+            if (matcher.find()) log.remote = matcher.group(1) + ":" + matcher.group(2)
             result
         }
 
@@ -76,7 +76,7 @@ class HttpTaskController {
 
         mongoTemplate.save(log)
 
-        return res
+        return ok(res)
     }
 
     private fun rpcExecuteTask(dto: RequestDto): RestWebInvocationResult {

@@ -449,7 +449,7 @@
                 area: ['300px', '200px'],
                 yes: function (index, layero) {
                     if ("out" === $("input[name='executeMode']:checked").val()) {
-                        outExecute(data);
+                        publicNetExecute(data);
                     } else {
                         rpcExecute(data);
                     }
@@ -482,12 +482,8 @@
                         async: false,
                         success: function (data) {
                             if (data['code'] === "200") {
-                                if (data['data'] != null) {
-                                    executeResult = data['data'];
-                                    layer.msg('执行成功')
-                                } else {
-                                    layer.msg("任务提交失败")
-                                }
+                                executeResult = data['data'];
+                                layer.msg('执行成功')
                             } else {
                                 layer.msg(data['message']);
                             }
@@ -498,12 +494,8 @@
                     });
 
                     if (executeResult != null) {
-                        var invocationResult = null;
-                        for (let i = 0; i < 100; i++) {
-                            globalExecuteResult = executeResult;
-                            invocationResult = executeResult['data'];
-                            if (invocationResult != null) break;
-                        }
+                        globalExecuteResult = executeResult;
+                        var invocationResult = executeResult;
 
                         if (invocationResult != null) {
                             if (invocationResult['responseBody'] != null) {
@@ -516,7 +508,7 @@
             });
         }
 
-        function outExecute(data) {
+        function publicNetExecute(data) {
             var map = getFormData(data.field);
 
             var executeResult = null;
@@ -551,16 +543,12 @@
                 });
 
                 if (executeResult != null) {
-                    var invocationResult = null;
-                    for (let i = 0; i < 100; i++) {
-                        globalExecuteResult = executeResult;
-                        invocationResult = executeResult['data'];
-                        if (invocationResult != null) break;
-                    }
+                    globalExecuteResult = executeResult;
+                    var invocationResult = executeResult;
 
                     if (invocationResult != null) {
                         if (invocationResult['responseBody'] != null) {
-                            completeExecuteCallback(JSON.stringify(invocationResult))
+                            openConsolePage(invocationResult)
                         }
                     }
                 }

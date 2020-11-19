@@ -2,44 +2,49 @@
   "status": "OK",
   "code": "200",
   "message": null,
-  "data": [
-    {
-      "id": "root",
-      "title": "一级目录",
-      "field": "title",
-      "children": [
-        {
-          "id": "class restdoc.client.dubbo.test.controller.EchoHttpController",
-          "title": "EchoHttpController",
-          "field": "name",
-          "children": [
-            {
-              "id": "af2fe2ffe3938128dbdae3253f092e98",
-              "title": "restdoc.client.dubbo.test.controller.EchoHttpController#echoRestWeb()",
-              "field": "",
-              "children": [],
-              "href": null,
-              "pid": "class restdoc.client.dubbo.test.controller.EchoHttpController",
-              "spread": true,
-              "checked": false,
-              "disabled": false,
-              "type": "API"
-            }
-          ],
-          "href": null,
-          "pid": "root",
-          "spread": true,
-          "checked": false,
-          "disabled": false,
-          "type": "RESOURCE"
-        }
+  "data": {
+    "isSuccessful": true,
+    "exceptionMsg": null,
+    "invocation": {
+      "className": "restdoc.client.api.model.RestWebInvocation",
+      "url": "/handshake/{pathVar}",
+      "method": "POST",
+      "requestHeaders": {
+        "Content-Type": [
+          "application/json;utf-8"
+        ]
+      },
+      "queryParam": {},
+      "requestBody": {
+        "msg": "OK",
+        "code": "1",
+        "success": "true"
+      },
+      "uriVariable": {
+        "pathVar": "pathVar"
+      }
+    },
+    "status": 200,
+    "responseHeaders": {
+      "Content-Type": [
+        "application/json"
       ],
-      "href": null,
-      "pid": "0",
-      "spread": true,
-      "checked": true,
-      "disabled": false,
-      "type": "RESOURCE"
+      "Transfer-Encoding": [
+        "chunked"
+      ],
+      "Date": [
+        "Thu, 19 Nov 2020 12:21:53 GMT"
+      ],
+      "Keep-Alive": [
+        "timeout=60"
+      ],
+      "Connection": [
+        "keep-alive"
+      ]
+    },
+    "responseBody": {
+      "msg": "欢迎测试Http服务",
+      "applicationType": "DUBBO"
     }
-  ]
+  }
 }
