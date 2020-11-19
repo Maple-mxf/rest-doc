@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>API Explorer</title>
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}"/>
+    <link rel="stylesheet" th:href="@{/admin/css/pearForm.css}"/>
+    <link rel="stylesheet" th:href="@{/admin/css/easyeditor.css}"/>
+    <link rel="stylesheet" th:href="@{/admin/css/fangge-style.css}"/>
+    <link rel="stylesheet" th:href="@{/admin/css/pear-tree/dtree.css}"/>
+    <link rel="stylesheet" th:href="@{/admin/css/doc-common.css}"/>
+    <link rel="stylesheet" th:href="@{/admin/css/code.css}"/>
+    <link rel="stylesheet" th:href="@{/admin/css/nav.css}"/>
+    <link rel="stylesheet" th:href="@{/admin/css/pear-tree/dtree.css}"/>
+    <link rel="stylesheet" th:href="@{/admin/css/pear-tree/font/dtreefont.css}"/>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 15px;
+        }
+
+        .dtree-nav-div cite {
+            font-family: 'Roboto', sans-serif;
+            font-size: 15px;
+        }
+
+        pre {
+            background-color: #283142;
+            color: white;
+            font-size: 16px;
+            font-family: Roboto, serif;
+        }
+
+        .code-block {
+            background-color: #283142;
+            color: white;
+            font-size: 16px;
+            font-family: Roboto, serif;
+        }
+
+        .layui-table td, .layui-table th {
+            color: #0C0C0C;
+            font-size: 15px;
+        }
+
+        .layui-table th {
+            text-align: center;
+        }
+
+        .headerTitle {
+            font-family: Roboto, serif;
+            margin-top: 30px;
+            font-weight: bold;
+        }
+
+        #urlSpan:hover {
+            cursor: pointer;
+        }
+
+        .layui-code {
+            font-size: 14px;
+            font-family: Roboto, serif;
+        }
+
+        #editDocDescriptionBtn:hover {
+            cursor: pointer;
+        }
+
+        tr:hover {
+            cursor: pointer;
+        }
+
+        body {
+            background-color: white;
+        }
+
+    </style>
+</head>
+<body>
+<input id="projectId" type="hidden" th:value="${projectId}">
+
+<div class="layui-fluid">
+    <div class="layui-row">
+        <div class="layui-col-md2">
+            <ul id="dtreeTableContent" class="dtree" data-id="root"></ul>
+        </div>
+        <div class="layui-col-md10">
+            <iframe id="apiDocFrame" src="" style="width: 100%;height: 900px" frameborder="no" border="0"
+                    marginwidth="0"
+                    marginheight="0"></iframe>
+        </div>
+    </div>
+</div>
+<script th:src="@{/layui/layui.js}"></script>
+<script th:src="@{/admin/js/jquery.js}"></script>
+<script th:inline="javascript">
+
+    var projectId = $("#projectId").val();
+
+    var lay = null;
+
+    layui.config({
+        base: '/restdoc/layui/lay/extends/'
+    }).use(['table', 'util', 'layer', 'jquery', 'layedit', 'dtree'],
+        function () {
+            var dtree = layui.dtree;
+            var $ = layui.jquery;
+            var layer = layui.layer;
+            util = layui.util;
+            lay = layer;
+
+            var dtreeData = null;
+
+            function setDTreeData() {
+                $.ajax({
+                    type: 'GET',
+                    url: "/restdoc/" + projectId + "/resource/dtree?at=REST_WEB",
+                    async: false,
+                    success: function (data) {
+                        if (data['code'] === 0) {
+                            dtreeData = data['data'];
+                        } else {
+                            layer.msg(data['msg']);
+                        }
+                    },
+                    error: function () {
+                        layer.msg("网络异常")
+                    }
+                });
+            }
+
+            setDTreeData();
+            var DemoTree = dtree.render({
+                elem: "#dtreeTableContent",
+                // url: "/restdoc/" + projectId + "/resource/dtree",
+                // dataStyle: "layuiStyle",
+                // response: {message: "msg", statusCode: 0},
+                data: dtreeData,
+                dataFormat: "list",
+                initLevel: 1,
+                skin: "zdy",
+                iconfont: ["dtreefont", "layui-icon", "iconfont"],
+                iconfontStyle: {
+                    fnode: {
+                        node: {
+                            open: "dtree-icon-xiangxia1",
+                            close: "dtree-icon-xiangyou"
+                        }/*,
+                    leaf: "dtree-icon-normal-file"*/
+                    }
+                }
+            });
+            dtree.on("node('dtreeTableContent')", function (obj) {
+                if (obj.param.leaf) {
+                    for (var i = 0; i < dtreeData.length; i++) {
+                        if (dtreeData[i].id === obj.param.nodeId) {
+                            if (dtreeData[i].type == "WIKI" || dtreeData[i].type == "API") {
+                                // "/{projectId}/document/{documentId}/view"
+                                $("#apiDocFrame").attr("src", '/restdoc/' + projectId + '/document/' + obj.param.nodeId + '/view');
+                            }
+                            break;
+                        }
+                    }
+                } else {
+                    DemoTree.clickSpread(obj.dom);
+                }
+            });
+            var docId = getFirstDocument(dtreeData);
+            if (null != docId) {
+                $("#apiDocFrame").attr("src", '/restdoc/' + projectId + '/document/' + docId + '/view');
+            }
+
+        });
+
+    function getFirstDocument(array) {
+        if (array == null || array.length === 0) return null;
+        var length = array.length;
+        var flag = 0;
+        for (let i = 0; i < length; i++) {
+            var node = array[i];
+            if ("API" === node['type'] || "WIKI" === node['type']) {
+                if (flag === 0) {
+                    return node['id']
+                }
+            } else {
+                var result = findFirstChildren(node);
+                if (result != null) return result;
+            }
+        }
+        return null;
+    }
+
+    function findFirstChildren(parentNode) {
+        if (parentNode != null && parentNode['children'].length === 0) {
+            return null;
+        } else {
+            var children = parentNode['children'];
+            var length = children.length;
+
+            for (let i = 0; i < length; i++) {
+                if (children[i]['type'] === 'WIKI' || children[i]['type'] === 'API') {
+                    return children[i]['id']
+                } else {
+                    var result = findFirstChildren(children[i]);
+                    if (null != result) {
+                        return result;
+                    }
+                }
+            }
+            return null;
+        }
+    }
+</script>
+</body>
+</html>

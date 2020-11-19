@@ -42,4 +42,16 @@ class ProjectViewController {
         model.addAttribute("project", project)
         return "project/edit"
     }
+
+    /**
+     * apiNavigationPage
+     */
+    @GetMapping("/project/{id}/navigation/view")
+    fun apiNavigationPage(@PathVariable id: String, model: Model): String {
+        model.addAttribute("projectId", id)
+        val project = mongoTemplate.findById(id, Project::class.java)
+        return if (project.type == ProjectType.REST_WEB)
+            "docs/web/api_navigation"
+        else ""
+    }
 }

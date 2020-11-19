@@ -13,6 +13,7 @@ import restdoc.web.repository.ProjectRepository
 
 @Controller
 @Verify
+@Deprecated(message = "DocumentNavViewController")
 class DocumentNavViewController {
 
     @Autowired

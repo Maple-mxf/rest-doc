@@ -97,7 +97,7 @@ class RestWebDocumentViewController {
 
         return if (DocType.API == restWebDocument.docType) {
             model.addAttribute("document", transformRestDocumentToVO(restWebDocument))
-            "docs/apiDetail"
+            "docs/web/api_detail"
         } else if (DocType.WIKI == restWebDocument.docType) {
             model.addAttribute("document", restWebDocument)
             "docs/wikiDetail"
