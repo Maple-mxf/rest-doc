@@ -1,5 +1,7 @@
 package restdoc.web.controller.console.obj
 
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
 import restdoc.web.model.*
 import restdoc.web.util.FieldType
 import java.net.URI
@@ -182,4 +184,8 @@ data class UpdateDubboDocumentDto(val description: String? = null, val paramDesc
 data class AuthDto(val account: String, val password: String)
 
 data class SyncRestApiDto(val projectId: String, val docIds: List<String>)
+
+data class LayuiPageDto(val page: Int = 1, val size: Int = 20) {
+    fun toPageable() = PageRequest.of(page - 1, size)
+}
 

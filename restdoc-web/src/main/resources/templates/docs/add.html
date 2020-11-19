@@ -23,111 +23,111 @@
 <input type="hidden" name="projectId" id="projectId" th:value="${projectId}"/>
 <div class="layui-fluid" style="margin-top: 10px">
     <div class="layui-row">
-        <div class="layui-col-md10">
-            <form class="layui-form layui-form-pane" action="" id="request_form">
-                <fieldset class="layui-elem-field site-demo-button" style="margin-top: 10px;">
-                    <div class="layui-form-item">
-                        <div class="layui-input-inline">
-                            <select id="method" name="method" lay-verify="method">
-                                <option value="NON" disabled>请选择请求方式</option>
-                                <option value="GET">GET</option>
-                                <option value="POST">POST</option>
-                                <option value="PUT">PUT</option>
-                                <option value="DELETE">DELETE</option>
-                                <option value="PATCH">PATCH</option>
-                                <option value="OPTION">OPTION</option>
-                            </select>
-                        </div>
-                        <div class="layui-input-inline">
-                            <input id="url" type="text" name="url"
-                                   placeholder="127.0.0.1:8080/springboot/{resource}/{id}"
-                                   lay-verify="url" autocomplete="off"
-                                   style="width: 220%"
-                                   class="layui-input">
-                        </div>
-                        <button class="layui-btn" style="margin-left: 23%;float: left" lay-submit lay-filter="execute">
-                            <i class="layui-icon layui-icon-triangle-r" style="font-size: 17px; color: white;"></i>调试
-                        </button>
-                        <button class="layui-btn" lay-submit lay-filter="save">
-                            <i class="layui-icon layui-icon-email" style="font-size: 18px; color: white;"></i> 保存
-                        </button>
-                    </div>
-                </fieldset>
 
-                <div class="layui-collapse group">
-                    <div class="layui-colla-item">
-                        <h2 class="layui-colla-title layui-bg-red">REST路径参数</h2>
-                        <div class="layui-colla-content" id="uri-fieldset">
-                            <div class="layui-form-item" style="margin-top: 10px">
-                                <div class="layui-inline">
-                                    <button type="button" class="layui-btn layui-btn-primary"
-                                            id="add_pathvar_field_btn">
-                                        增加路径参数
-                                    </button>
-                                </div>
+        <form class="layui-form layui-form-pane" action="" id="request_form">
+            <fieldset class="layui-elem-field site-demo-button" style="margin-top: 10px;">
+                <div class="layui-form-item">
+                    <div class="layui-input-inline">
+                        <select id="method" name="method" lay-verify="method">
+                            <option value="NON" disabled>请选择请求方式</option>
+                            <option value="GET">GET</option>
+                            <option value="POST">POST</option>
+                            <option value="PUT">PUT</option>
+                            <option value="DELETE">DELETE</option>
+                            <option value="PATCH">PATCH</option>
+                            <option value="OPTION">OPTION</option>
+                        </select>
+                    </div>
+                    <div class="layui-input-inline">
+                        <input id="url" type="text" name="url"
+                               placeholder="127.0.0.1:8080/springboot/{resource}/{id}"
+                               lay-verify="url" autocomplete="off"
+                               style="width: 220%"
+                               class="layui-input">
+                    </div>
+                    <button class="layui-btn" style="margin-left: 23%;float: left" lay-submit lay-filter="execute">
+                        <i class="layui-icon layui-icon-triangle-r" style="font-size: 17px; color: white;"></i>调试
+                    </button>
+                    <button class="layui-btn" lay-submit lay-filter="save">
+                        <i class="layui-icon layui-icon-email" style="font-size: 18px; color: white;"></i> 保存
+                    </button>
+                </div>
+            </fieldset>
+
+            <div class="layui-collapse group">
+                <div class="layui-colla-item">
+                    <h2 class="layui-colla-title layui-bg-red">REST路径参数</h2>
+                    <div class="layui-colla-content" id="uri-fieldset">
+                        <div class="layui-form-item" style="margin-top: 10px">
+                            <div class="layui-inline">
+                                <button type="button" class="layui-btn layui-btn-primary"
+                                        id="add_pathvar_field_btn">
+                                    增加路径参数
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <div class="layui-collapse group">
-                    <div class="layui-colla-item">
-                        <h2 class="layui-colla-title layui-bg-orange">请求头</h2>
-                        <div class="layui-colla-content" id="header-fieldset">
-                            <div class="layui-form-item" style="margin-top: 10px">
-                                <div class="layui-inline">
-                                    <button type="button" class="layui-btn layui-btn-primary"
-                                            id="add_request_header_field">
-                                        增加请求头参数
-                                    </button>
-                                </div>
+            <div class="layui-collapse group">
+                <div class="layui-colla-item">
+                    <h2 class="layui-colla-title layui-bg-orange">请求头</h2>
+                    <div class="layui-colla-content" id="header-fieldset">
+                        <div class="layui-form-item" style="margin-top: 10px">
+                            <div class="layui-inline">
+                                <button type="button" class="layui-btn layui-btn-primary"
+                                        id="add_request_header_field">
+                                    增加请求头参数
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="layui-collapse group">
-                    <div class="layui-colla-item">
-                        <h2 class="layui-colla-title layui-bg-cyan">请求参数</h2>
-                        <div class="layui-colla-content" id="body-fieldset">
+            </div>
+            <div class="layui-collapse group">
+                <div class="layui-colla-item">
+                    <h2 class="layui-colla-title layui-bg-cyan">请求参数</h2>
+                    <div class="layui-colla-content" id="body-fieldset">
 
-                            <div class="layui-form-item" style="margin-top: 10px">
-                                <div class="layui-inline">
-                                    <button type="button" class="layui-btn layui-btn-primary"
-                                            id="add_request_body_field">
-                                        增加请求参数
-                                    </button>
+                        <div class="layui-form-item" style="margin-top: 10px">
+                            <div class="layui-inline">
+                                <button type="button" class="layui-btn layui-btn-primary"
+                                        id="add_request_body_field">
+                                    增加请求参数
+                                </button>
 
-                                    <button type="button" class="layui-btn"
-                                            id="convert_json_to_fields">
-                                        JSON快速转换
-                                    </button>
-                                </div>
+                                <button type="button" class="layui-btn"
+                                        id="convert_json_to_fields">
+                                    JSON快速转换
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="layui-collapse group">
-                    <div class="layui-colla-item">
-                        <h2 class="layui-colla-title layui-bg-black">期望响应参数</h2>
-                        <div class="layui-colla-content" id="response-fieldset">
+            </div>
+            <div class="layui-collapse group">
+                <div class="layui-colla-item">
+                    <h2 class="layui-colla-title layui-bg-black">期望响应参数</h2>
+                    <div class="layui-colla-content" id="response-fieldset">
 
-                            <div class="layui-form-item" style="margin-top: 10px">
-                                <div class="layui-inline">
-                                    <button type="button" class="layui-btn layui-btn-primary"
-                                            id="add_response_body_field">
-                                        增加响应参数
-                                    </button>
-                                    <button type="button" class="layui-btn"
-                                            id="convert_response_json_fields">
-                                        JSON快速转换
-                                    </button>
-                                </div>
+                        <div class="layui-form-item" style="margin-top: 10px">
+                            <div class="layui-inline">
+                                <button type="button" class="layui-btn layui-btn-primary"
+                                        id="add_response_body_field">
+                                    增加响应参数
+                                </button>
+                                <button type="button" class="layui-btn"
+                                        id="convert_response_json_fields">
+                                    JSON快速转换
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
-            </form>
-        </div>
+            </div>
+        </form>
+
     </div>
 </div>
 
@@ -155,7 +155,6 @@
 <script th:src="@{/admin/js/doc/header.js}"></script>
 <script th:src="@{/admin/js/marked.min.js}" type="application/javascript" charset="UTF-8"></script>
 <script th:src="@{/admin/js/util.js}"></script>
-<!--<script th:src="@{/admin/js/apiexplore.js}"></script>-->
 <script type="text/javascript" th:inline="javascript">
     $("#projectNav").addClass("layui-this");
     var msg;
@@ -190,8 +189,6 @@
                 layer.msg("网络异常")
             }
         });
-
-
         form.verify({
             url: function (value, item) {
                 /*if (!new RegExp("^(http(s?)\\:\\/\\/)?[0-9a-zA-Z]([-.\\w]*[0-9a-zA-Z])*(:(0-9)*)*(\\/?)([a-zA-Z0-9\\-\\.\\?\\,\\'\\/\\\\\\+&amp;%$#_]*)?$").test(value)) {
@@ -473,6 +470,7 @@
                     map["executeMode"] = "remoteAddress";
                     map["remoteAddress"] = res[0]['remoteAddress'];
                     map['projectId'] = $("#projectId").val();
+                    map["documentId"] = $("#documentId").val();
                     $.ajax({
                         type: 'POST',
                         dataType: 'JSON',
@@ -496,7 +494,6 @@
                     if (executeResult != null) {
                         globalExecuteResult = executeResult;
                         var invocationResult = executeResult;
-
                         if (invocationResult != null) {
                             if (invocationResult['responseBody'] != null) {
                                 openConsolePage(invocationResult)
@@ -510,13 +507,13 @@
 
         function publicNetExecute(data) {
             var map = getFormData(data.field);
-
             var executeResult = null;
 
             if (!/^https?:\/\/.+/.test(map['url'])) {
                 layer.msg("请填写完整的URL地址，缺少IP地址端口或者域名")
             } else {
                 map['projectId'] = $("#projectId").val();
+                map["documentId"] = $("#documentId").val();
                 $.ajax({
                     type: 'POST',
                     dataType: 'JSON',
