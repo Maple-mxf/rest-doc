@@ -7,7 +7,6 @@
     <title>API explorer</title>
     <link rel="stylesheet" th:href="@{/layui/css/layui.css}"/>
     <link rel="stylesheet" th:href="@{/admin/css/pearForm.css}"/>
-    <link rel="stylesheet" th:href="@{/admin/css/easyeditor.css}"/>
     <link rel="stylesheet" th:href="@{/admin/css/fangge-style.css}"/>
     <link rel="stylesheet" th:href="@{/admin/css/pear-tree/dtree.css}"/>
     <link rel="stylesheet" th:href="@{/admin/css/nav.css}"/>
@@ -163,19 +162,10 @@
     var globalExecuteResult = null;
     layui.config({
         base: '/restdoc/layui/lay/extends/'
-    }).extend({
-        easyeditor: 'easyeditor'
-    }).use([
-        'util', 'layer',
-        'form', 'upload',
-        'easyeditor',
+    }).use(['layer',
+        'form',
         'element',
         'jquery'], function () {
-
-        var easyeditor = layui.easyeditor;
-        easyeditor.init({
-            elem: '.editor'
-        });
 
         var form = layui.form;
         var $ = layui.jquery;
@@ -471,6 +461,7 @@
 
         function rpcExecute(data) {
             var map = getFormData(data.field);
+            var executeResult = null;
             layer.open({
                 type: 2,
                 title: '请选择运行服务实例',
@@ -482,18 +473,17 @@
                     map["executeMode"] = "remoteAddress";
                     map["remoteAddress"] = res[0]['remoteAddress'];
                     map['projectId'] = $("#projectId").val();
-                    var httpTaskId = null;
                     $.ajax({
                         type: 'POST',
                         dataType: 'JSON',
                         contentType: 'application/json;charset=utf-8',
-                        url: '/restdoc/document/httpTask/submit',
+                        url: '/restdoc/httptask/submit',
                         data: JSON.stringify(map),
                         async: false,
                         success: function (data) {
                             if (data['code'] === "200") {
                                 if (data['data'] != null) {
-                                    httpTaskId = data['data'];
+                                    executeResult = data['data'];
                                     layer.msg('执行成功')
                                 } else {
                                     layer.msg("任务提交失败")
@@ -507,10 +497,9 @@
                         }
                     });
 
-                    if (httpTaskId != null) {
+                    if (executeResult != null) {
                         var invocationResult = null;
                         for (let i = 0; i < 100; i++) {
-                            var executeResult = getExecuteResult(httpTaskId);
                             globalExecuteResult = executeResult;
                             invocationResult = executeResult['data'];
                             if (invocationResult != null) break;
@@ -529,22 +518,24 @@
 
         function outExecute(data) {
             var map = getFormData(data.field);
+
+            var executeResult = null;
+
             if (!/^https?:\/\/.+/.test(map['url'])) {
                 layer.msg("请填写完整的URL地址，缺少IP地址端口或者域名")
             } else {
                 map['projectId'] = $("#projectId").val();
-                var httpTaskId = null;
                 $.ajax({
                     type: 'POST',
                     dataType: 'JSON',
                     contentType: 'application/json;charset=utf-8',
-                    url: '/restdoc/document/httpTask/submit',
+                    url: '/restdoc/httptask/submit',
                     data: JSON.stringify(map),
                     async: false,
                     success: function (data) {
                         if (data['code'] === "200") {
                             if (data['data'] != null) {
-                                httpTaskId = data['data'];
+                                executeResult = data['data'];
                                 layer.msg('执行成功')
                             } else {
                                 layer.msg("任务提交失败")
@@ -559,12 +550,10 @@
                     }
                 });
 
-                if (httpTaskId != null) {
+                if (executeResult != null) {
                     var invocationResult = null;
                     for (let i = 0; i < 100; i++) {
-                        var executeResult = getExecuteResult(httpTaskId);
                         globalExecuteResult = executeResult;
-
                         invocationResult = executeResult['data'];
                         if (invocationResult != null) break;
                     }
@@ -637,12 +626,12 @@
                 "</div></div>";
 
             // RequestHeader
-            var requestHeaderH5Text ="";
+            var requestHeaderH5Text = "";
             if (data.invocation.requestHeaders != null) {
                 for (const [key, value] of Object.entries(data.invocation.requestHeaders)) {
                     requestHeaderH5Text = requestHeaderH5Text + "<strong>" + key + "&nbsp;&nbsp;&nbsp;</strong>" + value + "<br>";
                 }
-                if (requestHeaderH5Text !== ''){
+                if (requestHeaderH5Text !== '') {
                     start = start + "  <div class='layui-colla-item'><h2 class='layui-colla-title'>Request Headers</h2>" +
                         "<div class='layui-colla-content'>" + requestHeaderH5Text + "</div></div>";
                 }
@@ -654,7 +643,7 @@
                 for (const [key, value] of Object.entries(data.invocation.uriVariable)) {
                     uriVarH5Text = uriVarH5Text + "<strong>" + key + "&nbsp;&nbsp;&nbsp;</strong>" + value + "<br>";
                 }
-                if (uriVarH5Text !== ''){
+                if (uriVarH5Text !== '') {
                     start = start + "  <div class='layui-colla-item'><h2 class='layui-colla-title'>URI Variable</h2>" +
                         "<div class='layui-colla-content'>" + uriVarH5Text + "</div></div>";
                 }
@@ -667,7 +656,7 @@
                 for (const [key, value] of Object.entries(data.invocation.queryParam)) {
                     queryParamH5Text = queryParamH5Text + "<strong>" + key + "&nbsp;&nbsp;&nbsp;</strong>" + value + "<br>";
                 }
-                if (queryParamH5Text !== ''){
+                if (queryParamH5Text !== '') {
                     start = start + "  <div class='layui-colla-item'><h2 class='layui-colla-title'>Query Param</h2>" +
                         "<div class='layui-colla-content'>" + queryParamH5Text + "</div></div>";
                 }
@@ -678,7 +667,7 @@
                 for (const [key, value] of Object.entries(data.invocation.requestBody)) {
                     requestBodyH5Text = requestBodyH5Text + "<strong>" + key + "&nbsp;&nbsp;&nbsp;</strong>" + value + "<br>";
                 }
-                if (requestBodyH5Text !== ''){
+                if (requestBodyH5Text !== '') {
                     start = start + "  <div class='layui-colla-item'><h2 class='layui-colla-title'>Request Body</h2>" +
                         "<div class='layui-colla-content'>" + requestBodyH5Text + "</div></div>";
                 }
@@ -707,9 +696,9 @@
                     }
                 }
                 if (isJSON) {
-                    responseBodyH5Text = responseBodyH5Text+ "<pre>"+formatJson(data.responseBody) +"</pre>";
-                }else{
-                    responseBodyH5Text = responseBodyH5Text+ "<pre style='font-size: 17px'>"+data.responseBody +"</pre>";
+                    responseBodyH5Text = responseBodyH5Text + "<pre>" + formatJson(data.responseBody) + "</pre>";
+                } else {
+                    responseBodyH5Text = responseBodyH5Text + "<pre style='font-size: 17px'>" + data.responseBody + "</pre>";
                 }
             }
 
@@ -724,27 +713,12 @@
                 /*scrollbar: false,*/
                 content: $('#consolePage'),
                 area: ['600px', '500px'],
-                btn: ['记录结果','取消'],
+                btn: ['记录结果', '取消'],
                 yes: function (index, doc) {
                     completeExecuteCallback(data.responseBody);
                     layer.close(index);
                 }
             });
-        }
-
-        function getExecuteResult(taskId) {
-            var result = null;
-            $.ajax({
-                type: 'GET',
-                contentType: 'application/json;charset=utf-8',
-                url: '/restdoc/document/httpTask/' + taskId,
-                async: false,
-                success: function (data) {
-                    result = data;
-                }
-            });
-
-            return result;
         }
 
         function formatJson(ugly) {
@@ -812,7 +786,6 @@
                 map["requestFieldValue"] = requestFieldValueNodes[i].value
 
                 map["requestFieldType"] = requestFieldTypeNodes[i].value;
-                /*map["requestFieldDescription"] = easyeditor.content(requestFieldDescriptionNodes[i].value);*/
                 map["requestFieldConstraint"] = (requestFieldConstraintNodes[i].value === 'on');
 
                 array[i] = map
@@ -823,13 +796,11 @@
         function getUriVarJsonArray() {
             var uriFields = $('input[name=uriField]');
             var uriValueFields = $('input[name=uriValue]');
-            /*var uriDescFields = $('textarea[name=uriDesc]');*/
             var array = new Array();
             for (let i = 0; i < uriFields.length; i++) {
                 var map = new Map();
                 map['field'] = uriFields[i].value;
                 map['value'] = uriValueFields[i].value;
-                /*map['desc'] = easyeditor.content(uriDescFields[i].value);*/
                 array[i] = map;
             }
             return array
@@ -844,10 +815,7 @@
             for (let i = 0; i < responseFieldPathNodes.length; i++) {
                 var map = new Map()
                 map["responseFieldPath"] = responseFieldPathNodes[i].value;
-                /*map["responseFieldValue"] = responseFieldDescriptionNodes[i].value;*/
-
                 map["responseFieldType"] = responseFieldTypeNodes[i].value;
-                /*map["responseFieldDescription"] = easyeditor.content(responseFieldDescriptionNodes[i].value);*/
                 map["responseFieldConstraint"] = (responseFieldConstraintNodes[i].value === 'on')
                 array[i] = map
             }

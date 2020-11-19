@@ -3,6 +3,7 @@ package restdoc.web.model
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.index.HashIndexed
 import org.springframework.data.mongodb.core.mapping.Document
+import java.util.*
 
 
 /**
@@ -30,7 +31,7 @@ class HttpApiTestLog {
 
     var queryParameters: Map<String, Any>? = null
 
-    var requestHeaderParameters: Map<String, List<String>>? = null
+    var requestHeaderParameters: Map<String, String>? = null
 
     var requestBodyParameters: Map<String, Any>? = null
 
@@ -40,7 +41,9 @@ class HttpApiTestLog {
 
     var responseBody: Any? = null
 
-    var testTime: Long? = null
+    var testDurationTimeMill: Long? = null
 
     var testMode: TestMode = TestMode.RPC
+
+    var createTime: Long? = Date().time
 }
