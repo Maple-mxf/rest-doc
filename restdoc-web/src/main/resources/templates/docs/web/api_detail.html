@@ -282,14 +282,9 @@
         </div>
         <div class="layui-tab-item">
             <div class="layui-row">
-                <div class="layui-col-md8">
-                    <iframe id="testApiFrame" th:src="@{'/'+${projectId}+'/document/view/'+${document.id}+'/test'}"
-                            style="width: 100%;height: 900px" frameborder="no" border="0" marginwidth="0"
-                            marginheight="0"></iframe>
-                </div>
-                <div class="layui-col-md4">
-                    <table id="testLogTable" lay-filter="testLogTable"></table>
-                </div>
+                <iframe id="testApiFrame" th:src="@{'/'+${projectId}+'/document/view/'+${document.id}+'/test'}"
+                        style="width: 100%;height: 900px" frameborder="no" border="0" marginwidth="0"
+                        marginheight="0"></iframe>
             </div>
 
         </div>
@@ -345,27 +340,6 @@
                         layer.close(index)
                     }
                 });
-            });
-
-            //第一个实例
-            table.render({
-                elem: '#testLogTable'
-                , url: '/restdoc/document/' + documentId + '/httpapitestlog/page'
-                , page: true
-                , skin: 'nob'
-                , limits: [50, 100]
-                , totalRow: false
-                , loading: true
-                , title: '调试记录'
-                , text: {
-                    none: '无调试记录'
-                }
-                , cols: [
-                    [
-                        {field: 'createTime', title: '创建时间', width: 150,align:'center'}
-                        , {field: 'testMode', title: '测试模式'/*, width: 100*/,align:'center'}
-                    ]
-                ]
             });
         });
 

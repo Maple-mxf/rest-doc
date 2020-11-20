@@ -23,111 +23,118 @@
 <input type="hidden" name="projectId" id="projectId" th:value="${projectId}"/>
 <div class="layui-fluid" style="margin-top: 10px">
     <div class="layui-row">
-
-        <form class="layui-form layui-form-pane" action="" id="request_form">
-            <fieldset class="layui-elem-field site-demo-button" style="margin-top: 10px;">
-                <div class="layui-form-item">
-                    <div class="layui-input-inline">
-                        <select id="method" name="method" lay-verify="method">
-                            <option value="NON" disabled>请选择请求方式</option>
-                            <option value="GET">GET</option>
-                            <option value="POST">POST</option>
-                            <option value="PUT">PUT</option>
-                            <option value="DELETE">DELETE</option>
-                            <option value="PATCH">PATCH</option>
-                            <option value="OPTION">OPTION</option>
-                        </select>
+        <div class="layui-col-md8">
+            <form class="layui-form layui-form-pane" action="" id="request_form">
+                <fieldset class="layui-elem-field site-demo-button" style="margin-top: 10px;">
+                    <div class="layui-form-item">
+                        <div class="layui-input-inline">
+                            <select id="method" name="method" lay-verify="method">
+                                <option value="NON" disabled>请选择请求方式</option>
+                                <option value="GET">GET</option>
+                                <option value="POST">POST</option>
+                                <option value="PUT">PUT</option>
+                                <option value="DELETE">DELETE</option>
+                                <option value="PATCH">PATCH</option>
+                                <option value="OPTION">OPTION</option>
+                            </select>
+                        </div>
+                        <div class="layui-input-inline">
+                            <input id="url" type="text" name="url"
+                                   placeholder="127.0.0.1:8080/springboot/{resource}/{id}"
+                                   lay-verify="url" autocomplete="off"
+                                   style="width: 220%"
+                                   class="layui-input">
+                        </div>
+                        <button class="layui-btn" style="margin-left: 23%;float: left" lay-submit lay-filter="execute">
+                            <i class="layui-icon layui-icon-triangle-r" style="font-size: 17px; color: white;"></i>调试
+                        </button>
+                        <button class="layui-btn" lay-submit lay-filter="save">
+                            <i class="layui-icon layui-icon-email" style="font-size: 18px; color: white;"></i> 保存
+                        </button>
                     </div>
-                    <div class="layui-input-inline">
-                        <input id="url" type="text" name="url"
-                               placeholder="127.0.0.1:8080/springboot/{resource}/{id}"
-                               lay-verify="url" autocomplete="off"
-                               style="width: 220%"
-                               class="layui-input">
-                    </div>
-                    <button class="layui-btn" style="margin-left: 23%;float: left" lay-submit lay-filter="execute">
-                        <i class="layui-icon layui-icon-triangle-r" style="font-size: 17px; color: white;"></i>调试
-                    </button>
-                    <button class="layui-btn" lay-submit lay-filter="save">
-                        <i class="layui-icon layui-icon-email" style="font-size: 18px; color: white;"></i> 保存
-                    </button>
-                </div>
-            </fieldset>
+                </fieldset>
 
-            <div class="layui-collapse group">
-                <div class="layui-colla-item">
-                    <h2 class="layui-colla-title layui-bg-red">REST路径参数</h2>
-                    <div class="layui-colla-content" id="uri-fieldset">
-                        <div class="layui-form-item" style="margin-top: 10px">
-                            <div class="layui-inline">
-                                <button type="button" class="layui-btn layui-btn-primary"
-                                        id="add_pathvar_field_btn">
-                                    增加路径参数
-                                </button>
+                <div class="layui-collapse group">
+                    <div class="layui-colla-item">
+                        <h2 class="layui-colla-title layui-bg-red">REST路径参数</h2>
+                        <div class="layui-colla-content" id="uri-fieldset">
+                            <div class="layui-form-item" style="margin-top: 10px">
+                                <div class="layui-inline">
+                                    <button type="button" class="layui-btn layui-btn-primary"
+                                            id="add_pathvar_field_btn">
+                                        增加路径参数
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="layui-collapse group">
-                <div class="layui-colla-item">
-                    <h2 class="layui-colla-title layui-bg-orange">请求头</h2>
-                    <div class="layui-colla-content" id="header-fieldset">
-                        <div class="layui-form-item" style="margin-top: 10px">
-                            <div class="layui-inline">
-                                <button type="button" class="layui-btn layui-btn-primary"
-                                        id="add_request_header_field">
-                                    增加请求头参数
-                                </button>
+                <div class="layui-collapse group">
+                    <div class="layui-colla-item">
+                        <h2 class="layui-colla-title layui-bg-orange">请求头</h2>
+                        <div class="layui-colla-content" id="header-fieldset">
+                            <div class="layui-form-item" style="margin-top: 10px">
+                                <div class="layui-inline">
+                                    <button type="button" class="layui-btn layui-btn-primary"
+                                            id="add_request_header_field">
+                                        增加请求头参数
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="layui-collapse group">
-                <div class="layui-colla-item">
-                    <h2 class="layui-colla-title layui-bg-cyan">请求参数</h2>
-                    <div class="layui-colla-content" id="body-fieldset">
+                <div class="layui-collapse group">
+                    <div class="layui-colla-item">
+                        <h2 class="layui-colla-title layui-bg-cyan">请求参数</h2>
+                        <div class="layui-colla-content" id="body-fieldset">
 
-                        <div class="layui-form-item" style="margin-top: 10px">
-                            <div class="layui-inline">
-                                <button type="button" class="layui-btn layui-btn-primary"
-                                        id="add_request_body_field">
-                                    增加请求参数
-                                </button>
+                            <div class="layui-form-item" style="margin-top: 10px">
+                                <div class="layui-inline">
+                                    <button type="button" class="layui-btn layui-btn-primary"
+                                            id="add_request_body_field">
+                                        增加请求参数
+                                    </button>
 
-                                <button type="button" class="layui-btn"
-                                        id="convert_json_to_fields">
-                                    JSON快速转换
-                                </button>
+                                    <button type="button" class="layui-btn"
+                                            id="convert_json_to_fields">
+                                        JSON快速转换
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="layui-collapse group">
-                <div class="layui-colla-item">
-                    <h2 class="layui-colla-title layui-bg-black">期望响应参数</h2>
-                    <div class="layui-colla-content" id="response-fieldset">
+                <div class="layui-collapse group">
+                    <div class="layui-colla-item">
+                        <h2 class="layui-colla-title layui-bg-black">期望响应参数</h2>
+                        <div class="layui-colla-content" id="response-fieldset">
 
-                        <div class="layui-form-item" style="margin-top: 10px">
-                            <div class="layui-inline">
-                                <button type="button" class="layui-btn layui-btn-primary"
-                                        id="add_response_body_field">
-                                    增加响应参数
-                                </button>
-                                <button type="button" class="layui-btn"
-                                        id="convert_response_json_fields">
-                                    JSON快速转换
-                                </button>
+                            <div class="layui-form-item" style="margin-top: 10px">
+                                <div class="layui-inline">
+                                    <button type="button" class="layui-btn layui-btn-primary"
+                                            id="add_response_body_field">
+                                        增加响应参数
+                                    </button>
+                                    <button type="button" class="layui-btn"
+                                            id="convert_response_json_fields">
+                                        JSON快速转换
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+            </form>
+        </div>
+        <div class="layui-col-md4">
+            <div class="layui-row">
             </div>
-        </form>
-
+            <div class="layui-row">
+                <table id="testLogTable" lay-filter="testLogTable"></table>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -164,15 +171,16 @@
     }).use(['layer',
         'form',
         'element',
-        'jquery'], function () {
+        'jquery', 'table'], function () {
 
         var form = layui.form;
         var $ = layui.jquery;
         msg = layui.layer;
         var layer = layui.layer;
         var element = layui.element;
-
+        var table = layui.table;
         var treeData = null;
+        var documentId = $("#documentId").val();
 
         $.ajax({
             type: 'GET',
@@ -202,6 +210,46 @@
                     return "请选择参数类型";
             }
             , pass: []
+        });
+
+        //第一个实例
+
+        table.render({
+            elem: '#testLogTable'
+            , url: '/restdoc/document/' + documentId + '/httpapitestlog/page'
+            , page: true
+            , size: 'sm'
+            , skin: 'nob'
+            , limits: [50, 100]
+            , totalRow: false
+            , loading: true
+            , title: '调试记录'
+            , text: {
+                none: '无调试记录'
+            }
+            , cols: [
+                [
+                    {
+                        width: 80, field: '状态', title: 'Success', align: 'center', templet: function (res) {
+                            if (res.success) {
+                                return "<i class='layui-icon layui-icon-ok-circle' style='=font-size: 17px; color: #5FB878;'></i>"
+                            } else {
+                                return "<i class='layui-icon layui-icon-close-fill' style='=font-size: 17px; color: #FF5722;'></i>"
+                            }
+                        }
+                    },
+                    {field: 'testMode', title: 'Mode', align: 'center', width: 80},
+                    {
+                        field: 'createTime',
+                        title: '时间',
+                        align: 'center',
+                        width: 160,
+                        templet: '<label>{{formatTimestamp(d.createTime)}}</label>'
+                    },
+                    {field: 'testMode', title: 'Mode', align: 'center'}
+                ]
+            ]
+
         });
 
         $('#tableContent').click(function () {

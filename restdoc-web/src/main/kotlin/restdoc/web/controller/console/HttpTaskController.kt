@@ -73,7 +73,7 @@ class HttpTaskController {
         log.testDurationTimeMill = Date().time - startTime
         log.responseHeader = res.responseHeaders
         log.responseBody = res.responseBody
-        log.success = res.isSuccessful
+        log.success = (log.responseStatus == 200)
 
         mongoTemplate.save(log)
 
