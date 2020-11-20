@@ -3,6 +3,7 @@ package restdoc.web.controller.console
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Sort
 import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.web.bind.annotation.*
@@ -28,7 +29,9 @@ class HttpApiTestLogController {
 
     @RequestMapping("/document/{documentId}/httpapitestlog/page")
     fun page(dto: LayuiPageDto, @PathVariable documentId: String): Any {
-        val page = httpApiTestLogRepository.page(Query(Criteria("documentId").`is`(documentId)), dto.toPageable())
+        val query = Query(Criteria("documentId").`is`(documentId))
+        query.with(Sort.by(Sort.Order.desc("createTime")))
+        val page = httpApiTestLogRepository.page(query, dto.toPageable())
         return layuiTableOK(data = page.content, count = page.totalElements.toInt())
     }
 
