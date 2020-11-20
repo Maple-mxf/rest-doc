@@ -1,50 +1,44 @@
 {
-  "status": "OK",
-  "code": "200",
-  "message": null,
-  "data": {
-    "isSuccessful": true,
-    "exceptionMsg": null,
-    "invocation": {
-      "className": "restdoc.client.api.model.RestWebInvocation",
-      "url": "/handshake/{pathVar}",
-      "method": "POST",
-      "requestHeaders": {
-        "Content-Type": [
-          "application/json;utf-8"
-        ]
-      },
-      "queryParam": {},
-      "requestBody": {
-        "msg": "OK",
-        "code": "1",
-        "success": "true"
-      },
-      "uriVariable": {
-        "pathVar": "pathVar"
-      }
-    },
-    "status": 200,
-    "responseHeaders": {
-      "Content-Type": [
-        "application/json"
-      ],
-      "Transfer-Encoding": [
-        "chunked"
-      ],
-      "Date": [
-        "Thu, 19 Nov 2020 12:21:53 GMT"
-      ],
-      "Keep-Alive": [
-        "timeout=60"
-      ],
-      "Connection": [
-        "keep-alive"
-      ]
-    },
-    "responseBody": {
-      "msg": "欢迎测试Http服务",
-      "applicationType": "DUBBO"
-    }
-  }
+  "id": "778971545014898688",
+  "success": true,
+  "remote": null,
+  "documentId": "80c09aafab9e3781bd05cb725a5eb84e",
+  "url": "/handshake/{pathVar}",
+  "uriParameters": {
+    "pathVar": "pathVar"
+  },
+  "queryParameters": null,
+  "requestHeaderParameters": {
+    "Content-Type": "application/json;utf-8"
+  },
+  "requestBodyParameters": {
+    "msg": "OK",
+    "code": "1",
+    "success": "true"
+  },
+  "responseStatus": 200,
+  "responseHeader": {
+    "Content-Type": [
+      "application/json"
+    ],
+    "Transfer-Encoding": [
+      "chunked"
+    ],
+    "Date": [
+      "Thu, 19 Nov 2020 13:14:48 GMT"
+    ],
+    "Keep-Alive": [
+      "timeout=60"
+    ],
+    "Connection": [
+      "keep-alive"
+    ]
+  },
+  "responseBody": {
+    "msg": "欢迎测试Http服务",
+    "applicationType": "DUBBO"
+  },
+  "testDurationTimeMill": 36,
+  "testMode": "RPC",
+  "createTime": 1605791688922
 }

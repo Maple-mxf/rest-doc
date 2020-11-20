@@ -30,11 +30,12 @@ class MicroserviceController {
 
     @PostMapping("/{projectId}/microservice/api/sync")
     fun syncAPI(@PathVariable projectId: String,
-                @RequestParam service: String/*,
-                @RequestParam id: String*/
-    ): Result {
+                @RequestParam service: String/*,@RequestParam id: String*/): Result {
         val (_, _, _, _, _, type) =
-                projectRepository.findById(projectId).orElseThrow { Status.BAD_REQUEST.instanceError("projectId错误") }
+                projectRepository.findById(projectId)
+                        .orElseThrow {
+                            Status.BAD_REQUEST.instanceError("projectId错误")
+                        }
         when (type) {
             ProjectType.DUBBO -> {
                 val apiList = this.clientRegistryCenter.getExposedAPIFilterService(service)
@@ -49,6 +50,4 @@ class MicroserviceController {
         }
         return ok()
     }
-
-
 }

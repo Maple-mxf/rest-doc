@@ -3,6 +3,7 @@ package restdoc.web.model
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.index.HashIndexed
 import org.springframework.data.mongodb.core.mapping.Document
+import org.springframework.http.HttpMethod
 import java.util.*
 
 
@@ -26,6 +27,8 @@ class HttpApiTestLog {
     var documentId: String? = null
 
     var url: String? = null
+
+    var method: HttpMethod? = HttpMethod.GET
 
     var uriParameters: Map<String, Any>? = null
 

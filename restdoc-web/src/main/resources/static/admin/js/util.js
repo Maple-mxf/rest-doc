@@ -10,44 +10,41 @@ function formatTimestamp(timestamp) {
     return year + "-" + month + "-" + theDate + " " + hour + ":" + minute + ":" + second;
 }
 
-function initTestApiDoc(document, form, one_uri_line, one_request_header_line,
+function initBaseInput(doc) {
+    // 设定method
+    $("#method").find("option[value=" + doc['method'] + "]").attr("selected", true);
+
+    // 设定api地址
+    $('#url').val(doc['url']);
+
+    // 设定api名称
+    $('#apiName').val(doc['name']);
+}
+
+function initTestApiDoc(testLog, doc, form, one_uri_line, one_request_header_line,
                         one_request_param_line, one_response_param_line
 ) {
 
-    if (document != null) {
+    if (testLog != null) {
 
-        // 设定method
-        $("#method").find("option[value=" + document['method'] + "]")
-            .attr("selected", true);
+        initBaseInput(doc);
 
-        // 设定api地址
-        $('#url').val(document['url']);
-
-        // 设定api名称
-        $('#apiName').val(document['name']);
-
-        // 设定描述
-        $('#apiDescription').text(document['description']);
-
-        if (document['uriVarDescriptors'] != null && document['uriVarDescriptors'].length > 0) {
-            initUriFieldDoc(document['uriVarDescriptors'], one_uri_line);
-            form.render()
+        if (testLog['uriParameters'] != null) {
+            initUriFieldDoc(testLog['uriParameters'], one_uri_line);
         }
 
-        if (document['requestHeaderDescriptor'] != null && document['requestHeaderDescriptor'].length > 0) {
-            initHeaderFieldDoc(document['requestHeaderDescriptor'], one_request_header_line);
-            form.render()
+        if (testLog['requestHeaderParameters'] != null) {
+            initRequestHeaderFieldDoc(testLog['requestHeaderParameters'], one_request_header_line);
         }
 
-        if (document['requestBodyDescriptor'] != null && document['requestBodyDescriptor'].length > 0) {
-            initRequestParamDoc(document['requestBodyDescriptor'], one_request_param_line);
-            form.render()
+        if (testLog['requestBodyParameters'] != null) {
+            initRequestParamDoc(testLog['requestBodyParameters'], one_request_param_line);
         }
 
-        if (document['responseBodyDescriptors'] != null && document['responseBodyDescriptors'].length > 0) {
-            initResponseParamDoc(document['responseBodyDescriptors'], one_response_param_line);
-            form.render()
+        if (testLog['responseBodyParameters'] != null && testLog['responseBodyParameters'].length > 0) {
+            initResponseParamDoc(testLog['responseBodyParameters'], one_response_param_line);
         }
+        form.render()
     }
 }
 
@@ -103,50 +100,43 @@ function initRequestParamDoc(requestFields, one_request_param_line) {
 }
 
 
-function initHeaderFieldDoc(headerFields, one_request_header_line) {
-    for (let i = 0; i < headerFields.length; i++) {
+function initRequestHeaderFieldDoc(headerFields, one_request_header_line) {
+    var keys = Object.keys(headerFields);
+    for (let i = 0; i < keys.length; i++) {
         $("#header-fieldset").append(one_request_header_line);
     }
-
     var all_input_line = $("#header-fieldset").children(".one-request-header-line");
-
     for (let i = 0; i < all_input_line.length; i++) {
         let line = all_input_line[i];
-        $(line).find("input").each(function () {
-            if (this.name === 'headerKey') {
-                this.value = headerFields[i]['field']
-            } else if (this.name === 'headerValue') {
-                this.value = headerFields[i]['value']
-            }
-        });
-        $(line).find("textarea:first-child").text(headerFields[i]['description'])
+        $(line).find("input")
+            .each(function () {
+                if (this.name === 'headerKey') {
+                    this.value = keys[i];
+                } else if (this.name === 'headerValue') {
+                    this.value = headerFields[keys[i]];
+                }
+            });
     }
-
     $("#header-fieldset").addClass("layui-show");
 }
 
-
 function initUriFieldDoc(uriVariables, oneuriline) {
-    for (let i = 0; i < uriVariables.length; i++) {
+    var keys = Object.keys(uriVariables);
+    for (let i = 0; i < keys.length; i++) {
         $("#uri-fieldset").append(oneuriline);
     }
     var all_input_line = $("#uri-fieldset").children(".one-uri-header-line");
 
     for (let i = 0; i < all_input_line.length; i++) {
         let line = all_input_line[i];
-
-        console.info($(line).find("input").length);
-
-        $(line).find("input").each(function () {
-            if (this.name === 'uriField') {
-                this.value = uriVariables[i]['field']
-            } else if (this.name === 'uriValue') {
-                this.value = uriVariables[i]['value']
-            }
-        });
-
-        $(line).find("textarea:first-child").html(uriVariables[i]['description']);
-
+        $(line).find("input")
+            .each(function () {
+                if (this.name === 'uriField') {
+                    this.value = keys[i];
+                } else if (this.name === 'uriValue') {
+                    this.value = uriVariables[keys[i]];
+                }
+            });
         $("#uri-fieldset").addClass("layui-show");
     }
 }

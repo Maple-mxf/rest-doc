@@ -2,7 +2,6 @@ package restdoc.web.controller.console
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.mongodb.core.MongoTemplate
-import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -19,11 +18,9 @@ import restdoc.web.core.schedule.ScheduleController
 import restdoc.web.model.HttpApiTestLog
 import restdoc.web.model.HttpTaskExecutor
 import restdoc.web.model.TestMode
-import restdoc.web.service.HttpApiTestLogService
 import restdoc.web.util.IDUtil
 import restdoc.web.util.PathValue
 import restdoc.web.util.dp.JsonProjector
-import java.net.URI
 import java.util.*
 import java.util.regex.Pattern.compile
 import javax.validation.Valid
@@ -33,9 +30,6 @@ import javax.validation.Valid
 class HttpTaskController {
 
     @Autowired
-    private lateinit var redisTemplate: RedisTemplate<String, Any>
-
-    @Autowired
     private lateinit var httpTaskExecutor: HttpTaskExecutor
 
     @Autowired
@@ -43,9 +37,6 @@ class HttpTaskController {
 
     @Autowired
     private lateinit var mongoTemplate: MongoTemplate
-
-    @Autowired
-    private lateinit var httpApiTestLogService: HttpApiTestLogService
 
     @PostMapping("/submit")
     fun submitHttpTask(@RequestBody @Valid dto: RequestDto): Any {
@@ -75,7 +66,9 @@ class HttpTaskController {
         log.responseBody = res.responseBody
         log.success = (log.responseStatus == 200)
 
-        mongoTemplate.save(log)
+        if (dto.documentId != null && dto.documentId!!.isNotBlank()){
+            mongoTemplate.save(log)
+        }
 
         return ok(res)
     }

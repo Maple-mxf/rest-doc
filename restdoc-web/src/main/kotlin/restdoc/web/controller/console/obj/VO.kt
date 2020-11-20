@@ -1,5 +1,6 @@
 package restdoc.web.controller.console.obj
 
+import org.springframework.http.HttpMethod
 import restdoc.web.base.getBean
 import restdoc.web.core.code.CURLCodeSampleGenerator
 import restdoc.web.core.code.JavaCodeSampleGenerator
@@ -203,3 +204,12 @@ data class DTreeVO(val id: String,
                    var children: List<Any> = listOf(),
                    var type: NodeType = NodeType.RESOURCE,
                    var iconClass: String? = null)
+
+data class HttpApiTestLogDeProjectVO(
+        val method: HttpMethod,
+        val url: String,
+        val uriParameters: Map<String, Any?>?,
+        val requestHeaderParameters: Map<String, Any?>?,
+        val requestBodyParameters: List<BodyFieldDescriptor>?,
+        val responseBodyParameters: List<BodyFieldDescriptor>?
+)
