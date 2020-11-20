@@ -35,7 +35,7 @@ class HttpApiTestLogController {
         return layuiTableOK(data = page.content, count = page.totalElements.toInt())
     }
 
-    @PostMapping("/document//httpapitestlog/{id}/deProject")
+    @PostMapping("/document/httpapitestlog/{id}/deProject")
     fun deProjectLogData(@PathVariable id: String): Result {
 
         val log = httpApiTestLogRepository.findById(id).orElseThrow { Status.BAD_REQUEST.instanceError() }
@@ -61,7 +61,7 @@ class HttpApiTestLogController {
         return ok(vo)
     }
 
-    @DeleteMapping("/document//httpapitestlog/{id}")
+    @DeleteMapping("/document/httpapitestlog/{id}")
     fun delete(@PathVariable id: String): Result {
         httpApiTestLogRepository.deleteById(id)
         return ok()
