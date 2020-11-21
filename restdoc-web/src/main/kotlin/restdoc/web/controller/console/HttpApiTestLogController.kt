@@ -8,6 +8,7 @@ import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.web.bind.annotation.*
 import restdoc.web.base.auth.Verify
+import restdoc.web.controller.console.obj.BatchDeleteDto
 import restdoc.web.controller.console.obj.HttpApiTestLogDeProjectVO
 import restdoc.web.controller.console.obj.LayuiPageDto
 import restdoc.web.controller.console.obj.layuiTableOK
@@ -59,6 +60,12 @@ class HttpApiTestLogController {
                 responseBodyParameters = responseBodyParameters)
 
         return ok(vo)
+    }
+
+    @DeleteMapping("/document/httpapitestlog/batch")
+    fun batchDelete(@RequestBody dto: BatchDeleteDto): Result {
+        val deleteResult = httpApiTestLogRepository.delete(Query(Criteria("id").`in`(dto.ids)))
+        return ok()
     }
 
     @DeleteMapping("/document/httpapitestlog/{id}")

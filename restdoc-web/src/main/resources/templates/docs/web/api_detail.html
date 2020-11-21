@@ -123,160 +123,164 @@
     <div class="layui-tab-content">
         <div class="layui-tab-item layui-show">
             <div class="layui-row">
-                <span style="margin-left: 2%"><h2 th:text="${document.name}"></h2></span>
-                <div class="layui-row code-block" style="margin-top: 1%; height: 60px;line-height: 60px; ">
-                    <span style="margin-left: 2%">HTTP1.1 GET <span th:text="${document.url}"></span></span>
-                    <span id="urlSpan" style="position: absolute;right: 10px;margin-top: -1%"><i
-                            class="layui-icon layui-icon-file-b" style="font-size: 25px; color: whitesmoke;"
-                            title="复制URL" id="copyURL"></i></span>
-                </div>
-                <div class="layui-row">
-                    <h3 class="headerTitle">备注
-                        <span>
+                <div class="layui-col-md10">
+
+                    <span style="margin-left: 2%"><h2 th:text="${document.name}"></h2></span>
+                    <div class="layui-row code-block" style="margin-top: 1%; height: 60px;line-height: 60px; ">
+                        <span style="margin-left: 2%">HTTP1.1 GET <span th:text="${document.url}"></span></span>
+                        <span id="urlSpan" style="position: absolute;right: 10px;margin-top: -1%"><i
+                                class="layui-icon layui-icon-file-b" style="font-size: 25px; color: whitesmoke;"
+                                title="复制URL" id="copyURL"></i></span>
+                    </div>
+                    <div class="layui-row">
+                        <h3 class="headerTitle">备注
+                            <span>
                                       <i class="layui-icon layui-icon-rate"
                                          style="font-size: 18px; color: #FF5722;font-weight: normal">
                                     <span style="font-size: 14px;color: #FF5722">Tip：双击内容区域可以编辑文档 </span></i>
                                 </span>
-                    </h3>
-                    <blockquote class="layui-elem-quote" id="editDocDescriptionBtn">
-                        <div class="layui-text	" th:utext="${document.description}"
-                             id="descriptionArea"></div>
-                    </blockquote>
-                </div>
-                <div class="layui-row"
-                     th:if="${document.uriVarDescriptors!=null and !document.uriVarDescriptors.isEmpty()}">
-                    <h3 class="headerTitle">URI路径参数列表 &nbsp;&nbsp;&nbsp;
-                        <i class="layui-icon layui-icon-rate"
-                           style="font-size: 18px; color: #FF5722;font-weight: normal">
-                            <span style="font-size: 14px;color: #FF5722">Tip：双击行可以编辑文档 </span></i>
-                    </h3>
-                    <p>
-                    </p>
-                    <table class="layui-table" id="uriFieldListTable" lay-size="lg">
-                        <colgroup>
-                            <col width="220">
-                            <col width="220">
-                            <col width="400">
-                            <col>
-                        </colgroup>
-                        <thead>
-                        <tr>
-                            <th>参数</th>
-                            <th>示例值</th>
-                            <th>说明</th>
-                        </tr>
-                        </thead>
-                        <tbody id="uriFieldListTableBody">
-                        </tbody>
-                    </table>
-                </div>
-                <div class="layui-row"
-                     th:if="${document.requestHeaderDescriptor!=null and !document.requestHeaderDescriptor.isEmpty()}">
-                    <h3 class="headerTitle">请求头参数列表
-                        &nbsp;&nbsp;&nbsp;
-                        <i class="layui-icon layui-icon-rate"
-                           style="font-size: 18px; color: #FF5722;font-weight: normal">
+                        </h3>
+                        <blockquote class="layui-elem-quote" id="editDocDescriptionBtn">
+                            <div class="layui-text	" th:utext="${document.description}"
+                                 id="descriptionArea"></div>
+                        </blockquote>
+                    </div>
+                    <div class="layui-row"
+                         th:if="${document.uriVarDescriptors!=null and !document.uriVarDescriptors.isEmpty()}">
+                        <h3 class="headerTitle">URI路径参数列表 &nbsp;&nbsp;&nbsp;
+                            <i class="layui-icon layui-icon-rate"
+                               style="font-size: 18px; color: #FF5722;font-weight: normal">
+                                <span style="font-size: 14px;color: #FF5722">Tip：双击行可以编辑文档 </span></i>
+                        </h3>
+                        <p>
+                        </p>
+                        <table class="layui-table" id="uriFieldListTable" lay-size="lg">
+                            <colgroup>
+                                <col width="220">
+                                <col width="220">
+                                <col width="400">
+                                <col>
+                            </colgroup>
+                            <thead>
+                            <tr>
+                                <th>参数</th>
+                                <th>示例值</th>
+                                <th>说明</th>
+                            </tr>
+                            </thead>
+                            <tbody id="uriFieldListTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="layui-row"
+                         th:if="${document.requestHeaderDescriptor!=null and !document.requestHeaderDescriptor.isEmpty()}">
+                        <h3 class="headerTitle">请求头参数列表
+                            &nbsp;&nbsp;&nbsp;
+                            <i class="layui-icon layui-icon-rate"
+                               style="font-size: 18px; color: #FF5722;font-weight: normal">
+                                <span style="font-size: 14px;color: #FF5722">Tip：双击行可以编辑文档 </span></i></h3>
+                        <p>
+                        <table class="layui-table" id="requestHeaderListTable" lay-size="lg">
+                            <colgroup>
+                                <col width="200">
+                                <col width="250">
+                                <col width="180">
+                                <col>
+                            </colgroup>
+                            <thead>
+                            <tr>
+                                <th>参数</th>
+                                <th>示例值</th>
+                                <th>是否可选</th>
+                                <th>说明</th>
+                            </tr>
+                            </thead>
+                            <tbody id="requestHeaderListTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="layui-row"
+                         th:if="${document.requestBodyDescriptor!=null and !document.requestBodyDescriptor.isEmpty()}">
+                        <h3 class="headerTitle">请求参数列表 <i class="layui-icon layui-icon-rate"
+                                                          style="font-size: 18px; color: #FF5722;font-weight: normal">
                             <span style="font-size: 14px;color: #FF5722">Tip：双击行可以编辑文档 </span></i></h3>
-                    <p>
-                    <table class="layui-table" id="requestHeaderListTable" lay-size="lg">
-                        <colgroup>
-                            <col width="200">
-                            <col width="250">
-                            <col width="180">
-                            <col>
-                        </colgroup>
-                        <thead>
-                        <tr>
-                            <th>参数</th>
-                            <th>示例值</th>
-                            <th>是否可选</th>
-                            <th>说明</th>
-                        </tr>
-                        </thead>
-                        <tbody id="requestHeaderListTableBody">
-                        </tbody>
-                    </table>
-                </div>
-                <div class="layui-row"
-                     th:if="${document.requestBodyDescriptor!=null and !document.requestBodyDescriptor.isEmpty()}">
-                    <h3 class="headerTitle">请求参数列表 <i class="layui-icon layui-icon-rate"
-                                                      style="font-size: 18px; color: #FF5722;font-weight: normal">
-                        <span style="font-size: 14px;color: #FF5722">Tip：双击行可以编辑文档 </span></i></h3>
-                    <p>
+                        <p>
 
-                    <table class="layui-table" id="requestBodyFieldListTable" lay-size="lg">
-                        <colgroup>
-                            <col width="200">
-                            <col width="120">
-                            <col width="200">
-                            <col width="200">
-                            <col>
-                        </colgroup>
-                        <thead>
-                        <tr>
-                            <th>参数</th>
-                            <th>类型</th>
-                            <th>示例值</th>
-                            <th>是否可选</th>
-                            <th>说明</th>
-                        </tr>
-                        </thead>
-                        <tbody id="requestBodyFieldListTableBody">
-                        </tbody>
-                    </table>
-                </div>
-                <div class="layui-row"
-                     th:if="${document.responseBodyDescriptors!=null and !document.responseBodyDescriptors.isEmpty()}">
-                    <h3 class="headerTitle">响应参数列表
-                        <i class="layui-icon layui-icon-rate"
-                           style="font-size: 18px; color: #FF5722;font-weight: normal">
-                            <span style="font-size: 14px;color: #FF5722">Tip：双击行可以编辑文档 </span></i>
-                    </h3>
-                    <p>
-                    <table class="layui-table" id="responseBodyFieldListTable" lay-size="lg">
-                        <colgroup>
-                            <col width="150">
-                            <col width="120">
-                            <col width="150">
-                            <col width="200">
-                            <col>
-                        </colgroup>
-                        <thead>
-                        <tr>
-                            <th>参数</th>
-                            <th>类型</th>
-                            <th>示例值</th>
-                            <th>说明</th>
+                        <table class="layui-table" id="requestBodyFieldListTable" lay-size="lg">
+                            <colgroup>
+                                <col width="200">
+                                <col width="120">
+                                <col width="200">
+                                <col width="200">
+                                <col>
+                            </colgroup>
+                            <thead>
+                            <tr>
+                                <th>参数</th>
+                                <th>类型</th>
+                                <th>示例值</th>
+                                <th>是否可选</th>
+                                <th>说明</th>
+                            </tr>
+                            </thead>
+                            <tbody id="requestBodyFieldListTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="layui-row"
+                         th:if="${document.responseBodyDescriptors!=null and !document.responseBodyDescriptors.isEmpty()}">
+                        <h3 class="headerTitle">响应参数列表
+                            <i class="layui-icon layui-icon-rate"
+                               style="font-size: 18px; color: #FF5722;font-weight: normal">
+                                <span style="font-size: 14px;color: #FF5722">Tip：双击行可以编辑文档 </span></i>
+                        </h3>
+                        <p>
+                        <table class="layui-table" id="responseBodyFieldListTable" lay-size="lg">
+                            <colgroup>
+                                <col width="150">
+                                <col width="120">
+                                <col width="150">
+                                <col width="200">
+                                <col>
+                            </colgroup>
+                            <thead>
+                            <tr>
+                                <th>参数</th>
+                                <th>类型</th>
+                                <th>示例值</th>
+                                <th>说明</th>
 
-                        </tr>
-                        </thead>
-                        <tbody id="responseBodyFieldListTableBody">
-                        </tbody>
-                    </table>
-                </div>
-                <div class="layui-row">
-                    <h3 class="headerTitle">代码示例</h3>
-                    <div class="layui-tab layui-tab-card">
-                        <ul class="layui-tab-title">
-                            <li class="layui-this">CURL</li>
-                            <li>Java</li>
-                            <li>Python</li>
-                        </ul>
-                        <div class="layui-tab-content" style="height: 500px;">
-                            <div class="layui-tab-item layui-show">
+                            </tr>
+                            </thead>
+                            <tbody id="responseBodyFieldListTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="layui-row">
+                        <h3 class="headerTitle">代码示例</h3>
+                        <div class="layui-tab layui-tab-card">
+                            <ul class="layui-tab-title">
+                                <li class="layui-this">CURL</li>
+                                <li>Java</li>
+                                <li>Python</li>
+                            </ul>
+                            <div class="layui-tab-content" style="height: 500px;">
+                                <div class="layui-tab-item layui-show">
                                         <pre style="font-size: 16px" class="layui-code "
                                              th:text="${document.curlCodeSample}"></pre>
-                            </div>
-                            <div class="layui-tab-item">
+                                </div>
+                                <div class="layui-tab-item">
                                         <pre style="font-size: 16px" class="layui-code "
                                              th:text="${document.javaCodeSample}"></pre>
-                            </div>
-                            <div class="layui-tab-item">
+                                </div>
+                                <div class="layui-tab-item">
                                         <pre style="font-size: 16px" class="layui-code "
                                              th:text="${document.pythonCodeSample}"></pre>
+                                </div>
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>

@@ -189,3 +189,4 @@ data class LayuiPageDto(val page: Int = 1, val size: Int = 20) {
     fun toPageable() = PageRequest.of(page - 1, size)
 }
 
+data class BatchDeleteDto(val ids: List<String>)

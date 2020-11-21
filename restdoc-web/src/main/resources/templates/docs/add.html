@@ -153,11 +153,12 @@
 
 <div id="consolePage" class="layui-fluid" style="display: none;width: 400px">
 </div>
-<script type="text/html" id="testLogOperate">
-    <a class="layui-btn layui-btn-xs" lay-event="export">导入</a>
-    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+<script type="text/html" id="testLogTableToolbar">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="export">导入</button>
+        <button class="layui-btn layui-btn-sm" lay-event="del">删除</button>
+    </div>
 </script>
-
 <script th:src="@{/layui/layui.js}"></script>
 <script th:src="@{/admin/js/jquery.js}"></script>
 <script th:src="@{/admin/js/doc/content.js}"></script>
@@ -224,17 +225,21 @@
                 , id: "testLogTable"
                 , url: '/restdoc/document/' + documentId + '/httpapitestlog/page'
                 , page: true
+                , toolbar: '#testLogTableToolbar'
                 , size: 'sm'
                 , skin: 'nob'
                 , limits: [50, 100]
                 , totalRow: false
                 , loading: true
                 , title: '调试记录'
+                , defaultToolbar: []
                 , text: {
                     none: '无调试记录'
                 }
                 , cols: [
                     [
+                        {type: 'checkbox', fixed: 'left'},
+
                         {
                             width: 70, field: 'success', title: '状态', align: 'center', templet: function (res) {
                                 if (res.success) {
@@ -245,54 +250,69 @@
                             }
                         },
                         {field: 'testMode', title: '模式', align: 'center', width: 70},
+                        {field: 'remote', title: '地址', align: 'center'},
                         {
                             field: 'createTime',
                             title: '时间',
                             align: 'center',
                             width: 160,
                             templet: '<label>{{formatTimestamp(d.createTime)}}</label>'
-                        },
-                        {fixed: 'right', title: '操作', align: 'center', toolbar: "#testLogOperate"}
+                        }/*,
+                        {fixed: 'right', title: '操作', align: 'center', toolbar: "#testLogOperate"}*/
                     ]
                 ]
             });
 
-            table.on('tool(testLogTable)', function (obj) {
-                var layEvent = obj.event;
-                if (layEvent === 'export') {
-                    clearURIParamInput();
-                    clearRequestHeaderParamInput();
-                    clearRequestParamInput();
-                    clearResponseParamInput();
-
-                    $.ajax({
-                        method: "POST",
-                        url: "/restdoc/document/httpapitestlog/" + obj.data.id + "/deProject",
-                        aysnc: false,
-                        success: function (res) {
-                            initTestApiDoc(res['data'], document, form, oneuriline, oneheaderline, oneline, responseoneline);
-                            element.render('collapse');
-                        },
-                        error: function () {
-                            layer.msg("Error");
-                        }
-                    });
-                } else if (layEvent === 'del') {
-                    $.ajax({
-                        method: "DELETE",
-                        url: "/restdoc/document/httpapitestlog/" + obj.data.id,
-                        aysnc: false,
-                        success: function (res) {
-                            table.reload('testLogTable', {
-                                url: '/restdoc/document/' + documentId + '/httpapitestlog/page'
+            table.on('toolbar(testLogTable)', function (obj) {
+                var checkStatus = table.checkStatus(obj.config.id);
+                switch (obj.event) {
+                    case 'export':
+                        var data = checkStatus.data;
+                        if (data.length !== 1) {
+                            layer.alert("导入测试数据只能选择一条测试记录");
+                        } else {
+                            clearURIParamInput();
+                            clearRequestHeaderParamInput();
+                            clearRequestParamInput();
+                            clearResponseParamInput();
+                            $.ajax({
+                                method: "POST",
+                                url: "/restdoc/document/httpapitestlog/" + data[0].id + "/deProject",
+                                aysnc: false,
+                                success: function (res) {
+                                    initTestApiDoc(res['data'], document, form, oneuriline, oneheaderline, oneline, responseoneline);
+                                    element.render('collapse');
+                                },
+                                error: function () {
+                                    layer.msg("Error");
+                                }
                             });
-                            layer.msg("删除成功");
-
-                        },
-                        error: function () {
-                            layer.msg("Error");
                         }
-                    });
+
+                        break;
+                    case 'del':
+                        var data = checkStatus.data;
+                        var ids = [];
+                        for (var i = 0; i < data.length; i++) {
+                            ids.push(data[i].id)
+                        }
+                        $.ajax({
+                            method: "DELETE",
+                            url: "/restdoc/document/httpapitestlog/batch",
+                            data: JSON.stringify({ids: ids}),
+                            contentType: 'application/json; charset=utf-8',
+                            aysnc: false,
+                            success: function (res) {
+                                table.reload('testLogTable', {
+                                    url: '/restdoc/document/' + documentId + '/httpapitestlog/page'
+                                });
+                                layer.msg("删除成功");
+                            },
+                            error: function () {
+                                layer.msg("Error");
+                            }
+                        });
+                        break;
                 }
             });
         }
