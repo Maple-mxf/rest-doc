@@ -189,3 +189,5 @@ data class LayuiPageDto(val page: Int = 1, val limit: Int = 20) {
 }
 
 data class BatchDeleteDto(val ids: List<String>)
+
+data class URLExtractDto(val url: String)

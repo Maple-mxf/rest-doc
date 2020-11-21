@@ -26,9 +26,9 @@
 </div>
 
 <script type="text/html" id="barDemo">
-    <a class="layui-btn  layui-btn-primary" lay-event="getDetail">实例详情</a>
+    <!--    <a class="layui-btn  layui-btn-primary" lay-event="getDetail">实例详情</a>-->
     <!--    <a class="layui-btn layui-btn-primary" lay-event="syncAPI">同步API</a>-->
-    <a class="layui-btn layui-btn-primary" lay-event="apiList">API列表</a>
+    <a class="layui-btn" lay-event="apiList">API列表</a>
 </script>
 <script th:src="@{/layui/layui.js}"></script>
 <script th:src="@{/admin/js/jquery.js}"></script>
@@ -51,13 +51,21 @@
                 [
                     {
                         field: 'applicationType', /*width: 180,*/ title: '应用类型'
-                    }
-                    ,
+                    },
                     {
                         field: 'service', /*width: 200,*/ title: '服务名称'
                     },
                     {
                         field: 'remoteAddress',/* width: 220,*/ title: '服务远程地址'
+                    },
+                    {
+                        field: 'hostname', /*width: 180,*/ title: '主机名称'
+                    },
+                    {
+                        field: 'osname', /*width: 180,*/ title: '运行操作系统'
+                    },
+                    {
+                        field: 'serializationProtocol', /*width: 180,*/ title: '序列化协议'
                     },
                     {fixed: 'right', title: '操作', toolbar: '#barDemo'}
                 ]

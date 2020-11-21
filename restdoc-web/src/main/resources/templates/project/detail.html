@@ -13,27 +13,29 @@
     </style>
 </head>
 <body>
-<table class="layui-table"  lay-even lay-skin="line" lay-size="lg">
-    <colgroup>
-        <col width="200">
-        <col width="300">
-        <col>
-    </colgroup>
-    <tbody>
-    <tr>
-        <td>项目名称</td>
-        <td th:text="${project.name}"></td>
-    </tr>
-    <tr>
-        <td>项目描述</td>
-        <td th:text="${project.desc}"></td>
-    </tr>
+<div class="layui-container">
+    <table class="layui-table"  lay-even lay-skin="line" lay-size="lg">
+        <colgroup>
+            <col width="200">
+            <col width="300">
+            <col>
+        </colgroup>
+        <tbody>
+        <tr>
+            <td>项目名称</td>
+            <td th:text="${project.name}"></td>
+        </tr>
+        <tr>
+            <td>项目描述</td>
+            <td th:text="${project.desc}"></td>
+        </tr>
 
-    <tr>
-        <td>创建时间</td>
-        <td th:text="${#dates.format(project.createTime, 'yyyy-MM-dd HH:mm')}"></td>
-    </tr>
-    </tbody>
-</table>
+        <tr>
+            <td>创建时间</td>
+            <td th:text="${#dates.format(project.createTime, 'yyyy-MM-dd HH:mm')}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
 </body>
 </html>

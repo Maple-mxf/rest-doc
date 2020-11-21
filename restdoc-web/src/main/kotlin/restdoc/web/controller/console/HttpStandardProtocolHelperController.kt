@@ -2,16 +2,15 @@ package restdoc.web.controller.console
 
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
+import org.springframework.web.util.UriTemplate
 import restdoc.web.controller.console.obj.SearchHeaderKeyVO
 import restdoc.web.controller.console.obj.SearchHeaderValueVO
+import restdoc.web.controller.console.obj.URLExtractDto
 import restdoc.web.core.Result
+import restdoc.web.core.Status
+import restdoc.web.core.failure
 import restdoc.web.core.ok
-import java.time.Duration
-import java.time.Instant
 import javax.annotation.PostConstruct
 
 /**
@@ -90,6 +89,17 @@ class HttpStandardProtocolHelperController {
                 if (text.isBlank()) ok(values.map { SearchHeaderValueVO(it) })
                 else ok(values.filter { it.contains(text) }.map { SearchHeaderValueVO(it) })
             else ok(mutableListOf<SearchHeaderValueVO>())
+        }
+    }
+
+    @PostMapping("/url/var/extract")
+    fun extractURIVars(@RequestBody dto: URLExtractDto): Result {
+        return try {
+            val uriTemplate = UriTemplate(dto.url)
+            ok(uriTemplate.variableNames.map { it to "" }.toMap())
+        } catch (e: Throwable) {
+            e.printStackTrace()
+            failure(Status.INVALID_REQUEST)
         }
     }
 }

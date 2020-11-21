@@ -19,6 +19,22 @@ function initBaseInput(doc) {
 
     // 设定api名称
     $('#apiName').val(doc['name']);
+
+    // 检测URL
+    $.ajax({
+        method: "POST",
+        url: "/restdoc/httpstandard/helper/url/var/extract",
+        data: JSON.stringify({url: doc['url']}),
+        contentType: 'application/json',
+        success: function (res) {
+            console.info(res);
+            if (res.code === '200') {
+                if (Object.keys(res.data).length > 0) {
+                    initUriFieldDoc(res.data, oneuriline)
+                }
+            }
+        }
+    });
 }
 
 function initTestApiDoc(testLog, doc, form, one_uri_line,
@@ -71,7 +87,9 @@ function initResponseParamDoc(responseFields, one_response_param_line) {
             .attr("selected", true);
     }
 
-    $("#response-fieldset").addClass("layui-show");
+    if (responseFields.length > 0) {
+        $("#response-fieldset").addClass("layui-show");
+    }
 }
 
 function initRequestParamDoc(requestFields, one_request_param_line) {
@@ -96,7 +114,9 @@ function initRequestParamDoc(requestFields, one_request_param_line) {
             .attr("selected", true);
     }
 
-    $("#body-fieldset").addClass("layui-show");
+    if (requestFields.length > 0) {
+        $("#body-fieldset").addClass("layui-show");
+    }
 }
 
 
@@ -117,7 +137,10 @@ function initRequestHeaderFieldDoc(headerFields) {
                 }
             });
     }
-    $("#header-fieldset").addClass("layui-show");
+    if (keys.length > 0) {
+        $("#header-fieldset").addClass("layui-show");
+    }
+
 }
 
 function initUriFieldDoc(uriVariables, oneuriline) {
@@ -137,6 +160,9 @@ function initUriFieldDoc(uriVariables, oneuriline) {
                     this.value = uriVariables[keys[i]];
                 }
             });
+    }
+
+    if (keys.length > 0) {
         $("#uri-fieldset").addClass("layui-show");
     }
 }
