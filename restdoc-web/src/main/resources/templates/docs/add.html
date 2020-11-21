@@ -155,8 +155,15 @@
 </div>
 <script type="text/html" id="testLogTableToolbar">
     <div class="layui-btn-container">
-        <button class="layui-btn layui-btn-sm" lay-event="export">导入</button>
-        <button class="layui-btn layui-btn-sm" lay-event="del">删除</button>
+        <button title="导入历史数据" class="layui-btn layui-btn-sm" lay-event="export">
+            <i class="layui-icon layui-icon-export" style="font-size: 20px; color: white;"></i>
+        </button>
+        <button title="删除" class="layui-btn layui-btn-danger layui-btn-sm" lay-event="del">
+            <i class="layui-icon layui-icon-delete" style="font-size: 20px; color: white;"></i>
+        </button>
+        <button title="刷新数据" class="layui-btn  layui-btn-primary layui-btn-sm" lay-event="refresh">
+            <i class="layui-icon layui-icon-refresh" style="font-size: 20px; color: black;"></i>
+        </button>
     </div>
 </script>
 <script th:src="@{/layui/layui.js}"></script>
@@ -236,6 +243,7 @@
                 , toolbar: '#testLogTableToolbar'
                 , size: 'sm'
                 , skin: 'nob'
+                , limit: '50'
                 , limits: [50, 100]
                 , totalRow: false
                 , loading: true
@@ -311,9 +319,7 @@
                             contentType: 'application/json; charset=utf-8',
                             aysnc: false,
                             success: function (res) {
-                                table.reload('testLogTable', {
-                                    url: '/restdoc/document/' + documentId + '/httpapitestlog/page'
-                                });
+                                refreshTestLogTable();
                                 layer.msg("删除成功");
                             },
                             error: function () {
@@ -321,7 +327,16 @@
                             }
                         });
                         break;
+                    case 'refresh':
+                        refreshTestLogTable();
+                        break
                 }
+            });
+        }
+
+        function refreshTestLogTable() {
+            table.reload('testLogTable', {
+                url: '/restdoc/document/' + documentId + '/httpapitestlog/page'
             });
         }
 
@@ -642,9 +657,7 @@
                         globalExecuteResult = executeResult;
                         var invocationResult = executeResult;
                         if (invocationResult != null) {
-                            if (invocationResult['responseBody'] != null) {
-                                openConsolePage(invocationResult)
-                            }
+                            openConsolePage(invocationResult)
                         }
                     }
                     layer.close(index)
@@ -744,6 +757,7 @@
             }
             form.render();
             element.render('collapse');
+            refreshTestLogTable();
         }
 
         function openConsolePage(data) {

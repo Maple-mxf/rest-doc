@@ -1,7 +1,6 @@
 package restdoc.web.controller.console.obj
 
 import org.springframework.data.domain.PageRequest
-import org.springframework.data.domain.Pageable
 import restdoc.web.model.*
 import restdoc.web.util.FieldType
 import java.net.URI
@@ -185,8 +184,8 @@ data class AuthDto(val account: String, val password: String)
 
 data class SyncRestApiDto(val projectId: String, val docIds: List<String>)
 
-data class LayuiPageDto(val page: Int = 1, val size: Int = 20) {
-    fun toPageable() = PageRequest.of(page - 1, size)
+data class LayuiPageDto(val page: Int = 1, val limit: Int = 20) {
+    fun toPageable() = PageRequest.of(page - 1, limit)
 }
 
 data class BatchDeleteDto(val ids: List<String>)
