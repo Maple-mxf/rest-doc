@@ -21,7 +21,7 @@ function initBaseInput(doc) {
     $('#apiName').val(doc['name']);
 }
 
-function initTestApiDoc(testLog, doc, form, one_uri_line, one_request_header_line,
+function initTestApiDoc(testLog, doc, form, one_uri_line,
                         one_request_param_line, one_response_param_line
 ) {
 
@@ -34,7 +34,7 @@ function initTestApiDoc(testLog, doc, form, one_uri_line, one_request_header_lin
         }
 
         if (testLog['requestHeaderParameters'] != null) {
-            initRequestHeaderFieldDoc(testLog['requestHeaderParameters'], one_request_header_line);
+            initRequestHeaderFieldDoc(testLog['requestHeaderParameters']);
         }
 
         if (testLog['requestBodyParameters'] != null) {
@@ -100,10 +100,10 @@ function initRequestParamDoc(requestFields, one_request_param_line) {
 }
 
 
-function initRequestHeaderFieldDoc(headerFields, one_request_header_line) {
+function initRequestHeaderFieldDoc(headerFields) {
     var keys = Object.keys(headerFields);
     for (let i = 0; i < keys.length; i++) {
-        $("#header-fieldset").append(one_request_header_line);
+        $("#header-fieldset").append(getNewHeaderLine());
     }
     var all_input_line = $("#header-fieldset").children(".one-request-header-line");
     for (let i = 0; i < all_input_line.length; i++) {

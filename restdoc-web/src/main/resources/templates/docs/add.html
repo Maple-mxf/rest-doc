@@ -171,12 +171,17 @@
     $("#projectNav").addClass("layui-this");
     var msg;
     var globalExecuteResult = null;
+
+    var tipTool = null;
     layui.config({
         base: '/restdoc/layui/lay/extends/'
     }).use(['layer',
         'form',
         'element',
-        'jquery', 'table'], function () {
+        'jquery',
+        'table',
+        'yutons_sug'
+    ], function () {
 
         var form = layui.form;
         var $ = layui.jquery;
@@ -184,6 +189,9 @@
         var layer = layui.layer;
         var element = layui.element;
         var table = layui.table;
+        var yutons_sug = layui.yutons_sug;
+        tipTool = yutons_sug;
+
         var treeData = null;
         var documentId = $("#documentId").val();
 
@@ -270,7 +278,7 @@
                         var data = checkStatus.data;
                         if (data.length !== 1) {
                             layer.alert("导入测试数据只能选择一条测试记录");
-                        } else {
+                        } else if (data.length === 1) {
                             clearURIParamInput();
                             clearRequestHeaderParamInput();
                             clearRequestParamInput();
@@ -280,22 +288,22 @@
                                 url: "/restdoc/document/httpapitestlog/" + data[0].id + "/deProject",
                                 aysnc: false,
                                 success: function (res) {
-                                    initTestApiDoc(res['data'], document, form, oneuriline, oneheaderline, oneline, responseoneline);
+                                    initTestApiDoc(res['data'], document, form, oneuriline, oneline, responseoneline);
                                     element.render('collapse');
                                 },
                                 error: function () {
                                     layer.msg("Error");
                                 }
                             });
+                        } else {
+                            layer.msg('无数据可导入');
                         }
-
                         break;
                     case 'del':
                         var data = checkStatus.data;
                         var ids = [];
-                        for (var i = 0; i < data.length; i++) {
-                            ids.push(data[i].id)
-                        }
+                        for (var i = 0; i < data.length; i++) ids.push(data[i].id);
+                        if (ids.length == 0) layer.msg('无数据可删除');
                         $.ajax({
                             method: "DELETE",
                             url: "/restdoc/document/httpapitestlog/batch",
@@ -401,7 +409,7 @@
             });
         });
         $("#add_request_header_field").click(function (event) {
-            $("#header-fieldset").append(oneheaderline);
+            $("#header-fieldset").append(getNewHeaderLine());
             form.render();
         });
 
@@ -976,6 +984,27 @@
         var children = obj.parentNode.parentNode;
         parent.removeChild(children);
     }
+
+    function tipHeaderKey(id) {
+        var searchURL = "/restdoc/httpstandard/helper/headerkey/search?text=";
+        tipTool.render({
+            id: id,
+            type: 'sug',
+            url: searchURL,
+            field: "headerKey"
+        });
+    }
+
+    function tipHeaderValue(keyId, valueId) {
+        var searchURL = "/restdoc/httpstandard/helper/headerValue/search?headerKey=" + $("#" + keyId).val() + "&text=";
+        tipTool.render({
+            id: valueId,
+            type: 'sug',
+            url: searchURL,
+            field: "headerValue"
+        });
+    }
+
 </script>
 </body>
 </html>

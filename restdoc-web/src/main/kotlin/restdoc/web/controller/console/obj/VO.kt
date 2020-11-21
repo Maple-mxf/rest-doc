@@ -213,3 +213,11 @@ data class HttpApiTestLogDeProjectVO(
         val requestBodyParameters: List<BodyFieldDescriptor>?,
         val responseBodyParameters: List<BodyFieldDescriptor>?
 )
+
+data class SearchHeaderKeyVO(
+        val headerKey: String
+)
+
+data class SearchHeaderValueVO(
+        val headerValue: String
+)
