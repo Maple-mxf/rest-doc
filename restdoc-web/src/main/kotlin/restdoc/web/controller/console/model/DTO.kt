@@ -164,7 +164,7 @@ data class CreateUpdateWikiDto(
         val tableContent: Any
 )
 
-data class UpdateNodeDto(val name: String, val pid: String, val order: Int = 0)
+data class UpdateNodeDto(val id: String, val name: String, val pid: String, val order: Int = 0)
 
 data class SyncApiEmptyTemplateDto(val remoteAddress: String,
                                    val projectId: String,

@@ -159,7 +159,6 @@
             }
 
             setDTreeData();
-
             var DemoTree = dtree.render({
                 elem: "#dtreeTableContent",
                 data: dtreeData,
@@ -293,12 +292,25 @@
                         title: '编辑',
                         btn: ['确定', '取消'],
                         yes: function (ix, layero) {
+                            var url = nodeIsResource(node.nodeId) ? "/restdoc/resource" : "/restdoc/document/baseinfo";
                             $.ajax({
                                 method: "PATCH",
-                                url: "",
+                                url: url,
                                 contentType: "application/json",
                                 async: false,
+                                data: JSON.stringify({
+                                    name: $("#name").val(),
+                                    id: node.nodeId,
+                                    pid: dtree.selectVal("parentResourceSelect").parentResourceSelect_select_nodeId,
+                                    order: 0
+                                }),
                                 success: function (res) {
+                                    if (res.code === '200') {
+                                        layer.msg('操作成功');
+                                        reloadNavTree();
+                                    } else {
+                                        layer.msg(res.message);
+                                    }
                                 }
                             });
                             layer.close(ix);
@@ -329,7 +341,8 @@
                                     success: function (res) {
                                         if (res.code === '200') {
                                             layer.msg("操作成功");
-                                            reloadNavTree();
+                                            /*reloadNavTree();*/
+                                            parent.location.reload();
                                         } else layer.msg(res.message);
                                     }
                                 });
@@ -395,7 +408,7 @@
                     });
                 })
             }
-
+            
             function createDoc(windowTitle, node, docType) {
                 layer.open({
                     type: 1,

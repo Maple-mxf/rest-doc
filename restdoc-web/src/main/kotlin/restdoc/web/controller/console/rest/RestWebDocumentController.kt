@@ -716,5 +716,16 @@ class RestWebDocumentController {
         mongoTemplate.save(newDocument)
         return ok()
     }
+
+    @PatchMapping("/baseinfo")
+    fun updateBaseInfo(@RequestBody @Valid dto: UpdateNodeDto): Result {
+        val updateResult = restWebDocumentRepository.update(Query().addCriteria(Criteria("_id").`is`(dto.id)),
+                Update().set("name", dto.name)
+                        .set("order", dto.order)
+                        .set("resource", dto.pid)
+        )
+
+        return ok()
+    }
 }
 

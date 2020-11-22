@@ -219,10 +219,14 @@ class ResourceController {
         return ok()
     }
 
-    @PatchMapping("/resource/{id}")
-    fun patch(@PathVariable id: String, @RequestBody @Valid dto: UpdateNodeDto): Result {
-        val updateResult = resourceRepository.update(Query().addCriteria(Criteria("_id").`is`(id)),
-                Update().set("name", dto.name))
+    @PatchMapping("/resource")
+    fun patch(@RequestBody @Valid dto: UpdateNodeDto): Result {
+        val updateResult = resourceRepository.update(Query().addCriteria(Criteria("_id").`is`(dto.id)),
+                Update().set("name", dto.name)
+                        .set("order", dto.order)
+                        .set("pid", dto.pid
+                        )
+        )
         return ok()
     }
 }
