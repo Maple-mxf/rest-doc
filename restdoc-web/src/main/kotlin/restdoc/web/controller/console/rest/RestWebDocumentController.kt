@@ -691,7 +691,7 @@ class RestWebDocumentController {
 
         mongoTemplate.save(document)
 
-        return ok()
+        return ok(document.id)
     }
 
     @PostMapping("/copy")
@@ -714,7 +714,7 @@ class RestWebDocumentController {
                 responseHeaderDescriptor = originDocument.responseHeaderDescriptor,
                 docType = originDocument.docType)
         mongoTemplate.save(newDocument)
-        return ok()
+        return ok(newDocument.id)
     }
 
     @PatchMapping("/baseinfo")

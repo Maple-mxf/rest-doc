@@ -241,8 +241,8 @@
                         toolbarId: "createApi",
                         title: "新建API文档",
                         handler: function (node, $div) {
-                            commonToolHandler(node, node.nodeId, function (res, $obj, first) {
-                                createDoc("新建API文档", node, "API");
+                            var instance = commonToolHandler(node, node.nodeId, function (res, $obj, first) {
+                                createDoc(instance, "新建API文档", node, "API");
                             });
                         }
                     },
@@ -369,6 +369,7 @@
                 $("#name").val("");
             }
 
+
             function reloadNavTree() {
                 setDTreeData();
                 dtree.reload(DemoTree, {
@@ -408,8 +409,8 @@
                     });
                 })
             }
-            
-            function createDoc(windowTitle, node, docType) {
+
+            function createDoc(treeIns, windowTitle, node, docType) {
                 layer.open({
                     type: 1,
                     scrollbar: false,
@@ -440,6 +441,8 @@
                                 contentType: "application/json",
                                 success: function (res) {
                                     resetCreateDiv();
+                                    dtree.selectVal("dtreeTableContent", res.data);
+                                    $("#apiDocFrame").attr("src", '/restdoc/' + projectId + '/document/' + res.data + '/view');
                                 }
                             });
                             layer.close(ix);
@@ -450,7 +453,7 @@
 
             function commonToolHandler(node, initNodeId, doneFunc) {
                 var resources = filterResources();
-                dtree.renderSelect({
+                var instance = dtree.renderSelect({
                     elem: "#parentResourceSelect",
                     width: "100%",
                     data: resources,
@@ -469,6 +472,8 @@
                     selectInitVal: initNodeId,
                     done: doneFunc
                 });
+
+                return instance;
             }
 
             function filterResources() {
