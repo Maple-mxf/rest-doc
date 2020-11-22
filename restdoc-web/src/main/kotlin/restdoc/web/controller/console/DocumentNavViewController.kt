@@ -36,6 +36,7 @@ class DocumentNavViewController {
             ProjectType.REST_WEB == project.type -> {
                 val instanceNumber = clientRegistryCenter.getClientKeysFilterApplicationType(ApplicationType.REST_WEB).size
                 model.addAttribute("instanceNumber", instanceNumber)
+                if (instanceNumber > 0) model.addAttribute("hasInstance", true)
                 "explorer/nav"
             }
             ProjectType.DUBBO.equals(project.type) -> {
