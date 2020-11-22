@@ -22,14 +22,9 @@
         </li>
         <li class="layui-nav-item layui-this"><a id="home" th:href="@{'/'+${projectId}+'/document/nav/view'}">文档</a>
         </li>
-<!--        <li class="layui-nav-item"><a id="projectDetail" href="javascript:;">项目详情</a></li>-->
         <li class="layui-nav-item"><a id="clientServiceList" href="javascript:;">服务实例
-            <span class="layui-badge-dot"  th:if="${hasInstance}"></span>
+            <span class="layui-badge-dot" th:if="${hasInstance}"></span>
         </a>
-        </li>
-        <li class="layui-nav-item"><a id="tableContentManage" href="javascript:;">目录管理</a></li>
-        <li class="layui-nav-item"><a id="createAPI" href="javascript:;">创建API</a>
-        <li class="layui-nav-item"><a id="createWIKI" href="javascript:;">创建WIKI</a>
         </li>
     </ul>
 </div>
@@ -53,7 +48,7 @@
         'layer',
         'element',
         'jquery',
-        'tree' ], function () {
+        'tree'], function () {
         var tree = layui.tree;
         var $ = layui.jquery;
         var layer = layui.layer;
@@ -61,52 +56,14 @@
         var treeData = null;
         var projectId = $("#projectId").val();
 
-        // /restdoc/project/746946688983240704/navigation/view
         $("#docContentFrame").attr("src", "/restdoc/project/" + projectId + "/navigation/view");
 
         element.on('nav(test)', function (elem) {
             if ('clientServiceList' === elem[0].id) {
                 layer.closeAll();
                 $("#docContentFrame").attr("src", '/restdoc/microservice/view/list?ap=REST_WEB&projectId=' + projectId);
-            } else if ('projectDetail' === elem[0].id) {
-                layer.closeAll();
-                $("#docContentFrame").attr("src", '/restdoc/project/' + projectId + '/view');
-            } else if ('tableContentManage' === elem[0].id) {
-                layer.closeAll();
-                $("#docContentFrame").attr("src", '/restdoc/' + projectId + '/resource/view/table');
-            } else if ('createAPI' === elem[0].id) {
-                layer.closeAll();
-                $("#docContentFrame").attr("src", '/restdoc/' + projectId + '/document/view/api/add');
-            } else if ('createWIKI' === elem[0].id) {
-                layer.closeAll();
-                $("#docContentFrame").attr("src", '/restdoc/' + projectId + '/document/view/wiki/add');
             }
         });
-
-      /*  var docId = getFirstDocument(treeData);
-        if (null != docId) {
-            $("#docContentFrame").attr("src", '/restdoc/' + projectId + '/document/' + docId + '/view');
-        }
-
-        $.ajax({
-            type: 'GET',
-            url: '/restdoc/' + projectId + '/resource/tree',
-            async: false,
-            success: function (data) {
-                if (data['code'] === "200") {
-                    treeData = data['data'];
-                    var docId = getFirstDocument(treeData);
-                    if (null != docId) {
-                        $("#docContentFrame").attr("src", '/restdoc/' + projectId + '/document/' + docId + '/view');
-                    }
-                } else {
-                    layer.msg(data['message']);
-                }
-            },
-            error: function () {
-                layer.msg("网络异常")
-            }
-        });*/
     });
 
     $('#restweb-project-nav').addClass("layui-this");

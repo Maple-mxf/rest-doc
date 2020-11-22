@@ -43,7 +43,14 @@ function initTestApiDoc(testLog, doc, form, one_uri_line,
 
     if (testLog != null) {
 
-        initBaseInput(doc);
+        // 设定method
+        $("#method").find("option[value=" + doc['method'] + "]").attr("selected", true);
+
+        // 设定api地址
+        $('#url').val(doc['url']);
+
+        // 设定api名称
+        $('#apiName').val(doc['name']);
 
         if (testLog['uriParameters'] != null) {
             initUriFieldDoc(testLog['uriParameters'], one_uri_line);

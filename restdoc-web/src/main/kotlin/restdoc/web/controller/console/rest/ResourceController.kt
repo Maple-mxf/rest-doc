@@ -72,8 +72,7 @@ class ResourceController {
                     iconClass = "dtree-icon-weibiaoti5")
         }
 
-        val docQuery = Query(Criteria("resource").`in`(resourceIds))
-
+        val docQuery = Query(Criteria("resource").`in`(resourceIds).and("projectId").`is`(projectId))
 
         val apiNodes = if (at == ApplicationType.REST_WEB) {
             docQuery.fields().exclude("requestHeaderDescriptor").exclude("requestBodyDescriptor").exclude("responseBodyDescriptors")
