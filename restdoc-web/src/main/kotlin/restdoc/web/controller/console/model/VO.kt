@@ -1,4 +1,4 @@
-package restdoc.web.controller.console.obj
+package restdoc.web.controller.console.model
 
 import org.springframework.http.HttpMethod
 import restdoc.web.base.getBean

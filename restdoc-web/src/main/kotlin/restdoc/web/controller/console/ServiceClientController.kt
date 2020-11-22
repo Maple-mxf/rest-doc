@@ -5,7 +5,7 @@ import org.springframework.http.HttpMethod
 import org.springframework.web.bind.annotation.*
 import restdoc.remoting.common.ApplicationType
 import restdoc.web.base.auth.Verify
-import restdoc.web.controller.console.obj.*
+import restdoc.web.controller.console.model.*
 import restdoc.web.core.ok
 import restdoc.web.core.schedule.ClientRegistryCenter
 import restdoc.web.core.schedule.ScheduleController

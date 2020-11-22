@@ -4,9 +4,9 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.util.UriTemplate
-import restdoc.web.controller.console.obj.SearchHeaderKeyVO
-import restdoc.web.controller.console.obj.SearchHeaderValueVO
-import restdoc.web.controller.console.obj.URLExtractDto
+import restdoc.web.controller.console.model.SearchHeaderKeyVO
+import restdoc.web.controller.console.model.SearchHeaderValueVO
+import restdoc.web.controller.console.model.URLExtractDto
 import restdoc.web.core.Result
 import restdoc.web.core.Status
 import restdoc.web.core.failure

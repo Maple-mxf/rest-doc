@@ -179,7 +179,7 @@
                 done: function (data, obj, first) {
                 },
                 toolbar: true,
-                toolbarShow: ['copyDoc', 'createResource', 'modify', 'createApi', 'createWiki'],
+                toolbarShow: ['copyDoc', 'createResource', 'createApi', 'createWiki', 'modify', 'del'],
                 toolbarExt: [
                     {
                         toolbarId: "copyDoc",
@@ -192,7 +192,7 @@
                         toolbarId: "modify",
                         title: "编辑",
                         handler: function (node, $div) {
-
+                            editNode(node);
                         }
                     },
                     {
@@ -257,13 +257,6 @@
                         }
                     },
                     {
-                        toolbarId: "rename",
-                        title: "重命名",
-                        handler: function (node, $div) {
-                            layer.msg("hello")
-                        }
-                    },
-                    {
                         toolbarId: "del",
                         title: "删除",
                         handler: function (node, $div) {
@@ -277,7 +270,6 @@
                             buttons.copyDoc = "";
                             if (param.nodeId === 'root') {
                                 buttons.del = "";
-                                buttons.rename = "";
                                 buttons.modify = "";
                             }
                         } else {
@@ -289,6 +281,31 @@
                     }
                 }
             });
+
+            function editNode(node) {
+                commonToolHandler(node, node.parentId, function () {
+                    $("#name").val(node.context);
+                    layer.open({
+                        type: 1,
+                        scrollbar: false,
+                        content: $('#create'),
+                        area: ['600px', '400px'],
+                        title: '编辑',
+                        btn: ['确定', '取消'],
+                        yes: function (ix, layero) {
+                            $.ajax({
+                                method: "PATCH",
+                                url: "",
+                                contentType: "application/json",
+                                async: false,
+                                success: function (res) {
+                                }
+                            });
+                            layer.close(ix);
+                        }
+                    })
+                })
+            }
 
             function deleteNode(node) {
                 layer.confirm('删除后不可恢复! 确认删除' + node.context + '?', {icon: 3, title: '提示'},

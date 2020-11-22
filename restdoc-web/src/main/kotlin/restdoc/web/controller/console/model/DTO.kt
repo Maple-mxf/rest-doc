@@ -1,4 +1,4 @@
-package restdoc.web.controller.console.obj
+package restdoc.web.controller.console.model
 
 import org.springframework.data.domain.PageRequest
 import restdoc.web.model.*
@@ -164,7 +164,7 @@ data class CreateUpdateWikiDto(
         val tableContent: Any
 )
 
-data class UpdateNodeDto(@NotBlank(message = "名称不可为空") val name: String)
+data class UpdateNodeDto(val name: String, val pid: String, val order: Int = 0)
 
 data class SyncApiEmptyTemplateDto(val remoteAddress: String,
                                    val projectId: String,
@@ -195,3 +195,5 @@ data class URLExtractDto(val url: String)
 data class CreateEmptyDocDto(val name: String, val resourceId: String, val projectId: String, val docType: DocType)
 
 data class CopyDocumentDocDto(val name: String, val documentId: String, val resourceId: String)
+
+

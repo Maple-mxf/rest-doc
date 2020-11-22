@@ -17,13 +17,12 @@ import restdoc.remoting.common.ApplicationType
 import restdoc.remoting.common.DubboExposedAPI
 import restdoc.remoting.common.RestWebExposedAPI
 import restdoc.web.base.auth.Verify
-import restdoc.web.controller.console.obj.*
+import restdoc.web.controller.console.model.*
 import restdoc.web.core.Result
 import restdoc.web.core.Status
 import restdoc.web.core.failure
 import restdoc.web.core.ok
 import restdoc.web.core.schedule.ClientRegistryCenter
-import restdoc.web.core.schedule.ScheduleController
 import restdoc.web.model.*
 import restdoc.web.repository.ProjectRepository
 import restdoc.web.repository.ResourceRepository
@@ -192,9 +191,6 @@ class RestWebDocumentController {
 
     @PostMapping("/deProject")
     fun deProjector(@RequestBody tree: JsonNode): Result = ok(JsonDeProjector(tree).deProject())
-
-    @Autowired
-    lateinit var scheduleController: ScheduleController
 
     @GetMapping("/httpTask/{taskId}")
     fun execute(@PathVariable taskId: String): Result {

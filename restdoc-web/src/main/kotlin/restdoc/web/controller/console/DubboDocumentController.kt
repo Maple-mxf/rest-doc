@@ -10,8 +10,8 @@ import restdoc.remoting.common.RequestCode
 import restdoc.remoting.protocol.RemotingCommand
 import restdoc.remoting.protocol.RemotingSerializable
 import restdoc.web.base.auth.Verify
-import restdoc.web.controller.console.obj.TestDubboMicroserviceResult
-import restdoc.web.controller.console.obj.UpdateDubboDocumentDto
+import restdoc.web.controller.console.model.TestDubboMicroserviceResult
+import restdoc.web.controller.console.model.UpdateDubboDocumentDto
 import restdoc.web.core.Result
 import restdoc.web.core.Status
 import restdoc.web.core.ok

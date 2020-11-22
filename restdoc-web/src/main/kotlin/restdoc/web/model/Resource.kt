@@ -46,5 +46,10 @@ data class Resource(
         /**
          *
          */
-        var createBy: String?
+        var createBy: String?,
+
+        /**
+         *
+         */
+        var order: Int? = 0
 )

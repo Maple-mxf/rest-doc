@@ -226,9 +226,12 @@ data class RestWebDocument(
         /**
          *
          */
-        val docType: DocType = DocType.API
+        val docType: DocType = DocType.API,
 
-)
+        /**
+         *
+         */
+        var order: Int? = 0)
 
 
 /**

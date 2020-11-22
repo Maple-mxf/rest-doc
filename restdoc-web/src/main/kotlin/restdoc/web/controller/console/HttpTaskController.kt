@@ -11,7 +11,7 @@ import org.springframework.web.client.HttpServerErrorException
 import restdoc.client.api.model.InvocationResult
 import restdoc.client.api.model.RestWebInvocation
 import restdoc.client.api.model.RestWebInvocationResult
-import restdoc.web.controller.console.obj.RequestDto
+import restdoc.web.controller.console.model.RequestDto
 import restdoc.web.core.Status
 import restdoc.web.core.ok
 import restdoc.web.core.schedule.ScheduleController

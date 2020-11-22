@@ -5,7 +5,7 @@ import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.stereotype.Service
 import restdoc.remoting.common.DubboExposedAPI
-import restdoc.web.controller.console.obj.NavNode
+import restdoc.web.controller.console.model.NavNode
 import restdoc.web.model.*
 import restdoc.web.repository.DubboDocumentRepository
 import restdoc.web.repository.ResourceRepository

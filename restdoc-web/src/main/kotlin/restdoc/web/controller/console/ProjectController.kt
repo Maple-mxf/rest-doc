@@ -7,8 +7,8 @@ import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.web.bind.annotation.*
 import restdoc.web.base.auth.Verify
-import restdoc.web.controller.console.obj.CreateProjectDto
-import restdoc.web.controller.console.obj.UpdateProjectDto
+import restdoc.web.controller.console.model.CreateProjectDto
+import restdoc.web.controller.console.model.UpdateProjectDto
 import restdoc.web.core.Result
 import restdoc.web.core.Status
 import restdoc.web.core.ok
