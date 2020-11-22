@@ -1,6 +1,9 @@
 package restdoc.web.controller.console.rest
 
+import io.lettuce.core.GeoArgs
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.core.annotation.Order
+import org.springframework.data.domain.Sort
 import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.data.mongodb.core.query.Update
@@ -60,7 +63,10 @@ class ResourceController {
     fun getResourceDTree(@PathVariable projectId: String,
                          @RequestParam at: ApplicationType): Any {
 
-        val resources = resourceRepository.list(Query(Criteria("projectId").`is`(projectId)))
+        val resourceQuery = Query(Criteria("projectId").`is`(projectId))
+        resourceQuery.with(Sort.by(Sort.Order.desc("order"), Sort.Order.desc("createTime")))
+        val resources = resourceRepository.list(resourceQuery)
+
         val resourceIds = resources.map { it.id }.toMutableList()
         resourceIds.add("root")
 
@@ -73,6 +79,7 @@ class ResourceController {
         }
 
         val docQuery = Query(Criteria("resource").`in`(resourceIds).and("projectId").`is`(projectId))
+        docQuery.with(Sort.by(Sort.Order.desc("order"), Sort.Order.desc("createTime")))
 
         val apiNodes = if (at == ApplicationType.REST_WEB) {
             docQuery.fields().exclude("requestHeaderDescriptor").exclude("requestBodyDescriptor").exclude("responseBodyDescriptors")
