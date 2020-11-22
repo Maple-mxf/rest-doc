@@ -210,6 +210,7 @@ data class RestWebDocument(
         /**
          *
          */
+        @Deprecated(message = "executeResult")
         val executeResult: Map<String, Any?>? = null,
 
         /**

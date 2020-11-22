@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.domain.Sort.Order.asc
 import org.springframework.data.domain.Sort.Order.desc
 import org.springframework.data.domain.Sort.by
 import org.springframework.data.mongodb.core.MongoTemplate
@@ -14,11 +13,6 @@ import org.springframework.data.mongodb.core.query.Update
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.http.HttpMethod
 import org.springframework.web.bind.annotation.*
-import org.springframework.web.client.HttpClientErrorException
-import org.springframework.web.client.HttpServerErrorException
-import restdoc.client.api.model.InvocationResult
-import restdoc.client.api.model.RestWebInvocation
-import restdoc.client.api.model.RestWebInvocationResult
 import restdoc.remoting.common.ApplicationType
 import restdoc.remoting.common.DubboExposedAPI
 import restdoc.remoting.common.RestWebExposedAPI
@@ -35,13 +29,11 @@ import restdoc.web.repository.ProjectRepository
 import restdoc.web.repository.ResourceRepository
 import restdoc.web.repository.RestWebDocumentRepository
 import restdoc.web.util.*
+import restdoc.web.util.IDUtil.id
 import restdoc.web.util.IDUtil.now
 import restdoc.web.util.dp.JsonDeProjector
-import restdoc.web.util.dp.JsonProjector
-import java.net.URI
 import java.net.URL
 import java.util.*
-import java.util.concurrent.TimeUnit
 import javax.validation.Valid
 
 /**
@@ -66,9 +58,6 @@ class RestWebDocumentController {
 
     @Autowired
     private lateinit var clientRegistryCenter: ClientRegistryCenter
-
-    @Autowired
-    private lateinit var httpTaskExecutor: HttpTaskExecutor
 
     @Autowired
     private lateinit var resourceRepository: ResourceRepository
@@ -297,11 +286,6 @@ class RestWebDocumentController {
 
         restWebDocumentRepository.update(doc)
     }
-
-    /*private inner class CountDescription {
-        lateinit var _id: String
-        var frequency by Delegates.notNull<Long>()
-    }*/
 
     /**
      * Get recommend field description
@@ -617,9 +601,8 @@ class RestWebDocumentController {
         return ok()
     }
 
-
     @PostMapping("/serviceClient/{clientId}/syncApi")
-    fun syncServiceInstanceApi(@PathVariable clientId: String,@RequestBody dto: SyncRestApiDto): Any {
+    fun syncServiceInstanceApi(@PathVariable clientId: String, @RequestBody dto: SyncRestApiDto): Any {
         val apiList =
                 clientRegistryCenter.getExposedAPIFilterApplicationType(clientId, ApplicationType.REST_WEB) as Collection<RestWebExposedAPI>
 
@@ -688,8 +671,54 @@ class RestWebDocumentController {
                 }
             }
         }
-
         return ok(SyncDocumentResultVo(totalQuantity = totalQuantity, savedQuantity = savedQuantity))
+    }
+
+    @PostMapping("/emptydoc")
+    fun createEmptyApiDoc(@RequestBody dto: CreateEmptyDocDto): Result {
+        val document = RestWebDocument(
+                id = id(),
+                projectId = dto.projectId,
+                name = dto.name,
+                resource = dto.resourceId,
+                url = "",
+                description = null,
+                requestHeaderDescriptor = null,
+                requestBodyDescriptor = null,
+                responseBodyDescriptors = null,
+                queryParam = null,
+                uriVarDescriptors = null,
+                executeResult = null,
+                content = null,
+                responseHeaderDescriptor = null,
+                docType = dto.docType)
+
+        mongoTemplate.save(document)
+
+        return ok()
+    }
+
+    @PostMapping("/copy")
+    fun copyDocument(@RequestBody dto: CopyDocumentDocDto): Result {
+        val originDocument = restWebDocumentRepository.findById(dto.documentId).orElseThrow { Status.INVALID_REQUEST.instanceError() }
+        val newDocument = RestWebDocument(
+                id = id(),
+                projectId = originDocument.projectId,
+                name = dto.name,
+                resource = dto.resourceId,
+                url = originDocument.url,
+                description = originDocument.description,
+                requestHeaderDescriptor = originDocument.requestHeaderDescriptor,
+                requestBodyDescriptor = originDocument.requestBodyDescriptor,
+                responseBodyDescriptors = originDocument.responseBodyDescriptors,
+                queryParam = originDocument.queryParam,
+                uriVarDescriptors = originDocument.uriVarDescriptors,
+                executeResult = originDocument.executeResult,
+                content = originDocument.content,
+                responseHeaderDescriptor = originDocument.responseHeaderDescriptor,
+                docType = originDocument.docType)
+        mongoTemplate.save(newDocument)
+        return ok()
     }
 }
 

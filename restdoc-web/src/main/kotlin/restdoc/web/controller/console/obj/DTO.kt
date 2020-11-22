@@ -191,3 +191,7 @@ data class LayuiPageDto(val page: Int = 1, val limit: Int = 20) {
 data class BatchDeleteDto(val ids: List<String>)
 
 data class URLExtractDto(val url: String)
+
+data class CreateEmptyDocDto(val name: String, val resourceId: String, val projectId: String, val docType: DocType)
+
+data class CopyDocumentDocDto(val name: String, val documentId: String, val resourceId: String)

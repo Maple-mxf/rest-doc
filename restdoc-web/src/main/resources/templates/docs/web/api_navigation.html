@@ -100,7 +100,7 @@
                 <div class="layui-col-md1"></div>
             </div>
             <div class="layui-row" style="margin-top: 20px">
-                <ul id="dtreeTableContent" class="dtree" data-id="root"></ul>
+                <ul id="dtreeTableContent" class="dtree" data-id="0"></ul>
             </div>
         </div>
         <div class="layui-col-md10">
@@ -110,6 +110,19 @@
         </div>
     </div>
 </div>
+
+<form class="layui-form layui-form-pane" action="" id="create" style="display: none">
+    <div class="layui-row" style="margin-top: 5%">
+        <div class="layui-col-md12">
+            <ul id="parentResourceSelect" class="dtree" data-id="0"></ul>
+            <input style="margin-top: 5%" type="text" id="name" name="name" required lay-verify="required"
+                   placeholder="请输入名称"
+                   autocomplete="off"
+                   class="layui-input">
+        </div>
+    </div>
+</form>
+
 <script th:src="@{/layui/layui.js}"></script>
 <script th:src="@{/admin/js/jquery.js}"></script>
 <script th:inline="javascript">
@@ -149,9 +162,6 @@
 
             var DemoTree = dtree.render({
                 elem: "#dtreeTableContent",
-                // url: "/restdoc/" + projectId + "/resource/dtree",
-                // dataStyle: "layuiStyle",
-                // response: {message: "msg", statusCode: 0},
                 data: dtreeData,
                 dataFormat: "list",
                 initLevel: 1,
@@ -169,48 +179,81 @@
                 done: function (data, obj, first) {
                 },
                 toolbar: true,
-                toolbarShow: ['copyDoc', 'editDoc', 'createResource', 'del', 'rename', 'createApi', 'createWiki'],
+                toolbarShow: ['copyDoc', 'createResource', 'modify', 'createApi', 'createWiki'],
                 toolbarExt: [
                     {
                         toolbarId: "copyDoc",
                         title: "复制文档",
                         handler: function (node, $div) {
-                            layer.msg("hello")
+                            copyDoc(node);
                         }
                     },
                     {
-                        toolbarId: "editDoc",
-                        title: "编辑文档",
+                        toolbarId: "modify",
+                        title: "编辑",
                         handler: function (node, $div) {
-                            layer.msg("hello")
+
                         }
                     },
                     {
                         toolbarId: "createResource",
-                        title: "创建目录",
+                        title: "新建目录",
                         handler: function (node, $div) {
-                            layer.msg("hello")
+                            commonToolHandler(node, node.nodeId, function (res, $obj, first) {
+                                layer.open({
+                                    type: 1,
+                                    scrollbar: false,
+                                    content: $('#create'),
+                                    area: ['600px', '400px'],
+                                    title: '新建目录',
+                                    btn: ['确定', '取消'],
+                                    yes: function (ix, layero) {
+                                        var name = $("#name").val();
+                                        if (name === "") {
+                                            layer.msg("请输入名称");
+                                        } else {
+                                            var nid = dtree.selectVal("parentResourceSelect").parentResourceSelect_select_nodeId;
+                                            if (nid === undefined) {
+                                                layer.msg("请选择父级目录");
+                                                return;
+                                            }
+                                            $.ajax({
+                                                method: "POST",
+                                                url: "/restdoc/" + projectId + "/resource",
+                                                data: JSON.stringify({
+                                                    "name": name,
+                                                    "tag": "",
+                                                    "pid": nid
+                                                }),
+                                                async: false,
+                                                contentType: "application/json",
+                                                success: function (res) {
+                                                    resetCreateDiv();
+                                                }
+                                            });
+                                            layer.close(ix);
+                                        }
+                                    }
+                                })
+                            });
                         }
                     },
                     {
                         toolbarId: "createApi",
-                        title: "创建API文档",
+                        title: "新建API文档",
                         handler: function (node, $div) {
-                            layer.msg("hello")
+                            commonToolHandler(node, node.nodeId, function (res, $obj, first) {
+                                createDoc("新建API文档", node, "API");
+                            });
                         }
                     },
                     {
                         toolbarId: "createWiki",
-                        title: "创建WIKI",
+                        title: "新建WIKI文档",
                         handler: function (node, $div) {
-                            layer.msg("hello")
-                        }
-                    },
-                    {
-                        toolbarId: "del",
-                        title: "删除",
-                        handler: function (node, $div) {
-                            layer.msg("hello")
+                            commonToolHandler(node, node.nodeId, function (res, $obj, first) {
+                                createDoc("新建WIKI文档", node, "WIKI");
+                            });
                         }
                     },
                     {
@@ -219,13 +262,24 @@
                         handler: function (node, $div) {
                             layer.msg("hello")
                         }
+                    },
+                    {
+                        toolbarId: "del",
+                        title: "删除",
+                        handler: function (node, $div) {
+                            deleteNode(node);
+                        }
                     }
                 ],
                 toolbarFun: {
                     loadToolbarBefore: function (buttons, param, $div) {
                         if (nodeIsResource(param.nodeId)) {
                             buttons.copyDoc = "";
-                            buttons.editDoc = "";
+                            if (param.nodeId === 'root') {
+                                buttons.del = "";
+                                buttons.rename = "";
+                                buttons.modify = "";
+                            }
                         } else {
                             buttons.createResource = "";
                             buttons.createApi = "";
@@ -235,6 +289,169 @@
                     }
                 }
             });
+
+            function deleteNode(node) {
+                layer.confirm('删除后不可恢复! 确认删除' + node.context + '?', {icon: 3, title: '提示'},
+                    function (index) {
+                        if (nodeIsResource(node.nodeId)) {
+                            var hasChildren = false;
+                            for (var i = 0; i < dtreeData.length; i++) {
+                                if (dtreeData[i].parentId === node.nodeId) {
+                                    hasChildren = true;
+                                    break;
+                                }
+                            }
+                            if (hasChildren) {
+                                layer.alert("该目录下还存在文档，不可删除");
+                                return;
+                            } else {
+                                $.ajax({
+                                    method: "DELETE",
+                                    url: "/restdoc/" + projectId + "/resource/" + node.nodeId,
+                                    async: false,
+                                    success: function (res) {
+                                        if (res.code === '200') {
+                                            layer.msg("操作成功");
+                                            reloadNavTree();
+                                        } else layer.msg(res.message);
+                                    }
+                                });
+                            }
+                        } else {
+                            $.ajax({
+                                method: "DELETE",
+                                url: "/restdoc/document/" + node.nodeId,
+                                async: false,
+                                success: function (res) {
+                                    if (res.code === '200') {
+                                        layer.msg("操作成功");
+                                        reloadNavTree();
+                                    } else layer.msg(res.message);
+                                }
+                            });
+                        }
+                        layer.close(index);
+                    });
+            }
+
+            function resetCreateDiv() {
+                reloadNavTree();
+                $("#name").val("");
+            }
+
+            function reloadNavTree() {
+                setDTreeData();
+                dtree.reload(DemoTree, {
+                    data: dtreeData,
+                    dataFormat: "list"
+                })
+            }
+
+            function copyDoc(node) {
+                commonToolHandler(node, node.parentId, function () {
+                    $("#name").val(node.context);
+                    layer.open({
+                        type: 1,
+                        scrollbar: false,
+                        content: $('#create'),
+                        area: ['600px', '400px'],
+                        title: '拷贝文档',
+                        btn: ['确定', '取消'],
+                        yes: function (ix, layero) {
+                            $.ajax({
+                                method: "POST",
+                                url: "/restdoc/document/copy",
+                                contentType: "application/json",
+                                data: JSON.stringify({
+                                    name: $("#name").val(),
+                                    resourceId: dtree.selectVal("parentResourceSelect").parentResourceSelect_select_nodeId,
+                                    documentId: node.nodeId
+                                }),
+                                async: false,
+                                success: function (res) {
+                                    $("#name").val("");
+                                }
+                            });
+                            layer.close(ix);
+                            reloadNavTree();
+                        }
+                    });
+                })
+            }
+
+            function createDoc(windowTitle, node, docType) {
+                layer.open({
+                    type: 1,
+                    scrollbar: false,
+                    content: $('#create'),
+                    area: ['600px', '400px'],
+                    title: windowTitle,
+                    btn: ['确定', '取消'],
+                    yes: function (ix, layero) {
+                        var name = $("#name").val();
+                        if (name === "") {
+                            layer.msg("请输入名称");
+                        } else {
+                            var nid = dtree.selectVal("parentResourceSelect").parentResourceSelect_select_nodeId;
+                            if (nid === undefined) {
+                                layer.msg("请选择目录");
+                                return;
+                            }
+                            $.ajax({
+                                method: "POST",
+                                url: "/restdoc/document/emptydoc",
+                                data: JSON.stringify({
+                                    "name": name,
+                                    "resourceId": nid,
+                                    "projectId": projectId,
+                                    "docType": docType
+                                }),
+                                async: false,
+                                contentType: "application/json",
+                                success: function (res) {
+                                    resetCreateDiv();
+                                }
+                            });
+                            layer.close(ix);
+                        }
+                    }
+                })
+            }
+
+            function commonToolHandler(node, initNodeId, doneFunc) {
+                var resources = filterResources();
+                dtree.renderSelect({
+                    elem: "#parentResourceSelect",
+                    width: "100%",
+                    data: resources,
+                    dataFormat: "list",
+                    skin: "zdy",
+                    iconfont: ["dtreefont", "layui-icon", "iconfont"],
+                    ficon: ["1", "-1"],
+                    iconfontStyle: {
+                        fnode: {
+                            node: {
+                                open: "dtree-icon-xiangxia1",
+                                close: "dtree-icon-xiangyou"
+                            }
+                        }
+                    },
+                    selectInitVal: initNodeId,
+                    done: doneFunc
+                });
+            }
+
+            function filterResources() {
+                var resources = [];
+                if (dtreeData !== null) {
+                    for (var i = 0; i < dtreeData.length; i++) {
+                        if (dtreeData[i].type === "RESOURCE") {
+                            resources.push(dtreeData[i]);
+                        }
+                    }
+                }
+                return resources;
+            }
 
             function searchNode() {
                 var value = $("#searchInput").val();

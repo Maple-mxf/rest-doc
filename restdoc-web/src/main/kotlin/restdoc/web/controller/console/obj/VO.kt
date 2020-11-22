@@ -203,7 +203,8 @@ data class DTreeVO(val id: String,
                    val parentId: String,
                    var children: List<Any> = listOf(),
                    var type: NodeType = NodeType.RESOURCE,
-                   var iconClass: String? = null)
+                   var iconClass: String? = null,
+                   val spread: Boolean = false)
 
 data class HttpApiTestLogDeProjectVO(
         val method: HttpMethod,

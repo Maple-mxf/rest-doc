@@ -97,9 +97,18 @@ class ResourceController {
             }
         }
 
+        val rootNode = DTreeVO(
+                id = "root",
+                title = "一级目录(虚拟)",
+                parentId = "0",
+                type = NodeType.RESOURCE,
+                spread = true,
+                iconClass = "dtree-icon-weibiaoti5")
+
         val nodes = mutableListOf<DTreeVO>()
         nodes.addAll(resourceNodes)
         nodes.addAll(apiNodes)
+        nodes.add(rootNode)
 
         return layuiTableOK(data = nodes, count = 1)
     }
