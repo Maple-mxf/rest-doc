@@ -1,4 +1,4 @@
-package restdoc.web.controller.console
+package restdoc.web.controller.console.rest
 
 import com.fasterxml.jackson.databind.JsonNode
 import kotlinx.coroutines.GlobalScope

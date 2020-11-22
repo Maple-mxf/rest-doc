@@ -1,4 +1,4 @@
-package restdoc.web.controller.console
+package restdoc.web.controller.console.rest
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Sort.Order.desc
@@ -19,9 +19,9 @@ import restdoc.web.util.IDUtil
 import java.util.*
 
 @RestController
-@RequestMapping("/team")
+@RequestMapping("/user")
 @Verify
-class TeamController {
+class UserController {
 
     @Autowired
     lateinit var mongoTemplate: MongoTemplate

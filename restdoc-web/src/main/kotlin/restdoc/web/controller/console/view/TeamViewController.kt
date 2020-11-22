@@ -1,4 +1,4 @@
-package restdoc.web.controller.console
+package restdoc.web.controller.console.view
 
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping

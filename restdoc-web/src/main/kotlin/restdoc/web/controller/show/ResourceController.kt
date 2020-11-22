@@ -5,7 +5,7 @@ import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
-import restdoc.web.controller.show.obj.NavbarVO
+import restdoc.web.controller.show.model.NavbarVO
 import restdoc.web.repository.ResourceRepository
 import restdoc.web.repository.RestWebDocumentRepository
 

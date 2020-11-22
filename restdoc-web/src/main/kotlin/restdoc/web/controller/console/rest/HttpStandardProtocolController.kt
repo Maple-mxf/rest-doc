@@ -1,4 +1,4 @@
-package restdoc.web.controller.console
+package restdoc.web.controller.console.rest
 
 import org.springframework.web.bind.annotation.RestController
 

@@ -1,4 +1,4 @@
-package restdoc.web.controller.console
+package restdoc.web.controller.console.rest
 
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType

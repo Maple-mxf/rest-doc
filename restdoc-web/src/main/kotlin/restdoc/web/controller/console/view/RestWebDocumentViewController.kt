@@ -1,4 +1,4 @@
-package restdoc.web.controller.console
+package restdoc.web.controller.console.view
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
@@ -32,7 +32,6 @@ class RestWebDocumentViewController {
     @Autowired
     lateinit var mapper: ObjectMapper
 
-    // Router
     @GetMapping("/{projectId}/document/view/list/")
     fun list(@PathVariable projectId: String, model: Model): String = listView(projectId, model)
 
