@@ -242,7 +242,7 @@
                         title: "新建API文档",
                         handler: function (node, $div) {
                             var instance = commonToolHandler(node, node.nodeId, function (res, $obj, first) {
-                                createDoc(instance, "新建API文档", node, "API");
+                                createDoc( "新建API文档", node, "API");
                             });
                         }
                     },
@@ -410,7 +410,7 @@
                 })
             }
 
-            function createDoc(treeIns, windowTitle, node, docType) {
+            function createDoc( windowTitle, node, docType) {
                 layer.open({
                     type: 1,
                     scrollbar: false,
