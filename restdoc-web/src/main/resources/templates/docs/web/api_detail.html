@@ -279,38 +279,6 @@
                     </div>
 
                 </div>
-                <div class="layui-col-md2 layui-col-md-offset1">
-                    <div class="layui-row ">
-                        <button id="copyDoc" type="button" class="layui-btn  layui-btn-sm layui-btn-primary"
-                                title="复制文档">
-                            <i class="layui-icon layui-icon-file-b" style="font-size: 25px; color: black;"></i>
-                        </button>
-                    </div>
-                    <div class="layui-row " style="margin-top: 15px">
-                        <button id="deleteDoc" type="button" class="layui-btn  layui-btn-sm  layui-btn-primary"
-                                title="删除文档">
-                            <i class="layui-icon layui-icon-delete" style="font-size: 25px; color: black;"></i>
-                        </button>
-                    </div>
-                    <div class="layui-row " style="margin-top: 15px">
-                        <button id="editDoc" type="button" class="layui-btn  layui-btn-sm layui-btn-primary"
-                                title="编辑文档">
-                            <i class="layui-icon layui-icon-edit" style="font-size: 25px; color: black;"></i>
-                        </button>
-                    </div>
-                    <div class="layui-row " style="margin-top: 15px">
-                        <button id="shareDoc" type="button" class="layui-btn  layui-btn-sm layui-btn-primary"
-                                title="分享文档">
-                            <i class="layui-icon layui-icon-share" style="font-size: 25px; color: black;"></i>
-                        </button>
-                    </div>
-                    <div class="layui-row " style="margin-top: 15px">
-                        <button id="exportDoc" type="button" class="layui-btn  layui-btn-sm layui-btn-primary"
-                                title="导出文档">
-                            <i class="layui-icon layui-icon-export" style="font-size: 25px; color: black;"></i>
-                        </button>
-                    </div>
-                </div>
             </div>
         </div>
         <div class="layui-tab-item">
@@ -319,7 +287,6 @@
                         style="width: 100%;height: 900px" frameborder="no" border="0" marginwidth="0"
                         marginheight="0"></iframe>
             </div>
-
         </div>
     </div>
 </div>
@@ -379,28 +346,6 @@
                     }
                 });
             });
-
-            // 删除文档
-            $("#deleteDoc").click(function () {
-                layer.confirm('确认删除？', {icon: 3, title: '提示'/*, anim: 4*/}, function (index) {
-                    layer.close(index);
-                });
-            });
-
-            // 拷贝文档
-            $("#copyDoc").click(function () {
-                layer.open({
-                    type: 1,
-                    content: $('#copyDocDiv'),
-                    area: ['600px', '400px'],
-                    title: '拷贝文档',
-                    btn: ['确定', '取消'],
-                    yes: function (ix, layero) {
-                        layer.close(ix);
-                    }
-                })
-            });
-
         });
 
     $("#copyURL").click(function () {
