@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>API Explorer</title>
+    <title>API Navigation</title>
     <link rel="stylesheet" th:href="@{/layui/css/layui.css}"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
@@ -93,7 +93,7 @@
                            class="layui-input">
                 </div>
                 <div class="layui-col-md2">
-                    <button type="button" class="layui-btn"  id="searchDocBtn">
+                    <button type="button" class="layui-btn" id="searchDocBtn">
                         <i class="layui-icon layui-icon-search"></i>
                     </button>
                 </div>
@@ -113,11 +113,8 @@
 <script th:src="@{/layui/layui.js}"></script>
 <script th:src="@{/admin/js/jquery.js}"></script>
 <script th:inline="javascript">
-
     var projectId = $("#projectId").val();
-
     var lay = null;
-
     layui.config({
         base: '/restdoc/layui/lay/extends/'
     }).use(['table', 'util', 'layer', 'jquery', 'layedit', 'dtree'],
@@ -149,6 +146,7 @@
             }
 
             setDTreeData();
+
             var DemoTree = dtree.render({
                 elem: "#dtreeTableContent",
                 // url: "/restdoc/" + projectId + "/resource/dtree",
@@ -165,24 +163,84 @@
                         node: {
                             open: "dtree-icon-xiangxia1",
                             close: "dtree-icon-xiangyou"
-                        }/*,
-                    leaf: "dtree-icon-normal-file"*/
+                        }
                     }
                 },
                 done: function (data, obj, first) {
+                },
+                toolbar: true,
+                toolbarShow: ['copyDoc', 'editDoc', 'createResource', 'del', 'rename', 'createApi', 'createWiki'],
+                toolbarExt: [
+                    {
+                        toolbarId: "copyDoc",
+                        title: "复制文档",
+                        handler: function (node, $div) {
+                            layer.msg("hello")
+                        }
+                    },
+                    {
+                        toolbarId: "editDoc",
+                        title: "编辑文档",
+                        handler: function (node, $div) {
+                            layer.msg("hello")
+                        }
+                    },
+                    {
+                        toolbarId: "createResource",
+                        title: "创建目录",
+                        handler: function (node, $div) {
+                            layer.msg("hello")
+                        }
+                    },
+                    {
+                        toolbarId: "createApi",
+                        title: "创建API文档",
+                        handler: function (node, $div) {
+                            layer.msg("hello")
+                        }
+                    },
+                    {
+                        toolbarId: "createWiki",
+                        title: "创建WIKI",
+                        handler: function (node, $div) {
+                            layer.msg("hello")
+                        }
+                    },
+                    {
+                        toolbarId: "del",
+                        title: "删除",
+                        handler: function (node, $div) {
+                            layer.msg("hello")
+                        }
+                    },
+                    {
+                        toolbarId: "rename",
+                        title: "重命名",
+                        handler: function (node, $div) {
+                            layer.msg("hello")
+                        }
+                    }
+                ],
+                toolbarFun: {
+                    loadToolbarBefore: function (buttons, param, $div) {
+                        if (nodeIsResource(param.nodeId)) {
+                            buttons.copyDoc = "";
+                            buttons.editDoc = "";
+                        } else {
+                            buttons.createResource = "";
+                            buttons.createApi = "";
+                            buttons.createWiki = "";
+                        }
+                        return buttons;
+                    }
                 }
             });
 
             function searchNode() {
                 var value = $("#searchInput").val();
                 if (value) {
-                    var flag = DemoTree.searchNode(value); // 内置方法查找节点
-                    if (!flag) {
-                        layer.msg("该名称节点不存在！", {icon: 5});
-                    }
-                } else {
-                    DemoTree.menubarMethod().refreshTree();  // 内置方法刷新树
-                }
+                    if (!DemoTree.searchNode(value)) layer.msg("该名称节点不存在！", {icon: 5});
+                } else DemoTree.menubarMethod().refreshTree();  // 内置方法刷新树
             }
 
             $("#searchDocBtn").click(function () {
@@ -197,14 +255,8 @@
 
             dtree.on("node('dtreeTableContent')", function (obj) {
                 if (obj.param.leaf) {
-                    for (var i = 0; i < dtreeData.length; i++) {
-                        if (dtreeData[i].id === obj.param.nodeId) {
-                            if (dtreeData[i].type == "WIKI" || dtreeData[i].type == "API") {
-                                // "/{projectId}/document/{documentId}/view"
-                                $("#apiDocFrame").attr("src", '/restdoc/' + projectId + '/document/' + obj.param.nodeId + '/view');
-                            }
-                            break;
-                        }
+                    if (!nodeIsResource(obj.param.nodeId)) {
+                        $("#apiDocFrame").attr("src", '/restdoc/' + projectId + '/document/' + obj.param.nodeId + '/view');
                     }
                 } else {
                     DemoTree.clickSpread(obj.dom);
@@ -215,6 +267,17 @@
                 $("#apiDocFrame").attr("src", '/restdoc/' + projectId + '/document/' + docId + '/view');
             }
 
+            function nodeIsResource(nodeId) {
+                for (var i = 0; i < dtreeData.length; i++) {
+                    if (dtreeData[i].id === nodeId) {
+                        if (dtreeData[i].type == "WIKI" || dtreeData[i].type == "API") {
+                            return false;
+                        }
+                        break;
+                    }
+                }
+                return true;
+            }
         });
 
     function getFirstDocument(array) {

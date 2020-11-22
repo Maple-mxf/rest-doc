@@ -77,7 +77,7 @@ class RestWebDocumentViewController {
     @GetMapping("/{projectId}/document/view/api/add")
     fun createApi(@PathVariable projectId: String, model: Model): String {
         model.set("projectId", projectId)
-        return "docs/add"
+        return "docs/web/api_test"
     }
 
     @GetMapping("/{projectId}/document/{documentId}/view")
@@ -117,7 +117,7 @@ class RestWebDocumentViewController {
         model.addAttribute("documentId", restWebDocument.id)
         model.addAttribute("projectId", projectId)
 
-        return "docs/add"
+        return "docs/web/api_test"
     }
 
     @Deprecated(message = "")
