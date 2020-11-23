@@ -470,20 +470,7 @@
                 $("#parentResourceSelectDiv").html("<ul id='parentResourceSelect' class='dtree' data-id='0'></ul>");
             }
 
-            // res, $obj, first
             function commonToolHandler(node, initNodeId, doneFunc) {
-                /*if (hideSelectNavTree == null) {
-
-                } else {
-                    setDTreeData();
-                    dtree.reload(
-                        hideSelectNavTree, {
-                            data: dtreeData,
-                            dataFormat: "list"
-                        });
-                    dtree.selectVal("parentResourceSelect", initNodeId);
-                    doneFunc();
-                }*/
                 var resources = filterResources();
                 hideSelectNavTree = dtree.renderSelect({
                     elem: "#parentResourceSelect",

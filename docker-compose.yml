@@ -26,6 +26,7 @@ services:
     image: registry.cn-beijing.aliyuncs.com/opensource-sharing/restdoc-console:1.0.RELEASE
     ports:
       - 8432:8432
+      - 4321:4321
     environment:
       REDIS-HOST: redis
       MONGO-HOST: mongodb
