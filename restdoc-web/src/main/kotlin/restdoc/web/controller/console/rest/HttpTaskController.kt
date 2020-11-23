@@ -98,6 +98,7 @@ class HttpTaskController {
 
             return executeResult
         } catch (e: Throwable) {
+            e.printStackTrace()
             return RestWebInvocationResult(
                     isSuccessful = false,
                     exceptionMsg = e.message,
