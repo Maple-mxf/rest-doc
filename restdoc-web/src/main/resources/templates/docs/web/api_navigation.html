@@ -350,8 +350,7 @@
                                     success: function (res) {
                                         if (res.code === '200') {
                                             layer.msg("操作成功");
-                                            /*reloadNavTree();*/
-                                            parent.location.reload();
+                                            reloadNavTree();
                                         } else layer.msg(res.message);
                                     }
                                 });
@@ -363,8 +362,12 @@
                                 async: false,
                                 success: function (res) {
                                     if (res.code === '200') {
-                                        layer.msg("操作成功");
-                                        reloadNavTree();
+                                        if ($("#apiDocFrame").attr("src").includes(node.nodeId)) {
+                                            layer.msg("操作成功");
+                                            parent.location.reload();
+                                        } else {
+                                            reloadNavTree();
+                                        }
                                     } else layer.msg(res.message);
                                 }
                             });

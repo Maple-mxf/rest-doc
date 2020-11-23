@@ -61,12 +61,13 @@ class HttpTaskController {
             result
         }
 
+        log.responseStatus = res.status
         log.testDurationTimeMill = Date().time - startTime
         log.responseHeader = res.responseHeaders
         log.responseBody = res.responseBody
         log.success = (log.responseStatus == 200)
 
-        if (dto.documentId != null && dto.documentId!!.isNotBlank()){
+        if (dto.documentId != null && dto.documentId!!.isNotBlank()) {
             mongoTemplate.save(log)
         }
 

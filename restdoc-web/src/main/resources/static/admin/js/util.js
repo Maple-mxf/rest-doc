@@ -9,7 +9,6 @@ function formatTimestamp(timestamp) {
     var second = dateObj.getSeconds();
     return year + "-" + month + "-" + theDate + " " + hour + ":" + minute + ":" + second;
 }
-
 function initBaseInput(doc) {
     // 设定method
     $("#method").find("option[value=" + doc['method'] + "]").attr("selected", true);

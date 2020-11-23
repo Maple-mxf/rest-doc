@@ -507,13 +507,16 @@
 
         form.on('submit(save)', function (data) {
             var projectId = $("#projectId").val();
-
             var map = getFormData(data.field);
-            map['executeResult'] = globalExecuteResult;
-            if (map['description'] != null) {
 
-                map['description'] = easyeditor.content(map['description'])
+            if (!beforeTestCheckUriVars(beforeTestCheckUriVars(map['uriFields']))) {
+                return false;
             }
+
+            map['executeResult'] = globalExecuteResult;
+            /*if (map['description'] != null) {
+                map['description'] = easyeditor.content(map['description'])
+            }*/
             var method;
             var did = $("#documentId").val();
 
@@ -637,6 +640,11 @@
                     map["remoteAddress"] = res[0]['remoteAddress'];
                     map['projectId'] = $("#projectId").val();
                     map["documentId"] = $("#documentId").val();
+
+                    if (!beforeTestCheckUriVars(beforeTestCheckUriVars(map['uriFields']))) {
+                        return false;
+                    }
+
                     $.ajax({
                         type: 'POST',
                         dataType: 'JSON',
@@ -678,6 +686,11 @@
             } else {
                 map['projectId'] = $("#projectId").val();
                 map["documentId"] = $("#documentId").val();
+
+                if (!beforeTestCheckUriVars(beforeTestCheckUriVars(map['uriFields']))) {
+                    return false;
+                }
+
                 $.ajax({
                     type: 'POST',
                     dataType: 'JSON',
@@ -887,6 +900,7 @@
             var responseFields = getResponseBodyKeyValueJsonArray();
             var uriFields = getUriVarJsonArray();
 
+
             var map = new Map();
 
             map['url'] = value["url"];
@@ -941,6 +955,16 @@
                 array[i] = map
             }
             return array
+        }
+
+        function beforeTestCheckUriVars(array) {
+            for (var i = 0; i < array.length; i++) {
+                if (array[i]['field'] !== null && array[i]['field'] !== "" && array[i]['value'] === "") {
+                    layer.msg("请填写URI变量" + array[i]['field'] + "的值");
+                    return false;
+                }
+            }
+            return true;
         }
 
         function getUriVarJsonArray() {
