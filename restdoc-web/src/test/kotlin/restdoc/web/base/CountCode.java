@@ -24,7 +24,7 @@ public class CountCode {
         if (!file.isDirectory()) {
 
             // 如果是Java文件  则统计行数   如果是Class文件  则不读取（字节码文件无法读取）
-            if (file.getName().endsWith(".java") || file.getName().endsWith(".kt")) {
+            if (file.getName().endsWith(".java") || file.getName().endsWith(".kt") ||file.getName().endsWith(".html")) {
 
                 // 读取所有的内容
                 List<String> result = Files.readAllLines(file.toPath());

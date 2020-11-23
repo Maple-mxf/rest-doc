@@ -151,17 +151,13 @@ data class CreateResourceDto(
         var pid: String
 )
 
-data class CreateUpdateWikiDto(
+
+data class UpdateWikiDto(
         var id: String?,
-        @NotBlank
         val projectId: String,
-        @NotBlank
         val content: String,
-        @NotBlank
-        val resource: String,
-        @NotBlank
-        val name: String,
-        val tableContent: Any
+        val resource: String? = null,
+        val name: String? = null
 )
 
 data class UpdateNodeDto(val id: String, val name: String, val pid: String, val order: Int = 0)

@@ -114,7 +114,9 @@
 <form class="layui-form layui-form-pane" action="" id="create" style="display: none">
     <div class="layui-row" style="margin-top: 5%">
         <div class="layui-col-md12">
-            <ul id="parentResourceSelect" class="dtree" data-id="0"></ul>
+            <div id="parentResourceSelectDiv">
+                <ul id='parentResourceSelect' class='dtree' data-id='0'></ul>
+            </div>
             <input style="margin-top: 5%" type="text" id="name" name="name" required lay-verify="required"
                    placeholder="请输入名称"
                    autocomplete="off"
@@ -128,6 +130,7 @@
 <script th:inline="javascript">
     var projectId = $("#projectId").val();
     var lay = null;
+
     layui.config({
         base: '/restdoc/layui/lay/extends/'
     }).use(['table', 'util', 'layer', 'jquery', 'layedit', 'dtree'],
@@ -232,6 +235,9 @@
                                             });
                                             layer.close(ix);
                                         }
+                                    },
+                                    end: function () {
+                                        destroyTree();
                                     }
                                 })
                             });
@@ -241,8 +247,8 @@
                         toolbarId: "createApi",
                         title: "新建API文档",
                         handler: function (node, $div) {
-                            var instance = commonToolHandler(node, node.nodeId, function (res, $obj, first) {
-                                createDoc( "新建API文档", node, "API");
+                            commonToolHandler(node, node.nodeId, function (res, $obj, first) {
+                                createDoc("新建API文档", node, "API");
                             });
                         }
                     },
@@ -314,6 +320,9 @@
                                 }
                             });
                             layer.close(ix);
+                        },
+                        end: function () {
+                            destroyTree();
                         }
                     })
                 })
@@ -405,12 +414,15 @@
                             });
                             layer.close(ix);
                             reloadNavTree();
+                        },
+                        end: function () {
+                            destroyTree();
                         }
                     });
                 })
             }
 
-            function createDoc( windowTitle, node, docType) {
+            function createDoc(windowTitle, node, docType) {
                 layer.open({
                     type: 1,
                     scrollbar: false,
@@ -447,13 +459,33 @@
                             });
                             layer.close(ix);
                         }
+                    },
+                    end: function () {
+                        destroyTree();
                     }
                 })
             }
 
+            function destroyTree() {
+                $("#parentResourceSelectDiv").html("<ul id='parentResourceSelect' class='dtree' data-id='0'></ul>");
+            }
+
+            // res, $obj, first
             function commonToolHandler(node, initNodeId, doneFunc) {
+                /*if (hideSelectNavTree == null) {
+
+                } else {
+                    setDTreeData();
+                    dtree.reload(
+                        hideSelectNavTree, {
+                            data: dtreeData,
+                            dataFormat: "list"
+                        });
+                    dtree.selectVal("parentResourceSelect", initNodeId);
+                    doneFunc();
+                }*/
                 var resources = filterResources();
-                var instance = dtree.renderSelect({
+                hideSelectNavTree = dtree.renderSelect({
                     elem: "#parentResourceSelect",
                     width: "100%",
                     data: resources,
@@ -472,8 +504,6 @@
                     selectInitVal: initNodeId,
                     done: doneFunc
                 });
-
-                return instance;
             }
 
             function filterResources() {

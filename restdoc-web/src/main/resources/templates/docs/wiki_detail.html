@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" th:href="@{/admin/css/doc-font.css}"/>
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}"/>
+    <link rel="stylesheet" th:href="@{/admin/css/pearForm.css}"/>
+    <link rel="stylesheet" th:href="@{/admin/css/fangge-style.css}"/>
+    <link rel="stylesheet" th:href="@{/admin/css/doc-common.css}"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <style>
+        html {
+            background-color: white;
+            border-left: slategrey dashed 1px;
+        }
+    </style>
+
+</head>
+
+<body>
+<input id="projectId" type="hidden" th:value="${projectId}">
+<input id="documentId" type="hidden" th:value="${document.id}">
+<div class="layui-fluid" style="margin-top: 10px">
+    <div class="layui-tab">
+        <ul class="layui-tab-title">
+            <li class="layui-this">文档</li>
+            <li>编辑</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show" th:utext="${document.content}" id="previewContentDiv"></div>
+            <div class="layui-tab-item">
+                <div class="layui-row">
+                    <textarea name="" id="edit" cols="30" rows="10" th:text="${document.content}"></textarea>
+                </div>
+                <div class="layui-row" style="margin-top: 30px">
+                    <div class="layui-col-md10">
+
+                    </div>
+                    <div class="layui-col-md2">
+                        <button type="button" class="layui-btn" id="saveContent">保存文档</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/layui/layui.js}"></script>
+<script th:src="@{/admin/js/jquery.js}"></script>
+<script th:src="@{/layui/lay/extends/tinymce/tinymce.min.js}"></script>
+<script type="text/javascript" th:inline="javascript">
+
+    var projectId = $("#projectId").val();
+    var documentId = $("#documentId").val();
+
+    var lay = null;
+
+    layui.config({
+        base: '/restdoc/layui/lay/extends/'
+    }).use([
+        'util',
+        'layer',
+        'form',
+        'jquery',
+        'element'], function () {
+        var element = layui.element;
+
+        var $ = layui.jquery;
+        var layer = layui.layer, layedit = layui.layedit;
+        lay = layer;
+    });
+    tinymce.init({
+        selector: '#edit',
+        auto_focus: true,
+        height: 700,
+        plugins: 'quickbars print preview searchreplace autolink fullscreen image link media codesample table charmap hr advlist lists wordcount imagetools indent2em',
+        language: 'zh_CN'/*,
+        init_instance_callback: function (editor) {
+        }*/
+    });
+
+    $("#saveContent").click(function () {
+        var content = tinymce.activeEditor.getContent();
+        $.ajax({
+            method: "PATCH",
+            url: '/restdoc/wiki',
+            async: false,
+            contentType: 'application/json',
+            data: JSON.stringify({
+                id: documentId,
+                projectId: projectId,
+                content:content
+            }),
+            success: function (res) {
+                if (res.code === '200') {
+                    $("#previewContentDiv").html(content);
+                    lay.msg("操作成功");
+                } else {
+                    lay.msg(res.message);
+                }
+            }
+        })
+    });
+
+
+</script>
+</body>
+</html>

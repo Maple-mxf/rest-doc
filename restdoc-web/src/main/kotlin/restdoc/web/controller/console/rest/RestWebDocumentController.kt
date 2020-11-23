@@ -95,7 +95,7 @@ class RestWebDocumentController {
         val uriVars = uriVarDescriptor.map { it.field to it.value }.toMap()
 
         val document = RestWebDocument(
-                id = IDUtil.id(),
+                id = id(),
                 name = dto.name,
                 projectId = dto.projectId,
                 resource = dto.resource!!,
@@ -199,36 +199,7 @@ class RestWebDocumentController {
         return ok(map)
     }
 
-    @PostMapping("/wiki")
-    fun createWiki(@RequestBody dto: CreateUpdateWikiDto): Result {
-        var save = false;
-        if (dto.id == null || dto.id!!.isEmpty()) {
-            save = true
-            dto.id = IDUtil.id()
-        }
 
-        val document = RestWebDocument(
-                id = dto.id,
-                projectId = dto.projectId,
-                name = dto.name,
-                resource = dto.resource,
-                url = "",
-                requestHeaderDescriptor = null,
-                requestBodyDescriptor = null,
-                responseBodyDescriptors = null,
-                uriVarDescriptors = null,
-                content = dto.content,
-                docType = DocType.WIKI
-        )
-
-        if (save) {
-            restWebDocumentRepository.save(document)
-        } else {
-            restWebDocumentRepository.update(document);
-        }
-
-        return ok(document.id)
-    }
 
     @DeleteMapping("/{id}")
     fun delete(@PathVariable id: String): Result {
@@ -338,7 +309,7 @@ class RestWebDocumentController {
         val requestFieldsDesc = requestFieldParamMap.let { map ->
             map.map {
                 HistoryFieldDescription(
-                        id = IDUtil.id(),
+                        id = id(),
                         field = it.key,
                         description = it.value.replace("\n", ""),
                         type = FieldDescType.REQUEST_PARAM,
@@ -349,7 +320,7 @@ class RestWebDocumentController {
         val responseFieldDesc = responseFieldParamMap.let { map ->
             map.map {
                 HistoryFieldDescription(
-                        id = IDUtil.id(),
+                        id = id(),
                         field = it.key,
                         description = it.value.replace("\n", ""),
                         type = FieldDescType.RESPONSE_PARAM,
@@ -360,7 +331,7 @@ class RestWebDocumentController {
         val headerFieldDesc = headerFieldParamMap.let { map ->
             map.map {
                 HistoryFieldDescription(
-                        id = IDUtil.id(),
+                        id = id(),
                         field = it.key,
                         description = it.value.replace("\n", "").trim(),
                         type = FieldDescType.HEADER,

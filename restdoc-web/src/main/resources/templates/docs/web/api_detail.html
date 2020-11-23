@@ -7,54 +7,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/layui/css/layui.css}"/>
-    <link rel="stylesheet" th:href="@{/admin/css/pearForm.css}"/>
-    <link rel="stylesheet" th:href="@{/admin/css/easyeditor.css}"/>
     <link rel="stylesheet" th:href="@{/admin/css/fangge-style.css}"/>
     <link rel="stylesheet" th:href="@{/admin/css/pear-tree/dtree.css}"/>
     <link rel="stylesheet" th:href="@{/admin/css/doc-common.css}"/>
-    <link rel="stylesheet" th:href="@{/admin/css/code.css}"/>
     <link rel="stylesheet" th:href="@{/admin/css/nav.css}"/>
     <style>
-        body {
-            font-family: 'Roboto', sans-serif;
-            font-size: 15px;
-        }
-
         .dtree-nav-div cite {
             font-family: 'Roboto', sans-serif;
             font-size: 15px;
         }
 
-        pre {
-            background-color: #283142;
-            color: white;
-            font-size: 16px;
-            font-family: Roboto, serif;
-        }
-
         .code-block {
             background-color: #283142;
             color: white;
-            font-size: 16px;
+            font-size: 15px;
             font-family: Roboto, serif;
         }
-
-        /*.common-code-pre {
-            background: #f4f4f4;
-            border: 1px solid #ddd;
-            border-left: 3px solid #f36d33;
-            color: #666;
-            page-break-inside: avoid;
-            font-family: Roboto, serif;
-            font-size: 15px;
-            line-height: 1.6;
-            margin-bottom: 1.6em;
-            max-width: 100%;
-            overflow: auto;
-            padding: 1em 1.5em;
-            display: block;
-            word-wrap: break-word;
-        }*/
 
         .layui-table td, .layui-table th {
             color: #0C0C0C;
@@ -65,10 +33,6 @@
             text-align: center;
         }
 
-        /* .layui-table th {
-             font-weight: bold;
-         }*/
-
         .headerTitle {
             font-family: Roboto, serif;
             margin-top: 30px;
@@ -77,18 +41,6 @@
 
         #urlSpan:hover {
             cursor: pointer;
-        }
-
-
-        /*.layui-tab-title li {
-            font-size: 18px;
-            font-family: Roboto, serif;
-            padding: 0 5%;
-        }*/
-
-        .layui-code {
-            font-size: 14px;
-            font-family: Roboto, serif;
         }
 
         #editDocDescriptionBtn:hover {
@@ -255,7 +207,7 @@
                     </div>
                     <div class="layui-row">
                         <h3 class="headerTitle">代码示例</h3>
-                        <div class="layui-tab layui-tab-card">
+                        <div class="layui-tab layui-tab-card ">
                             <ul class="layui-tab-title">
                                 <li class="layui-this">CURL</li>
                                 <li>Java</li>
@@ -263,16 +215,23 @@
                             </ul>
                             <div class="layui-tab-content" style="height: 500px;">
                                 <div class="layui-tab-item layui-show">
-                                        <pre style="font-size: 16px" class="layui-code "
+                                    <div class="language-html line-numbers-mode">
+                                        <pre class="layui-code" lay-title="CURL" lay-skin="notepad"
                                              th:text="${document.curlCodeSample}"></pre>
+                                    </div>
                                 </div>
                                 <div class="layui-tab-item">
-                                        <pre style="font-size: 16px" class="layui-code "
+                                    <div>
+                                        <pre class="layui-code" lay-title="CURL" lay-skin="notepad"
                                              th:text="${document.javaCodeSample}"></pre>
+                                    </div>
                                 </div>
                                 <div class="layui-tab-item">
-                                        <pre style="font-size: 16px" class="layui-code "
+                                    <div>
+                                        <pre class="layui-code" lay-title="CURL" lay-skin="notepad"
                                              th:text="${document.pythonCodeSample}"></pre>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
@@ -310,9 +269,10 @@
 
     layui.config({
         base: '/restdoc/layui/lay/extends/'
-    }).use(['table', 'layer', 'element', 'jquery', 'layedit', 'form'],
+    }).use(['table', 'layer', 'element', 'jquery', 'layedit', 'form', 'code'],
         function () {
             var $ = layui.jquery;
+            var code = layui.code;
             var layer = layui.layer;
             var element = layui.element;
             var table = layui.table;

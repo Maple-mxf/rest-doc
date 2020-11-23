@@ -74,6 +74,7 @@ class RestWebDocumentViewController {
     }
 
     @GetMapping("/{projectId}/document/view/api/add")
+    @Deprecated(message = "createApi")
     fun createApi(@PathVariable projectId: String, model: Model): String {
         model.set("projectId", projectId)
         return "docs/web/api_test"
@@ -90,7 +91,6 @@ class RestWebDocumentViewController {
         val resource = resourceRepository.findById(restWebDocument.resource)
 
         model.addAttribute("resource", resource)
-
         model.addAttribute("projectId", projectId)
         model.addAttribute("sample", mapper.writeValueAsString(restWebDocument.executeResult))
 
@@ -99,7 +99,7 @@ class RestWebDocumentViewController {
             "docs/web/api_detail"
         } else if (DocType.WIKI == restWebDocument.docType) {
             model.addAttribute("document", restWebDocument)
-            "docs/wikiDetail"
+            "docs/wiki_detail"
         } else {
             "docs/resourceDetail"
         }
@@ -115,6 +115,7 @@ class RestWebDocumentViewController {
         model.addAttribute("initDocument", restWebDocument)
         model.addAttribute("documentId", restWebDocument.id)
         model.addAttribute("projectId", projectId)
+        model.addAttribute("resource", restWebDocument.resource)
 
         return "docs/web/api_test"
     }
