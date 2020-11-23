@@ -159,14 +159,17 @@
 </div>
 <script type="text/html" id="testLogTableToolbar">
     <div class="layui-btn-container">
-        <button title="导入历史数据" class="layui-btn layui-btn-sm" lay-event="export">
-            <i class="layui-icon layui-icon-export" style="font-size: 20px; color: white;"></i>
+        <button title="导入历史数据" class="layui-btn layui-btn-sm layui-btn-primary" lay-event="export">
+            <i class="layui-icon layui-icon-export" style="font-size: 20px; color: black;"></i>
         </button>
-        <button title="删除" class="layui-btn layui-btn-danger layui-btn-sm" lay-event="del">
-            <i class="layui-icon layui-icon-delete" style="font-size: 20px; color: white;"></i>
+        <button title="详情" class="layui-btn layui-btn-sm layui-btn-primary" lay-event="detail">
+            <i class="layui-icon layui-icon-file" style="font-size: 20px; color: black;"></i>
         </button>
         <button title="刷新数据" class="layui-btn  layui-btn-primary layui-btn-sm" lay-event="refresh">
             <i class="layui-icon layui-icon-refresh" style="font-size: 20px; color: black;"></i>
+        </button>
+        <button title="删除" class="layui-btn layui-btn-primary layui-btn-sm" lay-event="del">
+            <i class="layui-icon layui-icon-delete" style="font-size: 20px; color: black;"></i>
         </button>
     </div>
 </script>
@@ -232,8 +235,11 @@
             type: function (value, item) {
                 if (value === "NON")
                     return "请选择参数类型";
-            }
-            , pass: []
+            },
+            uriValue: function (value, item) {
+                if (value === "") return "uri变量必填";
+            },
+            pass: []
         });
 
         //第一个实例
@@ -509,113 +515,101 @@
             var projectId = $("#projectId").val();
             var map = getFormData(data.field);
 
-            var noFillUriField = beforeTestCheckUriVars(map['uriFields']);
-            if (noFillUriField !== null) {
-                layer.msg("请填写URI变量" + noFillUriField + "的值");
-                return false;
+            map['executeResult'] = globalExecuteResult;
+            /*if (map['description'] != null) {
+                map['description'] = easyeditor.content(map['description'])
+            }*/
+            var method;
+            var did = $("#documentId").val();
+
+            map["projectId"] = projectId;
+            map["documentId"] = did;
+            var isNewDoc = true;
+            if (did === undefined || did === "") {
+                method = "POST"
             } else {
-                map['executeResult'] = globalExecuteResult;
-                /*if (map['description'] != null) {
-                    map['description'] = easyeditor.content(map['description'])
-                }*/
-                var method;
-                var did = $("#documentId").val();
-
-                map["projectId"] = projectId;
-                map["documentId"] = did;
-                var isNewDoc = true;
-                if (did === undefined || did === "") {
-                    method = "POST"
-                } else {
-                    method = "PUT";
-                    isNewDoc = false;
-                }
-
-                if (isNewDoc) {
-                    layer.open({
-                        type: 2,
-                        title: '完善API基本信息',
-                        area: ['700px', '500px'],
-                        content: ['/restdoc/' + projectId + '/document/baseinfo/edit/view', 'no'],
-                        btn: ['确定', '取消'],
-                        yes: function (index, doc) {
-                            var res = window["layui-layer-iframe" + index].getFormData();
-
-                            map['name'] = res['name'];
-                            map['resource'] = res['resource'];
-
-                            $("#apiName").val(res['name']);
-                            $("#resource").val(res['resource']);
-
-                            $.ajax({
-                                type: 'POST',
-                                dataType: 'JSON',
-                                contentType: 'application/json;charset=utf-8',
-                                url: '/restdoc/document',
-                                data: JSON.stringify(map),
-                                async: false,
-                                success: function (data) {
-                                    if (data['code'] === "200") {
-                                        if (data['data'] != null) {
-                                            var id = data['data'];
-                                            $('#documentId').val(id);
-                                            console.info(id);
-                                            layer.msg("保存成功");
-                                        } else {
-                                            layer.msg("保存失败")
-                                        }
-                                    } else {
-                                        layer.msg(data['message'])
-                                    }
-                                },
-                                error: function () {
-                                    layer.msg("网络异常")
-                                }
-                            });
-                            layer.close(index);
-                        }
-                    });
-                } else {
-                    map['name'] = $("#apiName").val();
-                    map['resource'] = $("#resource").val();
-
-                    $.ajax({
-                        type: 'PUT',
-                        dataType: 'JSON',
-                        contentType: 'application/json;charset=utf-8',
-                        url: '/restdoc/document',
-                        data: JSON.stringify(map),
-                        async: false,
-                        success: function (data) {
-                            if (data['code'] === "200") {
-                                if (data['data'] != null) {
-                                    var id = data['data'];
-                                    $('#documentId').val(id);
-                                    layer.msg("保存成功");
-                                } else {
-                                    layer.msg("保存失败")
-                                }
-                            } else {
-                                layer.msg(data['message'])
-                            }
-                        },
-                        error: function () {
-                            layer.msg("网络异常")
-                        }
-                    });
-                }
-                return false;
+                method = "PUT";
+                isNewDoc = false;
             }
+
+            if (isNewDoc) {
+                layer.open({
+                    type: 2,
+                    title: '完善API基本信息',
+                    area: ['700px', '500px'],
+                    content: ['/restdoc/' + projectId + '/document/baseinfo/edit/view', 'no'],
+                    btn: ['确定', '取消'],
+                    yes: function (index, doc) {
+                        var res = window["layui-layer-iframe" + index].getFormData();
+
+                        map['name'] = res['name'];
+                        map['resource'] = res['resource'];
+
+                        $("#apiName").val(res['name']);
+                        $("#resource").val(res['resource']);
+
+                        $.ajax({
+                            type: 'POST',
+                            dataType: 'JSON',
+                            contentType: 'application/json;charset=utf-8',
+                            url: '/restdoc/document',
+                            data: JSON.stringify(map),
+                            async: false,
+                            success: function (data) {
+                                if (data['code'] === "200") {
+                                    if (data['data'] != null) {
+                                        var id = data['data'];
+                                        $('#documentId').val(id);
+                                        console.info(id);
+                                        layer.msg("保存成功");
+                                    } else {
+                                        layer.msg("保存失败")
+                                    }
+                                } else {
+                                    layer.msg(data['message'])
+                                }
+                            },
+                            error: function () {
+                                layer.msg("网络异常")
+                            }
+                        });
+                        layer.close(index);
+                    }
+                });
+            } else {
+                map['name'] = $("#apiName").val();
+                map['resource'] = $("#resource").val();
+
+                $.ajax({
+                    type: 'PUT',
+                    dataType: 'JSON',
+                    contentType: 'application/json;charset=utf-8',
+                    url: '/restdoc/document',
+                    data: JSON.stringify(map),
+                    async: false,
+                    success: function (data) {
+                        if (data['code'] === "200") {
+                            if (data['data'] != null) {
+                                var id = data['data'];
+                                $('#documentId').val(id);
+                                layer.msg("保存成功");
+                            } else {
+                                layer.msg("保存失败")
+                            }
+                        } else {
+                            layer.msg(data['message'])
+                        }
+                    },
+                    error: function () {
+                        layer.msg("网络异常")
+                    }
+                });
+            }
+            return false;
         });
 
         form.on('submit(execute)', function (data) {
             var map = getFormData(data.field);
-            var noFillUriField = beforeTestCheckUriVars(map['uriFields']);
-            if (noFillUriField !== null) {
-                layer.msg("请填写URI变量" + noFillUriField + "的值");
-                return false;
-            }
-
             layer.open({
                 type: 1,
                 content: $('#testMode'),

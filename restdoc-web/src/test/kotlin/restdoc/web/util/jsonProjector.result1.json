@@ -1,32 +1,23 @@
 {
-  "code": 0,
-  "msg": "",
-  "count": 100,
-  "data": [
-    {
-      "userName": "测试用户1",
-      "userCode": "170001",
-      "deptName": "测试部门1"
+  "status": "OK",
+  "code": "200",
+  "message": null,
+  "data": {
+    "isSuccessful": false,
+    "exceptionMsg": "wait response on the channel <52.136.104.144/152.136.104.144:49142> timeout, 16384(ms)",
+    "invocation": {
+      "className": "restdoc.client.api.model.RestWebInvocation",
+      "url": "/handshake/{pathVar}",
+      "method": "POST",
+      "requestHeaders": {},
+      "queryParam": {},
+      "requestBody": {},
+      "uriVariable": {
+        "pathVar": "1"
+      }
     },
-    {
-      "userName": "测试用户2",
-      "userCode": "170002",
-      "deptName": "测试部门1"
-    },
-    {
-      "userName": "测试用户3",
-      "userCode": "170003",
-      "deptName": "测试部门2"
-    },
-    {
-      "userName": "测试用户4",
-      "userCode": "170004",
-      "deptName": "测试部门2"
-    },
-    {
-      "userName": "测试用户5",
-      "userCode": "170005",
-      "deptName": "测试部门3"
-    }
-  ]
+    "status": -1,
+    "responseHeaders": {},
+    "responseBody": null
+  }
 }

@@ -90,7 +90,7 @@ public class JsonProjector {
     private final static Pattern NON_NUMBER_INDEX_PATTERN = compile("(\\[\\d*\\])+");
 
     // Filter Json array field
-    private final static Pattern ARRAY_PATTERN = compile("([a-zA-Z0-9_]+[a-zA-Z0-9]*)(\\[\\d*\\])+");
+    private final static Pattern ARRAY_PATTERN = compile("([a-zA-Z0-9_]+[a-zA-Z0-9_\\-]*)(\\[\\d*\\])+");
 
     // Filter end with ']'
     // private final static Pattern CHILD_ARRAY_PATTERN = compile("^(.*)\\[\\d+\\]$");
