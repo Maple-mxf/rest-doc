@@ -339,7 +339,34 @@
                         break;
                     case 'refresh':
                         refreshTestLogTable();
-                        break
+                        break;
+                    case 'detail':
+
+                        var data = checkStatus.data;
+                        var ids = [];
+                        for (var i = 0; i < data.length; i++) ids.push(data[i].id);
+                        if (ids.length != 1) layer.msg('请选择一条记录');
+                        else {
+                            $.ajax({
+                                method: "POST",
+                                url: "/restdoc/document/httpapitestlog/" + ids[0] + "/log2testresult",
+                                contentType: 'application/json; charset=utf-8',
+                                aysnc: false,
+                                success: function (res) {
+                                    if (res.code === '200') {
+                                        openConsolePage(res.data);
+                                    } else {
+                                        layer.msg(res.message);
+                                    }
+                                },
+                                error: function () {
+                                    layer.msg("Error");
+                                }
+                            });
+                        }
+
+
+                        break;
                 }
             });
         }
@@ -867,7 +894,7 @@
                 /*scrollbar: false,*/
                 content: $('#consolePage'),
                 area: ['600px', '500px'],
-                btn: ['记录结果', '取消'],
+                btn: ['导入数据', '取消'],
                 yes: function (index, doc) {
                     completeExecuteCallback(data.responseBody);
                     layer.close(index);

@@ -7,6 +7,8 @@ import org.springframework.data.domain.Sort
 import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.web.bind.annotation.*
+import restdoc.client.api.model.RestWebInvocation
+import restdoc.client.api.model.RestWebInvocationResult
 import restdoc.web.base.auth.Verify
 import restdoc.web.controller.console.model.BatchDeleteDto
 import restdoc.web.controller.console.model.HttpApiTestLogDeProjectVO
@@ -17,6 +19,7 @@ import restdoc.web.core.Status
 import restdoc.web.core.ok
 import restdoc.web.repository.HttpApiTestLogRepository
 import restdoc.web.util.dp.JsonDeProjector
+import java.lang.reflect.Method
 
 @RestController
 @Verify
@@ -72,5 +75,31 @@ class HttpApiTestLogController {
     fun delete(@PathVariable id: String): Result {
         httpApiTestLogRepository.deleteById(id)
         return ok()
+    }
+
+    @PostMapping("/document/httpapitestlog/{id}/log2testresult")
+    fun log2TestResult(@PathVariable id: String): Result {
+        val log = httpApiTestLogRepository.findById(id).orElseThrow { Status.BAD_REQUEST.instanceError() }
+
+        val invocationResult = RestWebInvocationResult()
+        invocationResult.apply {
+            isSuccessful = log.success
+            status = log.responseStatus
+            responseHeaders = if (log.responseHeader != null) log.responseHeader!!.map { it.key to it.value.toMutableList() }.toMap().toMutableMap() else mutableMapOf()
+            responseBody = log.responseBody
+
+            val restWebInvocation = RestWebInvocation()
+            restWebInvocation.apply {
+                this.method = log.method!!.name
+                this.url = log.url!!
+                this.queryParam = if (log.queryParameters != null) log!!.queryParameters!!.toMutableMap() else mutableMapOf()
+                this.uriVariable = if (log.uriParameters != null) log!!.uriParameters!!.toMutableMap() else mutableMapOf()
+                this.requestHeaders = if (log.requestHeaderParameters != null) log.requestHeaderParameters!!.entries.map { it.key to it.value.split(",") }.toMap().toMutableMap() else mutableMapOf()
+                this.requestBody = if (log.requestBodyParameters != null) log.requestBodyParameters!!.toMutableMap() else mutableMapOf()
+            }
+            invocation = restWebInvocation
+        }
+
+        return ok(invocationResult)
     }
 }
