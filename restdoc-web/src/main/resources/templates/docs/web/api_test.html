@@ -57,13 +57,13 @@
                 <div class="layui-collapse group">
                     <div class="layui-colla-item">
                         <!--layui-bg-red-->
-                        <h2 class="layui-colla-title ">REST路径参数</h2>
+                        <h2 class="layui-colla-title ">URI Path Variables</h2>
                         <div class="layui-colla-content" id="uri-fieldset">
                             <div class="layui-form-item" style="margin-top: 10px">
                                 <div class="layui-inline">
                                     <button type="button" class="layui-btn layui-btn-primary"
                                             id="add_pathvar_field_btn">
-                                        增加路径参数
+                                        增加参数
                                     </button>
                                 </div>
                             </div>
@@ -73,14 +73,32 @@
 
                 <div class="layui-collapse group">
                     <div class="layui-colla-item">
+                        <!--layui-bg-red-->
+                        <h2 class="layui-colla-title ">Query Param String</h2>
+                        <div class="layui-colla-content" id="query-param-string-field-fieldset">
+                            <div class="layui-form-item" style="margin-top: 10px">
+                                <div class="layui-inline">
+                                    <button type="button" class="layui-btn layui-btn-primary"
+                                            id="query-param-string-field_btn">
+                                        增加参数
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="layui-collapse group">
+                    <div class="layui-colla-item">
                         <!--layui-bg-orange-->
-                        <h2 class="layui-colla-title ">请求头</h2>
+                        <h2 class="layui-colla-title ">HTTP Request Headers</h2>
                         <div class="layui-colla-content" id="header-fieldset">
                             <div class="layui-form-item" style="margin-top: 10px">
                                 <div class="layui-inline">
                                     <button type="button" class="layui-btn layui-btn-primary"
                                             id="add_request_header_field">
-                                        增加请求头参数
+                                        增加参数
                                     </button>
                                 </div>
                             </div>
@@ -89,15 +107,14 @@
                 </div>
                 <div class="layui-collapse group">
                     <div class="layui-colla-item">
-                        <!--layui-bg-cyan-->
-                        <h2 class="layui-colla-title">请求参数</h2>
+                        <h2 class="layui-colla-title">HTTP Request Body</h2>
                         <div class="layui-colla-content" id="body-fieldset">
 
                             <div class="layui-form-item" style="margin-top: 10px">
                                 <div class="layui-inline">
                                     <button type="button" class="layui-btn layui-btn-primary"
                                             id="add_request_body_field">
-                                        增加请求参数
+                                        增加参数
                                     </button>
 
                                     <button type="button" class="layui-btn"
@@ -109,17 +126,35 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="layui-collapse group">
+                    <div class="layui-colla-item">
+                        <!--layui-bg-red-->
+                        <h2 class="layui-colla-title ">HTTP Response Headers</h2>
+                        <div class="layui-colla-content" id="response-header-field-fieldset">
+                            <div class="layui-form-item" style="margin-top: 10px">
+                                <div class="layui-inline">
+                                    <button type="button" class="layui-btn layui-btn-primary"
+                                            id="response-header-field_btn">
+                                        增加参数
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="layui-collapse group">
                     <div class="layui-colla-item">
                         <!--layui-bg-black-->
-                        <h2 class="layui-colla-title ">期望响应参数</h2>
+                        <h2 class="layui-colla-title ">HTTP Response Body</h2>
                         <div class="layui-colla-content" id="response-fieldset">
 
                             <div class="layui-form-item" style="margin-top: 10px">
                                 <div class="layui-inline">
                                     <button type="button" class="layui-btn layui-btn-primary"
                                             id="add_response_body_field">
-                                        增加响应参数
+                                        增加参数
                                     </button>
                                     <button type="button" class="layui-btn"
                                             id="convert_response_json_fields">

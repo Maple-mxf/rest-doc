@@ -1,6 +1,3 @@
-/*id='first-header-field'*/
-var oneheaderline = "";
-
 function uuid() {
     var s = [];
     var hexDigits = "0123456789abcdef";
@@ -17,7 +14,7 @@ function uuid() {
 
 var snippet1 = "<div class='layui-form-item one-request-header-line' ><div class='layui-inline'><div class='layui-input-inline'><input type='text' name='headerKey' placeholder='Key' autocomplete='off' class='layui-input'";
 var snippet2 = "</div></div><div class='layui-inline'> <label>=</label> </div> <div class='layui-inline'> <div class='layui-input-inline'> <input type='text' name='headerValue' placeholder='Value' autocomplete='off'  class='layui-input'";
-var snippet3 = "</div></div><div class='layui-inline'><div class='layui-input-inline' style='width: 5%'><input type='checkbox' checked name='headerConstraint' title='必选'> </div></div><div class='layui-inline'><button title='删除当前字段' type='button' class='layui-btn layui-btn-sm layui-btn-primary' id='deleteHeaderBtn' style='margin-left: 10px'onclick='deleteHeaderFieldLine(this)'><i class='layui-icon layui-icon-subtraction' style='font-size: 30px; color: black;'></i></button></div></div>";
+var snippet3 = "</div></div><div class='layui-inline'><div class='layui-input-inline layui-hide' style='width: 5%'><input type='checkbox'  checked name='headerConstraint' title='必选'> </div></div><div class='layui-inline'><button title='删除当前字段' type='button' class='layui-btn layui-btn-sm layui-btn-primary' id='deleteHeaderBtn' style='margin-left: 10px' onclick='deleteHeaderFieldLine(this)'><i class='layui-icon layui-icon-subtraction' style='font-size: 30px; color: black;'></i></button></div></div>";
 
 
 function getNewHeaderLine() {

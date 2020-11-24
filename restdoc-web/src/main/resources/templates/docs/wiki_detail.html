@@ -30,7 +30,7 @@
             <div class="layui-tab-item layui-show" th:utext="${document.content}" id="previewContentDiv"></div>
             <div class="layui-tab-item">
                 <div class="layui-row">
-                    <textarea name="" id="edit" cols="30" rows="10" th:text="${document.content}"></textarea>
+                    <textarea name="" id="edit" cols="30" rows="10" th:utext="${document.content}"></textarea>
                 </div>
                 <div class="layui-row" style="margin-top: 30px">
                     <div class="layui-col-md10">
@@ -74,7 +74,9 @@
         auto_focus: true,
         height: 700,
         plugins: 'quickbars print preview searchreplace autolink fullscreen image link media codesample table charmap hr advlist lists wordcount imagetools indent2em',
-        language: 'zh_CN'/*,
+        language: 'zh_CN',
+        theme:'silver'
+        /*,
         init_instance_callback: function (editor) {
         }*/
     });
