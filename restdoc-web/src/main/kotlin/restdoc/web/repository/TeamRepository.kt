@@ -5,5 +5,4 @@ import restdoc.web.model.Team
 import restdoc.web.base.mongo.BaseRepository
 
 @Repository
-interface TeamRepository : BaseRepository<Team, String> {
-}
+interface TeamRepository : BaseRepository<Team, String>

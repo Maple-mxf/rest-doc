@@ -6,5 +6,4 @@ import restdoc.web.model.DubboDocument
 import restdoc.web.model.RestWebDocument
 
 @Repository
-interface DubboDocumentRepository : BaseRepository<DubboDocument, String> {
-}
+interface DubboDocumentRepository : BaseRepository<DubboDocument, String>

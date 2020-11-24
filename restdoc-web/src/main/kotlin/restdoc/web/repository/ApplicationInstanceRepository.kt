@@ -6,5 +6,4 @@ import restdoc.web.model.ApplicationInstance
 
 
 @Repository
-interface ApplicationInstanceRepository : BaseRepository<ApplicationInstance, String> {
-}
+interface ApplicationInstanceRepository : BaseRepository<ApplicationInstance, String>

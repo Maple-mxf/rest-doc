@@ -5,5 +5,4 @@ import restdoc.web.model.Resource
 import restdoc.web.base.mongo.BaseRepository
 
 @Repository
-interface ResourceRepository : BaseRepository<Resource, String> {
-}
+interface ResourceRepository : BaseRepository<Resource, String>
