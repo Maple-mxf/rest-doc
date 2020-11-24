@@ -244,6 +244,9 @@
             </div>
         </div>
         <div class="layui-tab-item">
+            <div class="layui-row">
+                
+            </div>
         </div>
         <div class="layui-tab-item">
             <div class="layui-row">
@@ -274,19 +277,28 @@
 
     layui.config({
         base: '/restdoc/layui/lay/extends/'
-    }).use(['table', 'layer', 'element', 'jquery', 'layedit', 'form', 'code'],
+    }).use(['layer', 'element', 'jquery', 'layedit', 'form', 'code'],
         function () {
             var $ = layui.jquery;
-            var code = layui.code;
             var layer = layui.layer;
             var element = layui.element;
-            var table = layui.table;
             lay = layer;
 
             element.on('tab(docDemoTabBrief)', function (data) {
                 if (0 === data.index) {
-                    var projectId = $("#projectId").val();
-                    $("#testApiFrame").attr("src", "/restdoc/" + projectId + '/document/view/' + documentId + "/test")
+                    $.ajax({
+                        url: '/restdoc/document/' + documentId,
+                        method: 'GET',
+                        success: function (res) {
+                            if (res.code === '200') {
+                                console.info(res.data);
+                                doc = res.data;
+                                renderApiTable();
+                            } else {
+                                console.info(res);
+                            }
+                        }
+                    })
                 }
             });
 

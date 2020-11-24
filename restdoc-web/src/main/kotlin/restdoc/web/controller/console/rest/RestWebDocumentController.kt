@@ -69,7 +69,7 @@ class RestWebDocumentController {
     }
 
     @GetMapping("/{id}")
-    fun get(@PathVariable id: String): Result = ok(mongoTemplate.findById(id, Project::class.java))
+    fun get(@PathVariable id: String): Result = ok(mongoTemplate.findById(id, RestWebDocument::class.java))
 
     private fun extractRawPath(url: String, uriVars: Map<String, Any>): String {
         return when {
