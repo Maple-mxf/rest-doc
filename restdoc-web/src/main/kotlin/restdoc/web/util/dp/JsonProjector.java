@@ -64,7 +64,7 @@ import static restdoc.web.core.StandardKt.throwError;
  * }
  * </pre>
  *
- * @author Overman
+ * @author Maple
  * @since 1.0
  */
 public class JsonProjector {

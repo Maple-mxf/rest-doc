@@ -19,7 +19,7 @@ import static java.lang.String.format;
 /**
  * <p>The JsonDeProjector provided deProject json string content to bodyDescriptor</p>
  *
- * @author ubuntu-m
+ * @author Maple
  * @see JsonProjector
  * @since 1.0
  */
