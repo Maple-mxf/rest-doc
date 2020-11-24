@@ -214,6 +214,8 @@
 <script th:src="@{/admin/js/doc/response.js}"></script>
 <script th:src="@{/admin/js/doc/urivar.js}"></script>
 <script th:src="@{/admin/js/doc/header.js}"></script>
+<script th:src="@{/admin/js/doc/query_param.js}"></script>
+<script th:src="@{/admin/js/doc/response_header.js}"></script>
 <script th:src="@{/admin/js/marked.min.js}" type="application/javascript" charset="UTF-8"></script>
 <script th:src="@{/admin/js/util.js}"></script>
 <script type="text/javascript" th:inline="javascript">
@@ -568,8 +570,19 @@
             $("#response-fieldset").append(responseoneline);
             form.render();
         });
+
+        $("#response-header-field_btn").click(function (event) {
+            $("#response-header-field-fieldset").append(one_response_header_line);
+            form.render();
+        });
+
         $("#add_pathvar_field_btn").click(function (event) {
             $("#uri-fieldset").append(oneuriline);
+            form.render();
+        });
+
+        $("#query-param-string-field_btn").click(function (event) {
+            $("#query-param-string-field-fieldset").append(one_query_param_string_line);
             form.render();
         });
 
@@ -1074,6 +1087,18 @@
     }
 
     function deleteUriVarFieldLine(obj) {
+        var parent = obj.parentNode.parentNode.parentNode;
+        var children = obj.parentNode.parentNode;
+        parent.removeChild(children);
+    }
+
+    function deleteQueryParamFieldLine(obj) {
+        var parent = obj.parentNode.parentNode.parentNode;
+        var children = obj.parentNode.parentNode;
+        parent.removeChild(children);
+    }
+
+    function deleteResponseHeaderFieldLine(obj) {
         var parent = obj.parentNode.parentNode.parentNode;
         var children = obj.parentNode.parentNode;
         parent.removeChild(children);
