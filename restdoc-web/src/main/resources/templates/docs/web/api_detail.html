@@ -68,6 +68,7 @@
 <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
     <ul class="layui-tab-title">
         <li class="layui-this">文档</li>
+        <li>示例</li>
         <li>调试</li>
     </ul>
     <div class="layui-tab-content">
@@ -84,9 +85,9 @@
                     <div class="layui-row">
                         <h3 class="headerTitle">备注
                             <span>
-                                      <i class="layui-icon layui-icon-rate"
+                                     <!-- <i class="layui-icon layui-icon-rate"
                                          style="font-size: 18px; color: #FF5722;font-weight: normal">
-                                    <span style="font-size: 14px;color: #FF5722">Tip：双击内容区域可以编辑文档 </span></i>
+                                    <span style="font-size: 14px;color: #FF5722">Tip：双击内容区域可以编辑文档 </span></i>-->
                                 </span>
                         </h3>
                         <blockquote class="layui-elem-quote" id="editDocDescriptionBtn">
@@ -97,9 +98,9 @@
                     <div class="layui-row"
                          th:if="${document.uriVarDescriptors!=null and !document.uriVarDescriptors.isEmpty()}">
                         <h3 class="headerTitle">URI路径参数列表 &nbsp;&nbsp;&nbsp;
-                            <i class="layui-icon layui-icon-rate"
+                            <!--<i class="layui-icon layui-icon-rate"
                                style="font-size: 18px; color: #FF5722;font-weight: normal">
-                                <span style="font-size: 14px;color: #FF5722">Tip：双击行可以编辑文档 </span></i>
+                                <span style="font-size: 14px;color: #FF5722">Tip：双击行可以编辑文档 </span></i>-->
                         </h3>
                         <p>
                         </p>
@@ -125,9 +126,10 @@
                          th:if="${document.requestHeaderDescriptor!=null and !document.requestHeaderDescriptor.isEmpty()}">
                         <h3 class="headerTitle">请求头参数列表
                             &nbsp;&nbsp;&nbsp;
-                            <i class="layui-icon layui-icon-rate"
+                            <!--<i class="layui-icon layui-icon-rate"
                                style="font-size: 18px; color: #FF5722;font-weight: normal">
-                                <span style="font-size: 14px;color: #FF5722">Tip：双击行可以编辑文档 </span></i></h3>
+                                <span style="font-size: 14px;color: #FF5722">Tip：双击行可以编辑文档 </span></i>-->
+                        </h3>
                         <p>
                         <table class="layui-table" id="requestHeaderListTable" lay-size="lg">
                             <colgroup>
@@ -150,9 +152,10 @@
                     </div>
                     <div class="layui-row"
                          th:if="${document.requestBodyDescriptor!=null and !document.requestBodyDescriptor.isEmpty()}">
-                        <h3 class="headerTitle">请求参数列表 <i class="layui-icon layui-icon-rate"
+                        <h3 class="headerTitle">请求参数列表 <!--<i class="layui-icon layui-icon-rate"
                                                           style="font-size: 18px; color: #FF5722;font-weight: normal">
-                            <span style="font-size: 14px;color: #FF5722">Tip：双击行可以编辑文档 </span></i></h3>
+                            <span style="font-size: 14px;color: #FF5722">Tip：双击行可以编辑文档 </span></i>-->
+                        </h3>
                         <p>
 
                         <table class="layui-table" id="requestBodyFieldListTable" lay-size="lg">
@@ -179,9 +182,9 @@
                     <div class="layui-row"
                          th:if="${document.responseBodyDescriptors!=null and !document.responseBodyDescriptors.isEmpty()}">
                         <h3 class="headerTitle">响应参数列表
-                            <i class="layui-icon layui-icon-rate"
+                            <!--<i class="layui-icon layui-icon-rate"
                                style="font-size: 18px; color: #FF5722;font-weight: normal">
-                                <span style="font-size: 14px;color: #FF5722">Tip：双击行可以编辑文档 </span></i>
+                                <span style="font-size: 14px;color: #FF5722">Tip：双击行可以编辑文档 </span></i>-->
                         </h3>
                         <p>
                         <table class="layui-table" id="responseBodyFieldListTable" lay-size="lg">
@@ -241,6 +244,8 @@
             </div>
         </div>
         <div class="layui-tab-item">
+        </div>
+        <div class="layui-tab-item">
             <div class="layui-row">
                 <iframe id="testApiFrame" th:src="@{'/'+${projectId}+'/document/view/'+${document.id}+'/test'}"
                         style="width: 100%;height: 900px" frameborder="no" border="0" marginwidth="0"
@@ -284,10 +289,8 @@
                     $("#testApiFrame").attr("src", "/restdoc/" + projectId + '/document/view/' + documentId + "/test")
                 }
             });
-            renderURITable(doc['uriVarDescriptors']);
-            renderRequestHeaderTable(doc['requestHeaderDescriptor']);
-            renderRequestBodyTable(doc['requestBodyDescriptor']);
-            renderResponseBodyTable(doc['responseBodyDescriptors']);
+
+            renderApiTable();
 
             $("#editDocDescriptionBtn").on('dblclick', function (event) {
                 layer.open({
@@ -306,6 +309,13 @@
                     }
                 });
             });
+
+            function renderApiTable() {
+                renderURITable(doc['uriVarDescriptors']);
+                renderRequestHeaderTable(doc['requestHeaderDescriptor']);
+                renderRequestBodyTable(doc['requestBodyDescriptor']);
+                renderResponseBodyTable(doc['responseBodyDescriptors']);
+            }
         });
 
     $("#copyURL").click(function () {
