@@ -63,7 +63,6 @@ public class JsonProjector extends BaseProjector<ObjectNode> {
 
     private final ObjectMapper mapper = new ObjectMapper();
 
-
     // Filter the field
     private final static Pattern FIELD_PATTERN = compile("[a-zA-Z0-9_]+[a-zA-Z0-9]*");
 
@@ -100,12 +99,7 @@ public class JsonProjector extends BaseProjector<ObjectNode> {
      * @param pathValues Given flatten path and json descriptor
      */
     public JsonProjector(List<PathValue> pathValues) {
-
-        // Resolve the json
-        List<PathValue> pathValueList = BaseProjector.resolve(pathValues);
-
-        // Build for rootNode
-        this.buildForTreeNode(pathValueList);
+        super(pathValues);
     }
 
     public ObjectNode project() {

@@ -22,7 +22,16 @@ import static java.util.stream.Collectors.toList;
 /**
  * Project JSON/XML
  */
-public abstract class BaseProjector<R> {
+public abstract class BaseProjector<R> implements Projector<R> {
+
+    public BaseProjector(List<PathValue> pathValues) {
+
+        // Resolve the json
+        List<PathValue> pathValueList = BaseProjector.resolve(pathValues);
+
+        // Build for rootNode
+        this.buildForTreeNode(pathValueList);
+    }
 
     // Filter Json array field
     protected final static Pattern ARRAY_PATTERN = compile("([a-zA-Z0-9_]+[a-zA-Z0-9_\\-]*)(\\[\\d*\\])+");
@@ -30,7 +39,7 @@ public abstract class BaseProjector<R> {
     // Filter the field
     protected final static String FIELD_REGEX = "^[a-zA-Z0-9_]+[a-zA-Z0-9]*$";
 
-    protected abstract R project();
+    public abstract R project();
 
     // Whole Node
     protected final List<Node> nodes = new ArrayList<>();
