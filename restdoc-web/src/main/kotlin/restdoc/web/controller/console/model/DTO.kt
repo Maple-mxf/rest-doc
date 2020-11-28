@@ -4,7 +4,6 @@ import org.springframework.data.domain.PageRequest
 import restdoc.web.model.*
 import restdoc.web.util.FieldType
 import java.net.URI
-import javax.validation.constraints.NotBlank
 
 data class CreateProjectDto(val name: String, val desc: String?, val type: ProjectType)
 

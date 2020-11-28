@@ -1,7 +1,10 @@
 package restdoc.client.dubbo.test.model;
 
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Objects;
 
+@XmlRootElement
+//@JacksonXmlRootElement(localName = "DuplicatePojo")
 public class DuplicatePojo {
 
     private String attribute;

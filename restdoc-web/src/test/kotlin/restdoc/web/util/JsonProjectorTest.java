@@ -2,6 +2,7 @@ package restdoc.web.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
+import restdoc.web.util.dp.BaseProjector;
 import restdoc.web.util.dp.JsonProjector;
 
 import java.io.File;
@@ -56,7 +57,7 @@ public class JsonProjectorTest {
                 .collect(Collectors.toList());
 
         System.err.println(mapper.writerWithDefaultPrettyPrinter()
-                .writeValueAsString(JsonProjector.resolve(pathValues)));
+                .writeValueAsString(BaseProjector.resolve(pathValues)));
     }
 
     @Test

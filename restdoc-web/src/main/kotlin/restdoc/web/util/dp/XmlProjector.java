@@ -1,12 +1,10 @@
 package restdoc.web.util.dp;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
-public class XmlProjector implements Projector {
-
-    @Override
-    @Deprecated
-    public ObjectNode project() {
-        return null;
-    }
-}
+//public class XmlProjector implements BaseProjector<String> {
+//
+//    @Override
+//    @Deprecated
+//    public String project() {
+//        return null;
+//    }
+//}
