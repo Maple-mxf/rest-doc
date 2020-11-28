@@ -99,7 +99,12 @@ public class JsonProjector extends BaseProjector<ObjectNode> {
      * @param pathValues Given flatten path and json descriptor
      */
     public JsonProjector(List<PathValue> pathValues) {
-        super(pathValues);
+
+        // Resolve the json
+        List<PathValue> pathValueList = BaseProjector.resolve(pathValues);
+
+        // Build for rootNode
+        this.buildForTreeNode(pathValueList);
     }
 
     public ObjectNode project() {
