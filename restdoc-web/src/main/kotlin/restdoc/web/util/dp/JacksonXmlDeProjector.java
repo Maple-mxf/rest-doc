@@ -24,7 +24,6 @@ public class JacksonXmlDeProjector implements DeProjector {
 
     public JacksonXmlDeProjector(String xmlText) {
         this.xmlText = xmlText;
-
     }
 
     @Override

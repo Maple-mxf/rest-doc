@@ -1,4 +1,4 @@
-var oneline = "<div class='layui-form-item one-line multi-request-body' id='first-request-body-field'>" +
+var oneline = "<div class='layui-form-item one-line multi-request-body layui-hide' id='first-request-body-field'>" +
     "            <div class='layui-inline'>" +
     "                <div class='layui-input-inline'>" +
     "                    <input type='text'" +
