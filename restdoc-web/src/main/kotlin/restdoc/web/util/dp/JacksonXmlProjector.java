@@ -31,75 +31,37 @@ public class JacksonXmlProjector extends BaseProjector<String> {
     }
 
     /**
-     * <pre>
-     * <?xml version='1.0' encoding='UTF-8'?>
-     * <XmlLinkedHashMap>
-     *     <sendDetail>
-     *         <content>
-     *             <name>Kobe</name>
-     *             <recipient>m17793873123@163.com</recipient>
-     *             <callback>false</callback>
-     *             <state>SUCCESS</state>
-     *         </content>
-     *         <totalElements>1</totalElements>
-     *     </sendDetail>
-     * </XmlLinkedHashMap>
-     * </pre>
-     *
      * @param <String>
      * @param <Object>
      */
-    @JacksonXmlRootElement
+    @JacksonXmlRootElement(localName = "root")
     private static class XmlLinkedHashMap<String, Object> extends LinkedHashMap<String, Object> {
-        public XmlLinkedHashMap(Map<? extends String, ? extends Object> m) {
+        XmlLinkedHashMap(Map<? extends String, ? extends Object> m) {
             super(m);
-        }
-
-        public XmlLinkedHashMap() {
-        }
-
-        public XmlLinkedHashMap(int initialCapacity) {
-            super(initialCapacity);
         }
     }
 
     /**
-     * <pre>
-     *     <LinkedHashMap>
-     *     <sendDetail>
-     *         <content>
-     *             <name>Kobe</name>
-     *             <recipient>m17793873123@163.com</recipient>
-     *             <callback>false</callback>
-     *             <state>SUCCESS</state>
-     *         </content>
-     *         <totalElements>1</totalElements>
-     *     </sendDetail>
-     * </LinkedHashMap>
-     * </pre>
      *
      * @return xml string
      */
     @Override
     public String project() {
-
         XMLOutputFactory xmlOutputFactory = XMLOutputFactory.newFactory();
         StringWriter out = new StringWriter();
-
-        XMLStreamWriter sw;
         try {
-            sw = xmlOutputFactory.createXMLStreamWriter(out);
+            XMLStreamWriter sw = xmlOutputFactory.createXMLStreamWriter(out);
             sw.writeStartDocument();
             mapper.writeValue(sw, new XmlLinkedHashMap(jsonProjector.projectToMap()));
             sw.writeEndDocument();
 
             sw.close();
+            out.close();
 
             return out.toString();
         } catch (XMLStreamException | IOException e) {
             e.printStackTrace();
-            return null;
+            return "";
         }
     }
-
 }

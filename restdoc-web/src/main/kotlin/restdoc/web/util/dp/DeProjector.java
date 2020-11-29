@@ -12,6 +12,5 @@ public interface DeProjector {
     /**
      * @return The flatten java pojo
      */
-    @Deprecated
     List<BodyFieldDescriptor> deProject();
 }

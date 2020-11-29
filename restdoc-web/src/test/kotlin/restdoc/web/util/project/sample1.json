@@ -56,6 +56,38 @@
     "defaultValue": false
   },
   {
+    "path": "sendDetail.content[1].name",
+    "value": "Kobe",
+    "description": null,
+    "type": "STRING",
+    "optional": false,
+    "defaultValue": "Kobe"
+  },
+  {
+    "path": "sendDetail.content[1].recipient",
+    "value": "m17793873123@163.com",
+    "description": null,
+    "type": "STRING",
+    "optional": false,
+    "defaultValue": "m17793873123@163.com"
+  },
+  {
+    "path": "sendDetail.content[1].state",
+    "value": "SUCCESS",
+    "description": null,
+    "type": "STRING",
+    "optional": false,
+    "defaultValue": "SUCCESS"
+  },
+  {
+    "path": "sendDetail.content[1].callback",
+    "value": false,
+    "description": null,
+    "type": "BOOLEAN",
+    "optional": false,
+    "defaultValue": false
+  },
+  {
     "path": "sendDetail.totalElements",
     "value": 1,
     "description": null,

@@ -65,7 +65,7 @@ public class JacksonXmlProjectorTest {
     }
 
     @Test
-    public void testProject2Xml3() throws XMLStreamException, IOException {
+    public void testProject2Xml3() throws IOException {
         List<Map<String, Object>> array = mapper.readValue(
                 new File("E:\\jw\\rest-doc\\restdoc-web\\src\\test\\kotlin\\restdoc\\web\\util\\project\\sample1.json"),
                 List.class);
@@ -76,5 +76,6 @@ public class JacksonXmlProjectorTest {
                 .collect(Collectors.toList());
 
         System.err.println(new JacksonXmlProjector(pathValues).project());
+        System.err.println(mapper.writeValueAsString(new JsonProjector(pathValues).projectToMap()));
     }
 }

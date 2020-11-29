@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<XmlLinkedHashMap>
+<root>
     <sendDetail>
         <content>
             <name>Kobe</name>
@@ -7,6 +7,12 @@
             <callback>false</callback>
             <state>SUCCESS</state>
         </content>
+        <content>
+            <recipient>m17793873123@163.com</recipient>
+            <callback>false</callback>
+            <state>SUCCESS</state>
+            <name>Kobe</name>
+        </content>
         <totalElements>1</totalElements>
     </sendDetail>
-</XmlLinkedHashMap>
+</root>

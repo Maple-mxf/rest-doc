@@ -29,8 +29,6 @@ public class JsonDeProjector implements DeProjector {
 
     private JsonNode jsonNode;
 
-    private final ObjectMapper mapper = new ObjectMapper();
-
     private List<Node> nodes = new ArrayList<>();
 
     public JsonDeProjector(JsonNode jsonNode) {
