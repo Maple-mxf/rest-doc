@@ -8,11 +8,14 @@ import java.util.Map;
 
 /**
  * The class XmlLinkedHashMap
+ *
+ * @see JacksonXmlRootElement#localName()
+ * @see JacksonXmlRootElement#namespace()
  * @param <String>
  * @param <Object>
  */
 @JacksonXmlRootElement(localName = "root")
-public class XmlLinkedHashMap<String, Object> extends LinkedHashMap<String, Object> {
+class XmlLinkedHashMap<String, Object> extends LinkedHashMap<String, Object> {
     XmlLinkedHashMap(Map<? extends String, ? extends Object> m) {
         super(m);
     }

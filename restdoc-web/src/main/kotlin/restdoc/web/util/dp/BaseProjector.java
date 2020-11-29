@@ -24,8 +24,6 @@ import static java.util.stream.Collectors.toList;
  */
 public abstract class BaseProjector<R> implements Projector<R> {
 
-
-
     // Filter Json array field
     protected final static Pattern ARRAY_PATTERN = compile("([a-zA-Z0-9_]+[a-zA-Z0-9_\\-]*)(\\[\\d*\\])+");
 

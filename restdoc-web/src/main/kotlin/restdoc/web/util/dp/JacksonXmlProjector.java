@@ -28,6 +28,7 @@ public class JacksonXmlProjector extends BaseProjector<String> {
     }
 
     /**
+     * project the pathValues to xml string
      *
      * @return xml string
      */
