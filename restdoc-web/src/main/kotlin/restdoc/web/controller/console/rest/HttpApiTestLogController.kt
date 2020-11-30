@@ -44,14 +44,9 @@ class HttpApiTestLogController {
 
         val log = httpApiTestLogRepository.findById(id).orElseThrow { Status.BAD_REQUEST.instanceError() }
 
-        /*val requestBodyParameters =
-                if (log.requestBodyParameters != null)
-                    JsonDeProjector(mapper.convertValue(log.requestBodyParameters, JsonNode::class.java)).deProject()
-                else null*/
-
         val responseBodyParameters =
                 if (log.responseBody != null)
-                    JsonDeProjector(mapper.convertValue(log.responseBody, JsonNode::class.java)).deProject()
+                    mapper.convertValue(log.responseBody, JsonNode::class.java)
                 else null
 
         val vo = HttpApiTestLogDeProjectVO(

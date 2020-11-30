@@ -28,7 +28,7 @@ data class RequestDto(
         val method: String,
         val headers: List<HeaderDto>?,
         val requestFields: Map<String, Any?>?,
-        val responseFields: List<ResponseFieldDto>?,
+        val responseFields: Map<String, Any?>?,
         val uriFields: List<UriVarFieldDto>?,
         val executeResult: Map<String, Any>? = null) {
 
@@ -64,7 +64,20 @@ data class RequestDto(
      */
     fun mapToRequestDescriptor(): List<BodyFieldDescriptor> {
         return if (!(requestFields == null || this.requestFields.isEmpty()))
-            JsonDeProjector(getBean(ObjectMapper::class.java).convertValue(requestFields, JsonNode::class.java)).deProject()
+            JsonDeProjector(getBean(ObjectMapper::class.java).convertValue(requestFields, JsonNode::class.java))
+                    .deProject()
+                    .map {
+                        BodyFieldDescriptor(
+                                path = it.path.replace(Regex("\\[\\d\\]"), "[]"),
+                                value = it.value,
+                                description = it.description,
+                                type = FieldType.valueOf(it.type.name.toUpperCase()),
+                                optional = it.optional,
+                                defaultValue = null
+                        )
+                    }
+                    // Fields Deduplication
+                    .distinctBy { it.path }
         else mutableListOf()
     }
 
@@ -72,22 +85,23 @@ data class RequestDto(
      * Deduplication field path
      */
     fun mapToResponseDescriptor(): List<BodyFieldDescriptor> {
-        return if (!(responseFields == null || this.responseFields.isEmpty())) {
-            responseFields
-                    .filter { it.responseFieldPath.isNotBlank() }
+        return if (!(responseFields == null || this.responseFields.isEmpty()))
+            JsonDeProjector(getBean(ObjectMapper::class.java).convertValue(requestFields, JsonNode::class.java))
+                    .deProject()
                     .map {
                         BodyFieldDescriptor(
-                                path = it.responseFieldPath.replace(Regex("\\[\\d\\]"), "[]"),
-                                value = it.responseFieldValue,
-                                description = it.responseFieldDescription,
-                                type = FieldType.valueOf(it.responseFieldType.toUpperCase()),
-                                optional = it.responseFieldConstraint,
+                                path = it.path.replace(Regex("\\[\\d\\]"), "[]"),
+                                value = it.value,
+                                description = it.description,
+                                type = FieldType.valueOf(it.type.name.toUpperCase()),
+                                optional = it.optional,
                                 defaultValue = null
                         )
                     }
                     // Fields Deduplication
                     .distinctBy { it.path }
-        } else mutableListOf()
+        else mutableListOf()
+
     }
 
     fun mapToURIVarDescriptor(): List<URIVarDescriptor> {

@@ -11,16 +11,6 @@ import restdoc.web.model.RestWebDocument
 import restdoc.web.model.URIVarDescriptor
 
 
-@Deprecated(message = "Global Var immutable")
-val ROOT_NAV: NavNode = NavNode(
-        id = "root",
-        title = "一级目录",
-        field = "title",
-        children = mutableListOf(),
-        href = null,
-        pid = "0",
-        checked = true)
-
 
 fun findChild(parentNode: NavNode, navNodes: List<NavNode>) {
     val children: MutableList<NavNode> = navNodes.filter { it.pid == parentNode.id }.toMutableList()
@@ -212,7 +202,7 @@ data class HttpApiTestLogDeProjectVO(
         val uriParameters: Map<String, Any?>?,
         val requestHeaderParameters: Map<String, Any?>?,
         val requestBodyParameters: Map<String, Any?>?,
-        val responseBodyParameters: List<BodyFieldDescriptor>?
+        val responseBodyParameters: Any?
 )
 
 data class SearchHeaderKeyVO(

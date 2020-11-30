@@ -1,90 +1,10 @@
 [
   {
-    "path": "recipients",
-    "value": null,
-    "description": null,
-    "type": "OBJECT",
-    "optional": false,
-    "defaultValue": null
-  },
-  {
-    "path": "recipients.member",
-    "value": null,
-    "description": null,
-    "type": "ARRAY",
-    "optional": false,
-    "defaultValue": null
-  },
-  {
-    "path": "recipients.member[0]",
-    "value": null,
-    "description": null,
-    "type": "OBJECT",
-    "optional": false,
-    "defaultValue": null
-  },
-  {
-    "path": "recipients.member[0].firmId",
-    "value": "168498749354",
-    "description": null,
-    "type": "STRING",
-    "optional": false,
-    "defaultValue": "168498749354"
-  },
-  {
-    "path": "recipients.member[0].allCheck",
-    "value": false,
-    "description": null,
-    "type": "BOOLEAN",
-    "optional": false,
-    "defaultValue": false
-  },
-  {
-    "path": "recipients.member[0].groups",
-    "value": null,
-    "description": null,
-    "type": "ARRAY",
-    "optional": false,
-    "defaultValue": null
-  },
-  {
-    "path": "recipients.member[0].groups[0]",
-    "value": null,
-    "description": null,
-    "type": "OBJECT",
-    "optional": false,
-    "defaultValue": null
-  },
-  {
-    "path": "recipients.member[0].groups[0].groupId",
+    "path": "root[0].groupId",
     "value": "groupId",
     "description": null,
     "type": "STRING",
     "optional": false,
     "defaultValue": "groupId"
-  },
-  {
-    "path": "recipients.member[0].groups[0].members",
-    "value": null,
-    "description": null,
-    "type": "ARRAY",
-    "optional": false,
-    "defaultValue": null
-  },
-  {
-    "path": "recipients.member[0].groups[0].receiver",
-    "value": null,
-    "description": null,
-    "type": "ARRAY",
-    "optional": false,
-    "defaultValue": null
-  },
-  {
-    "path": "recipients.member[0].groups[0].excludes",
-    "value": null,
-    "description": null,
-    "type": "ARRAY",
-    "optional": false,
-    "defaultValue": null
   }
 ]

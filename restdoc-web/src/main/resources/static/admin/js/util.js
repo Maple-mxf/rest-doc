@@ -115,9 +115,7 @@ function projectToXml(data) {
     return xml;
 }
 
-function initTestApiDoc(testLog, doc, form, one_uri_line,
-                        one_request_param_line, one_response_param_line
-) {
+function initTestApiDoc(testLog, doc, form, one_uri_line) {
 
     if (testLog != null) {
 
@@ -139,12 +137,11 @@ function initTestApiDoc(testLog, doc, form, one_uri_line,
         }
 
         if (testLog['requestBodyParameters'] != null) {
-            // initRequestParamDoc(testLog['requestBodyParameters'], one_request_param_line);
             initRequestBody(testLog['requestBodyParameters']);
         }
 
-        if (testLog['responseBodyParameters'] != null && testLog['responseBodyParameters'].length > 0) {
-            initResponseParamDoc(testLog['responseBodyParameters'], one_response_param_line);
+        if (testLog['responseBodyParameters'] != null) {
+            initResponseBody(testLog['responseBodyParameters'])
         }
         form.render()
     }
@@ -160,56 +157,16 @@ function initRequestBody(requestBodyParameters) {
     $("#body-fieldset").addClass("layui-show");
 }
 
-function initResponseParamDoc(responseFields, one_response_param_line) {
-    for (let i = 0; i < responseFields.length; i++) {
-        $("#response-fieldset").append(one_response_param_line);
-    }
-    var all_input_line = $("#response-fieldset").children(".one-response-body-line");
-    for (let i = 0; i < all_input_line.length; i++) {
-        let line = all_input_line[i];
+function initResponseBody(responseBodyParameters) {
+    console.info(responseBodyParameters);
+    var jsonText = formatJson(projectToJson(JSON.stringify(responseBodyParameters)));
+    var xmlText = formatXml(projectToXml(JSON.stringify(responseBodyParameters)));
 
-        $(line).find("input").each(function () {
-            if (this.name === 'responseFieldPath') {
-                this.value = responseFields[i]['path']
-            }
-        });
+    $("#response_body_json_text").val(jsonText);
+    $("#response_body_xml_text").val(xmlText);
 
-        $($(line).find("select:first-child"))
-            .find("option[value=" + responseFields[i]['type'] + "]")
-            .attr("selected", true);
-    }
-
-    if (responseFields.length > 0) {
-        $("#response-fieldset").addClass("layui-show");
-    }
+    $("#response-fieldset").addClass("layui-show");
 }
-
-function initRequestParamDoc(requestFields, one_request_param_line) {
-    for (let i = 0; i < requestFields.length; i++) {
-        $("#body-fieldset").append(one_request_param_line);
-    }
-
-    var all_input_line = $("#body-fieldset").children(".one-line");
-
-    for (let i = 0; i < all_input_line.length; i++) {
-        let line = all_input_line[i];
-        $(line).find("input").each(function () {
-            if (this.name === 'requestFieldPath') {
-                this.value = requestFields[i]['path']
-            } else if (this.name === 'requestFieldValue') {
-                this.value = requestFields[i]['value']
-            }
-        });
-        $($(line).find("select:first-child"))
-            .find("option[value=" + requestFields[i]['type'] + "]")
-            .attr("selected", true);
-    }
-
-    if (requestFields.length > 0) {
-        $("#body-fieldset").addClass("layui-show");
-    }
-}
-
 
 function initRequestHeaderFieldDoc(headerFields) {
     var keys = Object.keys(headerFields);
