@@ -211,7 +211,7 @@ data class HttpApiTestLogDeProjectVO(
         val url: String,
         val uriParameters: Map<String, Any?>?,
         val requestHeaderParameters: Map<String, Any?>?,
-        val requestBodyParameters: List<BodyFieldDescriptor>?,
+        val requestBodyParameters: Map<String, Any?>?,
         val responseBodyParameters: List<BodyFieldDescriptor>?
 )
 

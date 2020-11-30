@@ -9,6 +9,48 @@ function formatTimestamp(timestamp) {
     var second = dateObj.getSeconds();
     return year + "-" + month + "-" + theDate + " " + hour + ":" + minute + ":" + second;
 }
+
+function formatXml(xml) {
+    var formatted = '';
+    var reg = /(>)(<)(\/*)/g;
+    xml = xml.replace(reg, '$1\r\n$2$3');
+    var pad = 0;
+    jQuery.each(xml.split('\r\n'), function (index, node) {
+        var indent = 0;
+        if (node.match(/.+<\/\w[^>]*>$/)) {
+            indent = 0;
+        } else if (node.match(/^<\/\w/)) {
+            if (pad != 0) {
+                pad -= 1;
+            }
+        } else if (node.match(/^<\w[^>]*[^\/]>.*$/)) {
+            indent = 1;
+        } else {
+            indent = 0;
+        }
+        var padding = '';
+        for (var i = 0; i < pad; i++) {
+            padding += '  ';
+        }
+        formatted += padding + node + '\r\n';
+        pad += indent;
+    });
+
+    return formatted;
+}
+
+function formatJson(ugly) {
+    if (ugly !== '') {
+        try {
+            var obj = JSON.parse(ugly);
+            return JSON.stringify(obj, undefined, 4);
+        } catch (e) {
+            alert("JSON字符串错误，请检查");
+            return ugly;
+        }
+    }
+}
+
 function initBaseInput(doc) {
     // 设定method
     $("#method").find("option[value=" + doc['method'] + "]").attr("selected", true);
@@ -26,7 +68,6 @@ function initBaseInput(doc) {
         data: JSON.stringify({url: doc['url']}),
         contentType: 'application/json',
         success: function (res) {
-            console.info(res);
             if (res.code === '200') {
                 if (Object.keys(res.data).length > 0) {
                     initUriFieldDoc(res.data, oneuriline)
@@ -34,6 +75,44 @@ function initBaseInput(doc) {
             }
         }
     });
+}
+
+function projectToJson(data) {
+    var json = {};
+    $.ajax({
+        method: "POST",
+        url: "/restdoc/textprotocol/serialize2Json",
+        contentType: 'application/json',
+        data: data,
+        async: false,
+        success: function (res) {
+            if (res.code === '200') {
+                json = res.data;
+            } else {
+                alert(res.message);
+            }
+        }
+    });
+    return json;
+}
+
+function projectToXml(data) {
+    var xml = "";
+    $.ajax({
+        method: "POST",
+        url: "/restdoc/textprotocol/serialize2Xml",
+        contentType: 'application/json',
+        async: false,
+        data: data,
+        success: function (res) {
+            if (res.code === '200') {
+                xml = res.data;
+            } else {
+                alert(res.message);
+            }
+        }
+    });
+    return xml;
 }
 
 function initTestApiDoc(testLog, doc, form, one_uri_line,
@@ -60,7 +139,8 @@ function initTestApiDoc(testLog, doc, form, one_uri_line,
         }
 
         if (testLog['requestBodyParameters'] != null) {
-            initRequestParamDoc(testLog['requestBodyParameters'], one_request_param_line);
+            // initRequestParamDoc(testLog['requestBodyParameters'], one_request_param_line);
+            initRequestBody(testLog['requestBodyParameters']);
         }
 
         if (testLog['responseBodyParameters'] != null && testLog['responseBodyParameters'].length > 0) {
@@ -68,6 +148,16 @@ function initTestApiDoc(testLog, doc, form, one_uri_line,
         }
         form.render()
     }
+}
+
+function initRequestBody(requestBodyParameters) {
+    var jsonText = formatJson(projectToJson(JSON.stringify(requestBodyParameters)));
+    var xmlText = formatXml(projectToXml(JSON.stringify(requestBodyParameters)));
+
+    $("#request_body_json_text").val(jsonText);
+    $("#request_body_xml_text").val(xmlText);
+
+    $("#body-fieldset").addClass("layui-show");
 }
 
 function initResponseParamDoc(responseFields, one_response_param_line) {
@@ -78,16 +168,12 @@ function initResponseParamDoc(responseFields, one_response_param_line) {
     for (let i = 0; i < all_input_line.length; i++) {
         let line = all_input_line[i];
 
-
         $(line).find("input").each(function () {
             if (this.name === 'responseFieldPath') {
                 this.value = responseFields[i]['path']
             }
         });
 
-        $(line).find("textarea").text(responseFields[i]['description']);
-
-        //
         $($(line).find("select:first-child"))
             .find("option[value=" + responseFields[i]['type'] + "]")
             .attr("selected", true);
@@ -114,7 +200,6 @@ function initRequestParamDoc(requestFields, one_request_param_line) {
                 this.value = requestFields[i]['value']
             }
         });
-        $(line).find("textarea").text(requestFields[i]['description'])
         $($(line).find("select:first-child"))
             .find("option[value=" + requestFields[i]['type'] + "]")
             .attr("selected", true);

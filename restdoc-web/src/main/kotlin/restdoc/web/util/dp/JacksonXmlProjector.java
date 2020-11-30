@@ -15,7 +15,7 @@ import java.util.List;
  * The class SAXReaderXmlProjector {@link JsonProjector}
  * <p>
  * <p>
- * SaxReader parse flatten list data to xml string
+ * JacksonXml parse flatten list data to xml string
  */
 public class JacksonXmlProjector extends BaseProjector<String> {
 

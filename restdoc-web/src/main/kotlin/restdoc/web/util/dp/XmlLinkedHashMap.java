@@ -14,9 +14,10 @@ import java.util.Map;
  * @param <String>
  * @param <Object>
  */
-@JacksonXmlRootElement(localName = "root")
-class XmlLinkedHashMap<String, Object> extends LinkedHashMap<String, Object> {
-    XmlLinkedHashMap(Map<? extends String, ? extends Object> m) {
+@JacksonXmlRootElement(localName = "HttpApiResponse")
+public class XmlLinkedHashMap<String, Object> extends LinkedHashMap<String, Object> {
+    public XmlLinkedHashMap() {super();}
+    public XmlLinkedHashMap(Map<? extends String, ? extends Object> m) {
         super(m);
     }
 }

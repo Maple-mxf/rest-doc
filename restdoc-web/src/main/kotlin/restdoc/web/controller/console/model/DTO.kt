@@ -1,8 +1,14 @@
 package restdoc.web.controller.console.model
 
+import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.node.ObjectNode
+import org.omg.CORBA.Object
 import org.springframework.data.domain.PageRequest
+import restdoc.web.base.getBean
 import restdoc.web.model.*
 import restdoc.web.util.FieldType
+import restdoc.web.util.dp.JsonDeProjector
 import java.net.URI
 
 data class CreateProjectDto(val name: String, val desc: String?, val type: ProjectType)
@@ -21,7 +27,7 @@ data class RequestDto(
         val resource: String?,
         val method: String,
         val headers: List<HeaderDto>?,
-        val requestFields: List<RequestFieldsDto>?,
+        val requestFields: Map<String, Any?>?,
         val responseFields: List<ResponseFieldDto>?,
         val uriFields: List<UriVarFieldDto>?,
         val executeResult: Map<String, Any>? = null) {
@@ -38,7 +44,6 @@ data class RequestDto(
      *
      */
     fun mapToHeaderDescriptor(): List<HeaderFieldDescriptor> {
-
         return if (!(headers == null || this.headers.isEmpty())) {
             headers
                     .filter { it.headerKey.isNotBlank() }
@@ -58,23 +63,9 @@ data class RequestDto(
      * Deduplication field path
      */
     fun mapToRequestDescriptor(): List<BodyFieldDescriptor> {
-
-        return if (!(requestFields == null || this.requestFields.isEmpty())) {
-            requestFields
-                    .filter { it.requestFieldPath.isNotBlank() }
-                    .map {
-                        BodyFieldDescriptor(
-                                path = it.requestFieldPath.replace(Regex("\\[\\d\\]"), "[]"),
-                                value = it.requestFieldValue,
-                                description = it.requestFieldDescription,
-                                type = FieldType.valueOf(it.requestFieldType.toUpperCase()),
-                                optional = it.requestFieldConstraint,
-                                defaultValue = null
-                        )
-                    }
-                    // Fields Deduplication
-                    .distinctBy { it.path }
-        } else mutableListOf()
+        return if (!(requestFields == null || this.requestFields.isEmpty()))
+            JsonDeProjector(getBean(ObjectMapper::class.java).convertValue(requestFields, JsonNode::class.java)).deProject()
+        else mutableListOf()
     }
 
     /**
@@ -114,13 +105,13 @@ data class RequestDto(
     }
 }
 
-
 data class UriVarFieldDto(
         val field: String?,
         val value: Any?,
         val desc: String? = null
 )
 
+@Deprecated(message = "HeaderDto")
 data class HeaderDto(
         val headerKey: String,
         val headerValue: String,
@@ -128,14 +119,7 @@ data class HeaderDto(
         val headerConstraint: Boolean
 )
 
-data class RequestFieldsDto(
-        val requestFieldPath: String,
-        val requestFieldValue: Any,
-        val requestFieldType: String,
-        val requestFieldDescription: String? = null,
-        val requestFieldConstraint: Boolean
-)
-
+@Deprecated(message = "ResponseFieldDto")
 data class ResponseFieldDto(
         val responseFieldPath: String,
         val responseFieldValue: Any? = null,
@@ -144,6 +128,7 @@ data class ResponseFieldDto(
         val responseFieldConstraint: Boolean
 )
 
+@Deprecated(message = "CreateResourceDto")
 data class CreateResourceDto(
         val name: String,
         val tag: String,
@@ -190,5 +175,7 @@ data class URLExtractDto(val url: String)
 data class CreateEmptyDocDto(val name: String, val resourceId: String, val projectId: String, val docType: DocType)
 
 data class CopyDocumentDocDto(val name: String, val documentId: String, val resourceId: String)
+
+data class XmlTextDto(val text: String)
 
 

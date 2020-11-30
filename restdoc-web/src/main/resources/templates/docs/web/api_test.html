@@ -109,29 +109,25 @@
                     <div class="layui-colla-item">
                         <h2 class="layui-colla-title">HTTP Request Body</h2>
                         <div class="layui-colla-content" id="body-fieldset">
-
                             <div class="layui-form-item" style="margin-top: 10px">
-                                <div class="layui-inline">
-                                    <button type="button" class="layui-btn layui-btn-primary"
-                                            id="add_request_body_field">
-                                        增加参数
-                                    </button>
-
-                                    <button type="button" class="layui-btn"
-                                            id="convert_json_to_fields">
-                                        JSON快速转换
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="layui-form-item layui-hide" style="margin-top: 10px">
-                                <div class="layui-tab layui-tab-card">
+                                <div class="layui-tab layui-tab-card ">
                                     <ul class="layui-tab-title">
-                                        <li class="layui-this">JSON</li>
-                                        <li>XML</li>
+                                        <li class="layui-this">
+                                            <input type="radio" name="bodyTextType" value="JSON" title="JSON" checked>
+                                        </li>
+                                        <li><input type="radio" name="bodyTextType" value="XML" title="XML"></li>
                                     </ul>
                                     <div class="layui-tab-content">
-                                        <div class="layui-tab-item layui-show">1</div>
-                                        <div class="layui-tab-item">2</div>
+                                        <div class="layui-tab-item layui-show">
+                                               <textarea name="requestBodyTextType" id="request_body_json_text"
+                                                         placeholder="请输入JSON"
+                                                         class="layui-textarea" cols=20 rows=15></textarea>
+                                        </div>
+                                        <div class="layui-tab-item">
+                                               <textarea name="requestBodyTextType" id="request_body_xml_text"
+                                                         placeholder="请输入XML"
+                                                         class="layui-textarea" cols=20 rows=15></textarea>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -222,10 +218,10 @@
 </script>
 <script th:src="@{/layui/layui.js}"></script>
 <script th:src="@{/admin/js/jquery.js}"></script>
-<script th:src="@{/admin/js/doc/content.js}"></script>
 <script th:src="@{/admin/js/doc/response.js}"></script>
 <script th:src="@{/admin/js/doc/urivar.js}"></script>
 <script th:src="@{/admin/js/doc/header.js}"></script>
+<script th:src="@{/admin/js/doc/content.js}"></script>
 <script th:src="@{/admin/js/doc/query_param.js}"></script>
 <script th:src="@{/admin/js/doc/response_header.js}"></script>
 <script th:src="@{/admin/js/marked.min.js}" type="application/javascript" charset="UTF-8"></script>
@@ -435,64 +431,6 @@
             });
         });
 
-        $('#convert_json_to_fields').click(function (event) {
-            layer.open({
-                title: 'JSON快速转换',
-                area: ['900px', '600px'],
-                scrollbar: false,
-                type: 2,
-                content: '/restdoc/document/json/convert',
-                closeBtn: 1,
-                btn: ['转换JSON'],
-                yes: function (index, layero) {
-                    var res = window["layui-layer-iframe" + index].getJSONValue();
-                    $.ajax({
-                        type: 'POST',
-                        dataType: 'JSON',
-                        contentType: 'application/json;charset=utf-8',
-                        url: '/restdoc/document/deProject',
-                        data: res,
-                        async: false,
-                        success: function (data) {
-                            if (data.code === '200') {
-                                if (data.data.length >= 1) {
-                                    clearRequestParamInput();
-
-                                    for (let i = 0; i < data.data.length; i++) {
-                                        addRequestParamInput();
-                                    }
-
-                                    var all_input_line = $("#body-fieldset").children(".multi-request-body");
-
-                                    for (let i = 0; i < all_input_line.length; i++) {
-                                        let line = all_input_line[i];
-                                        $(line).find("input").each(function () {
-                                            if (this.name === 'requestFieldPath') {
-                                                this.value = data.data[i]['path']
-                                            } else if (this.name === 'requestFieldValue') {
-                                                this.value = data.data[i]['value']
-                                            }
-                                        });
-
-                                        $($(line).find("select:first-child"))
-                                            .find("option[value=" + data.data[i]['type'] + "]")
-                                            .attr("selected", true);
-                                    }
-                                }
-                                // 重新渲染页面
-                                form.render();
-                            } else {
-                                layer.msg('JSON转换失败，错误信息:' + data.message)
-                            }
-                        },
-                        error: function (data) {
-                            layer.msg("JSON格式错误")
-                        }
-                    });
-                    layer.close(index);
-                }
-            });
-        });
         $('#convert_response_json_fields').click(function (event) {
             layer.open({
                 title: 'JSON快速转换',
@@ -574,10 +512,6 @@
             }
         }
 
-        $("#add_request_body_field").click(function (event) {
-            addRequestParamInput();
-            form.render();
-        });
         $("#add_response_body_field").click(function (event) {
             $("#response-fieldset").append(responseoneline);
             form.render();
@@ -603,9 +537,6 @@
             var map = getFormData(data.field);
 
             map['executeResult'] = globalExecuteResult;
-            /*if (map['description'] != null) {
-                map['description'] = easyeditor.content(map['description'])
-            }*/
             var method;
             var did = $("#documentId").val();
 
@@ -728,7 +659,6 @@
                     map["remoteAddress"] = res[0]['remoteAddress'];
                     map['projectId'] = $("#projectId").val();
                     map["documentId"] = $("#documentId").val();
-
 
                     $.ajax({
                         type: 'POST',
@@ -951,7 +881,6 @@
             layer.open({
                 type: 1,
                 title: '测试结果',
-                /*scrollbar: false,*/
                 content: $('#consolePage'),
                 area: ['600px', '500px'],
                 btn: ['导入数据', '取消'],
@@ -962,22 +891,11 @@
             });
         }
 
-        function formatJson(ugly) {
-            try {
-                // var obj = JSON.parse(ugly);
-                return JSON.stringify(ugly, undefined, 4)
-            } catch (e) {
-                // layer.msg("JSON字符串错误，请检查")
-                return ugly
-            }
-        }
-
         function getFormData(value) {
             var header = getHeaderKeyValueJsonArray();
-            var requestFields = getRequestBodyKeyValueJsonArray();
+            var requestFields = getRequestBodyText();
             var responseFields = getResponseBodyKeyValueJsonArray();
             var uriFields = getUriVarJsonArray();
-
 
             var map = new Map();
 
@@ -997,7 +915,6 @@
         function getHeaderKeyValueJsonArray() {
             var headerKeyNodes = $('input[name=headerKey]');
             var headerValueNodes = $('input[name=headerValue]');
-            /*var headerDescriptionNodes = $('textarea[name=headerDescription]');*/
             var headerConstraintNodes = $('input[name=headerConstraint]');
 
             var array = [];
@@ -1006,7 +923,6 @@
                 var map = new Map();
                 map["headerKey"] = headerKeyNodes[i].value;
                 map["headerValue"] = headerValueNodes[i].value;
-                /*map["headerDescription"] = easyeditor.content(headerDescriptionNodes[i].value);*/
                 map["headerConstraint"] = (headerConstraintNodes[i].value === 'on');
 
                 array[i] = map
@@ -1014,25 +930,31 @@
             return array
         }
 
-        function getRequestBodyKeyValueJsonArray() {
-            var requestFieldPathNodes = $('input[name=requestFieldPath]')
-            var requestFieldValueNodes = $('input[name=requestFieldValue]')
-            var requestFieldTypeNodes = $('select[name=requestFieldType]')
-            /*var requestFieldDescriptionNodes = $('textarea[name=requestFieldDescription]')*/
-            var requestFieldConstraintNodes = $('input[name=requestFieldConstraint]')
-            var array = [];
-
-            for (let i = 0; i < requestFieldPathNodes.length; i++) {
-                var map = new Map();
-                map["requestFieldPath"] = requestFieldPathNodes[i].value
-                map["requestFieldValue"] = requestFieldValueNodes[i].value
-
-                map["requestFieldType"] = requestFieldTypeNodes[i].value;
-                map["requestFieldConstraint"] = (requestFieldConstraintNodes[i].value === 'on');
-
-                array[i] = map
+        function getRequestBodyText() {
+            var checkedValue = $("input[name='requestBodyTextType']:checked").val();
+            if (checkedValue === "JSON") {
+                return JSON.parse($("#request_body_json_text").val());
+            } else {
+                var jsonValue = null;
+                var xmlText = $("#request_body_xml_text").val();
+                $.ajax({
+                    url: '/restdoc/textprotocol/xml2Json',
+                    method: 'POST',
+                    async: false,
+                    contentType: "application/json",
+                    data: JSON.stringify({
+                        'text': xmlText
+                    }),
+                    success: function (res) {
+                        if (res.code === '200') {
+                            jsonValue = JSON.parse(res.data);
+                        } else {
+                            layer.msg(res.message);
+                        }
+                    }
+                });
+                return jsonValue;
             }
-            return array
         }
 
         function beforeTestCheckUriVars(array) {
@@ -1060,7 +982,6 @@
         function getResponseBodyKeyValueJsonArray() {
             var responseFieldPathNodes = $('input[name=responseFieldPath]');
             var responseFieldTypeNodes = $('select[name=responseFieldType]');
-            /*var responseFieldDescriptionNodes = $('textarea[name=responseFieldDescription]');*/
             var responseFieldConstraintNodes = $('input[name=responseFieldConstraint]');
             var array = new Array();
             for (let i = 0; i < responseFieldPathNodes.length; i++) {

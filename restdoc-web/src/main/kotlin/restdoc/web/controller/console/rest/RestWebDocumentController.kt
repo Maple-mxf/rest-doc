@@ -71,7 +71,7 @@ class RestWebDocumentController {
     @GetMapping("/{id}")
     fun get(@PathVariable id: String): Result = ok(mongoTemplate.findById(id, RestWebDocument::class.java))
 
-    private fun extractRawPath(url: String, uriVars: Map<String, Any>): String {
+    private fun extractRawPath(url: String): String {
         return when {
             url.startsWith("http") -> URL(url).path
             url.matches(Regex("^([/][a-zA-Z0-9])+[/]?$")) -> url
@@ -99,7 +99,7 @@ class RestWebDocumentController {
                 name = dto.name,
                 projectId = dto.projectId,
                 resource = dto.resource!!,
-                url = extractRawPath(dto.url, uriVars),
+                url = extractRawPath(dto.url),
                 requestHeaderDescriptor = requestHeaderDescriptor,
                 requestBodyDescriptor = requestBodyDescriptor,
                 responseBodyDescriptors = responseBodyDescriptor,
@@ -164,7 +164,7 @@ class RestWebDocumentController {
                 name = dto.name,
                 projectId = dto.projectId,
                 resource = dto.resource!!,
-                url = extractRawPath(dto.url, uriVars),
+                url = extractRawPath(dto.url),
                 requestHeaderDescriptor = requestHeaderDescriptor,
                 requestBodyDescriptor = requestBodyDescriptor,
                 responseBodyDescriptors = responseBodyDescriptor,
@@ -185,11 +185,13 @@ class RestWebDocumentController {
     }
 
     @PostMapping("/project")
+    @Deprecated(message = "projector")
     fun projector(@RequestBody requestDto: RequestDto): Result {
         return ok()
     }
 
     @PostMapping("/deProject")
+    @Deprecated(message = "deProjector")
     fun deProjector(@RequestBody tree: JsonNode): Result = ok(JsonDeProjector(tree).deProject())
 
     @GetMapping("/httpTask/{taskId}")
