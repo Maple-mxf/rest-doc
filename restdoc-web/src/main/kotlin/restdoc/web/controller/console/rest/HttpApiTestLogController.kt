@@ -55,7 +55,8 @@ class HttpApiTestLogController {
                 uriParameters = log.uriParameters,
                 requestHeaderParameters = log.requestHeaderParameters,
                 requestBodyParameters = log.requestBodyParameters,
-                responseBodyParameters = responseBodyParameters)
+                responseBodyParameters = responseBodyParameters,
+                responseHeaderParameters = log.responseHeader)
 
         return ok(vo)
     }

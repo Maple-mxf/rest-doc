@@ -192,11 +192,6 @@ data class RestWebDocument(
          */
         var responseBodyDescriptors: List<BodyFieldDescriptor>?,
 
-        /**
-         *
-         */
-        @Deprecated(message = "queryParam")
-        var queryParam: Map<String, Any>? = null,
 
         /**
          *
@@ -226,7 +221,10 @@ data class RestWebDocument(
         /**
          *
          */
-        var order: Int? = 0)
+        var order: Int? = 0,
+
+        var queryParamFieldDescriptor: List<QueryParamFieldDescriptor>? = null
+)
 
 
 /**
@@ -285,6 +283,13 @@ data class HistoryAddress(@Id val id: String, val address: String,
 data class HeaderFieldDescriptor(
         val field: String,
         var value: List<String>,
+        var description: String?,
+        val optional: Boolean = false
+)
+
+data class QueryParamFieldDescriptor(
+        val field: String,
+        var value: Any,
         var description: String?,
         val optional: Boolean = false
 )

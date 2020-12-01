@@ -162,7 +162,6 @@ class ScheduleController @Autowired constructor(scheduleProperties: ScheduleProp
             RemotingTimeoutException::class,
             RemotingSendRequestException::class,
             RemotingCommandException::class)
-    @Deprecated(message = "syncSubmitRemoteHttpTask")
     fun syncSubmitRemoteHttpTask(remote: String?,
                                  taskId: String?,
                                  invocation: RestWebInvocation): RestWebInvocationResult {

@@ -21,8 +21,9 @@ import restdoc.web.model.HttpTaskExecutor
 import restdoc.web.model.TestMode
 import restdoc.web.util.IDUtil
 import restdoc.web.util.PathValue
-import restdoc.web.util.UrlUtil
+import restdoc.web.util.URLUtil
 import restdoc.web.util.dp.JsonProjector
+import java.net.URL
 import java.util.*
 import java.util.regex.Pattern.compile
 import javax.validation.Valid
@@ -50,16 +51,15 @@ class HttpTaskController {
         val res = if (dto.remoteAddress != null) {
             val result = rpcExecuteTask(dto)
             log.testMode = TestMode.RPC
+            log.remote = dto.remoteAddress
             result
         } else {
             if (!dto.url.startsWith("http") && !dto.url.startsWith("https"))
                 Status.BAD_REQUEST.error("请填写完整的API请求地址")
             val result = publicNetExecuteTask(dto)
             log.testMode = TestMode.PUBLIC_NET
-
-            val p = compile("(\\d+\\.\\d+\\.\\d+\\.\\d+)\\:(\\d+)")
-            val matcher = p.matcher(dto.url)
-            if (matcher.find()) log.remote = matcher.group(1) + ":" + matcher.group(2)
+            val url = URL(dto.url)
+            log.remote = "${url.protocol}://${url.host}:${url.port}"
             result
         }
 
@@ -68,6 +68,7 @@ class HttpTaskController {
         log.responseHeader = res.responseHeaders
         log.responseBody = res.responseBody
         log.success = (log.responseStatus == 200)
+        log.queryParameters = null
 
         if (dto.documentId != null && dto.documentId!!.isNotBlank()) {
             mongoTemplate.save(log)
@@ -99,7 +100,7 @@ class HttpTaskController {
             url = dto.lookupPath()
             method = dto.method
             requestHeaders = requestHeaderDescriptor.map { bd -> bd.field to bd.value }.toMap().toMutableMap()
-            queryParam = if (dto.queryParams == null) mutableMapOf() else dto.queryParams!!.toMutableMap()
+            queryParam = URLUtil.parseQueryParam(  dto.url)
             requestBody = bodyMap
             uriVariable = uriVarDescriptor.map { it.field to it.value }.toMap().toMutableMap()
         }
@@ -135,7 +136,7 @@ class HttpTaskController {
                     url = dto.lookupPath()
                     method = dto.method
                     requestHeaders = requestHeaderDescriptor.map { bd -> bd.field to bd.value }.toMap().toMutableMap()
-                    queryParam = if (dto.queryParams == null) mutableMapOf() else dto.queryParams!!.toMutableMap()
+                    queryParam = URLUtil.parseQueryParam(dto.url)
                     requestBody = bodyMap
                     uriVariable = uriVarDescriptor.map { it.field to it.value }.toMap().toMutableMap()
                 }
@@ -183,21 +184,13 @@ class HttpTaskController {
      */
     private fun log(dto: RequestDto): HttpApiTestLog {
         val log = HttpApiTestLog()
-
-        val queryParamKvs: MutableMap<String, Any?> = UrlUtil.parseQueryParam(dto.url)
-
-        val map = dto.queryParams?.map { it.key to it.value }?.toMap()
-        if (map != null) {
-            queryParamKvs.putAll(map)
-        }
-
         log.apply {
             id = IDUtil.id()
             documentId = dto.documentId
             uriParameters = dto.uriFields?.map { it.field!! to it.value!! }?.toMap()
-            queryParameters = queryParamKvs
             requestHeaderParameters = dto.headers?.map { it.headerKey to it.headerValue }?.toMap()
             requestBodyParameters = JsonProjector(dto.mapToRequestDescriptor().map { PathValue(it.path, it.value) }).projectToMap()
+            queryParameters = URLUtil.parseQueryParam(dto.url)
             url = dto.url
         }
         return log

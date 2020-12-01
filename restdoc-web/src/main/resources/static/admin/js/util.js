@@ -70,7 +70,7 @@ function initBaseInput(doc) {
         success: function (res) {
             if (res.code === '200') {
                 if (Object.keys(res.data).length > 0) {
-                    initUriFieldDoc(res.data, oneuriline)
+                    initUriFieldDoc(res.data)
                 }
             }
         }
@@ -115,7 +115,7 @@ function projectToXml(data) {
     return xml;
 }
 
-function initTestApiDoc(testLog, doc, form, one_uri_line) {
+function initTestApiDoc(testLog, doc, form) {
 
     if (testLog != null) {
 
@@ -129,11 +129,15 @@ function initTestApiDoc(testLog, doc, form, one_uri_line) {
         $('#apiName').val(doc['name']);
 
         if (testLog['uriParameters'] != null) {
-            initUriFieldDoc(testLog['uriParameters'], one_uri_line);
+            initUriFieldDoc(testLog['uriParameters']);
         }
 
         if (testLog['requestHeaderParameters'] != null) {
             initRequestHeaderFieldDoc(testLog['requestHeaderParameters']);
+        }
+
+        if (testLog['responseHeaderParameters'] != null) {
+            initResponseHeaderField(testLog['responseHeaderParameters']);
         }
 
         if (testLog['requestBodyParameters'] != null) {
@@ -191,10 +195,11 @@ function initRequestHeaderFieldDoc(headerFields) {
 
 function initResponseHeaderField(headerFields) {
     var keys = Object.keys(headerFields);
+    console.info(headerFields);
     for (let i = 0; i < keys.length; i++) {
         $("#response-header-field-fieldset").append(one_response_header_line);
     }
-    var all_input_line = $("#response-header-field-fieldset").children(".layui-form-item");
+    var all_input_line = $("#response-header-field-fieldset").children(".one_response_header_line");
     for (let i = 0; i < all_input_line.length; i++) {
         let line = all_input_line[i];
         $(line).find("input")
@@ -211,29 +216,7 @@ function initResponseHeaderField(headerFields) {
     }
 }
 
-function initQueryParam(queryParam) {
-    var keys = Object.keys(queryParam);
-    for (let i = 0; i < keys.length; i++) {
-        $("#query-param-string-field-fieldset").append(one_query_param_string_line);
-    }
-    var all_input_line = $("#query-param-string-field-fieldset").children(".layui-form-item");
-    for (let i = 0; i < all_input_line.length; i++) {
-        let line = all_input_line[i];
-        $(line).find("input")
-            .each(function () {
-                if (this.name === 'queryParamField') {
-                    this.value = keys[i];
-                } else if (this.name === 'queryParamValue') {
-                    this.value = queryParam[keys[i]];
-                }
-            });
-    }
-    if (keys.length > 0) {
-        $("#query-param-string-field-fieldset").addClass("layui-show");
-    }
-}
-
-function initUriFieldDoc(uriVariables, oneuriline) {
+function initUriFieldDoc(uriVariables) {
     var keys = Object.keys(uriVariables);
     for (let i = 0; i < keys.length; i++) {
         $("#uri-fieldset").append(oneuriline);

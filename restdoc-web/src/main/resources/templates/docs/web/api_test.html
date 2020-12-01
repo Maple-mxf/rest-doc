@@ -70,25 +70,6 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="layui-collapse group">
-                    <div class="layui-colla-item">
-                        <!--layui-bg-red-->
-                        <h2 class="layui-colla-title ">Query Param String</h2>
-                        <div class="layui-colla-content" id="query-param-string-field-fieldset">
-                            <div class="layui-form-item" style="margin-top: 10px">
-                                <div class="layui-inline">
-                                    <button type="button" class="layui-btn layui-btn-primary"
-                                            id="query-param-string-field_btn">
-                                        增加参数
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
                 <div class="layui-collapse group">
                     <div class="layui-colla-item">
                         <!--layui-bg-orange-->
@@ -107,7 +88,7 @@
                 </div>
                 <div class="layui-collapse group">
                     <div class="layui-colla-item">
-                        <h2 class="layui-colla-title">HTTP Request Body</h2>
+                        <h2 class="layui-colla-title ">HTTP Request Body</h2>
                         <div class="layui-colla-content" id="body-fieldset">
                             <div class="layui-form-item" style="margin-top: 10px">
                                 <div class="layui-tab layui-tab-card ">
@@ -138,7 +119,7 @@
                 <div class="layui-collapse group">
                     <div class="layui-colla-item">
                         <!--layui-bg-red-->
-                        <h2 class="layui-colla-title ">HTTP Response Headers</h2>
+                        <h2 class="layui-colla-title layui-bg-red ">HTTP Response Headers</h2>
                         <div class="layui-colla-content" id="response-header-field-fieldset">
                             <div class="layui-form-item" style="margin-top: 10px">
                                 <div class="layui-inline">
@@ -154,7 +135,7 @@
 
                 <div class="layui-collapse group">
                     <div class="layui-colla-item">
-                        <h2 class="layui-colla-title ">HTTP Response Body</h2>
+                        <h2 class="layui-colla-title layui-bg-red ">HTTP Response Body</h2>
                         <div class="layui-colla-content" id="response-fieldset">
                             <div class="layui-form-item" style="margin-top: 10px">
                                 <div class="layui-tab layui-tab-card ">
@@ -232,7 +213,6 @@
 <script th:src="@{/admin/js/doc/urivar.js}"></script>
 <script th:src="@{/admin/js/doc/header.js}"></script>
 <script th:src="@{/admin/js/doc/content.js}"></script>
-<script th:src="@{/admin/js/doc/query_param.js}"></script>
 <script th:src="@{/admin/js/doc/response_header.js}"></script>
 <script th:src="@{/admin/js/marked.min.js}" type="application/javascript" charset="UTF-8"></script>
 <script th:src="@{/admin/js/util.js}"></script>
@@ -276,7 +256,7 @@
                 }
             },
             error: function () {
-                layer.msg("网络异常")
+                layer.msg("网络异常");
             }
         });
         form.verify({
@@ -318,7 +298,7 @@
                         {type: 'checkbox', fixed: 'left'},
 
                         {
-                            width: 70, field: 'success', title: '状态', align: 'center', templet: function (res) {
+                            width: 60, field: 'success', title: '状态', align: 'center', templet: function (res) {
                                 if (res.success) {
                                     return "<i class='layui-icon layui-icon-ok-circle' style='=font-size: 17px; color: #5FB878;'></i>"
                                 } else {
@@ -326,15 +306,14 @@
                                 }
                             }
                         },
-                        {field: 'testMode', title: '模式', align: 'center', width: 70},
-                        {field: 'remote', title: '地址', align: 'center'},
+                        {field: 'testMode', title: '模式', align: 'center', width: 100},
+                        {field: 'remote', title: '地址', align: 'center'}/*,
                         {
                             field: 'createTime',
                             title: '时间',
                             align: 'center',
-                            width: 160,
                             templet: '<label>{{formatTimestamp(d.createTime)}}</label>'
-                        }/*,
+                        }*//*,
                         {fixed: 'right', title: '操作', align: 'center', toolbar: "#testLogOperate"}*/
                     ]
                 ]
@@ -350,16 +329,13 @@
                         } else if (data.length === 1) {
                             clearURIParamInput();
                             clearRequestHeaderParamInput();
-                            clearQueryParamParamInput();
                             clearResponseHeaderParamInput();
-                            clearRequestParamInput();
-                            clearResponseParamInput();
                             $.ajax({
                                 method: "POST",
                                 url: "/restdoc/document/httpapitestlog/" + data[0].id + "/deProject",
                                 aysnc: false,
                                 success: function (res) {
-                                    initTestApiDoc(res['data'], document, form, oneuriline);
+                                    initTestApiDoc(res['data'], document, form);
                                     element.render('collapse');
                                 },
                                 error: function () {
@@ -394,7 +370,6 @@
                         refreshTestLogTable();
                         break;
                     case 'detail':
-
                         var data = checkStatus.data;
                         var ids = [];
                         for (var i = 0; i < data.length; i++) ids.push(data[i].id);
@@ -417,8 +392,6 @@
                                 }
                             });
                         }
-
-
                         break;
                 }
             });
@@ -450,16 +423,6 @@
 
         function addResponseParamInput() {
             $("#response-fieldset").append(responseoneline);
-        }
-
-        function clearResponseParamInput() {
-            var all_input_line = $("#response-fieldset").children(".one-response-body-line");
-            cleanInputLine(all_input_line);
-        }
-
-        function clearRequestParamInput() {
-            var all_input_line = $("#body-fieldset").children(".multi-request-body");
-            cleanInputLine(all_input_line);
         }
 
         function clearURIParamInput() {
@@ -500,11 +463,6 @@
 
         $("#add_pathvar_field_btn").click(function (event) {
             $("#uri-fieldset").append(oneuriline);
-            form.render();
-        });
-
-        $("#query-param-string-field_btn").click(function (event) {
-            $("#query-param-string-field-fieldset").append(one_query_param_string_line);
             form.render();
         });
 
@@ -715,17 +673,11 @@
 
         function completeExecuteCallback(queryParam, header, body) {
             if (body != null) {
-                $("#response-fieldset").addClass("layui-show");
                 initResponseBody(body);
-                if (header !== null) {
-                    clearResponseHeaderParamInput();
-                    initResponseHeaderField(header);
-                }
-
-                if (queryParam !== null) {
-                    clearQueryParamParamInput();
-                    initQueryParam(queryParam);
-                }
+            }
+            if (header !== null) {
+                clearResponseHeaderParamInput();
+                initResponseHeaderField(header);
             }
             element.render('collapse');
             refreshTestLogTable();
@@ -841,7 +793,6 @@
             var requestFields = getRequestBodyText();
             var responseFields = getResponseBodyText();
             var uriFields = getUriVarJsonArray();
-            var queryParam = getQueryParamKeyValueJsonArray();
             var responseHeader = getResponseHeaderKeyValueJsonArray();
 
             var map = new Map();
@@ -855,26 +806,7 @@
             map['requestFields'] = requestFields;
             map['responseFields'] = responseFields;
             map['uriFields'] = uriFields;
-            map['queryParam'] = queryParam;
             map['responseHeader'] = responseHeader;
-
-            return map;
-        }
-
-        function getQueryParamKeyValueJsonArray() {
-            var queryParamKeyNodes = $('input[name=queryParamField]');
-            var queryParamValueNodes = $('input[name=queryParamValue]');
-
-            var map = new Map();
-            for (var i = 0; i < queryParamKeyNodes.length; i++) {
-
-                var key = queryParamKeyNodes[i].value;
-                var value = queryParamValueNodes[i].value;
-
-                map[key] = value;
-            }
-
-            console.info(map);
 
             return map;
         }
@@ -1019,12 +951,6 @@
     }
 
     function deleteUriVarFieldLine(obj) {
-        var parent = obj.parentNode.parentNode.parentNode;
-        var children = obj.parentNode.parentNode;
-        parent.removeChild(children);
-    }
-
-    function deleteQueryParamFieldLine(obj) {
         var parent = obj.parentNode.parentNode.parentNode;
         var children = obj.parentNode.parentNode;
         parent.removeChild(children);

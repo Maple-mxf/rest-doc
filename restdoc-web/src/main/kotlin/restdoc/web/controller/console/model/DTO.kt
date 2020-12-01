@@ -18,7 +18,6 @@ data class RequestDto(
         var documentId: String?,
         var executeMode: String?,
         var remoteAddress: String?,
-        var queryParams: Map<String, Any?>?,
         var url: String,
         val name: String?,
         val description: String?,

@@ -87,13 +87,12 @@ class RestWebDocumentController {
     fun create(@RequestBody @Valid dto: RequestDto): Result {
 
         dto.url = dto.lookupPath()
+
         val requestHeaderDescriptor = dto.mapToHeaderDescriptor()
         val requestBodyDescriptor = dto.mapToRequestDescriptor()
         val responseBodyDescriptor = dto.mapToResponseDescriptor()
         val uriVarDescriptor = dto.mapToURIVarDescriptor()
         val responseHeaderDescriptor = dto.mapToResponseHeaderDescriptor()
-
-        val uriVars = uriVarDescriptor.map { it.field to it.value }.toMap()
 
         val document = RestWebDocument(
                 id = id(),
@@ -524,7 +523,6 @@ class RestWebDocumentController {
                         requestHeaderDescriptor = null,
                         requestBodyDescriptor = null,
                         responseBodyDescriptors = null,
-                        queryParam = null,
                         method = HttpMethod.valueOf(it.supportMethod[0]),
                         uriVarDescriptors = null,
                         content = null,
@@ -627,7 +625,6 @@ class RestWebDocumentController {
                                 requestBodyDescriptor = null,
                                 requestHeaderDescriptor = null,
                                 responseBodyDescriptors = null,
-                                queryParam = null,
                                 method = HttpMethod.valueOf(api.supportMethod[0]),
                                 uriVarDescriptors = null,
                                 content = null,
@@ -654,7 +651,6 @@ class RestWebDocumentController {
                 requestHeaderDescriptor = null,
                 requestBodyDescriptor = null,
                 responseBodyDescriptors = null,
-                queryParam = null,
                 uriVarDescriptors = null,
                 content = null,
                 responseHeaderDescriptor = null,
@@ -678,8 +674,8 @@ class RestWebDocumentController {
                 requestHeaderDescriptor = originDocument.requestHeaderDescriptor,
                 requestBodyDescriptor = originDocument.requestBodyDescriptor,
                 responseBodyDescriptors = originDocument.responseBodyDescriptors,
-                queryParam = originDocument.queryParam,
                 uriVarDescriptors = originDocument.uriVarDescriptors,
+                queryParamFieldDescriptor = originDocument.queryParamFieldDescriptor,
                 content = originDocument.content,
                 responseHeaderDescriptor = originDocument.responseHeaderDescriptor,
                 docType = originDocument.docType)

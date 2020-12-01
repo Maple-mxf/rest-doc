@@ -203,8 +203,9 @@ data class HttpApiTestLogDeProjectVO(
         val uriParameters: Map<String, Any?>?,
         val requestHeaderParameters: Map<String, Any?>?,
         val requestBodyParameters: Map<String, Any?>?,
-        val responseBodyParameters: Any?
-)
+        val responseBodyParameters: Any?,
+        val responseHeaderParameters: Map<String, Any?> ?= null
+        )
 
 data class SearchHeaderKeyVO(
         val headerKey: String
