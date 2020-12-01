@@ -2,8 +2,6 @@ package restdoc.web.controller.console.model
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.node.ObjectNode
-import org.omg.CORBA.Object
 import org.springframework.data.domain.PageRequest
 import restdoc.web.base.getBean
 import restdoc.web.model.*
@@ -20,7 +18,7 @@ data class RequestDto(
         var documentId: String?,
         var executeMode: String?,
         var remoteAddress: String?,
-        var queryParams: MutableMap<String, Any>?,
+        var queryParams: Map<String, Any?>?,
         var url: String,
         val name: String?,
         val description: String?,
@@ -30,7 +28,8 @@ data class RequestDto(
         val requestFields: Map<String, Any?>?,
         val responseFields: Map<String, Any?>?,
         val uriFields: List<UriVarFieldDto>?,
-        val executeResult: Map<String, Any>? = null) {
+        val executeResult: Map<String, Any>? = null,
+        val responseHeaders: Map<String, Any?>? = null) {
 
     fun lookupPath(): String {
         return if (this.url.contains("http(s)?")) {
@@ -101,7 +100,22 @@ data class RequestDto(
                     // Fields Deduplication
                     .distinctBy { it.path }
         else mutableListOf()
+    }
 
+    /**
+     * mapToResponseHeaderDescriptor
+     */
+    fun mapToResponseHeaderDescriptor(): List<HeaderFieldDescriptor> {
+        return if (responseHeaders != null && !responseHeaders.isEmpty()) {
+            responseHeaders.entries
+                    .map {
+                        HeaderFieldDescriptor(
+                                field = it.key,
+                                value = if (it.value == null) listOf() else it.value!!.toString().split(","),
+                                description = null
+                        )
+                    }
+        } else listOf()
     }
 
     fun mapToURIVarDescriptor(): List<URIVarDescriptor> {

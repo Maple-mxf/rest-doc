@@ -50,7 +50,7 @@ class RestWebInvocation : Invocation, RemotingSerializable() {
 
     lateinit var requestHeaders: MutableMap<String, List<String>>
 
-    lateinit var queryParam: MutableMap<String, Any>
+    lateinit var queryParam: MutableMap<String, Any?>
 
     lateinit var requestBody: MutableMap<String, Any>
 

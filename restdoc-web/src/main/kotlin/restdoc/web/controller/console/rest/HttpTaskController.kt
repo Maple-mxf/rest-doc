@@ -12,6 +12,7 @@ import restdoc.client.api.model.InvocationResult
 import restdoc.client.api.model.RestWebInvocation
 import restdoc.client.api.model.RestWebInvocationResult
 import restdoc.web.controller.console.model.RequestDto
+import restdoc.web.controller.console.model.RestWebInvocationResultVO
 import restdoc.web.core.Status
 import restdoc.web.core.ok
 import restdoc.web.core.schedule.ScheduleController
@@ -20,6 +21,7 @@ import restdoc.web.model.HttpTaskExecutor
 import restdoc.web.model.TestMode
 import restdoc.web.util.IDUtil
 import restdoc.web.util.PathValue
+import restdoc.web.util.UrlUtil
 import restdoc.web.util.dp.JsonProjector
 import java.util.*
 import java.util.regex.Pattern.compile
@@ -71,7 +73,17 @@ class HttpTaskController {
             mongoTemplate.save(log)
         }
 
-        return ok(res)
+        val vo = RestWebInvocationResultVO(
+                isSuccessful = res.isSuccessful,
+                exceptionMsg = res.exceptionMsg,
+                invocation = res.invocation,
+                status = res.status,
+                responseHeaders = res.responseHeaders,
+                responseBody = res.responseBody,
+                queryParam = log.queryParameters
+        )
+
+        return ok(vo)
     }
 
     private fun rpcExecuteTask(dto: RequestDto): RestWebInvocationResult {
@@ -87,7 +99,7 @@ class HttpTaskController {
             url = dto.lookupPath()
             method = dto.method
             requestHeaders = requestHeaderDescriptor.map { bd -> bd.field to bd.value }.toMap().toMutableMap()
-            queryParam = if (dto.queryParams == null) mutableMapOf() else dto.queryParams!!
+            queryParam = if (dto.queryParams == null) mutableMapOf() else dto.queryParams!!.toMutableMap()
             requestBody = bodyMap
             uriVariable = uriVarDescriptor.map { it.field to it.value }.toMap().toMutableMap()
         }
@@ -123,7 +135,7 @@ class HttpTaskController {
                     url = dto.lookupPath()
                     method = dto.method
                     requestHeaders = requestHeaderDescriptor.map { bd -> bd.field to bd.value }.toMap().toMutableMap()
-                    queryParam = if (dto.queryParams == null) mutableMapOf() else dto.queryParams!!
+                    queryParam = if (dto.queryParams == null) mutableMapOf() else dto.queryParams!!.toMutableMap()
                     requestBody = bodyMap
                     uriVariable = uriVarDescriptor.map { it.field to it.value }.toMap().toMutableMap()
                 }
@@ -172,11 +184,18 @@ class HttpTaskController {
     private fun log(dto: RequestDto): HttpApiTestLog {
         val log = HttpApiTestLog()
 
+        val queryParamKvs: MutableMap<String, Any?> = UrlUtil.parseQueryParam(dto.url)
+
+        val map = dto.queryParams?.map { it.key to it.value }?.toMap()
+        if (map != null) {
+            queryParamKvs.putAll(map)
+        }
+
         log.apply {
             id = IDUtil.id()
             documentId = dto.documentId
             uriParameters = dto.uriFields?.map { it.field!! to it.value!! }?.toMap()
-            queryParameters = dto.queryParams?.map { it.key to it.value }?.toMap()
+            queryParameters = queryParamKvs
             requestHeaderParameters = dto.headers?.map { it.headerKey to it.headerValue }?.toMap()
             requestBodyParameters = JsonProjector(dto.mapToRequestDescriptor().map { PathValue(it.path, it.value) }).projectToMap()
             url = dto.url

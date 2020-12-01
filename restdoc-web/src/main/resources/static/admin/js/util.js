@@ -64,7 +64,7 @@ function initBaseInput(doc) {
     // 检测URL
     $.ajax({
         method: "POST",
-        url: "/restdoc/httpstandard/helper/url/var/extract",
+        url: "/restdoc/httpstandard/helper/uri/var/extract",
         data: JSON.stringify({url: doc['url']}),
         contentType: 'application/json',
         success: function (res) {
@@ -158,7 +158,6 @@ function initRequestBody(requestBodyParameters) {
 }
 
 function initResponseBody(responseBodyParameters) {
-    console.info(responseBodyParameters);
     var jsonText = formatJson(projectToJson(JSON.stringify(responseBodyParameters)));
     var xmlText = formatXml(projectToXml(JSON.stringify(responseBodyParameters)));
 
@@ -188,7 +187,50 @@ function initRequestHeaderFieldDoc(headerFields) {
     if (keys.length > 0) {
         $("#header-fieldset").addClass("layui-show");
     }
+}
 
+function initResponseHeaderField(headerFields) {
+    var keys = Object.keys(headerFields);
+    for (let i = 0; i < keys.length; i++) {
+        $("#response-header-field-fieldset").append(one_response_header_line);
+    }
+    var all_input_line = $("#response-header-field-fieldset").children(".layui-form-item");
+    for (let i = 0; i < all_input_line.length; i++) {
+        let line = all_input_line[i];
+        $(line).find("input")
+            .each(function () {
+                if (this.name === 'responseHeaderField') {
+                    this.value = keys[i];
+                } else if (this.name === 'responseHeaderValue') {
+                    this.value = headerFields[keys[i]];
+                }
+            });
+    }
+    if (keys.length > 0) {
+        $("#response-header-field-fieldset").addClass("layui-show");
+    }
+}
+
+function initQueryParam(queryParam) {
+    var keys = Object.keys(queryParam);
+    for (let i = 0; i < keys.length; i++) {
+        $("#query-param-string-field-fieldset").append(one_query_param_string_line);
+    }
+    var all_input_line = $("#query-param-string-field-fieldset").children(".layui-form-item");
+    for (let i = 0; i < all_input_line.length; i++) {
+        let line = all_input_line[i];
+        $(line).find("input")
+            .each(function () {
+                if (this.name === 'queryParamField') {
+                    this.value = keys[i];
+                } else if (this.name === 'queryParamValue') {
+                    this.value = queryParam[keys[i]];
+                }
+            });
+    }
+    if (keys.length > 0) {
+        $("#query-param-string-field-fieldset").addClass("layui-show");
+    }
 }
 
 function initUriFieldDoc(uriVariables, oneuriline) {

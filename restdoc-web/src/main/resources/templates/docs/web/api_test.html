@@ -281,10 +281,6 @@
         });
         form.verify({
             url: function (value, item) {
-                /*if (!new RegExp("^(http(s?)\\:\\/\\/)?[0-9a-zA-Z]([-.\\w]*[0-9a-zA-Z])*(:(0-9)*)*(\\/?)([a-zA-Z0-9\\-\\.\\?\\,\\'\\/\\\\\\+&amp;%$#_]*)?$").test(value)) {
-                    return "URL格式不正确";
-                }*/
-
                 if (value === "") return "URL格式不正确";
             },
             type: function (value, item) {
@@ -354,6 +350,8 @@
                         } else if (data.length === 1) {
                             clearURIParamInput();
                             clearRequestHeaderParamInput();
+                            clearQueryParamParamInput();
+                            clearResponseHeaderParamInput();
                             clearRequestParamInput();
                             clearResponseParamInput();
                             $.ajax({
@@ -456,47 +454,36 @@
 
         function clearResponseParamInput() {
             var all_input_line = $("#response-fieldset").children(".one-response-body-line");
-            var line_length = all_input_line.length;
-
-            if (line_length > 0) {
-                for (let i = 0; i < line_length; i++) {
-                    var obj = all_input_line[i];
-                    var parent = obj.parentNode;
-                    parent.removeChild(obj)
-                }
-            }
+            cleanInputLine(all_input_line);
         }
 
         function clearRequestParamInput() {
             var all_input_line = $("#body-fieldset").children(".multi-request-body");
-            var line_length = all_input_line.length;
-
-            if (line_length > 0) {
-                for (let i = 0; i < line_length; i++) {
-                    var obj = all_input_line[i];
-                    var parent = obj.parentNode;
-                    parent.removeChild(obj)
-                }
-            }
+            cleanInputLine(all_input_line);
         }
 
         function clearURIParamInput() {
             var all_input_line = $("#uri-fieldset").children(".one-uri-header-line");
-            var line_length = all_input_line.length;
-
-            if (line_length > 0) {
-                for (let i = 0; i < line_length; i++) {
-                    var obj = all_input_line[i];
-                    var parent = obj.parentNode;
-                    parent.removeChild(obj)
-                }
-            }
+            cleanInputLine(all_input_line);
         }
 
         function clearRequestHeaderParamInput() {
             var all_input_line = $("#header-fieldset").children(".one-request-header-line");
-            var line_length = all_input_line.length;
+            cleanInputLine(all_input_line);
+        }
 
+        function clearResponseHeaderParamInput() {
+            var all_input_line = $("#response-header-field-fieldset").children(".one_response_header_line");
+            cleanInputLine(all_input_line);
+        }
+
+        function clearQueryParamParamInput() {
+            var all_input_line = $("#query-param-string-field-fieldset").children(".one-query-param-string-line");
+            cleanInputLine(all_input_line);
+        }
+
+        function cleanInputLine(all_input_line) {
+            var line_length = all_input_line.length;
             if (line_length > 0) {
                 for (let i = 0; i < line_length; i++) {
                     var obj = all_input_line[i];
@@ -726,50 +713,20 @@
             }
         }
 
-        function completeExecuteCallback(body) {
+        function completeExecuteCallback(queryParam, header, body) {
             if (body != null) {
                 $("#response-fieldset").addClass("layui-show");
-                $.ajax({
-                    type: 'POST',
-                    dataType: 'JSON',
-                    contentType: 'application/json;charset=utf-8',
-                    url: '/restdoc/document/deProject',
-                    data: JSON.stringify(body),
-                    async: false,
-                    success: function (data) {
-                        if (data.code === '200') {
-                            if (data.data.length >= 1) {
-                                clearResponseParamInput();
+                initResponseBody(body);
+                if (header !== null) {
+                    clearResponseHeaderParamInput();
+                    initResponseHeaderField(header);
+                }
 
-                                for (let i = 0; i < data.data.length; i++) {
-                                    addResponseParamInput();
-                                }
-                                var all_input_line = $("#response-fieldset").children(".one-response-body-line");
-                                for (let i = 0; i < all_input_line.length; i++) {
-                                    let line = all_input_line[i];
-                                    $(line).find("input").each(function () {
-                                        if (this.name === 'responseFieldPath') {
-                                            this.value = data.data[i]['path']
-                                        }
-                                    });
-
-                                    $($(line).find("select:first-child"))
-                                        .find("option[value=" + data.data[i]['type'] + "]")
-                                        .attr("selected", true);
-                                }
-                            }
-                            // 重新渲染页面
-                            form.render();
-                        } else {
-                            layer.msg('JSON转换失败，错误信息:' + data.message)
-                        }
-                    },
-                    error: function (data) {
-                        layer.msg("JSON格式错误");
-                    }
-                });
+                if (queryParam !== null) {
+                    clearQueryParamParamInput();
+                    initQueryParam(queryParam);
+                }
             }
-            form.render();
             element.render('collapse');
             refreshTestLogTable();
         }
@@ -809,12 +766,11 @@
                 }
             }
 
-
             // Query Param
-            if (data.invocation.queryParam != null) {
+            if (data.queryParam != null) {
                 var queryParamH5Text = "";
-                for (const [key, value] of Object.entries(data.invocation.queryParam)) {
-                    queryParamH5Text = queryParamH5Text + "<strong>" + key + "&nbsp;&nbsp;&nbsp;</strong>" + value + "<br>";
+                for (const [key, value] of Object.entries(data.queryParam)) {
+                    queryParamH5Text = queryParamH5Text + "<strong>" + key + "&nbsp;&nbsp;&nbsp;=</strong>" + value + "<br>";
                 }
                 if (queryParamH5Text !== '') {
                     start = start + "  <div class='layui-colla-item'><h2 class='layui-colla-title'>Query Param</h2>" +
@@ -874,7 +830,7 @@
                 area: ['600px', '500px'],
                 btn: ['导入数据', '取消'],
                 yes: function (index, doc) {
-                    completeExecuteCallback(data.responseBody);
+                    completeExecuteCallback(data.queryParam, data.responseHeaders, data.responseBody);
                     layer.close(index);
                 }
             });
@@ -885,6 +841,8 @@
             var requestFields = getRequestBodyText();
             var responseFields = getResponseBodyText();
             var uriFields = getUriVarJsonArray();
+            var queryParam = getQueryParamKeyValueJsonArray();
+            var responseHeader = getResponseHeaderKeyValueJsonArray();
 
             var map = new Map();
 
@@ -897,6 +855,26 @@
             map['requestFields'] = requestFields;
             map['responseFields'] = responseFields;
             map['uriFields'] = uriFields;
+            map['queryParam'] = queryParam;
+            map['responseHeader'] = responseHeader;
+
+            return map;
+        }
+
+        function getQueryParamKeyValueJsonArray() {
+            var queryParamKeyNodes = $('input[name=queryParamField]');
+            var queryParamValueNodes = $('input[name=queryParamValue]');
+
+            var map = new Map();
+            for (var i = 0; i < queryParamKeyNodes.length; i++) {
+
+                var key = queryParamKeyNodes[i].value;
+                var value = queryParamValueNodes[i].value;
+
+                map[key] = value;
+            }
+
+            console.info(map);
 
             return map;
         }
@@ -919,13 +897,26 @@
             return array
         }
 
+        function getResponseHeaderKeyValueJsonArray() {
+            var headerKeyNodes = $('input[name=responseHeaderField]');
+            var headerValueNodes = $('input[name=responseHeaderValue]');
+            var map = new Map();
+            for (let i = 0; i < headerKeyNodes.length; i++) {
+                map[headerKeyNodes[i].value] = headerValueNodes[i].value;
+            }
+            return map;
+        }
+
         function getRequestBodyText() {
             var checkedValue = $("input[name='responseBodyTextType']:checked").val();
             if (checkedValue === "JSON") {
-                return JSON.parse($("#response_body_json_text").val());
+                var jsonText = $("#response_body_json_text").val();
+                if (jsonText === "") return null;
+                return JSON.parse(jsonText);
             } else {
                 var jsonValue = null;
                 var xmlText = $("#response_body_xml_text").val();
+                if (xmlText === "") return jsonValue;
                 $.ajax({
                     url: '/restdoc/textprotocol/xml2Json',
                     method: 'POST',
@@ -949,10 +940,17 @@
         function getResponseBodyText() {
             var checkedValue = $("input[name='responseBodyTextType']:checked").val();
             if (checkedValue === "JSON") {
-                return JSON.parse($("#request_body_json_text").val());
+                try {
+                    return JSON.parse($("#request_body_json_text").val());
+                } catch (error) {
+                    console.info(error);
+                    return null;
+                }
+
             } else {
                 var jsonValue = null;
                 var xmlText = $("#request_body_xml_text").val();
+                if (xmlText == "") return null;
                 $.ajax({
                     url: '/restdoc/textprotocol/xml2Json',
                     method: 'POST',

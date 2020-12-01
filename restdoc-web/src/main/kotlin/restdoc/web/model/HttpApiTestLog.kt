@@ -32,7 +32,7 @@ class HttpApiTestLog {
 
     var uriParameters: Map<String, Any>? = null
 
-    var queryParameters: Map<String, Any>? = null
+    var queryParameters: Map<String, Any?>? = null
 
     var requestHeaderParameters: Map<String, String>? = null
 

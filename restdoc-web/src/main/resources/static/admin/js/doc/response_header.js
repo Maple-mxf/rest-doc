@@ -1,4 +1,4 @@
-var one_response_header_line = "<div class='layui-form-item oone_response_header_line'  ><div class='layui-inline'><div class='layui-input-inline'>" +
+var one_response_header_line = "<div class='layui-form-item one_response_header_line'  ><div class='layui-inline'><div class='layui-input-inline'>" +
     "<input type='text' name='responseHeaderField' placeholder='Key' autocomplete='off'" +
     "                               class='layui-input'> </div> </div> <div class='layui-inline'> <label>=</label> </div>  <div class='layui-inline'>" +
     "                    <div class='layui-input-inline'>" +

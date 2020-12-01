@@ -195,6 +195,7 @@ data class RestWebDocument(
         /**
          *
          */
+        @Deprecated(message = "queryParam")
         var queryParam: Map<String, Any>? = null,
 
         /**
@@ -206,12 +207,6 @@ data class RestWebDocument(
          *
          */
         var uriVarDescriptors: List<URIVarDescriptor>?,
-
-        /**
-         *
-         */
-        @Deprecated(message = "executeResult")
-        val executeResult: Map<String, Any?>? = null,
 
         /**
          *

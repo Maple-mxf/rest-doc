@@ -4,6 +4,7 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.util.UriTemplate
+import restdoc.web.controller.console.model.QueryParamKeyValueVO
 import restdoc.web.controller.console.model.SearchHeaderKeyVO
 import restdoc.web.controller.console.model.SearchHeaderValueVO
 import restdoc.web.controller.console.model.URLExtractDto
@@ -92,7 +93,7 @@ class HttpStandardProtocolHelperController {
         }
     }
 
-    @PostMapping("/url/var/extract")
+    @PostMapping("/uri/var/extract")
     fun extractURIVars(@RequestBody dto: URLExtractDto): Result {
         return try {
             val uriTemplate = UriTemplate(dto.url)
@@ -101,5 +102,19 @@ class HttpStandardProtocolHelperController {
             e.printStackTrace()
             failure(Status.INVALID_REQUEST)
         }
+    }
+
+    @PostMapping("/queryparam/var/extract")
+    fun extractQueryParamVars(@RequestBody dto: URLExtractDto): Result {
+        val si = dto.url.lastIndexOf("?")
+        return if (si != -1) {
+            val queryParamKvs = dto.url.substring(startIndex = si).split("&")
+                    .map {
+                        val kvs = it.split("=")
+                        if (kvs.size > 1) QueryParamKeyValueVO(key = kvs[0], value = kvs[1])
+                        else QueryParamKeyValueVO(key = it, value = "")
+                    }
+            ok(queryParamKvs)
+        } else ok()
     }
 }

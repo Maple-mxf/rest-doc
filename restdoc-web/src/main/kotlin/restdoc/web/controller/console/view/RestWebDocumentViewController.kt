@@ -92,7 +92,7 @@ class RestWebDocumentViewController {
 
         model.addAttribute("resource", resource)
         model.addAttribute("projectId", projectId)
-        model.addAttribute("sample", mapper.writeValueAsString(restWebDocument.executeResult))
+        // model.addAttribute("sample", mapper.writeValueAsString(restWebDocument.executeResult))
 
         return if (DocType.API == restWebDocument.docType) {
             model.addAttribute("document", transformRestDocumentToVO(restWebDocument))

@@ -1,6 +1,7 @@
 package restdoc.web.controller.console.model
 
 import org.springframework.http.HttpMethod
+import restdoc.client.api.model.Invocation
 import restdoc.web.base.getBean
 import restdoc.web.core.code.CURLCodeSampleGenerator
 import restdoc.web.core.code.JavaCodeSampleGenerator
@@ -9,7 +10,7 @@ import restdoc.web.model.BodyFieldDescriptor
 import restdoc.web.model.HeaderFieldDescriptor
 import restdoc.web.model.RestWebDocument
 import restdoc.web.model.URIVarDescriptor
-
+import javax.print.DocFlavor
 
 
 fun findChild(parentNode: NavNode, navNodes: List<NavNode>) {
@@ -212,3 +213,13 @@ data class SearchHeaderKeyVO(
 data class SearchHeaderValueVO(
         val headerValue: String
 )
+
+data class QueryParamKeyValueVO(val key: String, val value: Any?)
+
+data class RestWebInvocationResultVO(val isSuccessful: Boolean,
+                                     val exceptionMsg: String?,
+                                     val invocation: Invocation,
+                                     val status: Int,
+                                     val responseHeaders: MutableMap<String, MutableList<String>>,
+                                     val responseBody: Any?,
+                                     val queryParam: Map<String, Any?>? = null)

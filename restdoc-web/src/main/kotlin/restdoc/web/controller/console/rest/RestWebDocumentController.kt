@@ -91,6 +91,7 @@ class RestWebDocumentController {
         val requestBodyDescriptor = dto.mapToRequestDescriptor()
         val responseBodyDescriptor = dto.mapToResponseDescriptor()
         val uriVarDescriptor = dto.mapToURIVarDescriptor()
+        val responseHeaderDescriptor = dto.mapToResponseHeaderDescriptor()
 
         val uriVars = uriVarDescriptor.map { it.field to it.value }.toMap()
 
@@ -103,10 +104,10 @@ class RestWebDocumentController {
                 requestHeaderDescriptor = requestHeaderDescriptor,
                 requestBodyDescriptor = requestBodyDescriptor,
                 responseBodyDescriptors = responseBodyDescriptor,
+                responseHeaderDescriptor = responseHeaderDescriptor,
                 method = HttpMethod.valueOf(dto.method),
                 description = dto.description,
                 uriVarDescriptors = uriVarDescriptor,
-                executeResult = dto.executeResult,
                 docType = DocType.API)
 
         restWebDocumentRepository.save(document)
@@ -131,6 +132,7 @@ class RestWebDocumentController {
         val requestBodyDescriptor = dto.mapToRequestDescriptor()
         val responseBodyDescriptor = dto.mapToResponseDescriptor()
         val uriVarDescriptor = dto.mapToURIVarDescriptor()
+        val responseHeaderDescriptor = dto.mapToResponseHeaderDescriptor()
 
         oldDocument.requestHeaderDescriptor?.forEach {
             requestHeaderDescriptor
@@ -156,6 +158,12 @@ class RestWebDocumentController {
                     .forEach { d -> d.description = it.description }
         }
 
+        oldDocument.responseHeaderDescriptor?.forEach {
+            responseHeaderDescriptor
+                    .filter { d -> d.field == it.field }
+                    .forEach { d -> d.description = it.description }
+        }
+
         val uriVars = uriVarDescriptor.map { it.field to it.value }.toMap()
 
         // Save An Api Project Document
@@ -170,7 +178,6 @@ class RestWebDocumentController {
                 responseBodyDescriptors = responseBodyDescriptor,
                 method = HttpMethod.valueOf(dto.method),
                 uriVarDescriptors = uriVarDescriptor,
-                executeResult = dto.executeResult,
                 description = dto.description)
 
         val updateResult = restWebDocumentRepository.update(document)
@@ -200,7 +207,6 @@ class RestWebDocumentController {
         val map = result as LinkedHashMap<String, Any>
         return ok(map)
     }
-
 
 
     @DeleteMapping("/{id}")
@@ -262,11 +268,6 @@ class RestWebDocumentController {
     private fun getRecommendDescription(projectId: String,
                                         field: String,
                                         type: FieldDescType): String? {
-
-        /*val match = match(Criteria("projectId").`is`(projectId).and("type").`is`(type).and(" field").`is`(field))
-        val count = group("description").push("createTime").`as`("createTime").count().`as`("frequency")
-        val mappedResults = mongoTemplate.aggregate(newAggregation(match, count),
-                HistoryFieldDescription::class.java, CountDescription::class.java).mappedResults*/
 
         val query = Query().addCriteria(Criteria("projectId").`is`(projectId).and("type").`is`(type).and("field").`is`(field))
                 .with(by(desc("frequency")))
@@ -526,7 +527,6 @@ class RestWebDocumentController {
                         queryParam = null,
                         method = HttpMethod.valueOf(it.supportMethod[0]),
                         uriVarDescriptors = null,
-                        executeResult = null,
                         content = null,
                         responseHeaderDescriptor = null)
             }
@@ -630,7 +630,6 @@ class RestWebDocumentController {
                                 queryParam = null,
                                 method = HttpMethod.valueOf(api.supportMethod[0]),
                                 uriVarDescriptors = null,
-                                executeResult = null,
                                 content = null,
                                 responseHeaderDescriptor = null,
                                 docType = DocType.API)
@@ -657,7 +656,6 @@ class RestWebDocumentController {
                 responseBodyDescriptors = null,
                 queryParam = null,
                 uriVarDescriptors = null,
-                executeResult = null,
                 content = null,
                 responseHeaderDescriptor = null,
                 docType = dto.docType)
@@ -682,7 +680,6 @@ class RestWebDocumentController {
                 responseBodyDescriptors = originDocument.responseBodyDescriptors,
                 queryParam = originDocument.queryParam,
                 uriVarDescriptors = originDocument.uriVarDescriptors,
-                executeResult = originDocument.executeResult,
                 content = originDocument.content,
                 responseHeaderDescriptor = originDocument.responseHeaderDescriptor,
                 docType = originDocument.docType)

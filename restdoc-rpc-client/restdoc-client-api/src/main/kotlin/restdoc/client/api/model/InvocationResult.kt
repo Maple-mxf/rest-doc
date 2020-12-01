@@ -49,7 +49,8 @@ class RestWebInvocationResult : InvocationResult {
     var responseBody: Any? = null
 
     constructor()
-    constructor(isSuccessful: Boolean, exceptionMsg: String?,
+    constructor(isSuccessful: Boolean,
+                exceptionMsg: String?,
                 invocation: Invocation,
                 status: Int,
                 responseHeaders: MutableMap<String, MutableList<String>>,
