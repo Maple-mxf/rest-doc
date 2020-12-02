@@ -26,6 +26,9 @@
             <span class="layui-badge-dot" th:if="${hasInstance}"></span>
         </a>
         </li>
+        <li class="layui-nav-item"><a id="projectSettings" href="javascript:;">设置
+        </a>
+        </li>
     </ul>
 </div>
 
@@ -62,13 +65,12 @@
             if ('clientServiceList' === elem[0].id) {
                 layer.closeAll();
                 $("#docContentFrame").attr("src", '/restdoc/microservice/view/list?ap=REST_WEB&projectId=' + projectId);
+            } else if ('projectSettings' === elem[0].id) {
+                $("#docContentFrame").attr("src", '/restdoc/project/' + projectId + '/settings/view');
             }
         });
     });
-
     $('#restweb-project-nav').addClass("layui-this");
-
-
 </script>
 </body>
 </html>

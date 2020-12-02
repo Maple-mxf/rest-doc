@@ -11,5 +11,6 @@ data class User(
         var password: String?,
         var createTime: Long?,
         var status: AccountStatus = AccountStatus.NORMAL,
-        var teamId: String
+        var teamId: String,
+        var role: Rule = Rule.SYS_ADMIN
 )

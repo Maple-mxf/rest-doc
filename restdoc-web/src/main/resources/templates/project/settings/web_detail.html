@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}"/>
+    <link rel="stylesheet" th:href="@{/admin/css/pearForm.css}"/>
+</head>
+<body>
+
+<div class="layui-container" style="margin-top: 80px">
+
+    <form class="layui-form">
+        <input type="hidden" th:value="${project.id}" id="id">
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">名称</label>
+            <div class="layui-input-block">
+                <input type="text" id="name" name="name" th:value="${project.name}" lay-verify="required"
+                       placeholder="请输入"
+                       autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">描述</label>
+            <div class="layui-input-block">
+                <input id="desc" type="text" th:value="${project.desc}" name="desc" placeholder="请输入" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">应用类型</label>
+            <div class="layui-input-block">
+                <select name="city" lay-verify="required" id="type" readonly="">
+                    <option value="REST_WEB">REST web应用</option>
+                    <option value="DUBBO">Dubbo应用</option>
+                    <option value="SPRINGCLOUD">SpringCloud应用</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">允许访问</label>
+            <div class="layui-input-block">
+                <input type="radio" name="allowAccess" value="true" title="是">
+                <input type="radio" name="allowAccess" value="false" title="否" checked>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">访问密码</label>
+            <div class="layui-input-block">
+                <input type="text" th:value="${project.accessPassword}" name="accessPassword" placeholder="请输入"
+                       autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">访问地址</label>
+            <div class="layui-input-block">
+                <input type="text" name="accessURL" id="accessURL" placeholder=""
+                       autocomplete="off"
+                       readonly
+                       class="layui-input">
+            </div>
+        </div>
+
+    </form>
+
+</div>
+
+<script th:src="@{/layui/layui.js}"></script>
+<script th:src="@{/admin/js/jquery.js}"></script>
+<script type="text/javascript" th:inline="javascript">
+
+    var project = [[${project}]];
+
+    if (project.type === 'REST_WEB') {
+        $("#type").find("option[value='REST_WEB']").attr("selected", true);
+    } else if (project.type === 'DUBBO') {
+        $("#type").find("option[value='DUBBO']").attr("selected", true);
+    } else if (project.type === 'SPRINGCLOUD') {
+        $("#type").find("option[value='SPRINGCLOUD']").attr("selected", true);
+    }
+
+    $('#accessURL').val(window.location.protocol + "://" + window.location.host + "/restdoc/or/" + project.id);
+
+    layui.use([
+        'util', 'layer',
+        'form', 'upload',
+        'element', 'jquery'], function () {
+        var form = layui.form;
+        var $ = layui.jquery;
+        msg = layui.layer;
+        var layer = layui.layer;
+
+        /* form.on('submit(*)', function (data) {
+             $.ajax({
+                 type: 'PATCH',
+                 dataType: 'JSON',
+                 contentType: 'application/json;charset=utf-8',
+                 url: '/restdoc/project',
+                 data: JSON.stringify(data.field),
+                 async: false,
+                 success: function (data) {
+                     if (data.code === "200") {
+                     } else {
+                         updateSuccess = true;
+                         errorMessage = data.message;
+                     }
+                 }
+             });
+
+             return false;
+         });*/
+    });
+
+    function getFormData() {
+        return {
+            "id": $("#id").val(),
+            "name": $("#name").val(),
+            "desc": $("#desc").val(),
+            "type": $("#type option:selected").val()
+        };
+    }
+
+</script>
+</body>
+</html>

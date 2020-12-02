@@ -36,12 +36,17 @@ data class Project(
         /**
          * Is allow non password access
          */
-        val allowAccessNonPasswords: Boolean = false,
+        val allowAccess: Boolean = false,
 
         /**
          * Access password
          */
-        val accessPassword: String? = null
+        val accessPassword: String = "restdoc",
+
+        /**
+         *Access
+         */
+        val accessURL: String? = null
 )
 
 enum class ProjectType {
