@@ -103,19 +103,19 @@
                         <div class="layui-row">
                             <div class="layui-col-md2" style=" margin-top: 10px;">
                                 <div class="layui-inline">
-                                    <button type="button" id="editURIVarTableBtn" class="layui-btn layui-btn-sm">
+                                    <button type="button" id="editURIVarTableBtn" class="layui-btn">
                                         编辑
                                     </button>
                                 </div>
                                 <div class="layui-inline">
-                                    <button type="button" id="saveURIVarTableBtn" class="layui-btn layui-btn-sm"
+                                    <button type="button" id="saveURIVarTableBtn" class="layui-btn"
                                             style="display: none">
                                         保存
                                     </button>
                                 </div>
                                 <div class="layui-inline">
                                     <button type="button" id="cancelURIVarTableBtn"
-                                            class="layui-btn layui-btn-sm layui-btn-danger" style="display: none">
+                                            class="layui-btn layui-btn-danger" style="display: none">
                                         取消
                                     </button>
                                 </div>
@@ -148,12 +148,12 @@
                         <div class="layui-row">
                             <div class="layui-col-md2" style=" margin-top: 10px;">
                                 <div class="layui-inline">
-                                    <button type="button" id="editRequestHeaderTableBtn" class="layui-btn layui-btn-sm">
+                                    <button type="button" id="editRequestHeaderTableBtn" class="layui-btn">
                                         编辑
                                     </button>
                                 </div>
                                 <div class="layui-inline">
-                                    <button type="button" id="saveRequestHeaderTableBtn" class="layui-btn layui-btn-sm"
+                                    <button type="button" id="saveRequestHeaderTableBtn" class="layui-btn"
                                             style="display: none">
                                         保存
                                     </button>
@@ -161,7 +161,7 @@
                                 <div class="layui-inline">
                                     <button type="button" id="cancelRequestHeaderTableBtn"
                                             onclick="resetRequestHeaderTable()"
-                                            class="layui-btn layui-btn-sm layui-btn-danger" style="display: none">
+                                            class="layui-btn layui-btn-danger" style="display: none">
                                         取消
                                     </button>
                                 </div>
@@ -197,19 +197,19 @@
                         <div class="layui-row">
                             <div class="layui-col-md2" style=" margin-top: 10px;">
                                 <div class="layui-inline">
-                                    <button type="button" id="editRequestBodyTableBtn" class="layui-btn layui-btn-sm">
+                                    <button type="button" id="editRequestBodyTableBtn" class="layui-btn">
                                         编辑
                                     </button>
                                 </div>
                                 <div class="layui-inline">
-                                    <button type="button" id="saveRequestBodyTableBtn" class="layui-btn layui-btn-sm"
+                                    <button type="button" id="saveRequestBodyTableBtn" class="layui-btn"
                                             style="display: none">
                                         保存
                                     </button>
                                 </div>
                                 <div class="layui-inline">
                                     <button type="button" id="cancelRequestBodyTableBtn"
-                                            class="layui-btn layui-btn-sm layui-btn-danger" style="display: none">
+                                            class="layui-btn layui-btn-danger" style="display: none">
                                         取消
                                     </button>
                                 </div>
@@ -245,12 +245,12 @@
                         <div class="layui-row">
                             <div class="layui-col-md2" style=" margin-top: 10px;">
                                 <div class="layui-inline">
-                                    <button type="button" id="editResponseBodyTableBtn" class="layui-btn layui-btn-sm">
+                                    <button type="button" id="editResponseBodyTableBtn" class="layui-btn">
                                         编辑
                                     </button>
                                 </div>
                                 <div class="layui-inline">
-                                    <button type="button" id="saveResponseBodyTableBtn" class="layui-btn layui-btn-sm"
+                                    <button type="button" id="saveResponseBodyTableBtn" class="layui-btn"
                                             style="display: none">
                                         保存
                                     </button>
@@ -258,7 +258,7 @@
                                 <div class="layui-inline">
                                     <button type="button" id="cancelResponseBodyTableBtn"
                                             onclick="resetResponseBodyTable()"
-                                            class="layui-btn layui-btn-sm layui-btn-danger" style="display: none">
+                                            class="layui-btn layui-btn-danger" style="display: none">
                                         取消
                                     </button>
                                 </div>
@@ -481,7 +481,7 @@
                 var fun = "openEditRequestBodyPage(" + param + ")";
                 var start = "<tr ondblclick=" + fun + ">", end = "</tr>";
 
-                var line = '<td>' + requestBodyFields[i]['path'] + '</td>' + '<td>' + requestBodyFields[i]['type'] + '</td>' + '<td>' + requestBodyFields[i]['value'] + '</td>' + '<td>' + requestBodyFields[i]['optional'] + '</td>' + '<td>' + requestBodyFields[i]['description'] + '</td>';
+                var line = '<td>' + requestBodyFields[i]['path'] + '</td>' + '<td>' + requestBodyFields[i]['type'].toLowerCase() + '</td>' + '<td>' + requestBodyFields[i]['value'] + '</td>' + '<td>' + requestBodyFields[i]['optional'] + '</td>' + '<td>' + requestBodyFields[i]['description'] + '</td>';
                 allLine = allLine + start + line + end;
             }
             $("#requestBodyFieldListTableBody").html(allLine)
@@ -497,7 +497,7 @@
                 var fun = "openEditResponseBodyPage(" + param + ")";
                 var start = "<tr ondblclick=" + fun + ">", end = "</tr>";
 
-                var line = '<td>' + responseBodyFields[i]['path'] + '</td>' + '<td>' + responseBodyFields[i]['type'] + '</td>' + '<td>' + responseBodyFields[i]['value'] + '</td>' + '<td>' + responseBodyFields[i]['description'] + '</td>';
+                var line = '<td>' + responseBodyFields[i]['path'] + '</td>' + '<td>' + responseBodyFields[i]['type'].toLowerCase() + '</td>' + '<td>' + responseBodyFields[i]['value'] + '</td>' + '<td>' + responseBodyFields[i]['description'] + '</td>';
                 allLine = allLine + start + line + end;
             }
             $("#responseBodyFieldListTableBody").html(allLine)
