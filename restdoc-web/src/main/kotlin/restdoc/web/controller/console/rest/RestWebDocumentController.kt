@@ -69,7 +69,10 @@ class RestWebDocumentController {
     }
 
     @GetMapping("/{id}")
-    fun get(@PathVariable id: String): Result = ok(mongoTemplate.findById(id, RestWebDocument::class.java))
+    fun get(@PathVariable id: String): Result {
+        val doc = restWebDocumentRepository.findById(id).orElseThrow { Status.INVALID_REQUEST.instanceError("id参数错误") }
+        return ok(transformRestDocumentToVO(doc))
+    }
 
     private fun extractRawPath(url: String): String {
         return when {
@@ -760,5 +763,22 @@ class RestWebDocumentController {
         println(updateResult)
         return ok(descriptor)
     }
+
+    @PatchMapping("/queryparamdescriptor")
+    fun updateQueryParamDescriptor(@RequestBody dto: BatchUpdateQueryParamSnippetDto): Result {
+        val descriptor = dto.values
+                .map {
+                    QueryParamDescriptor(
+                            field = it.field,
+                            value = it.value,
+                            description = it.description
+                    )
+                }
+        val updateResult = restWebDocumentRepository.update(Query().addCriteria(Criteria("_id").`is`(dto.documentId)),
+                Update().set("queryParamDescriptors", descriptor))
+        println(updateResult)
+        return ok(descriptor)
+    }
+
 }
 

@@ -94,6 +94,69 @@ function renderURIVarEditStateTable(uriFields) {
     }
 }
 
+$('#editQueryParamTableBtn').click(function () {
+    renderQueryParamEditStateTable(doc['queryParamDescriptors']);
+    $('#saveQueryParamTableBtn,#cancelQueryParamTableBtn').css("display", 'block');
+});
+
+function renderQueryParamEditStateTable(queryParamFields) {
+    if (queryParamFields !== null && queryParamFields.length > 0) {
+        var allLine = '';
+        for (var i = 0; i < queryParamFields.length; i++) {
+            var start = "<tr>", end = "</tr>";
+            var line =
+                '<td><input name="field" class="layui-input" value="' + queryParamFields[i]['field'] + '"> </td>' +
+                '<td><input name="value" class="layui-input" value="' + queryParamFields[i]['value'] + '"></td>' +
+                '<td> <input name="description" class="layui-input" value="' + queryParamFields[i]['description'] + '"> </td>';
+
+            allLine = allLine + start + line + end;
+        }
+
+        $("#queryParamListTableBody").html(allLine);
+        gform.render();
+    }
+}
+
+function resetQueryParamTable() {
+    $('#saveQueryParamTableBtn,#cancelQueryParamTableBtn').css('display', 'none');
+    doc = getLastedDocument();
+    renderQueryParamTable(doc['queryParamDescriptors']);
+}
+
+$('#saveQueryParamTableBtn').click(function () {
+    var trLines = $('#queryParamListTableBody').children('tr');
+    var array = [];
+    for (var i = 0; i < trLines.length; i++) {
+        var field = $(trLines[i]).find("input[name=field]").val();
+        var value = $(trLines[i]).find("input[name=value]").val();
+        var description = $(trLines[i]).find("input[name=description]").val();
+        var map = {
+            field: field,
+            value: value,
+            description: description
+        };
+        array.push(map)
+    }
+    $.ajax({
+        url: '/restdoc/document/queryparamdescriptor',
+        method: 'PATCH',
+        contentType: 'application/json',
+        data: JSON.stringify({
+            documentId: documentId,
+            values: array
+        }),
+        success: function (res) {
+            if (res.code === '200') {
+                lay.msg('保存成功');
+                resetQueryParamTable();
+                renderQueryParamTable(res.data)
+            } else {
+                lay.msg('操作失败');
+            }
+        }
+    });
+});
+
 // 过时
 function resetURITableState() {
 

@@ -184,6 +184,7 @@ data class SyncApiEmptyTemplateDto(val remoteAddress: String,
                                    val service: String)
 
 
+data class UpdateQueryParamSnippetDto(val field: String, val value: String, val description: String)
 data class UpdateURIVarSnippetDto(val field: String, val value: String, val description: String)
 data class UpdateRequestHeaderSnippetDto(val field: String, val value: String, val optional: Boolean, val description: String)
 data class UpdateRequestBodySnippetDto(val path: String, val value: Any, val optional: Boolean, val description: String, val type: String? = null)
@@ -194,6 +195,7 @@ data class BatchUpdateURIVarSnippetDto(val documentId: String, val values: List<
 data class BatchUpdateRequestBodySnippetDto(val documentId: String, val values: List<UpdateRequestBodySnippetDto>)
 data class BatchUpdateRequestHeaderSnippetDto(val documentId: String, val values: List<UpdateRequestHeaderSnippetDto>)
 data class BatchUpdateResponseBodySnippetDto(val documentId: String, val values: List<UpdateResponseBodySnippetDto>)
+data class BatchUpdateQueryParamSnippetDto(val documentId: String, val values: List<UpdateQueryParamSnippetDto>)
 
 data class UpdateDubboDocumentDto(val description: String? = null, val paramDescriptor: MethodParamDescriptor? = null,
                                   val returnValueDescriptor: MethodReturnValueDescriptor? = null)
