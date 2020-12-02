@@ -96,11 +96,31 @@
                     </div>
                     <div class="layui-row"
                          th:if="${document.uriVarDescriptors!=null and !document.uriVarDescriptors.isEmpty()}">
+
                         <h3 class="headerTitle">URI路径参数列表
                         </h3>
-                        <button type="button" id="editURIVarTableBtn" class="layui-btn" style="margin-top: 10px">
-                            <i class="layui-icon">&#xe642;</i>
-                        </button>
+
+                        <div class="layui-row">
+                            <div class="layui-col-md2" style=" margin-top: 10px;">
+                                <div class="layui-inline">
+                                    <button type="button" id="editURIVarTableBtn" class="layui-btn layui-btn-sm">
+                                        编辑
+                                    </button>
+                                </div>
+                                <div class="layui-inline">
+                                    <button type="button" id="saveURIVarTableBtn" class="layui-btn layui-btn-sm"
+                                            style="display: none">
+                                        保存
+                                    </button>
+                                </div>
+                                <div class="layui-inline">
+                                    <button type="button" id="cancelURIVarTableBtn"
+                                            class="layui-btn layui-btn-sm layui-btn-danger" style="display: none">
+                                        取消
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
 
                         <table class="layui-table" id="uriFieldListTable" lay-size="lg">
                             <colgroup>
@@ -124,25 +144,49 @@
                          th:if="${document.requestHeaderDescriptor!=null and !document.requestHeaderDescriptor.isEmpty()}">
                         <h3 class="headerTitle">请求头参数列表
                         </h3>
-                        <p>
-                        <table class="layui-table" id="requestHeaderListTable" lay-size="lg">
-                            <colgroup>
-                                <col width="200">
-                                <col width="250">
-                                <col width="180">
-                                <col>
-                            </colgroup>
-                            <thead>
-                            <tr>
-                                <th>参数</th>
-                                <th>示例值</th>
-                                <th>是否可选</th>
-                                <th>说明</th>
-                            </tr>
-                            </thead>
-                            <tbody id="requestHeaderListTableBody">
-                            </tbody>
-                        </table>
+
+                        <div class="layui-row">
+                            <div class="layui-col-md2" style=" margin-top: 10px;">
+                                <div class="layui-inline">
+                                    <button type="button" id="editRequestHeaderTableBtn" class="layui-btn layui-btn-sm">
+                                        编辑
+                                    </button>
+                                </div>
+                                <div class="layui-inline">
+                                    <button type="button" id="saveRequestHeaderTableBtn" class="layui-btn layui-btn-sm"
+                                            style="display: none">
+                                        保存
+                                    </button>
+                                </div>
+                                <div class="layui-inline">
+                                    <button type="button" id="cancelRequestHeaderTableBtn"
+                                            onclick="resetRequestHeaderTable()"
+                                            class="layui-btn layui-btn-sm layui-btn-danger" style="display: none">
+                                        取消
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <form class="layui-form">
+                            <table class="layui-table" id="requestHeaderListTable" lay-size="lg">
+                                <colgroup>
+                                    <col width="200">
+                                    <col width="250">
+                                    <col width="180">
+                                    <col>
+                                </colgroup>
+                                <thead>
+                                <tr>
+                                    <th>参数</th>
+                                    <th>示例值</th>
+                                    <th>是否可选</th>
+                                    <th>说明</th>
+                                </tr>
+                                </thead>
+                                <tbody id="requestHeaderListTableBody">
+                                </tbody>
+                            </table>
+                        </form>
                     </div>
                     <div class="layui-row"
                          th:if="${document.requestBodyDescriptor!=null and !document.requestBodyDescriptor.isEmpty()}">
@@ -150,51 +194,97 @@
                         </h3>
                         <p>
 
-                        <table class="layui-table" id="requestBodyFieldListTable" lay-size="lg">
-                            <colgroup>
-                                <col width="200">
-                                <col width="120">
-                                <col width="200">
-                                <col width="200">
-                                <col>
-                            </colgroup>
-                            <thead>
-                            <tr>
-                                <th>参数</th>
-                                <th>类型</th>
-                                <th>示例值</th>
-                                <th>是否可选</th>
-                                <th>说明</th>
-                            </tr>
-                            </thead>
-                            <tbody id="requestBodyFieldListTableBody">
-                            </tbody>
-                        </table>
+                        <div class="layui-row">
+                            <div class="layui-col-md2" style=" margin-top: 10px;">
+                                <div class="layui-inline">
+                                    <button type="button" id="editRequestBodyTableBtn" class="layui-btn layui-btn-sm">
+                                        编辑
+                                    </button>
+                                </div>
+                                <div class="layui-inline">
+                                    <button type="button" id="saveRequestBodyTableBtn" class="layui-btn layui-btn-sm"
+                                            style="display: none">
+                                        保存
+                                    </button>
+                                </div>
+                                <div class="layui-inline">
+                                    <button type="button" id="cancelRequestBodyTableBtn"
+                                            class="layui-btn layui-btn-sm layui-btn-danger" style="display: none">
+                                        取消
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <form class="layui-form">
+                            <table class="layui-table" id="requestBodyFieldListTable" lay-size="lg">
+                                <colgroup>
+                                    <col width="200">
+                                    <col width="200">
+                                    <col width="200">
+                                    <col width="120">
+                                    <col>
+                                </colgroup>
+                                <thead>
+                                <tr>
+                                    <th>参数</th>
+                                    <th>类型</th>
+                                    <th>示例值</th>
+                                    <th>可选</th>
+                                    <th>说明</th>
+                                </tr>
+                                </thead>
+                                <tbody id="requestBodyFieldListTableBody">
+                                </tbody>
+                            </table>
+                        </form>
                     </div>
                     <div class="layui-row"
                          th:if="${document.responseBodyDescriptors!=null and !document.responseBodyDescriptors.isEmpty()}">
                         <h3 class="headerTitle">响应参数列表
                         </h3>
-                        <p>
-                        <table class="layui-table" id="responseBodyFieldListTable" lay-size="lg">
-                            <colgroup>
-                                <col width="150">
-                                <col width="120">
-                                <col width="150">
-                                <col width="200">
-                                <col>
-                            </colgroup>
-                            <thead>
-                            <tr>
-                                <th>参数</th>
-                                <th>类型</th>
-                                <th>示例值</th>
-                                <th>说明</th>
-                            </tr>
-                            </thead>
-                            <tbody id="responseBodyFieldListTableBody">
-                            </tbody>
-                        </table>
+                        <div class="layui-row">
+                            <div class="layui-col-md2" style=" margin-top: 10px;">
+                                <div class="layui-inline">
+                                    <button type="button" id="editResponseBodyTableBtn" class="layui-btn layui-btn-sm">
+                                        编辑
+                                    </button>
+                                </div>
+                                <div class="layui-inline">
+                                    <button type="button" id="saveResponseBodyTableBtn" class="layui-btn layui-btn-sm"
+                                            style="display: none">
+                                        保存
+                                    </button>
+                                </div>
+                                <div class="layui-inline">
+                                    <button type="button" id="cancelResponseBodyTableBtn"
+                                            onclick="resetResponseBodyTable()"
+                                            class="layui-btn layui-btn-sm layui-btn-danger" style="display: none">
+                                        取消
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <form class="layui-form">
+                            <table class="layui-table" id="responseBodyFieldListTable" lay-size="lg">
+                                <colgroup>
+                                    <col width="150">
+                                    <col width="120">
+                                    <col width="150">
+                                    <col width="200">
+                                    <col>
+                                </colgroup>
+                                <thead>
+                                <tr>
+                                    <th>参数</th>
+                                    <th>类型</th>
+                                    <th>示例值</th>
+                                    <th>说明</th>
+                                </tr>
+                                </thead>
+                                <tbody id="responseBodyFieldListTableBody">
+                                </tbody>
+                            </table>
+                        </form>
                     </div>
                     <div class="layui-row">
                         <h3 class="headerTitle">代码示例</h3>
@@ -226,7 +316,6 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -250,6 +339,7 @@
 <script th:src="@{/admin/js/jquery.js}"></script>
 <script th:src="@{/admin/js/util.js}"></script>
 <script th:src="@{/layui/lay/extends/tinymce/tinymce.min.js}"></script>
+<script th:src="@{/admin/js/api_detail.js}"></script>
 <script th:inline="javascript">
 
     var documentId = [[${document.id}]];
@@ -257,25 +347,8 @@
     var url = [[${document.url}]];
     var projectId = $("#projectId").val();
 
-
-    document.oncontextmenu = function (e) {
-        return false;
-    };
-
-    $(document).mousedown(function (e) {
-
-        var key = e.which;
-        if (key == 3) {
-            //获取右键点击坐标
-            var x = e.clientX;
-            var y = e.clientY;
-
-            $(".qq").show().css({left: x, top: y});
-        }
-    });
-
-
     var lay = null;
+    var gform = null;
 
     layui.config({
         base: '/restdoc/layui/lay/extends/'
@@ -284,6 +357,8 @@
             var $ = layui.jquery;
             var layer = layui.layer;
             var element = layui.element;
+            var form = layui.form;
+            gform = form;
             lay = layer;
 
             element.on('tab(docDemoTabBrief)', function (data) {
@@ -351,6 +426,9 @@
         $(".uri-description-text").css("display", 'none');
         $(".uri-description").css("display", 'block');
         $(".uri-value").css("display", 'block');
+        $("#editURIVarTableBtn").css("display", 'none');
+        $("#saveURIVarTableBtn").css("display", 'block');
+        $("#cancelURIVarTableBtn").css("display", 'block');
     });
 
     function renderURITable(uriFields) {
@@ -361,14 +439,13 @@
                 var param = "'" + uriFields[i]['field'] + "'";
                 var fun = "openEditVarPage(" + param + ")";
 
-                var line = '<td>' + uriFields[i]['field'] + '</td>' +
-                    '<td><span class="uri-value-text">' + uriFields[i]['value'] + '</span><input type="text" style="display: none" name="title" autocomplete="off" class="layui-input uri-value" value="' + uriFields[i]['value'] + '"> </td>' +
-                    '<td><span class="uri-description-text" style="display: none">' + uriFields[i]['description'] + '</span>' +
-                    '<input type="text" style="display: none" name="title" autocomplete="off" class="layui-input uri-description" value="' + uriFields[i]['description'] + '"> ' +
+                var line = '<td class="uri-field-text">' + uriFields[i]['field'] + '</td>' +
+                    '<td><span class="uri-value-text">' + uriFields[i]['value'] + '</span><input type="text" style="display: none" name="uri-value" autocomplete="off" class="layui-input uri-value" value="' + uriFields[i]['value'] + '"> </td>' +
+                    '<td><span class="uri-description-text" >' + uriFields[i]['description'] + '</span>' +
+                    '<input type="text" style="display: none" name="uri-description" autocomplete="off" class="layui-input uri-description" value="' + uriFields[i]['description'] + '"> ' +
                     '</td>';
 
-                // var start = "<tr  ondblclick=" + fun + " >",
-                var start = "<tr>",
+                var start = "<tr  ondblclick=" + fun + " >",
                     end = "</tr>";
                 allLine = allLine + start + line + end;
             }
@@ -395,8 +472,8 @@
     }
 
     function renderRequestBodyTable(requestBodyFields) {
-        if (requestBodyFields !== null && requestBodyFields.length > 0) {
 
+        if (requestBodyFields !== null && requestBodyFields.length > 0) {
             var allLine = "";
             for (let i = 0; i < requestBodyFields.length; i++) {
 

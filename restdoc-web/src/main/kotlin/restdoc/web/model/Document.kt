@@ -271,15 +271,6 @@ data class HistoryFieldDescription(
         var frequency: Int = 1
 )
 
-/**
- * API test uri history
- */
-@Document(collection = "restdoc_history_address")
-@Deprecated(message = "HistoryAddress")
-data class HistoryAddress(@Id val id: String, val address: String,
-                          @HashIndexed val documentId: String, val createTime: Long)
-
-
 data class HeaderFieldDescriptor(
         val field: String,
         var value: List<String>,
@@ -300,7 +291,7 @@ data class BodyFieldDescriptor(
         var description: String?,
         val type: FieldType = FieldType.OBJECT,
         val optional: Boolean = false,
-        val defaultValue: Any?
+        val defaultValue: Any? = null
 ) {
 
     override fun equals(other: Any?): Boolean {

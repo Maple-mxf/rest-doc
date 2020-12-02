@@ -19,12 +19,12 @@
         </appender>
 
         <!--默认所有的包以info-->
-        <root level="debug">
+        <root level="info">
             <appender-ref ref="STDOUT"/>
         </root>
 
         <!--各个服务的包在本地执行的时候，打开debug模式-->
-        <logger name="restdoc.web" level="debug" additivity="false">
+        <logger name="restdoc.web" level="info" additivity="false">
             <appender-ref ref="STDOUT"/>
         </logger>
     </springProfile>
@@ -110,7 +110,7 @@
         <shutdownHook class="ch.qos.logback.core.hook.DelayingShutdownHook"/>
 
         <!--记录到文件时，记录两类一类是error日志，一个是所有日志-->
-        <root level="debug">
+        <root level="info">
             <appender-ref ref="STDOUT"/>
             <appender-ref ref="FILE_ERROR"/>
             <appender-ref ref="FILE_ALL"/>
@@ -119,9 +119,9 @@
     </springProfile>
 
     <!-- 系统模块日志级别控制  -->
-    <logger name="restdoc.web" level="debug" />
+    <logger name="restdoc.web" level="info" />
     <!-- Spring日志级别控制  -->
-    <logger name="org.springframework" level="debug" />
+    <logger name="org.springframework" level="info" />
     <!--mongo日志打印-->
     <logger name="com.mongodb" level="info" />
 

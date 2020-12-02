@@ -4,6 +4,7 @@ package restdoc.web.util.dp;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.*;
+import org.springframework.util.Assert;
 import restdoc.web.core.Status;
 import restdoc.web.model.BodyFieldDescriptor;
 import restdoc.web.util.FieldType;
@@ -32,6 +33,7 @@ public class JsonDeProjector implements DeProjector {
     private List<Node> nodes = new ArrayList<>();
 
     public JsonDeProjector(JsonNode jsonNode) {
+        Assert.notNull(jsonNode, "被deProject的对象不可为空");
         this.jsonNode = jsonNode;
     }
 

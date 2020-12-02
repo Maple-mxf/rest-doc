@@ -693,5 +693,59 @@ class RestWebDocumentController {
 
         return ok()
     }
+
+    @PatchMapping("/uridescriptor")
+    fun updateURIVarDescriptor(@RequestBody dto: BatchUpdateURIVarSnippetDto): Result {
+        val descriptor = dto.values.map { URIVarDescriptor(field = it.field, value = it.value, description = it.description) }
+        val updateResult = restWebDocumentRepository.update(Query().addCriteria(Criteria("_id").`is`(dto.documentId)), Update().set("uriVarDescriptors", descriptor))
+        println(updateResult)
+        return ok(descriptor)
+    }
+
+    @PatchMapping("/requestbodydescriptor")
+    fun updateRequestBodyDescriptor(@RequestBody dto: BatchUpdateRequestBodySnippetDto): Result {
+        val descriptor = dto.values
+                .map {
+                    BodyFieldDescriptor(
+                            path = it.path,
+                            value = it.value,
+                            description = it.description,
+                            type = FieldType.valueOf(it.type!!),
+                            optional = it.optional)
+                }
+        val updateResult = restWebDocumentRepository.update(Query().addCriteria(Criteria("_id").`is`(dto.documentId)), Update().set("requestBodyDescriptor", descriptor))
+        println(updateResult)
+        return ok(descriptor)
+    }
+
+    @PatchMapping("/requestheaderdescriptor")
+    fun updateRequestBodyDescriptor(@RequestBody dto: BatchUpdateRequestHeaderSnippetDto): Result {
+        val descriptor = dto.values
+                .map {
+                    HeaderFieldDescriptor(
+                            field = it.field,
+                            value = it.value.split(","),
+                            description = it.description,
+                            optional = it.optional)
+                }
+        val updateResult = restWebDocumentRepository.update(Query().addCriteria(Criteria("_id").`is`(dto.documentId)), Update().set("requestHeaderDescriptor", descriptor))
+        println(updateResult)
+        return ok(descriptor)
+    }
+
+    @PatchMapping("/responsebodydescriptor")
+    fun updateResponseBodyDescriptor(@RequestBody dto: BatchUpdateResponseBodySnippetDto): Result {
+        val descriptor = dto.values
+                .map {
+                    BodyFieldDescriptor(
+                            path = it.path,
+                            value = it.value,
+                            description = it.description,
+                            type = FieldType.valueOf(it.type!!))
+                }
+        val updateResult = restWebDocumentRepository.update(Query().addCriteria(Criteria("_id").`is`(dto.documentId)), Update().set("responseBodyDescriptors", descriptor))
+        println(updateResult)
+        return ok(descriptor)
+    }
 }
 

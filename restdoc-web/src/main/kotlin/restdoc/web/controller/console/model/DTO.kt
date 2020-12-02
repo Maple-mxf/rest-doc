@@ -83,9 +83,9 @@ data class RequestDto(
      * Deduplication field path
      */
     fun mapToResponseDescriptor(): List<BodyFieldDescriptor> {
-        return if (!(responseFields == null || this.responseFields.isEmpty()))
-            JsonDeProjector(getBean(ObjectMapper::class.java).convertValue(requestFields, JsonNode::class.java))
-                    .deProject()
+        return if (!(responseFields == null || this.responseFields.isEmpty())) {
+            val jsonNode = getBean(ObjectMapper::class.java).convertValue(responseFields, JsonNode::class.java)
+            JsonDeProjector(jsonNode).deProject()
                     .map {
                         BodyFieldDescriptor(
                                 path = it.path.replace(Regex("\\[\\d\\]"), "[]"),
@@ -98,7 +98,7 @@ data class RequestDto(
                     }
                     // Fields Deduplication
                     .distinctBy { it.path }
-        else mutableListOf()
+        } else mutableListOf()
     }
 
     /**
@@ -179,10 +179,15 @@ data class SyncApiEmptyTemplateDto(val remoteAddress: String,
 
 
 data class UpdateURIVarSnippetDto(val field: String, val value: String, val description: String)
-data class UpdateRequestHeaderSnippetDto(val field: String, val value: String, val optional: Any, val description: String)
-data class UpdateRequestBodySnippetDto(val path: String, val value: Any, val optional: Any, val description: String)
-data class UpdateResponseBodySnippetDto(val path: String, val value: Any, val description: String)
+data class UpdateRequestHeaderSnippetDto(val field: String, val value: String, val optional: Boolean, val description: String)
+data class UpdateRequestBodySnippetDto(val path: String, val value: Any, val optional: Boolean, val description: String, val type: String? = null)
+data class UpdateResponseBodySnippetDto(val path: String, val value: Any, val description: String, val type: String? = null)
 data class UpdateDescriptionSnippetDto(val description: String)
+
+data class BatchUpdateURIVarSnippetDto(val documentId: String, val values: List<UpdateURIVarSnippetDto>)
+data class BatchUpdateRequestBodySnippetDto(val documentId: String, val values: List<UpdateRequestBodySnippetDto>)
+data class BatchUpdateRequestHeaderSnippetDto(val documentId: String, val values: List<UpdateRequestHeaderSnippetDto>)
+data class BatchUpdateResponseBodySnippetDto(val documentId: String, val values: List<UpdateResponseBodySnippetDto>)
 
 data class UpdateDubboDocumentDto(val description: String? = null, val paramDescriptor: MethodParamDescriptor? = null,
                                   val returnValueDescriptor: MethodReturnValueDescriptor? = null)
