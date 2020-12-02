@@ -180,18 +180,22 @@ data class RestWebDocument(
         /**
          *
          */
-        var requestHeaderDescriptor: List<HeaderFieldDescriptor>?,
+        var requestHeaderDescriptor: List<HeaderFieldDescriptor>? = null,
 
         /**
          *
          */
-        var requestBodyDescriptor: List<BodyFieldDescriptor>?,
+        var requestBodyDescriptor: List<BodyFieldDescriptor>? = null,
 
         /**
          *
          */
-        var responseBodyDescriptors: List<BodyFieldDescriptor>?,
+        var responseBodyDescriptors: List<BodyFieldDescriptor>? = null,
 
+        /**
+         *
+         */
+        var queryParamDescriptors: List<QueryParamDescriptor>? = null,
 
         /**
          *
@@ -307,6 +311,12 @@ data class BodyFieldDescriptor(
 }
 
 data class URIVarDescriptor(
+        val field: String,
+        var value: Any,
+        var description: String?
+)
+
+data class QueryParamDescriptor(
         val field: String,
         var value: Any,
         var description: String?

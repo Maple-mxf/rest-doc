@@ -6,10 +6,7 @@ import restdoc.web.base.getBean
 import restdoc.web.core.code.CURLCodeSampleGenerator
 import restdoc.web.core.code.JavaCodeSampleGenerator
 import restdoc.web.core.code.PythonCodeSampleGenerator
-import restdoc.web.model.BodyFieldDescriptor
-import restdoc.web.model.HeaderFieldDescriptor
-import restdoc.web.model.RestWebDocument
-import restdoc.web.model.URIVarDescriptor
+import restdoc.web.model.*
 import javax.print.DocFlavor
 
 
@@ -103,20 +100,30 @@ data class RestWebDocumentVO(
         /**
          *
          */
-        val requestHeaderDescriptor: MutableList<HeaderFieldDescriptorVO> = mutableListOf(),
+        val requestHeaderDescriptor: List<HeaderFieldDescriptorVO> = listOf(),
 
         /**
          *
          */
-        val requestBodyDescriptor: MutableList<BodyFieldDescriptorVO> = mutableListOf(),
+        val requestBodyDescriptor: List<BodyFieldDescriptorVO> = listOf(),
 
         /**
          *
          */
-        val responseBodyDescriptors: MutableList<BodyFieldDescriptorVO> = mutableListOf(),
+        val responseBodyDescriptors: List<BodyFieldDescriptorVO> = listOf(),
+
+        /**
+         *
+         */
+        val queryParamDescriptors: List<QueryParamDescriptor> = listOf(),
 
 
-        var uriVarDescriptors: MutableList<URIVarDescriptorVO> = mutableListOf(),
+        val uriVarDescriptors: List<URIVarDescriptorVO> = listOf(),
+
+        /**
+         *
+         */
+        val responseHeaderDescriptors: List<HeaderFieldDescriptorVO> = listOf(),
 
         /**
          * CURL Code sample
@@ -166,10 +173,12 @@ fun transformRestDocumentToVO(doc: RestWebDocument) = RestWebDocumentVO(
         resource = doc.resource,
         url = doc.url,
         description = if (doc.description == null || doc.description!!.isBlank()) "API说明" else doc.description!!,
-        requestHeaderDescriptor = transformHeaderToVO(doc.requestHeaderDescriptor ?: mutableListOf()),
-        responseBodyDescriptors = transformNormalParamToVO(doc.responseBodyDescriptors ?: mutableListOf()),
-        requestBodyDescriptor = transformNormalParamToVO(doc.requestBodyDescriptor ?: mutableListOf()),
-        uriVarDescriptors = transformURIFieldToVO(doc.uriVarDescriptors ?: mutableListOf()),
+        requestHeaderDescriptor = transformHeaderToVO(doc.requestHeaderDescriptor ?: listOf()),
+        responseBodyDescriptors = transformNormalParamToVO(doc.responseBodyDescriptors ?: listOf()),
+        requestBodyDescriptor = transformNormalParamToVO(doc.requestBodyDescriptor ?: listOf()),
+        uriVarDescriptors = transformURIFieldToVO(doc.uriVarDescriptors ?: listOf()),
+        responseHeaderDescriptors = transformHeaderToVO(doc.responseHeaderDescriptor ?: listOf()),
+        queryParamDescriptors = if (doc.queryParamDescriptors != null) doc.queryParamDescriptors!! else listOf(),
         curlCodeSample = getBean(CURLCodeSampleGenerator::class.java).invoke(doc),
         javaCodeSample = getBean(JavaCodeSampleGenerator::class.java).invoke(doc),
         pythonCodeSample = getBean(PythonCodeSampleGenerator::class.java).invoke(doc)
@@ -204,8 +213,8 @@ data class HttpApiTestLogDeProjectVO(
         val requestHeaderParameters: Map<String, Any?>?,
         val requestBodyParameters: Map<String, Any?>?,
         val responseBodyParameters: Any?,
-        val responseHeaderParameters: Map<String, Any?> ?= null
-        )
+        val responseHeaderParameters: Map<String, Any?>? = null
+)
 
 data class SearchHeaderKeyVO(
         val headerKey: String

@@ -6,6 +6,7 @@ import org.springframework.data.domain.PageRequest
 import restdoc.web.base.getBean
 import restdoc.web.model.*
 import restdoc.web.util.FieldType
+import restdoc.web.util.URLUtil
 import restdoc.web.util.dp.JsonDeProjector
 import java.net.URI
 
@@ -129,6 +130,11 @@ data class RequestDto(
                     // Fields Deduplication
                     .distinctBy { it.field }
         } else mutableListOf()
+    }
+
+    fun mapToQueryParamDescriptor(): List<QueryParamDescriptor> {
+        return URLUtil.parseQueryParam(this.url)
+                .map { QueryParamDescriptor(field = it.key, value = it.value, description = "") }
     }
 }
 

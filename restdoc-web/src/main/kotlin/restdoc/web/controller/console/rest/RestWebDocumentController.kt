@@ -93,6 +93,7 @@ class RestWebDocumentController {
         val responseBodyDescriptor = dto.mapToResponseDescriptor()
         val uriVarDescriptor = dto.mapToURIVarDescriptor()
         val responseHeaderDescriptor = dto.mapToResponseHeaderDescriptor()
+        val queryParamDescriptor = dto.mapToQueryParamDescriptor()
 
         val document = RestWebDocument(
                 id = id(),
@@ -104,6 +105,7 @@ class RestWebDocumentController {
                 requestBodyDescriptor = requestBodyDescriptor,
                 responseBodyDescriptors = responseBodyDescriptor,
                 responseHeaderDescriptor = responseHeaderDescriptor,
+                queryParamDescriptors = queryParamDescriptor,
                 method = HttpMethod.valueOf(dto.method),
                 description = dto.description,
                 uriVarDescriptors = uriVarDescriptor,
@@ -132,6 +134,16 @@ class RestWebDocumentController {
         val responseBodyDescriptor = dto.mapToResponseDescriptor()
         val uriVarDescriptor = dto.mapToURIVarDescriptor()
         val responseHeaderDescriptor = dto.mapToResponseHeaderDescriptor()
+        val queryParamDescriptor = dto.mapToQueryParamDescriptor()
+
+
+        oldDocument.queryParamDescriptors?.forEach {
+            queryParamDescriptor
+                    .filter { d -> d.field == it.field }
+                    .forEach { d ->
+                        d.description = it.description
+                    }
+        }
 
         oldDocument.requestHeaderDescriptor?.forEach {
             requestHeaderDescriptor
@@ -163,8 +175,6 @@ class RestWebDocumentController {
                     .forEach { d -> d.description = it.description }
         }
 
-        val uriVars = uriVarDescriptor.map { it.field to it.value }.toMap()
-
         // Save An Api Project Document
         val document = RestWebDocument(
                 id = dto.documentId,
@@ -175,6 +185,8 @@ class RestWebDocumentController {
                 requestHeaderDescriptor = requestHeaderDescriptor,
                 requestBodyDescriptor = requestBodyDescriptor,
                 responseBodyDescriptors = responseBodyDescriptor,
+                queryParamDescriptors = queryParamDescriptor,
+                responseHeaderDescriptor = responseHeaderDescriptor,
                 method = HttpMethod.valueOf(dto.method),
                 uriVarDescriptors = uriVarDescriptor,
                 description = dto.description)
@@ -215,6 +227,7 @@ class RestWebDocumentController {
     }
 
     @PatchMapping("/{id}")
+    @Deprecated(message = "patch")
     fun patch(@PathVariable id: String, @RequestBody @Valid dto: UpdateNodeDto): Result {
         val updateResult = restWebDocumentRepository.update(Query().addCriteria(Criteria("_id").`is`(id)),
                 Update().set("name", dto.name))

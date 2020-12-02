@@ -33,12 +33,6 @@
             text-align: center;
         }
 
-        .headerTitle {
-            font-family: Roboto, serif;
-            margin-top: 30px;
-            font-weight: bold;
-        }
-
         #urlSpan:hover {
             cursor: pointer;
         }
@@ -55,14 +49,8 @@
             background-color: white;
         }
 
-        .edit-hover-div {
-            width: 100%;
-            height: 100%;
-            margin-top: 0;
-            opacity: 0.5;
-            background-color: #393D49;
-            text-align: center;
-            display: none;
+        .line-row-block{
+            margin-top: 40px;
         }
 
     </style>
@@ -87,79 +75,289 @@
                                 title="复制URL" id="copyURL"></i></span>
                     </div>
                     <div class="layui-row">
-                        <h3 class="headerTitle">备注
-                        </h3>
+                        备注
                         <blockquote class="layui-elem-quote" id="editDocDescriptionBtn">
                             <div class="layui-text	" th:utext="${document.description}"
                                  id="descriptionArea"></div>
                         </blockquote>
                     </div>
-                    <div class="layui-row"
-                         th:if="${document.uriVarDescriptors!=null and !document.uriVarDescriptors.isEmpty()}">
 
-                        <h3 class="headerTitle">URI路径参数列表
-                        </h3>
+                    <div class="layui-row line-row-block"
+                         th:if="${document.queryParamDescriptors!=null and !document.queryParamDescriptors.isEmpty()}">
 
-                        <div class="layui-row">
-                            <div class="layui-col-md2" style=" margin-top: 10px;">
-                                <div class="layui-inline">
-                                    <button type="button" id="editURIVarTableBtn" class="layui-btn">
-                                        编辑
-                                    </button>
+
+                        <fieldset class="layui-elem-field">
+                            <legend>Query Param <span style="cursor: pointer">
+                                <i id="editQueryParamTableBtn" class="layui-icon layui-icon-edit"
+                                   style="font-size: 19px;"></i></span>
+                            </legend>
+                            <div class="layui-field-box">
+                                <div class="layui-row">
+                                    <form action="" class="layui-row">
+                                        <table class="layui-table" id="queryParamListTable" lay-size="lg">
+                                            <thead>
+                                            <tr>
+                                                <th>参数</th>
+                                                <th>示例值</th>
+                                                <th>说明</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="queryParamListTableBody">
+                                            </tbody>
+                                        </table>
+                                    </form>
                                 </div>
-                                <div class="layui-inline">
-                                    <button type="button" id="saveURIVarTableBtn" class="layui-btn"
-                                            style="display: none">
-                                        保存
-                                    </button>
-                                </div>
-                                <div class="layui-inline">
-                                    <button type="button" id="cancelURIVarTableBtn"
-                                            class="layui-btn layui-btn-danger" style="display: none">
-                                        取消
-                                    </button>
+                                <div class="layui-row">
+                                    <div class="layui-col-md10"></div>
+                                    <div class="layui-col-md2" style="margin-left:85% ">
+                                        <div class="layui-inline">
+                                            <button type="button" id="saveQueryParamTableBtn" class="layui-btn"
+                                                    style="display: none">
+                                                保存
+                                            </button>
+                                        </div>
+                                        <div class="layui-inline">
+                                            <button type="button" id="cancelQueryParamTableBtn"
+                                                    class="layui-btn layui-btn-danger" style="display: none">
+                                                取消
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-
-                        <table class="layui-table" id="uriFieldListTable" lay-size="lg">
-                            <colgroup>
-                                <col width="220">
-                                <col width="220">
-                                <col width="400">
-                                <col>
-                            </colgroup>
-                            <thead>
-                            <tr>
-                                <th>参数</th>
-                                <th>示例值</th>
-                                <th>说明</th>
-                            </tr>
-                            </thead>
-                            <tbody id="uriFieldListTableBody">
-                            </tbody>
-                        </table>
+                        </fieldset>
                     </div>
-                    <div class="layui-row"
-                         th:if="${document.requestHeaderDescriptor!=null and !document.requestHeaderDescriptor.isEmpty()}">
-                        <h3 class="headerTitle">请求头参数列表
-                        </h3>
+                    <div class="layui-row line-row-block"
+                         th:if="${document.uriVarDescriptors!=null and !document.uriVarDescriptors.isEmpty()}"
+                         >
+                        <fieldset class="layui-elem-field">
+                            <legend>URI Variable <span style="cursor: pointer">
+                                <i id="editURIVarTableBtn" class="layui-icon layui-icon-edit"
+                                   style="font-size: 19px;"></i></span>
+                            </legend>
+                            <div class="layui-field-box">
+                                <div class="layui-row">
+                                    <form action="" class="layui-row">
+                                        <table class="layui-table" id="uriFieldListTable" lay-size="lg">
+                                            <colgroup>
+                                                <col width="220">
+                                                <col width="220">
+                                                <col width="400">
+                                                <col>
+                                            </colgroup>
+                                            <thead>
+                                            <tr>
+                                                <th>参数</th>
+                                                <th>示例值</th>
+                                                <th>说明</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="uriFieldListTableBody">
+                                            </tbody>
+                                        </table>
+                                    </form>
+                                </div>
+                                <div class="layui-row">
+                                    <div class="layui-col-md10"></div>
+                                    <div class="layui-col-md2" style="margin-left:85% ">
+                                        <div class="layui-inline">
+                                            <button type="button" id="saveURIVarTableBtn" class="layui-btn"
+                                                    style="display: none">
+                                                保存
+                                            </button>
+                                        </div>
+                                        <div class="layui-inline">
+                                            <button type="button" id="cancelURIVarTableBtn"
+                                                    class="layui-btn layui-btn-danger" style="display: none">
+                                                取消
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="layui-row line-row-block"
+                         th:if="${document.requestHeaderDescriptor!=null and !document.requestHeaderDescriptor.isEmpty()}"
+                         >
+                        <fieldset class="layui-elem-field">
+                            <legend>HTTP Request Header <span style="cursor: pointer">
+                                <i id="editRequestHeaderTableBtn" class="layui-icon layui-icon-edit"
+                                   style="font-size: 19px;"></i></span>
+                            </legend>
+                            <div class="layui-field-box">
+                                <div class="layui-row">
+                                    <form class="layui-form">
+                                        <table class="layui-table" id="requestHeaderListTable" lay-size="lg">
+                                            <colgroup>
+                                                <col width="200">
+                                                <col width="250">
+                                                <col width="180">
+                                                <col>
+                                            </colgroup>
+                                            <thead>
+                                            <tr>
+                                                <th>参数</th>
+                                                <th>示例值</th>
+                                                <th>是否可选</th>
+                                                <th>说明</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="requestHeaderListTableBody">
+                                            </tbody>
+                                        </table>
+                                    </form>
+                                </div>
+                                <div class="layui-row">
+                                    <div class="layui-col-md10"></div>
+                                    <div class="layui-col-md2" style="margin-left:85% ">
+                                        <div class="layui-inline">
+                                            <button type="button" id="saveRequestHeaderTableBtn" class="layui-btn"
+                                                    style="display: none">
+                                                保存
+                                            </button>
+                                        </div>
+                                        <div class="layui-inline">
+                                            <button type="button" id="cancelRequestHeaderTableBtn"
+                                                    onclick="resetRequestHeaderTable()"
+                                                    class="layui-btn layui-btn-danger" style="display: none">
+                                                取消
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="layui-row line-row-block"
+                         th:if="${document.requestBodyDescriptor!=null and !document.requestBodyDescriptor.isEmpty()}"
+                         >
+                        <fieldset class="layui-elem-field">
+                            <legend>HTTP Request Body <span style="cursor: pointer">
+                                <i id="editRequestBodyTableBtn" class="layui-icon layui-icon-edit"
+                                   style="font-size: 19px;"></i></span>
+                            </legend>
+                            <div class="layui-field-box">
+                                <div class="layui-row">
+                                    <form class="layui-form">
+                                        <table class="layui-table" id="requestBodyFieldListTable" lay-size="lg">
+                                            <colgroup>
+                                                <col width="200">
+                                                <col width="200">
+                                                <col width="200">
+                                                <col width="120">
+                                                <col>
+                                            </colgroup>
+                                            <thead>
+                                            <tr>
+                                                <th>参数</th>
+                                                <th>类型</th>
+                                                <th>示例值</th>
+                                                <th>可选</th>
+                                                <th>说明</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="requestBodyFieldListTableBody">
+                                            </tbody>
+                                        </table>
+                                    </form>
+                                </div>
+                                <div class="layui-row">
+                                    <div class="layui-col-md10"></div>
+                                    <div class="layui-col-md2" style="margin-left:85% ">
+                                        <div class="layui-inline">
+                                            <button type="button" id="saveRequestBodyTableBtn" class="layui-btn"
+                                                    style="display: none">
+                                                保存
+                                            </button>
+                                        </div>
+                                        <div class="layui-inline">
+                                            <button type="button" id="cancelRequestBodyTableBtn"
+                                                    class="layui-btn layui-btn-danger" style="display: none">
+                                                取消
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </fieldset>
+
+                    </div>
+                    <div class="layui-row line-row-block"
+                         th:if="${document.responseBodyDescriptors!=null and !document.responseBodyDescriptors.isEmpty()}"
+                         >
+
+                        <fieldset class="layui-elem-field">
+                            <legend>HTTP Response Body <span style="cursor: pointer">
+                                <i id="editResponseBodyTableBtn" class="layui-icon layui-icon-edit"
+                                   style="font-size: 19px;"></i></span>
+                            </legend>
+                            <div class="layui-field-box">
+                                <form class="layui-form">
+                                    <div class="layui-row">
+                                        <table class="layui-table" id="responseBodyFieldListTable" lay-size="lg">
+                                            <colgroup>
+                                                <col width="150">
+                                                <col width="120">
+                                                <col width="150">
+                                                <col width="200">
+                                                <col>
+                                            </colgroup>
+                                            <thead>
+                                            <tr>
+                                                <th>参数</th>
+                                                <th>类型</th>
+                                                <th>示例值</th>
+                                                <th>说明</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="responseBodyFieldListTableBody">
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="layui-row">
+                                        <div class="layui-col-md10"></div>
+                                        <div class="layui-col-md2" style="margin-left:85% ">
+                                            <div class="layui-inline">
+                                                <button type="button" id="saveResponseBodyTableBtn" class="layui-btn"
+                                                        style="display: none">
+                                                    保存
+                                                </button>
+                                            </div>
+                                            <div class="layui-inline">
+                                                <button type="button" id="cancelResponseBodyTableBtn"
+                                                        onclick="resetResponseBodyTable()"
+                                                        class="layui-btn layui-btn-danger" style="display: none">
+                                                    取消
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="layui-row line-row-block"
+                         th:if="${document.responseHeaderDescriptors!=null and !document.responseHeaderDescriptors.isEmpty()}"
+                         style="display: none">
+                        HTTP Response Header
 
                         <div class="layui-row">
                             <div class="layui-col-md2" style=" margin-top: 10px;">
                                 <div class="layui-inline">
-                                    <button type="button" id="editRequestHeaderTableBtn" class="layui-btn">
+                                    <button type="button" id="editResponseHeaderTableBtn" class="layui-btn">
                                         编辑
                                     </button>
                                 </div>
                                 <div class="layui-inline">
-                                    <button type="button" id="saveRequestHeaderTableBtn" class="layui-btn"
+                                    <button type="button" id="saveResponseHeaderTableBtn" class="layui-btn"
                                             style="display: none">
                                         保存
                                     </button>
                                 </div>
                                 <div class="layui-inline">
-                                    <button type="button" id="cancelRequestHeaderTableBtn"
+                                    <button type="button" id="cancelResponseHeaderTableBtn"
                                             onclick="resetRequestHeaderTable()"
                                             class="layui-btn layui-btn-danger" style="display: none">
                                         取消
@@ -168,7 +366,7 @@
                             </div>
                         </div>
                         <form class="layui-form">
-                            <table class="layui-table" id="requestHeaderListTable" lay-size="lg">
+                            <table class="layui-table" id="responseHeaderListTable" lay-size="lg">
                                 <colgroup>
                                     <col width="200">
                                     <col width="250">
@@ -183,111 +381,13 @@
                                     <th>说明</th>
                                 </tr>
                                 </thead>
-                                <tbody id="requestHeaderListTableBody">
+                                <tbody id="responseHeaderListTableBody">
                                 </tbody>
                             </table>
                         </form>
                     </div>
-                    <div class="layui-row"
-                         th:if="${document.requestBodyDescriptor!=null and !document.requestBodyDescriptor.isEmpty()}">
-                        <h3 class="headerTitle">请求参数列表
-                        </h3>
-                        <p>
-
-                        <div class="layui-row">
-                            <div class="layui-col-md2" style=" margin-top: 10px;">
-                                <div class="layui-inline">
-                                    <button type="button" id="editRequestBodyTableBtn" class="layui-btn">
-                                        编辑
-                                    </button>
-                                </div>
-                                <div class="layui-inline">
-                                    <button type="button" id="saveRequestBodyTableBtn" class="layui-btn"
-                                            style="display: none">
-                                        保存
-                                    </button>
-                                </div>
-                                <div class="layui-inline">
-                                    <button type="button" id="cancelRequestBodyTableBtn"
-                                            class="layui-btn layui-btn-danger" style="display: none">
-                                        取消
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <form class="layui-form">
-                            <table class="layui-table" id="requestBodyFieldListTable" lay-size="lg">
-                                <colgroup>
-                                    <col width="200">
-                                    <col width="200">
-                                    <col width="200">
-                                    <col width="120">
-                                    <col>
-                                </colgroup>
-                                <thead>
-                                <tr>
-                                    <th>参数</th>
-                                    <th>类型</th>
-                                    <th>示例值</th>
-                                    <th>可选</th>
-                                    <th>说明</th>
-                                </tr>
-                                </thead>
-                                <tbody id="requestBodyFieldListTableBody">
-                                </tbody>
-                            </table>
-                        </form>
-                    </div>
-                    <div class="layui-row"
-                         th:if="${document.responseBodyDescriptors!=null and !document.responseBodyDescriptors.isEmpty()}">
-                        <h3 class="headerTitle">响应参数列表
-                        </h3>
-                        <div class="layui-row">
-                            <div class="layui-col-md2" style=" margin-top: 10px;">
-                                <div class="layui-inline">
-                                    <button type="button" id="editResponseBodyTableBtn" class="layui-btn">
-                                        编辑
-                                    </button>
-                                </div>
-                                <div class="layui-inline">
-                                    <button type="button" id="saveResponseBodyTableBtn" class="layui-btn"
-                                            style="display: none">
-                                        保存
-                                    </button>
-                                </div>
-                                <div class="layui-inline">
-                                    <button type="button" id="cancelResponseBodyTableBtn"
-                                            onclick="resetResponseBodyTable()"
-                                            class="layui-btn layui-btn-danger" style="display: none">
-                                        取消
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <form class="layui-form">
-                            <table class="layui-table" id="responseBodyFieldListTable" lay-size="lg">
-                                <colgroup>
-                                    <col width="150">
-                                    <col width="120">
-                                    <col width="150">
-                                    <col width="200">
-                                    <col>
-                                </colgroup>
-                                <thead>
-                                <tr>
-                                    <th>参数</th>
-                                    <th>类型</th>
-                                    <th>示例值</th>
-                                    <th>说明</th>
-                                </tr>
-                                </thead>
-                                <tbody id="responseBodyFieldListTableBody">
-                                </tbody>
-                            </table>
-                        </form>
-                    </div>
-                    <div class="layui-row">
-                        <h3 class="headerTitle">代码示例</h3>
+                    <div class="layui-row line-row-block" style="display: none">
+                        Code Sample
                         <div class="layui-tab layui-tab-card ">
                             <ul class="layui-tab-title">
                                 <li class="layui-this">CURL</li>
@@ -404,6 +504,8 @@
                 renderRequestHeaderTable(doc['requestHeaderDescriptor']);
                 renderRequestBodyTable(doc['requestBodyDescriptor']);
                 renderResponseBodyTable(doc['responseBodyDescriptors']);
+                renderQueryParamTable(doc['queryParamDescriptors']);
+                renderResponseHeaderTable(doc['responseHeaderDescriptors']);
             }
         });
 
@@ -421,16 +523,6 @@
         document.body.removeChild(input);
     });
 
-    $("#editURIVarTableBtn").click(function () {
-        $(".uri-value-text").css("display", 'none');
-        $(".uri-description-text").css("display", 'none');
-        $(".uri-description").css("display", 'block');
-        $(".uri-value").css("display", 'block');
-        $("#editURIVarTableBtn").css("display", 'none');
-        $("#saveURIVarTableBtn").css("display", 'block');
-        $("#cancelURIVarTableBtn").css("display", 'block');
-    });
-
     function renderURITable(uriFields) {
         if (uriFields !== null && uriFields.length > 0) {
             var allLine = "";
@@ -439,11 +531,9 @@
                 var param = "'" + uriFields[i]['field'] + "'";
                 var fun = "openEditVarPage(" + param + ")";
 
-                var line = '<td class="uri-field-text">' + uriFields[i]['field'] + '</td>' +
-                    '<td><span class="uri-value-text">' + uriFields[i]['value'] + '</span><input type="text" style="display: none" name="uri-value" autocomplete="off" class="layui-input uri-value" value="' + uriFields[i]['value'] + '"> </td>' +
-                    '<td><span class="uri-description-text" >' + uriFields[i]['description'] + '</span>' +
-                    '<input type="text" style="display: none" name="uri-description" autocomplete="off" class="layui-input uri-description" value="' + uriFields[i]['description'] + '"> ' +
-                    '</td>';
+                var line = '<td>' + uriFields[i]['field'] + '</td>' +
+                    '<td>' + uriFields[i]['value'] + '</td>' +
+                    '<td>' + uriFields[i]['description'] + '</td>';
 
                 var start = "<tr  ondblclick=" + fun + " >",
                     end = "</tr>";
@@ -453,6 +543,25 @@
         }
     }
 
+    function renderQueryParamTable(queryParamFields) {
+        if (queryParamFields !== null && queryParamFields.length > 0) {
+            var allLine = "";
+
+            for (let i = 0; i < queryParamFields.length; i++) {
+                var param = "'" + queryParamFields[i]['field'] + "'";
+                var fun = "openEditVarPage(" + param + ")";
+
+                var line = '<td>' + queryParamFields[i]['field'] + '</td>' +
+                    '<td> ' + queryParamFields[i]['value'] + ' </td>' +
+                    '<td> ' + queryParamFields[i]['description'] + '</td>';
+
+                var start = "<tr >",
+                    end = "</tr>";
+                allLine = allLine + start + line + end;
+            }
+            $("#queryParamListTableBody").html(allLine);
+        }
+    }
 
     function renderRequestHeaderTable(headerFields) {
         if (headerFields !== null && headerFields.length > 0) {
@@ -468,6 +577,21 @@
                 allLine = allLine + start + line + end;
             }
             $("#requestHeaderListTableBody").html(allLine);
+        }
+    }
+
+    function renderResponseHeaderTable(headerFields) {
+        if (headerFields !== null && headerFields.length > 0) {
+            var allLine = "";
+            for (let i = 0; i < headerFields.length; i++) {
+
+                var param = "'" + headerFields[i]['field'] + "'";
+                var fun = "openEditRequestHeaderPage(" + param + ")";
+                var line = '<td>' + headerFields[i]['field'] + '</td>' + '<td>' + headerFields[i]['value'] + '</td>' + '<td>' + headerFields[i]['optional'] + '</td>' + '<td>' + headerFields[i]['description'] + '</td>';
+                var start = "<tr>", end = "</tr>";
+                allLine = allLine + start + line + end;
+            }
+            $("#responseHeaderListTableBody").html(allLine);
         }
     }
 

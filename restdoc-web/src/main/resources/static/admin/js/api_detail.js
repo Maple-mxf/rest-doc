@@ -3,9 +3,9 @@ $('#saveURIVarTableBtn').click(function () {
     var trLines = $('#uriFieldListTableBody').children('tr');
     var array = [];
     for (var i = 0; i < trLines.length; i++) {
-        var field = $(trLines[i]).children('.uri-field-text').text();
-        var value = $(trLines[i]).find("input[name=uri-value]").val();
-        var description = $(trLines[i]).find("input[name=uri-description]").val();
+        var field = $(trLines[i]).find("input[name=field]").val();
+        var value = $(trLines[i]).find("input[name=value]").val();
+        var description = $(trLines[i]).find("input[name=description]").val();
         var map = {
             field: field,
             value: value,
@@ -31,6 +31,12 @@ $('#saveURIVarTableBtn').click(function () {
             }
         }
     });
+});
+
+
+$("#editURIVarTableBtn").click(function () {
+    $('#saveURIVarTableBtn,#cancelURIVarTableBtn').css("display", 'block');
+    renderURIVarEditStateTable(doc['uriVarDescriptors']);
 });
 
 $('#saveRequestBodyTableBtn').click(function () {
@@ -70,12 +76,29 @@ $('#saveRequestBodyTableBtn').click(function () {
     });
 });
 
+function renderURIVarEditStateTable(uriFields) {
+    if (uriFields !== null && uriFields.length > 0) {
+        var allLine = '';
+        for (var i = 0; i < uriFields.length; i++) {
+            var start = "<tr>", end = "</tr>";
+            var line =
+                '<td><input name="field" class="layui-input" value="' + uriFields[i]['field'] + '"> </td>' +
+                '<td><input name="value" class="layui-input" value="' + uriFields[i]['value'] + '"></td>' +
+                '<td> <input name="description" class="layui-input" value="' + uriFields[i]['description'] + '"> </td>';
+
+            allLine = allLine + start + line + end;
+        }
+
+        $("#uriFieldListTableBody").html(allLine);
+        gform.render();
+    }
+}
+
 // 过时
 function resetURITableState() {
 
     // 重置按钮
     $('#saveURIVarTableBtn,#cancelURIVarTableBtn').css("display", 'none');
-    $('#editURIVarTableBtn').css("display", 'block');
 
 
     $('.uri-description,.uri-value').css("display", 'none');
@@ -103,7 +126,6 @@ function getLastedDocument() {
 }
 
 $("#editRequestBodyTableBtn").click(function () {
-    $('#editRequestBodyTableBtn').css('display', 'none');
     $('#saveRequestBodyTableBtn,#cancelRequestBodyTableBtn').css('display', 'block');
     renderRequestBodyTableOnEditState(doc['requestBodyDescriptor'])
 });
@@ -145,7 +167,6 @@ function renderRequestBodyTableOnEditState(requestBodyFields) {
 
 $("#editRequestHeaderTableBtn").click(function () {
     renderRequestHeaderOnEditState(doc['requestHeaderDescriptor']);
-    $('#editRequestHeaderTableBtn').css("display", 'none');
     $('#saveRequestHeaderTableBtn,#cancelRequestHeaderTableBtn').css("display", 'block');
 });
 
@@ -181,7 +202,6 @@ $('#cancelRequestBodyTableBtn').click(function () {
 
 function resetRequestBodyTable() {
     $('#saveRequestBodyTableBtn,#cancelRequestBodyTableBtn').css("display", 'none');
-    $('#editRequestBodyTableBtn').css('display', 'block');
 
     doc = getLastedDocument();
     renderRequestBodyTable(doc['requestBodyDescriptor']);
@@ -190,7 +210,6 @@ function resetRequestBodyTable() {
 
 function resetRequestHeaderTable() {
     $('#saveRequestHeaderTableBtn,#cancelRequestHeaderTableBtn').css("display", 'none');
-    $('#editRequestHeaderTableBtn').css('display', 'block');
     doc = getLastedDocument();
     renderRequestHeaderTable(doc['requestHeaderDescriptor']);
 }
@@ -257,13 +276,11 @@ function renderResponseBodyTableOnEditState(responseBodyFields) {
 }
 
 $('#editResponseBodyTableBtn').click(function () {
-    $('#editResponseBodyTableBtn').css("display", 'none');
     $('#saveResponseBodyTableBtn,#cancelResponseBodyTableBtn').css("display", 'block');
     renderResponseBodyTableOnEditState(doc['responseBodyDescriptors'])
 });
 
 function resetResponseBodyTable() {
-    $('#editResponseBodyTableBtn').css("display", 'block');
     $('#saveResponseBodyTableBtn,#cancelResponseBodyTableBtn').css("display", 'none');
     doc = getLastedDocument();
     renderResponseBodyTable(doc['responseBodyDescriptors']);
