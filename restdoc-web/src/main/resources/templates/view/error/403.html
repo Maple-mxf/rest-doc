@@ -1,19 +1,20 @@
 <!DOCTYPE html>
-<html>
-	<head>
-		<meta charset="utf-8">
-		<title></title>
-		<link href="../../../static/admin/css/pearButton.css" rel="stylesheet" />
-		<link href="../../../static/assets/error.css" rel="stylesheet" />
-	</head>
-	<body>
-		<div class="content">
-			<img src="../../../static/admin/images/403.svg" alt="">
-			<div class="content-r">
-				<h1>403</h1>
-				<p>抱歉，你无权访问该页面</p>
-				<button class="pear-btn pear-btn-primary">返回首页</button>
-			</div>
-		</div>
-	</body>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <link th:href="@{/admin/css/pearButton.css}" rel="stylesheet"/>
+    <link th:href="@{/assets/error.css}" rel="stylesheet"/>
+</head>
+<body>
+<div class="content">
+    <img th:src="@{/admin/images/403.svg}" alt="">
+    <div class="content-r">
+        <h1>403</h1>
+        <p>抱歉，你无权访问该页面</p>
+
+    </div>
+</div>
+
+</body>
 </html>

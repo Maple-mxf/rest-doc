@@ -16,6 +16,7 @@ import restdoc.web.model.Project
 import restdoc.web.model.ProjectType
 import restdoc.web.repository.ProjectRepository
 import restdoc.web.util.IDUtil
+import restdoc.web.util.MD5Util
 import java.util.*
 import javax.validation.Valid
 
@@ -54,12 +55,14 @@ class ProjectController {
     @PostMapping("")
     fun create(@RequestBody dto: CreateProjectDto): Result {
         if (dto.type == ProjectType.SPRINGCLOUD) Status.BAD_REQUEST.error("暂不支持SpringCloud项目")
+        val projectId = IDUtil.id()
         val project = Project(
-                id = IDUtil.id(),
+                id = projectId,
                 name = dto.name,
                 createTime = Date().time,
                 desc = dto.desc,
-                type = dto.type
+                type = dto.type,
+                accessPassword = MD5Util.encryptPassword("restdoc", projectId, 1024)
         )
         mongoTemplate.save(project)
         return ok()

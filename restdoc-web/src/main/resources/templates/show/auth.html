@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>RESTdoc文档访问</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/admin/css/login.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/main.css}" media="all">
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}"/>
+</head>
+<body class="layui-layout-login">
+<div class="login-bg">
+    <div class="cover"></div>
+</div>
+<input type="hidden" id="projectId" th:value="${projectId}">
+<div class="login-content">
+    <h1 class="login-box-title"><i class="fa fa-fw fa-user"></i>授权访问</h1>
+    <form class="layui-form" th:action="@{/auth}" method="post">
+        <div class="layui-form-item">
+            <label class="layui-icon layui-icon-password" for="password"></label>
+            <input class="layui-input" type="password" name="password" id="password" placeholder="请输入访问密码">
+        </div>
+        <button type="button" id="submit" class="layui-btn layui-btn-fluid ajax-login"><i
+                class="fa fa-sign-in fa-lg fa-fw"></i> 确认
+        </button>
+    </form>
+</div>
+<script th:src="@{/layui/layui.js}"></script>
+<script th:src="@{/admin/js/jquery.js}"></script>
+<script type="text/javascript" th:inline="javascript">
+    var errorMessage = [[${errorMessage}]];
+
+    var lay = null;
+
+    layui.use([
+        'util', 'layer'], function () {
+        var layer = layui.layer;
+        lay = layer;
+        if (errorMessage != null) {
+            layer.msg(errorMessage)
+        }
+    });
+
+    $('#submit').click(function () {
+        $.ajax({
+            method: 'POST',
+            url: '/restdoc/or/auth',
+            async: false,
+            contentType: 'application/json',
+            data: JSON.stringify({
+                'projectId': $("#projectId").val(),
+                'password': $('#password').val()
+            }),
+            success: function (res) {
+                if (res.code === '200') {
+                    lay.msg('授权成功');
+                    window.location.href = ''
+                } else {
+                    lay.msg(res.message)
+                }
+            }
+        });
+    });
+
+</script>
+</body>
+</html>

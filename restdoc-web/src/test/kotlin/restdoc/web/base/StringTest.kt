@@ -1,6 +1,7 @@
 package restdoc.web.base
 
 import org.junit.Test
+import restdoc.web.util.MD5Util
 
 class StringTest {
 
@@ -19,7 +20,8 @@ class StringTest {
             }
         }
 
-
+        // dd63da87e71a8309795a64746fe8dbef
+        println(MD5Util.encryptPassword("restdoc","746946688983240704",1024))
     }
 
 

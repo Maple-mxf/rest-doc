@@ -1,8 +1,6 @@
 package restdoc.web.controller.console.rest
 
-import io.lettuce.core.GeoArgs
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.core.annotation.Order
 import org.springframework.data.domain.Sort
 import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query

@@ -26,11 +26,6 @@ data class Project(
         /**
          *
          */
-        val accessPwd: String? = null,
-
-        /**
-         *
-         */
         val type: ProjectType = ProjectType.REST_WEB,
 
         /**
@@ -41,7 +36,7 @@ data class Project(
         /**
          * Access password
          */
-        val accessPassword: String = "restdoc",
+        val accessPassword: String? = null,
 
         /**
          *Access
