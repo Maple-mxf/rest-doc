@@ -1,24 +1,24 @@
 package restdoc.remoting.common.body;
 
 import restdoc.remoting.common.ApplicationType;
-import restdoc.remoting.common.RestWebExposedAPI;
+import restdoc.remoting.common.RestWebApiDescriptor;
 
 import java.util.List;
 
 @Deprecated
 public class RestWebExposedAPIBody extends BaseExposedAPIBody {
 
-    private List<RestWebExposedAPI> apiList;
+    private List<RestWebApiDescriptor> apiList;
 
     public RestWebExposedAPIBody() {
         super(ApplicationType.REST_WEB);
     }
 
-    public void setApiList(List<RestWebExposedAPI> apiList) {
+    public void setApiList(List<RestWebApiDescriptor> apiList) {
         this.apiList = apiList;
     }
 
-    public List<RestWebExposedAPI> getApiList() {
+    public List<RestWebApiDescriptor> getApiList() {
         return apiList;
     }
 

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import restdoc.remoting.annotation.Nullable;
 import restdoc.remoting.common.ApplicationClientInfo;
 import restdoc.remoting.common.ApplicationType;
-import restdoc.remoting.common.ExposedAPI;
+import restdoc.remoting.common.ApiDescriptor;
 import restdoc.web.util.MD5Util;
 
 import java.nio.charset.StandardCharsets;
@@ -69,7 +69,7 @@ public class ClientRegistryCenter implements CommandLineRunner {
     /**
      * @param remote remote remote address {@link Channel#remoteAddress()}
      */
-    public void registryAPI(String remote, ApplicationType at, String service, List<ExposedAPI> apiList) {
+    public void registryAPI(String remote, ApplicationType at, String service, List<ApiDescriptor> apiList) {
         String key = MD5Util.MD5Encode(remote, StandardCharsets.UTF_8.name());
 
         synchronized (this) {
@@ -135,7 +135,7 @@ public class ClientRegistryCenter implements CommandLineRunner {
     /**
      * @return exposedAPI collection
      */
-    public Collection<ExposedAPI> getExposedAPIFilterApplicationTypeByRemote(String remote, ApplicationType at) {
+    public Collection<ApiDescriptor> getExposedAPIFilterApplicationTypeByRemote(String remote, ApplicationType at) {
         String key = MD5Util.MD5Encode(remote, StandardCharsets.UTF_8.name());
         return getExposedAPIFilterApplicationType(key, at);
     }
@@ -143,7 +143,7 @@ public class ClientRegistryCenter implements CommandLineRunner {
     /**
      * @return exposedAPI collection
      */
-    public Collection<ExposedAPI> getExposedAPIFilterApplicationType(String clientId, ApplicationType at) {
+    public Collection<ApiDescriptor> getExposedAPIFilterApplicationType(String clientId, ApplicationType at) {
         Set<Api> apiSet = this.apiTable.get(clientId);
         return apiSet
                 .stream()
@@ -158,7 +158,7 @@ public class ClientRegistryCenter implements CommandLineRunner {
      * @return exposedAPI collection
      */
     @Deprecated
-    public Collection<ExposedAPI> getExposedAPIFilterService(String service) {
+    public Collection<ApiDescriptor> getExposedAPIFilterService(String service) {
         return this.apiTable.values().stream()
                 .flatMap(Collection::stream)
                 .filter(t -> t.getService().equals(service))

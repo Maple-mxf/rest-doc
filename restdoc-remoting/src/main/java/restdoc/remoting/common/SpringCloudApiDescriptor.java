@@ -3,7 +3,7 @@ package restdoc.remoting.common;
 /**
  * SSL context
  */
-public class SpringCloudExposedAPI implements ExposedAPI {
+public class SpringCloudApiDescriptor implements ApiDescriptor {
 
     @Override
     public String uniqueKey() {

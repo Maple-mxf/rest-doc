@@ -1,7 +1,7 @@
 package restdoc.remoting.common.body;
 
 import restdoc.remoting.common.ApplicationType;
-import restdoc.remoting.common.DubboExposedAPI;
+import restdoc.remoting.common.DubboApiDescriptor;
 
 import java.util.List;
 
@@ -11,17 +11,17 @@ import java.util.List;
 @Deprecated
 public class DubboExposedAPIBody extends BaseExposedAPIBody {
 
-    private List<DubboExposedAPI> apiList;
+    private List<DubboApiDescriptor> apiList;
 
     public DubboExposedAPIBody() {
         super(ApplicationType.DUBBO);
     }
 
-    public List<DubboExposedAPI> getApiList() {
+    public List<DubboApiDescriptor> getApiList() {
         return apiList;
     }
 
-    public void setApiList(List<DubboExposedAPI> apiList) {
+    public void setApiList(List<DubboApiDescriptor> apiList) {
         this.apiList = apiList;
     }
 

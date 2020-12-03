@@ -14,7 +14,7 @@ import restdoc.client.api.model.DubboInvocation
 import restdoc.client.dubbo.DubboRefBeanManager
 import restdoc.client.dubbo.model.ServiceDescriptor
 import restdoc.remoting.common.ApplicationType
-import restdoc.remoting.common.DubboExposedAPI
+import restdoc.remoting.common.DubboApiDescriptor
 import restdoc.remoting.common.RemotingUtil
 import restdoc.remoting.common.body.DubboExposedAPIBody
 import restdoc.remoting.netty.NettyRequestProcessor
@@ -92,14 +92,14 @@ open class ExportAPIHandler(private val beanFactory: ConfigurableListableBeanFac
 
             dubboRefBeanManager.addRefBean(it.value.ref.javaClass.name, it.value.ref)
 
-            val dubboAPI = DubboExposedAPI()
+            val dubboAPI = DubboApiDescriptor()
             dubboAPI.name = it.value.beanName
             dubboAPI.refName = it.value.ref.javaClass.name
 
             val sd = ServiceDescriptor(it.value.interfaceClass)
 
             dubboAPI.exposedMethods = sd.allMethods.map { mh ->
-                val exposedMethod = DubboExposedAPI.ExposedMethod(
+                val exposedMethod = DubboApiDescriptor.ExposedMethod(
                         mh.paramDesc,
                         mh.compatibleParamSignatures,
                         mh.parameterClasses.map { it.name }.toTypedArray(),

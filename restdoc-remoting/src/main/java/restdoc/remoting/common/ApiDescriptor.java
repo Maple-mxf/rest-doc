@@ -1,6 +1,6 @@
 package restdoc.remoting.common;
 
-public interface ExposedAPI {
+public interface ApiDescriptor {
 
     /**
      *

@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.stereotype.Service
-import restdoc.remoting.common.DubboExposedAPI
+import restdoc.remoting.common.DubboApiDescriptor
 import restdoc.web.controller.console.model.NavNode
 import restdoc.web.model.*
 import restdoc.web.repository.DubboDocumentRepository
@@ -17,7 +17,7 @@ import restdoc.web.util.ReflectUtils
  * @author Overman
  */
 interface DubboDocumentService {
-    fun sync(projectId: String, apiList: Collection<DubboExposedAPI>)
+    fun sync(projectId: String, apiList: Collection<DubboApiDescriptor>)
 }
 
 /**
@@ -32,7 +32,7 @@ open class DubboDocumentServiceImpl : DubboDocumentService {
     @Autowired
     lateinit var resourceRepository: ResourceRepository
 
-    override fun sync(projectId: String, apiList: Collection<DubboExposedAPI>) {
+    override fun sync(projectId: String, apiList: Collection<DubboApiDescriptor>) {
 
         // 0 同步resource(删除不存在的resource)
         val apiIds = apiList.map { it.name.hashCode().toString() }

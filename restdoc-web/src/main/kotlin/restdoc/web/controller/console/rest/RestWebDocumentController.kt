@@ -1,6 +1,5 @@
 package restdoc.web.controller.console.rest
 
-import com.fasterxml.jackson.databind.JsonNode
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.springframework.beans.factory.annotation.Autowired
@@ -14,8 +13,8 @@ import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.http.HttpMethod
 import org.springframework.web.bind.annotation.*
 import restdoc.remoting.common.ApplicationType
-import restdoc.remoting.common.DubboExposedAPI
-import restdoc.remoting.common.RestWebExposedAPI
+import restdoc.remoting.common.DubboApiDescriptor
+import restdoc.remoting.common.RestWebApiDescriptor
 import restdoc.web.base.auth.Verify
 import restdoc.web.controller.console.model.*
 import restdoc.web.core.Result
@@ -30,7 +29,6 @@ import restdoc.web.repository.RestWebDocumentRepository
 import restdoc.web.util.*
 import restdoc.web.util.IDUtil.id
 import restdoc.web.util.IDUtil.now
-import restdoc.web.util.dp.JsonDeProjector
 import java.net.URL
 import java.util.*
 import javax.validation.Valid
@@ -493,7 +491,7 @@ class RestWebDocumentController {
 
             val restwebAPIList =
                     this.clientRegistryCenter.getExposedAPIFilterApplicationType(
-                            clientId, ApplicationType.REST_WEB) as Collection<RestWebExposedAPI>
+                            clientId, ApplicationType.REST_WEB) as Collection<RestWebApiDescriptor>
 
             val resources = restwebAPIList
                     .groupBy { it.controller }
@@ -573,7 +571,7 @@ class RestWebDocumentController {
 
         } else if (ApplicationType.DUBBO == ap) {
             val restwebAPIList = this.clientRegistryCenter.getExposedAPIFilterApplicationTypeByRemote(clientId, ApplicationType.DUBBO)
-                    as Collection<DubboExposedAPI>
+                    as Collection<DubboApiDescriptor>
 
         } else {
             throw RuntimeException("Not support application type $ap")
@@ -586,7 +584,7 @@ class RestWebDocumentController {
     @PostMapping("/serviceClient/{clientId}/syncApi")
     fun syncServiceInstanceApi(@PathVariable clientId: String, @RequestBody dto: SyncRestApiDto): Any {
         val apiList =
-                clientRegistryCenter.getExposedAPIFilterApplicationType(clientId, ApplicationType.REST_WEB) as Collection<RestWebExposedAPI>
+                clientRegistryCenter.getExposedAPIFilterApplicationType(clientId, ApplicationType.REST_WEB) as Collection<RestWebApiDescriptor>
 
         val groupByResourceAPIList = apiList.groupBy { it.controller }.toMap()
 

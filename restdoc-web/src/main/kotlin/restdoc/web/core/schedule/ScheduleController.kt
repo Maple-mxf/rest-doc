@@ -1,7 +1,6 @@
 package restdoc.web.core.schedule
 
 import com.fasterxml.jackson.databind.node.ObjectNode
-import com.sun.org.apache.regexp.internal.RE
 import io.netty.channel.Channel
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -189,7 +188,7 @@ class ScheduleController @Autowired constructor(scheduleProperties: ScheduleProp
      * @since 1.0
      */
     @Deprecated(message = "syncGetEmptyApiTemplates")
-    fun syncGetEmptyApiTemplates(clientId: String?): List<RestWebExposedAPI> {
+    fun syncGetEmptyApiTemplates(clientId: String?): List<RestWebApiDescriptor> {
 
         val request = RemotingCommand.createRequestCommand(RequestCode.GET_EMPTY_API_TEMPLATES, null)
         val clientChannelInfo = clientRegistryCenter.get(clientId)

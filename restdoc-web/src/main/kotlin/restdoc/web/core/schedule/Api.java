@@ -1,7 +1,7 @@
 package restdoc.web.core.schedule;
 
 import restdoc.remoting.common.ApplicationType;
-import restdoc.remoting.common.ExposedAPI;
+import restdoc.remoting.common.ApiDescriptor;
 
 import java.util.List;
 import java.util.Objects;
@@ -12,7 +12,7 @@ public class Api {
 
     private ApplicationType at;
 
-    private List<ExposedAPI> apiList;
+    private List<ApiDescriptor> apiList;
 
     public String getService() {
         return service;
@@ -30,11 +30,11 @@ public class Api {
         this.at = at;
     }
 
-    public List<ExposedAPI> getApiList() {
+    public List<ApiDescriptor> getApiList() {
         return apiList;
     }
 
-    public void setApiList(List<ExposedAPI> apiList) {
+    public void setApiList(List<ApiDescriptor> apiList) {
         this.apiList = apiList;
     }
 

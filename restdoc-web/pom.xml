@@ -96,13 +96,13 @@
         <dependency>
             <artifactId>restdoc-remoting</artifactId>
             <groupId>com.github.open-source-sharing</groupId>
-            <version>1.0.RELEASE</version>
+            <version>2.0.RELEASE</version>
         </dependency>
 
         <dependency>
             <artifactId>restdoc-client-api</artifactId>
             <groupId>com.github.open-source-sharing</groupId>
-            <version>1.0.RELEASE</version>
+            <version>2.0.RELEASE</version>
         </dependency>
 
         <dependency>

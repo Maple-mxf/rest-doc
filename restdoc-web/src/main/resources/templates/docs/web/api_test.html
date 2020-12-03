@@ -94,18 +94,19 @@
                                 <div class="layui-tab layui-tab-card ">
                                     <ul class="layui-tab-title">
                                         <li class="layui-this">
-                                            <input type="radio" name="bodyTextType" value="JSON" title="JSON" checked>
+                                            <input type="radio" name="requestBodyTextType" value="JSON" title="JSON"
+                                                   checked>
                                         </li>
-                                        <li><input type="radio" name="bodyTextType" value="XML" title="XML"></li>
+                                        <li><input type="radio" name="requestBodyTextType" value="XML" title="XML"></li>
                                     </ul>
                                     <div class="layui-tab-content">
                                         <div class="layui-tab-item layui-show">
-                                               <textarea name="requestBodyTextType" id="request_body_json_text"
+                                               <textarea id="request_body_json_text"
                                                          placeholder="请输入JSON"
                                                          class="layui-textarea" cols=20 rows=15></textarea>
                                         </div>
                                         <div class="layui-tab-item">
-                                               <textarea name="requestBodyTextType" id="request_body_xml_text"
+                                               <textarea id="request_body_xml_text"
                                                          placeholder="请输入XML"
                                                          class="layui-textarea" cols=20 rows=15></textarea>
                                         </div>
@@ -849,14 +850,14 @@
         }
 
         function getRequestBodyText() {
-            var checkedValue = $("input[name='responseBodyTextType']:checked").val();
+            var checkedValue = $("input[name='requestBodyTextType']:checked").val();
             if (checkedValue === "JSON") {
-                var jsonText = $("#response_body_json_text").val();
+                var jsonText = $("#request_body_json_text").val();
                 if (jsonText === "") return null;
                 return JSON.parse(jsonText);
             } else {
                 var jsonValue = null;
-                var xmlText = $("#response_body_xml_text").val();
+                var xmlText = $("#request_body_xml_text").val();
                 if (xmlText === "") return jsonValue;
                 $.ajax({
                     url: '/restdoc/textprotocol/xml2Json',

@@ -2,7 +2,7 @@ package restdoc.remoting.common;
 
 import java.util.List;
 
-public class DubboExposedAPI implements ExposedAPI {
+public class DubboApiDescriptor implements ApiDescriptor {
 
     private String name;
     private List<ExposedMethod> exposedMethods;

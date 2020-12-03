@@ -4,17 +4,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.core.MethodParameter;
 import org.springframework.core.env.Environment;
+import org.springframework.http.MediaType;
 import org.springframework.util.MimeType;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.method.HandlerMethod;
-import org.springframework.web.servlet.mvc.condition.MediaTypeExpression;
+import org.springframework.web.servlet.mvc.condition.*;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
-import restdoc.remoting.common.RestWebExposedAPI;
+import restdoc.remoting.common.RestWebApiDescriptor;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.lang.annotation.Annotation;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -26,7 +28,7 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
 
     private static Logger log = LoggerFactory.getLogger(EndpointsListener.class);
 
-    private List<RestWebExposedAPI> restWebExposedAPIList;
+    private List<RestWebApiDescriptor> restWebExposedAPIList;
 
     private final Environment environment;
 
@@ -53,6 +55,8 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
                     RequestMappingInfo requestMappingInfo = hm.getKey();
                     HandlerMethod handlerMethod = hm.getValue();
 
+                    transparentApi(requestMappingInfo, handlerMethod);
+
                     return requestMappingInfo.getPatternsCondition()
                             .getPatterns()
                             .stream()
@@ -60,7 +64,7 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
                             .map(pattern -> String.join("", contextPath, pattern))
                             .map(pattern -> {
 
-                                RestWebExposedAPI emptyTemplate = new RestWebExposedAPI();
+                                RestWebApiDescriptor emptyTemplate = new RestWebApiDescriptor();
                                 emptyTemplate.setSupportMethod(requestMappingInfo.getMethodsCondition()
                                         .getMethods()
                                         .stream()
@@ -101,7 +105,160 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
         log.info("RESTDOC-CLIENT collect api empty templates {} ", restWebExposedAPIList);
     }
 
-    public List<RestWebExposedAPI> getRestWebExposedAPIList() {
+    public List<RestWebApiDescriptor> getRestWebExposedAPIList() {
         return restWebExposedAPIList;
+    }
+
+
+    /**
+     * @see RequestMapping
+     * transparentApi
+     *
+     * @return {@link RestWebApiDescriptor}
+     * @see org.springframework.web.bind.annotation.PathVariable
+     * @see org.springframework.web.bind.annotation.RequestParam
+     * @see org.springframework.web.bind.annotation.RequestPart
+     * @see org.springframework.web.bind.annotation.MatrixVariable
+     * @see org.springframework.web.bind.annotation.RequestBody
+     * @see org.springframework.web.bind.annotation.CookieValue
+     * @see org.springframework.web.bind.annotation.RequestHeader
+     */
+    private RestWebApiDescriptor transparentApi(RequestMappingInfo requestMappingInfo, HandlerMethod handlerMethod) {
+        RestWebApiDescriptor emptyDescriptor = new RestWebApiDescriptor();
+        emptyDescriptor.setName(requestMappingInfo.getName());
+
+        Set<RequestMethod> methods = requestMappingInfo.getMethodsCondition().getMethods();
+
+        ParamsRequestCondition paramsCondition = requestMappingInfo.getParamsCondition();
+        ConsumesRequestCondition consumesCondition = requestMappingInfo.getConsumesCondition();
+        ProducesRequestCondition producesCondition = requestMappingInfo.getProducesCondition();
+        HeadersRequestCondition headersCondition = requestMappingInfo.getHeadersCondition();
+        RequestCondition<?> customCondition = requestMappingInfo.getCustomCondition();
+
+        boolean isGetMethod = methods.isEmpty();
+        boolean isAllowRequestBody = true;
+
+        // content-type=application/*  TODO
+        @Deprecated
+        boolean isRequireFormDataHeader =
+                consumesCondition.getConsumableMediaTypes().contains(MediaType.MULTIPART_FORM_DATA) ||
+                        consumesCondition.getConsumableMediaTypes().contains(MediaType.APPLICATION_FORM_URLENCODED);
+
+        if (methods.contains(RequestMethod.GET))
+            isAllowRequestBody = false;
+        if (isRequireFormDataHeader)
+            isAllowRequestBody = true;
+
+        MethodParameter[] parameters = handlerMethod.getMethodParameters();
+
+        for (MethodParameter parameter : parameters) {
+            if (parameter.getParameterAnnotations().length > 0) {
+                String parameterName = parameter.getParameterName();
+                RestWebApiDescriptor.ParameterDescriptor parameterDescriptor =
+                        new RestWebApiDescriptor.ParameterDescriptor(parameterName);
+                parameterDescriptor.setType(parameter.getParameterType().getName());
+
+                Annotation[] annotations = parameter.getParameterAnnotations();
+                for (Annotation annotation : annotations) {
+                    if (annotation.annotationType().equals(PathVariable.class)) {
+                        PathVariable pathVariable = (PathVariable) annotation;
+                        parameterDescriptor.setRequire(pathVariable.required());
+                        emptyDescriptor.getPathVariableParameters()
+                                .add(parameterDescriptor);
+                    } else if (annotation.annotationType().equals(RequestParam.class)) {
+                        RequestParam requestParam = (RequestParam) annotation;
+                        parameterDescriptor.setRequire(requestParam.required());
+                        parameterDescriptor.setDefaultValue(requestParam.defaultValue());
+
+                        if (!isAllowRequestBody) {
+                            emptyDescriptor.getQueryParamParameters().add(parameterDescriptor);
+                        } else {
+                        }
+                    } else if (annotation.annotationType().equals(RequestPart.class)) {
+
+                    } else if (annotation.annotationType().equals(MatrixVariable.class)) {
+                        MatrixVariable matrixVariable = (MatrixVariable) annotation;
+                        parameterDescriptor.setRequire(matrixVariable.required());
+                        parameterDescriptor.setName(matrixVariable.name());
+                        parameterDescriptor.setDefaultValue(matrixVariable.defaultValue());
+                        emptyDescriptor.getMatrixVariableParameters().add(parameterDescriptor);
+
+                    } else if (annotation.annotationType().equals(RequestBody.class)) {
+                        RequestBody requestBody = (RequestBody) annotation;
+                        parameterDescriptor.setRequire(requestBody.required());
+                        emptyDescriptor.getRequestBodyParameters().add(parameterDescriptor);
+
+                    } else if (annotation.annotationType().equals(CookieValue.class)) {
+                        CookieValue cookieValue = (CookieValue) annotation;
+                        parameterDescriptor.setRequire(cookieValue.required());
+                        parameterDescriptor.setName("Cookie");
+                        parameterDescriptor.setDefaultValue(cookieValue.defaultValue());
+
+                        List<RestWebApiDescriptor.ParameterDescriptor> cookieValues = emptyDescriptor.getRequestHeaderParameters()
+                                .getOrDefault("Cookie", new ArrayList<>());
+                        emptyDescriptor.getRequestHeaderParameters().put("Cookie", cookieValues);
+
+                    } else if (annotation.annotationType().equals(RequestHeader.class)) {
+                        RequestHeader requestHeader = (RequestHeader) annotation;
+                        parameterDescriptor.setDefaultValue(requestHeader.defaultValue());
+                        parameterDescriptor.setRequire(requestHeader.required());
+                        parameterDescriptor.setName(requestHeader.name());
+
+                        emptyDescriptor.getRequestHeaderParameters()
+                                .put(requestHeader.name(), Collections.singletonList(parameterDescriptor));
+                    }
+                }
+            }
+        }
+
+        // consumesCondition
+        List<RestWebApiDescriptor.ParameterDescriptor> acceptableContentTypes
+                = emptyDescriptor.getRequestHeaderParameters().getOrDefault("Content-Type", new ArrayList<>());
+        acceptableContentTypes.addAll(
+                consumesCondition.getConsumableMediaTypes()
+                        .stream()
+                        .map(t -> {
+                            RestWebApiDescriptor.ParameterDescriptor pd = new RestWebApiDescriptor.ParameterDescriptor(null, true);
+                            pd.setRequireEqualsValue(t.toString());
+                            return pd;
+                        })
+                        .collect(Collectors.toList())
+        );
+        emptyDescriptor.getRequestHeaderParameters().put("Content-Type", acceptableContentTypes);
+
+        // headersCondition
+        headersCondition.getExpressions()
+                .stream()
+                .filter(NameValueExpression::isNegated)
+                .map(t -> {
+                    RestWebApiDescriptor.ParameterDescriptor pd = new RestWebApiDescriptor.ParameterDescriptor(t.getName(), true);
+                    pd.setRequireEqualsValue(t.getValue());
+                    return pd;
+                })
+                .collect(Collectors.groupingBy(RestWebApiDescriptor.ParameterDescriptor::getName))
+                .forEach((key, value) -> {
+                    List<RestWebApiDescriptor.ParameterDescriptor> pds
+                            = emptyDescriptor.getRequestHeaderParameters().getOrDefault(key, new ArrayList<>());
+                    pds.addAll(value);
+                    emptyDescriptor.getRequestHeaderParameters().put(key, pds);
+                });
+
+        // producesCondition
+        List<RestWebApiDescriptor.ParameterDescriptor> produceContentTypes = emptyDescriptor.getResponseHeaderParameters()
+                .getOrDefault("Content-Type", new ArrayList<>());
+        produceContentTypes.addAll(
+                producesCondition.getProducibleMediaTypes()
+                        .stream()
+                        .map(t -> {
+                            RestWebApiDescriptor.ParameterDescriptor pd = new RestWebApiDescriptor.ParameterDescriptor(null, true);
+                            pd.setRequireEqualsValue(t.toString());
+                            return pd;
+                        })
+                        .collect(Collectors.toList()));
+        emptyDescriptor.getResponseHeaderParameters().put("Content-Type", produceContentTypes);
+
+        //
+
+        return emptyDescriptor;
     }
 }
