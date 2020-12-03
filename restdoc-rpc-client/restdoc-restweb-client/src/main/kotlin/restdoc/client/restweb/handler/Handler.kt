@@ -1,7 +1,6 @@
 package restdoc.client.restweb.handler
 
 import io.netty.channel.ChannelHandlerContext
-import org.springframework.boot.info.BuildProperties
 import org.springframework.core.env.Environment
 import restdoc.client.api.AgentConfigurationProperties
 import restdoc.client.api.model.ClientInfo

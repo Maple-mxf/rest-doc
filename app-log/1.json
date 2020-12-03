@@ -1,0 +1,156 @@
+{
+  "_id": "738638106957189120",
+  "lambdaName": "全国职业技能等级证书查询",
+  "groupFields": [
+    {
+      "code": "G298B46A0",
+      "name": "基本信息",
+      "rank": NumberInt("0")
+    },
+    {
+      "code": "G40B7AA33",
+      "name": "证书信息",
+      "rank": NumberInt("1")
+    }
+  ],
+  "ignoreExportExcelFields": [
+    "G298B46A0FB1E1B"
+  ],
+  "matrixFields": [
+    {
+      "name": "头像",
+      "code": "G298B46A0FB1E1B",
+      "type": "IMAGE",
+      "group": "G298B46A0",
+      "constraints": false,
+      "rank": NumberInt("0"),
+      "placeholder": "请输入头像"
+    },
+    {
+      "name": "姓名",
+      "code": "G298B46A0FB349A",
+      "type": "INPUT",
+      "group": "G298B46A0",
+      "constraints": false,
+      "rank": NumberInt("1"),
+      "placeholder": "请输入姓名"
+    },
+    {
+      "name": "性别",
+      "code": "G298B46A0FBF6E4",
+      "type": "INPUT",
+      "group": "G298B46A0",
+      "constraints": false,
+      "rank": NumberInt("2"),
+      "placeholder": "请输入性别"
+    },
+    {
+      "name": "职业名称",
+      "code": "G40B7AA33F3B81E351",
+      "type": "INPUT",
+      "group": "G40B7AA33",
+      "constraints": false,
+      "rank": NumberInt("0"),
+      "placeholder": "请输入职业名称"
+    },
+    {
+      "name": "技能等级",
+      "code": "G40B7AA33F43FA6E8A",
+      "type": "INPUT",
+      "group": "G40B7AA33",
+      "constraints": false,
+      "rank": NumberInt("1"),
+      "placeholder": "请输入技能等级"
+    },
+    {
+      "name": "身份证号",
+      "code": "G298B46A0FBF624",
+      "type": "INPUT",
+      "group": "G298B46A0",
+      "constraints": false,
+      "rank": NumberInt("3"),
+      "placeholder": "请输入身份证号"
+    },
+    {
+      "name": "证书编号",
+      "code": "G40B7AA33F271DDC13",
+      "type": "INPUT",
+      "group": "G40B7AA33",
+      "constraints": false,
+      "rank": NumberInt("2"),
+      "placeholder": "请输入证书编号"
+    },
+    {
+      "name": "理论成绩",
+      "code": "G40B7AA33F1C4C812",
+      "type": "INPUT",
+      "group": "G40B7AA33",
+      "constraints": false,
+      "rank": NumberInt("3"),
+      "placeholder": "请输入理论成绩"
+    },
+    {
+      "name": "实操成绩",
+      "code": "G40B7AA33F2BE634D6",
+      "type": "INPUT",
+      "group": "G40B7AA33",
+      "constraints": false,
+      "rank": NumberInt("4"),
+      "placeholder": "请输入实操成绩"
+    },
+    {
+      "name": "评定成绩",
+      "code": "G40B7AA33F40ECE9AF",
+      "type": "INPUT",
+      "group": "G40B7AA33",
+      "constraints": false,
+      "rank": NumberInt("5"),
+      "placeholder": "请输入评定成绩"
+    },
+    {
+      "name": "发证日期",
+      "code": "G40B7AA33F28332BEA",
+      "type": "DATE",
+      "group": "G40B7AA33",
+      "constraints": false,
+      "rank": NumberInt("8"),
+      "placeholder": "请输入发证日期"
+    }
+  ],
+  "searchFieldCodes": [
+    "G298B46A0FB349A",
+    "G40B7AA33F271DDC13",
+    "G298B46A0FBF624"
+  ],
+  "adminPageFilterFieldCodes": [
+    "G298B46A0FB349A",
+    "G298B46A0FBF6E4",
+    "G40B7AA33F40ECE9AF",
+    "G40B7AA33F28332BEA"
+  ],
+  "componentName": "全国职业技能等级证书查询",
+  "componentCode": "LambdaComponent",
+  "orgId": "10717",
+  "createTime": NumberLong("1596175447931"),
+  "websiteId": "730699648670371840",
+  "rank": NumberInt("1"),
+  "createMember": {
+    "_id": "-1",
+    "name": "系统",
+    "orgId": "10717"
+  },
+  "lastUpdateTime": NumberLong("1596178123119"),
+  "lastUpdateMember": {
+    "_id": "722363738061017088",
+    "name": "12000002221",
+    "orgId": "34082"
+  },
+  "display": true,
+  "deleted": false,
+  "options": { },
+  "additional": {
+    "type": "CertQueryLambda"
+  },
+  "showName": false,
+  "_class": "com.onepushing.cloud.website.entity.component.LambdaComponent"
+}
