@@ -26,6 +26,11 @@ RESTdoc分为两个模块，RESTdoc-console和RESTdoc-client，RESTdoc-console�
   <artifactId>restdoc-restweb-client</artifactId>
   <version>1.0.RELEASE</version>
 </dependency>
+<dependency>
+  <groupId>org.jetbrains.kotlin</groupId>
+  <artifactId>kotlin-reflect</artifactId>
+  <version>1.3.72</version>
+</dependency>
 ```
 
 dubbo应用
@@ -35,17 +40,13 @@ dubbo应用
   <artifactId>restdoc-dubbo-client</artifactId>
   <version>1.0.RELEASE</version>
 </dependency>
+<dependency>
+  <groupId>org.jetbrains.kotlin</groupId>
+  <artifactId>kotlin-reflect</artifactId>
+  <version>1.3.72</version>
+</dependency>
 ```
 
-- Gradle dependency <br>
-普通web应用
-```
-implementation 'com.github.open-source-sharing:restdoc-restweb-client:1.0.RELEASE'
-```
-dubbo应用
-```
-implementation 'com.github.open-source-sharing:restdoc-dubbo-client:1.0.RELEASE'
-```
 
 - 配置application.yml/application.properties
 

@@ -1,0 +1,4 @@
+restdoc:
+  host: 152.136.104.144
+  port: 4321
+  service: '测试服务1'

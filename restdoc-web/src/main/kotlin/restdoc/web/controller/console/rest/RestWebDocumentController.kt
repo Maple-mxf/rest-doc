@@ -538,7 +538,7 @@ class RestWebDocumentController {
                         requestHeaderDescriptor = null,
                         requestBodyDescriptor = null,
                         responseBodyDescriptors = null,
-                        method = HttpMethod.valueOf(it.supportMethod[0]),
+                        method = if (it.supportMethod.isEmpty()) HttpMethod.POST else HttpMethod.valueOf(it.supportMethod[0]),
                         uriVarDescriptors = null,
                         content = null,
                         responseHeaderDescriptor = null)
@@ -641,7 +641,7 @@ class RestWebDocumentController {
                                 requestBodyDescriptor = null,
                                 requestHeaderDescriptor = null,
                                 responseBodyDescriptors = null,
-                                method = HttpMethod.valueOf(api.supportMethod[0]),
+                                method = if (api.supportMethod.isEmpty()) HttpMethod.POST else HttpMethod.valueOf(api.supportMethod[0]),
                                 uriVarDescriptors = null,
                                 content = null,
                                 responseHeaderDescriptor = null,

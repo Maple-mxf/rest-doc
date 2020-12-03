@@ -15,6 +15,7 @@
     <modules>
         <module>restdoc-client-dubbo-test</module>
         <module>restdoc-client-springcloud-test</module>
+        <module>restdoc-client-web-test</module>
     </modules>
 
 
