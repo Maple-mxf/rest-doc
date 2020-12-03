@@ -48,7 +48,7 @@
                         <button class="layui-btn" style="margin-left: 23%;float: left" lay-submit lay-filter="execute">
                             <i class="layui-icon layui-icon-triangle-r" style="font-size: 17px; color: white;"></i>调试
                         </button>
-                        <button class="layui-btn" lay-submit lay-filter="save">
+                        <button class="layui-btn" lay-submit lay-filter="save" id="saveDocBtn">
                             <i class="layui-icon layui-icon-email" style="font-size: 18px; color: white;"></i> 保存
                         </button>
                     </div>
@@ -202,7 +202,7 @@
         <button title="刷新数据" class="layui-btn  layui-btn-primary layui-btn-sm" lay-event="refresh">
             <i class="layui-icon layui-icon-refresh" style="font-size: 20px; color: black;"></i>
         </button>
-        <button title="删除" class="layui-btn layui-btn-primary layui-btn-sm" lay-event="del">
+        <button title="删除" class="layui-btn layui-btn-primary layui-btn-sm" lay-event="del" id="deleteTestLogBtn">
             <i class="layui-icon layui-icon-delete" style="font-size: 20px; color: black;"></i>
         </button>
     </div>
@@ -220,6 +220,11 @@
     $("#projectNav").addClass("layui-this");
     var msg;
     var globalExecuteResult = null;
+    var readOnly = parent.readOnly;
+
+    if (readOnly !== null) {
+        $('#saveDocBtn,#deleteTestLogBtn').css('display', 'none')
+    }
 
     var tipTool = null;
     layui.config({
@@ -361,7 +366,7 @@
                                 if (res.code === '200') {
                                     refreshTestLogTable();
                                     layer.msg("删除成功");
-                                }else{
+                                } else {
                                     layer.msg(res.message)
                                 }
                             },

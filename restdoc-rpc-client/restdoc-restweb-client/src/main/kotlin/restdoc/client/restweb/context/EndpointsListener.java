@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Component;
 import org.springframework.util.MimeType;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.condition.MediaTypeExpression;

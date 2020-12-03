@@ -34,13 +34,6 @@
             font-family: Roboto, serif;
         }
 
-        .code-block {
-            background-color: #283142;
-            color: white;
-            font-size: 16px;
-            font-family: Roboto, serif;
-        }
-
         .layui-table td, .layui-table th {
             color: #0C0C0C;
             font-size: 15px;
@@ -112,6 +105,9 @@
     var projectId = $("#projectId").val();
     var lay = null;
 
+    // 根据readOnly进行动态渲染页面 屏蔽修改操作
+    var readOnly = [[${readOnly}]];
+
     layui.config({
         base: '/restdoc/layui/lay/extends/'
     }).use(['table', 'util', 'layer', 'jquery', 'layedit', 'dtree'],
@@ -143,7 +139,8 @@
             }
 
             setDTreeData();
-            var DemoTree = dtree.render({
+
+            var dtreeOptions = {
                 elem: "#dtreeTableContent",
                 data: dtreeData,
                 dataFormat: "list",
@@ -160,10 +157,13 @@
                     }
                 },
                 done: function (data, obj, first) {
-                },
-                toolbar: true,
-                toolbarShow: ['copyDoc', 'createResource', 'createApi', 'createWiki', 'modify', 'del'],
-                toolbarExt: [
+                }
+            };
+
+            if (readOnly === null) {
+                dtreeOptions['toolbar'] = true;
+                dtreeOptions['toolbarShow'] = ['copyDoc', 'createResource', 'createApi', 'createWiki', 'modify', 'del'];
+                dtreeOptions['toolbarExt'] = [
                     {
                         toolbarId: "copyDoc",
                         title: "复制文档",
@@ -250,8 +250,8 @@
                             deleteNode(node);
                         }
                     }
-                ],
-                toolbarFun: {
+                ];
+                dtreeOptions['toolbarFun'] = {
                     loadToolbarBefore: function (buttons, param, $div) {
                         if (nodeIsResource(param.nodeId)) {
                             buttons.copyDoc = "";
@@ -266,8 +266,10 @@
                         }
                         return buttons;
                     }
-                }
-            });
+                };
+            }
+
+            var DemoTree = dtree.render(dtreeOptions);
 
             function editNode(node) {
                 commonToolHandler(node, node.parentId, function () {
@@ -437,13 +439,13 @@
                                 async: false,
                                 contentType: "application/json",
                                 success: function (res) {
-                                   if (res.code === '200'){
-                                       resetCreateDiv();
-                                       dtree.selectVal("dtreeTableContent", res.data);
-                                       $("#apiDocFrame").attr("src", '/restdoc/' + projectId + '/document/' + res.data + '/view');
-                                   }else{
-                                       layer.msg(res.message);
-                                   }
+                                    if (res.code === '200') {
+                                        resetCreateDiv();
+                                        dtree.selectVal("dtreeTableContent", res.data);
+                                        $("#apiDocFrame").attr("src", '/restdoc/' + projectId + '/document/' + res.data + '/view');
+                                    } else {
+                                        layer.msg(res.message);
+                                    }
                                 }
                             });
                             layer.close(ix);

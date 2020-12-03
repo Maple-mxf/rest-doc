@@ -49,11 +49,11 @@
             background-color: white;
         }
 
-        .line-row-block{
+        .line-row-block {
             margin-top: 40px;
         }
 
-        .edit-state{
+        .edit-state {
             color: #FF5722;
             font-weight: bold;
         }
@@ -134,7 +134,7 @@
                     </div>
                     <div class="layui-row line-row-block"
                          th:if="${document.uriVarDescriptors!=null and !document.uriVarDescriptors.isEmpty()}"
-                         >
+                    >
                         <fieldset class="layui-elem-field">
                             <legend>URI Variable <span style="cursor: pointer">
                                 <i id="editURIVarTableBtn" class="layui-icon layui-icon-edit"
@@ -184,7 +184,7 @@
                     </div>
                     <div class="layui-row line-row-block"
                          th:if="${document.requestHeaderDescriptor!=null and !document.requestHeaderDescriptor.isEmpty()}"
-                         >
+                    >
                         <fieldset class="layui-elem-field">
                             <legend>HTTP Request Header <span style="cursor: pointer">
                                 <i id="editRequestHeaderTableBtn" class="layui-icon layui-icon-edit"
@@ -236,7 +236,7 @@
                     </div>
                     <div class="layui-row line-row-block"
                          th:if="${document.requestBodyDescriptor!=null and !document.requestBodyDescriptor.isEmpty()}"
-                         >
+                    >
                         <fieldset class="layui-elem-field">
                             <legend>HTTP Request Body <span style="cursor: pointer">
                                 <i id="editRequestBodyTableBtn" class="layui-icon layui-icon-edit"
@@ -291,7 +291,7 @@
                     </div>
                     <div class="layui-row line-row-block"
                          th:if="${document.responseBodyDescriptors!=null and !document.responseBodyDescriptors.isEmpty()}"
-                         >
+                    >
 
                         <fieldset class="layui-elem-field">
                             <legend>HTTP Response Body <span style="cursor: pointer">
@@ -391,7 +391,7 @@
                             </table>
                         </form>
                     </div>
-                    <div class="layui-row line-row-block"  >
+                    <div class="layui-row line-row-block">
                         Code Sample
                         <div class="layui-tab layui-tab-card ">
                             <ul class="layui-tab-title">
@@ -452,6 +452,13 @@
     var url = [[${document.url}]];
     var projectId = $("#projectId").val();
 
+    var readOnly = parent.readOnly;
+
+    if (readOnly !== null) {
+        $('#editRequestBodyTableBtn,#editQueryParamTableBtn,#editURIVarTableBtn,#editResponseBodyTableBtn,#editRequestHeaderTableBtn,#editResponseHeaderTableBtn')
+            .css('display', 'none');
+    }
+
     var lay = null;
     var gform = null;
 
@@ -487,6 +494,7 @@
             renderApiTable();
 
             $("#editDocDescriptionBtn").on('dblclick', function (event) {
+                if (readOnly !== null) return;
                 layer.open({
                     type: 2,
                     title: "编辑文档备注",
@@ -634,6 +642,7 @@
     }
 
     function openEditVarPage(field) {
+        if (readOnly !== null) return;
         lay.open({
             type: 2,
             title: "编辑URI路径参数",
@@ -653,6 +662,7 @@
     }
 
     function openEditRequestHeaderPage(field) {
+        if (readOnly !== null) return;
         lay.open({
             type: 2,
             title: "编辑请求头参数",
@@ -671,6 +681,7 @@
     }
 
     function openEditRequestBodyPage(field) {
+        if (readOnly !== null) return;
         lay.open({
             type: 2,
             title: "编辑请求体参数",
@@ -689,6 +700,7 @@
     }
 
     function openEditResponseBodyPage(field) {
+        if (readOnly !== null) return;
         lay.open({
             type: 2,
             title: "编辑响应体参数",
