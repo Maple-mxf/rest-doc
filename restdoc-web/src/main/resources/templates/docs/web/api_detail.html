@@ -586,7 +586,8 @@
 
                 var line = '<td>' + headerFields[i]['field'] + '</td>' + '<td>' + headerFields[i]['value'] + '</td>' + '<td>' + headerFields[i]['optional'] + '</td>' + '<td>' + headerFields[i]['description'] + '</td>';
 
-                var start = "<tr ondblclick=" + fun + ">", end = "</tr>";
+                // var start = "<tr ondblclick=" + fun + ">", end = "</tr>";
+                var start = "<tr>", end = "</tr>";
                 allLine = allLine + start + line + end;
             }
             $("#requestHeaderListTableBody").html(allLine);
@@ -616,7 +617,8 @@
 
                 var param = "'" + requestBodyFields[i]['path'] + "'";
                 var fun = "openEditRequestBodyPage(" + param + ")";
-                var start = "<tr ondblclick=" + fun + ">", end = "</tr>";
+                // var start = "<tr ondblclick=" + fun + ">", end = "</tr>";
+                var start = "<tr >", end = "</tr>";
 
                 var line = '<td>' + requestBodyFields[i]['path'] + '</td>' + '<td>' + requestBodyFields[i]['type'].toLowerCase() + '</td>' + '<td>' + requestBodyFields[i]['value'] + '</td>' + '<td>' + requestBodyFields[i]['optional'] + '</td>' + '<td>' + requestBodyFields[i]['description'] + '</td>';
                 allLine = allLine + start + line + end;
@@ -632,12 +634,13 @@
 
                 var param = "'" + responseBodyFields[i]['path'] + "'";
                 var fun = "openEditResponseBodyPage(" + param + ")";
-                var start = "<tr ondblclick=" + fun + ">", end = "</tr>";
+                // var start = "<tr ondblclick=" + fun + ">", end = "</tr>";
+                var start = "<tr>", end = "</tr>";
 
                 var line = '<td>' + responseBodyFields[i]['path'] + '</td>' + '<td>' + responseBodyFields[i]['type'].toLowerCase() + '</td>' + '<td>' + responseBodyFields[i]['value'] + '</td>' + '<td>' + responseBodyFields[i]['description'] + '</td>';
                 allLine = allLine + start + line + end;
             }
-            $("#responseBodyFieldListTableBody").html(allLine)
+            $("#responseBodyFieldListTableBody").html(allLine);
         }
     }
 

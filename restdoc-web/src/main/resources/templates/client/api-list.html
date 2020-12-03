@@ -4,8 +4,15 @@
     <meta charset="UTF-8">
     <title>API列表</title>
     <link rel="stylesheet" th:href="@{/layui/css/layui.css}"/>
-    <link rel="stylesheet" th:href="@{/admin/css/pearForm.css}"/>
+    <link rel="stylesheet" th:href="@{/admin/css/pear-tree/dtree.css}"/>
+    <link rel="stylesheet" th:href="@{/admin/css/pear-tree/font/dtreefont.css}"/>
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <style>
+        .dtree-nav-div cite {
+            font-family: 'Roboto', sans-serif;
+            font-size: 15px;
+        }
+    </style>
 </head>
 <body>
 <div class="layui-fluid">
@@ -45,10 +52,11 @@
 
     var layuiTree = null;
 
-    layui.use('tree', function () {
+    layui.use(['tree','dtree'], function () {
         var tree = layui.tree;
         layuiTree = tree;
-        //渲染
+        var dtree = layui.dtree;
+
         var inst1 = tree.render({
             elem: '#test1',
             id: "apiListTree",
@@ -61,13 +69,13 @@
         var apiList = layuiTree.getChecked('apiListTree');
         var res = [];
         for (var i = 0; i < apiList.length; i++) {
-           var api = apiList[i];
-           if (api.children != null && api.children.length > 0 ){
-               for (var j = 0; j < api.children.length; j++) {
-                   var doc = api.children[j];
-                   res.push(doc.id);
-               }
-           }
+            var api = apiList[i];
+            if (api.children != null && api.children.length > 0) {
+                for (var j = 0; j < api.children.length; j++) {
+                    var doc = api.children[j];
+                    res.push(doc.id);
+                }
+            }
         }
         return res;
     }

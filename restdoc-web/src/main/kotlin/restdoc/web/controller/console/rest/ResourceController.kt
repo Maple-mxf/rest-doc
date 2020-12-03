@@ -78,10 +78,17 @@ class ResourceController {
         }
 
         val docQuery = Query(Criteria("resource").`in`(resourceIds).and("projectId").`is`(projectId))
-        docQuery.with(Sort.by(Sort.Order.desc("order"), Sort.Order.desc("createTime")))
+        docQuery.with(Sort.by(Sort.Order.desc("order"), Sort.Order.asc("createTime")))
 
         val apiNodes = if (at == ApplicationType.REST_WEB) {
-            docQuery.fields().exclude("requestHeaderDescriptor").exclude("requestBodyDescriptor").exclude("responseBodyDescriptors")
+            docQuery.fields()
+                    .exclude("requestHeaderDescriptor")
+                    .exclude("requestBodyDescriptor")
+                    .exclude("responseBodyDescriptors")
+                    .exclude("description")
+                    .exclude("uriVarDescriptors")
+                    .exclude("queryParamFieldDescriptor")
+
             val webDocs = restWebDocumentRepository.list(docQuery)
             webDocs.map {
                 DTreeVO(id = it.id!!,

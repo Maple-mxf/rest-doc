@@ -210,6 +210,7 @@ data class RestWebDocument(
         /**
          *
          */
+        @Deprecated(message = "content")
         val content: String? = null,
 
         /**

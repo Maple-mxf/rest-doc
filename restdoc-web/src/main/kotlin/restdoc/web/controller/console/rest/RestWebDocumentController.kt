@@ -551,7 +551,6 @@ class RestWebDocumentController {
 
                             val node = NavNode(
                                     id = it.id!!,
-                                    /*title = it.name!!,*/
                                     title = it.url,
                                     field = "",
                                     children = mutableListOf(),
