@@ -212,6 +212,7 @@
                                                 contentType: "application/json",
                                                 success: function (res) {
                                                     resetCreateDiv();
+                                                    if (res.code !== '200') layer.msg(res.message);
                                                 }
                                             });
                                             layer.close(ix);
@@ -436,9 +437,13 @@
                                 async: false,
                                 contentType: "application/json",
                                 success: function (res) {
-                                    resetCreateDiv();
-                                    dtree.selectVal("dtreeTableContent", res.data);
-                                    $("#apiDocFrame").attr("src", '/restdoc/' + projectId + '/document/' + res.data + '/view');
+                                   if (res.code === '200'){
+                                       resetCreateDiv();
+                                       dtree.selectVal("dtreeTableContent", res.data);
+                                       $("#apiDocFrame").attr("src", '/restdoc/' + projectId + '/document/' + res.data + '/view');
+                                   }else{
+                                       layer.msg(res.message);
+                                   }
                                 }
                             });
                             layer.close(ix);

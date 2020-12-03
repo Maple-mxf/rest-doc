@@ -358,8 +358,12 @@
                             contentType: 'application/json; charset=utf-8',
                             aysnc: false,
                             success: function (res) {
-                                refreshTestLogTable();
-                                layer.msg("删除成功");
+                                if (res.code === '200') {
+                                    refreshTestLogTable();
+                                    layer.msg("删除成功");
+                                }else{
+                                    layer.msg(res.message)
+                                }
                             },
                             error: function () {
                                 layer.msg("Error");

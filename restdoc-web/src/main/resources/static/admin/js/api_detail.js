@@ -1,3 +1,6 @@
+var queryTableIsEditState = false, uriTableIsEditState = false, requestHeaderTableIsEditState = false,
+    requestBodyTableIsEditState = false, responseBodyTableIsEditState = false;
+
 // 保存URI数据
 $('#saveURIVarTableBtn').click(function () {
     var trLines = $('#uriFieldListTableBody').children('tr');
@@ -27,16 +30,22 @@ $('#saveURIVarTableBtn').click(function () {
                 resetURITableState();
                 renderURITable(res.data)
             } else {
-                lay.msg('操作失败');
+                lay.msg(res.message);
             }
         }
     });
 });
 
-
 $("#editURIVarTableBtn").click(function () {
-    $('#saveURIVarTableBtn,#cancelURIVarTableBtn').css("display", 'block');
-    renderURIVarEditStateTable(doc['uriVarDescriptors']);
+    if (uriTableIsEditState) {
+        resetURITableState();
+        uriTableIsEditState = false;
+    } else {
+        $('#saveURIVarTableBtn,#cancelURIVarTableBtn').css("display", 'block');
+        renderURIVarEditStateTable(doc['uriVarDescriptors']);
+        uriTableIsEditState = true;
+        $('#editURIVarTableBtn').addClass('edit-state');
+    }
 });
 
 $('#saveRequestBodyTableBtn').click(function () {
@@ -70,7 +79,7 @@ $('#saveRequestBodyTableBtn').click(function () {
                 lay.msg('保存成功');
                 resetRequestBodyTable();
             } else {
-                lay.msg('操作失败');
+                lay.msg(res.message);
             }
         }
     });
@@ -95,8 +104,19 @@ function renderURIVarEditStateTable(uriFields) {
 }
 
 $('#editQueryParamTableBtn').click(function () {
-    renderQueryParamEditStateTable(doc['queryParamDescriptors']);
-    $('#saveQueryParamTableBtn,#cancelQueryParamTableBtn').css("display", 'block');
+    if (queryTableIsEditState) {
+        resetQueryParamTable();
+        queryTableIsEditState = false;
+    } else {
+        renderQueryParamEditStateTable(doc['queryParamDescriptors']);
+        $('#saveQueryParamTableBtn,#cancelQueryParamTableBtn').css("display", 'block');
+        queryTableIsEditState = true;
+        $('#editQueryParamTableBtn').addClass('edit-state');
+    }
+});
+
+$('#cancelQueryParamTableBtn').click(function () {
+    resetQueryParamTable();
 });
 
 function renderQueryParamEditStateTable(queryParamFields) {
@@ -119,6 +139,7 @@ function renderQueryParamEditStateTable(queryParamFields) {
 
 function resetQueryParamTable() {
     $('#saveQueryParamTableBtn,#cancelQueryParamTableBtn').css('display', 'none');
+    $('#editQueryParamTableBtn').removeClass('edit-state');
     doc = getLastedDocument();
     renderQueryParamTable(doc['queryParamDescriptors']);
 }
@@ -151,21 +172,18 @@ $('#saveQueryParamTableBtn').click(function () {
                 resetQueryParamTable();
                 renderQueryParamTable(res.data)
             } else {
-                lay.msg('操作失败');
+                lay.msg(res.message);
             }
         }
     });
 });
 
-// 过时
 function resetURITableState() {
-
     // 重置按钮
     $('#saveURIVarTableBtn,#cancelURIVarTableBtn').css("display", 'none');
-
-
-    $('.uri-description,.uri-value').css("display", 'none');
-    $('.uri-description-text,.uri-value-text').css("display", 'block');
+    $('#editURIVarTableBtn').removeClass('edit-state');
+    doc = getLastedDocument();
+    renderURITable(doc['uriVarDescriptors']);
 }
 
 // 过时
@@ -189,8 +207,18 @@ function getLastedDocument() {
 }
 
 $("#editRequestBodyTableBtn").click(function () {
-    $('#saveRequestBodyTableBtn,#cancelRequestBodyTableBtn').css('display', 'block');
-    renderRequestBodyTableOnEditState(doc['requestBodyDescriptor'])
+
+    if (requestBodyTableIsEditState) {
+        requestBodyTableIsEditState = false;
+        resetRequestBodyTable();
+    } else {
+
+        $('#saveRequestBodyTableBtn,#cancelRequestBodyTableBtn').css('display', 'block');
+        renderRequestBodyTableOnEditState(doc['requestBodyDescriptor']);
+        $('#editRequestBodyTableBtn').addClass('edit-state');
+        requestBodyTableIsEditState = true;
+    }
+
 });
 
 function renderRequestBodyTableOnEditState(requestBodyFields) {
@@ -229,8 +257,17 @@ function renderRequestBodyTableOnEditState(requestBodyFields) {
 
 
 $("#editRequestHeaderTableBtn").click(function () {
-    renderRequestHeaderOnEditState(doc['requestHeaderDescriptor']);
-    $('#saveRequestHeaderTableBtn,#cancelRequestHeaderTableBtn').css("display", 'block');
+
+    if (requestHeaderTableIsEditState) {
+        resetRequestHeaderTable();
+        requestHeaderTableIsEditState = false;
+    } else {
+        renderRequestHeaderOnEditState(doc['requestHeaderDescriptor']);
+        $('#saveRequestHeaderTableBtn,#cancelRequestHeaderTableBtn').css("display", 'block');
+        $('#editRequestHeaderTableBtn').addClass('edit-state');
+        requestHeaderTableIsEditState = true;
+    }
+
 });
 
 function renderRequestHeaderOnEditState(requestHeaderFields) {
@@ -268,6 +305,7 @@ function resetRequestBodyTable() {
 
     doc = getLastedDocument();
     renderRequestBodyTable(doc['requestBodyDescriptor']);
+    $('#editRequestBodyTableBtn').removeClass('edit-state');
 }
 
 
@@ -275,6 +313,7 @@ function resetRequestHeaderTable() {
     $('#saveRequestHeaderTableBtn,#cancelRequestHeaderTableBtn').css("display", 'none');
     doc = getLastedDocument();
     renderRequestHeaderTable(doc['requestHeaderDescriptor']);
+    $('#editRequestHeaderTableBtn').removeClass("edit-state");
 }
 
 $("#saveRequestHeaderTableBtn").click(function () {
@@ -306,7 +345,7 @@ $("#saveRequestHeaderTableBtn").click(function () {
                 lay.msg('保存成功');
                 resetRequestHeaderTable();
             } else {
-                lay.msg('操作失败');
+                lay.msg(res.message);
             }
         }
     });
@@ -339,14 +378,23 @@ function renderResponseBodyTableOnEditState(responseBodyFields) {
 }
 
 $('#editResponseBodyTableBtn').click(function () {
-    $('#saveResponseBodyTableBtn,#cancelResponseBodyTableBtn').css("display", 'block');
-    renderResponseBodyTableOnEditState(doc['responseBodyDescriptors'])
+    if (responseBodyTableIsEditState) {
+        resetResponseBodyTable();
+        responseBodyTableIsEditState = false;
+    } else {
+        $('#saveResponseBodyTableBtn,#cancelResponseBodyTableBtn').css("display", 'block');
+        $('#editResponseBodyTableBtn').addClass('edit-state');
+        renderResponseBodyTableOnEditState(doc['responseBodyDescriptors'])
+        responseBodyTableIsEditState = true;
+    }
+
 });
 
 function resetResponseBodyTable() {
     $('#saveResponseBodyTableBtn,#cancelResponseBodyTableBtn').css("display", 'none');
     doc = getLastedDocument();
     renderResponseBodyTable(doc['responseBodyDescriptors']);
+    $('#editResponseBodyTableBtn').removeClass('edit-state');
 }
 
 $('#saveResponseBodyTableBtn').click(function () {
@@ -378,7 +426,7 @@ $('#saveResponseBodyTableBtn').click(function () {
                 lay.msg('保存成功');
                 resetResponseBodyTable();
             } else {
-                lay.msg('操作失败');
+                lay.msg(res.message);
             }
         }
     });

@@ -20,7 +20,7 @@ import java.util.*
 
 @RestController
 @RequestMapping("/team")
-@Verify
+@Verify(role = ["SYS_ADMIN"])
 class TeamController {
 
     @Autowired

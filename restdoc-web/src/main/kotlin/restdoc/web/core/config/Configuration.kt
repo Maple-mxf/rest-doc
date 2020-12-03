@@ -22,7 +22,7 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 import restdoc.web.base.auth.AuthContext
-import restdoc.web.base.auth.AuthMetadataImpl
+import restdoc.web.base.auth.RestDocAuthImpl
 import restdoc.web.base.auth.AuthenticationInterceptor
 import restdoc.web.base.mongo.BaseMongoRepositoryFactoryBean
 import restdoc.web.base.mongo.BaseRepositoryImpl
@@ -104,7 +104,7 @@ open class ApplicationConfiguration : WebMvcConfigurer {
 
     @Bean
     open fun authenticationInterceptor(): AuthenticationInterceptor {
-        val authMetadata = AuthMetadataImpl(redisTemplate, mapper)
+        val authMetadata = RestDocAuthImpl(redisTemplate, mapper)
         val authenticationInterceptor = AuthenticationInterceptor(authContext, authMetadata)
         authenticationInterceptor.pathPatterns = arrayOf("/**")
         authenticationInterceptor.order = 0

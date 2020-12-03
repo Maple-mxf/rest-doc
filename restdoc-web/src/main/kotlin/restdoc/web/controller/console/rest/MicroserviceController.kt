@@ -16,7 +16,7 @@ import restdoc.web.repository.ProjectRepository
 import restdoc.web.service.DubboDocumentService
 
 @RestController
-@Verify
+@Verify(role = ["SYS_ADMIN"])
 class MicroserviceController {
 
     @Autowired

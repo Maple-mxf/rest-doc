@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import restdoc.web.base.auth.Verify
 import restdoc.web.controller.console.model.RequestDto
 import restdoc.web.controller.console.model.XmlTextDto
 import restdoc.web.core.Result
@@ -15,6 +16,7 @@ import restdoc.web.util.dp.XmlLinkedHashMap
 
 @RestController
 @RequestMapping("/textprotocol")
+@Verify
 class TextProtocolController {
 
     @Autowired

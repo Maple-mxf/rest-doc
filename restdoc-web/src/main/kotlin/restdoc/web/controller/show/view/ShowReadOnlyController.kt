@@ -10,7 +10,7 @@ import restdoc.web.base.auth.Verify
 import restdoc.web.controller.show.model.AuthDTO
 import restdoc.web.core.*
 import restdoc.web.model.ProjectType
-import restdoc.web.model.Rule
+import restdoc.web.model.Role
 import restdoc.web.model.User
 import restdoc.web.repository.ProjectRepository
 import restdoc.web.util.MD5Util
@@ -32,11 +32,17 @@ class ShowReadOnlyController {
     @Autowired
     lateinit var redisTemplate: RedisTemplate<String, Any>
 
+    /**
+     * @see Role.VIEWER
+     */
     @GetMapping("/{projectId}")
-    @Verify(require = false)
+    @Verify(require = false, role = ["VIEWER"])
     fun routeEntrance(@PathVariable projectId: String, model: Model): String {
-        val project = projectRepository.findById(projectId).orElseThrow { restdoc.web.core.Status.INVALID_REQUEST.instanceError("id不存在") }
+        val project = projectRepository.findById(projectId)
+                .orElseThrow { restdoc.web.core.Status.INVALID_REQUEST.instanceError("id不存在") }
+
         model.addAttribute("projectId", project.id)
+        model.addAttribute("readOnly", true)
         if (!project.allowAccess) return "view/error/403"
         return if (holderKit.user == null) {
             "show/auth"
@@ -48,24 +54,24 @@ class ShowReadOnlyController {
     @PostMapping("/auth")
     @ResponseBody
     fun auth(@RequestBody dto: AuthDTO, request: HttpServletRequest, response: HttpServletResponse, model: Model): Result {
-        val project = projectRepository.findById(dto.projectId).orElseThrow { restdoc.web.core.Status.INVALID_REQUEST.instanceError("id不存在") }
+        val project = projectRepository.findById(dto.projectId)
+                .orElseThrow { restdoc.web.core.Status.INVALID_REQUEST.instanceError("id不存在") }
         val encryptPassword = MD5Util.encryptPassword(dto.password, project.id, 1024)
 
-        if (encryptPassword == project.accessPassword) {
-            val user = User(id = "default", account = "or", password = null, createTime = null, role = Rule.VIEWER, teamId = "")
+        return if (encryptPassword == project.accessPassword) {
+            val user = User(id = "default", account = "or", password = null, createTime = null, role = Role.VIEWER, teamId = "")
             val cookieValue: String = MD5Util.MD5Encode(request.remoteHost, "UTF-8")
             val cookie = Cookie(ACCESS_TOKEN, cookieValue)
-            cookie.path = ""
+            cookie.path = "/"
             val expireTime = 1000 * 60 * 60 * 24 * 7L
             cookie.maxAge = expireTime.toInt()
             response.addCookie(cookie)
             redisTemplate.opsForValue().set(cookieValue, user)
             redisTemplate.expire(cookieValue, expireTime, TimeUnit.MILLISECONDS)
 
-            return ok()
+            ok()
         } else {
-            model.addAttribute("errorMessage", "访问密码错误")
-            return failure(Status.INVALID_REQUEST, "访问密码错误")
+            failure(Status.INVALID_REQUEST, "访问密码错误")
         }
     }
 

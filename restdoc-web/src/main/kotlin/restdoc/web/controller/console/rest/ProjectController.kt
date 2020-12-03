@@ -22,7 +22,6 @@ import javax.validation.Valid
 
 @RestController
 @RequestMapping("/project")
-@Verify
 class ProjectController {
 
     @Autowired
@@ -35,6 +34,7 @@ class ProjectController {
      * Add Search
      */
     @GetMapping("/list")
+    @Verify(role = ["SYS_ADMIN"])
     fun list(@RequestParam(required = false, defaultValue = "0") page: Int,
              @RequestParam(required = false, defaultValue = "12") size: Int,
              @RequestParam type: ProjectType
@@ -44,15 +44,18 @@ class ProjectController {
 
 
     @GetMapping("/{id}")
+    @Verify(role = ["*"])
     fun get(@PathVariable id: String): Result = ok(mongoTemplate.findById(id, Project::class.java))
 
     @DeleteMapping("/{id}")
+    @Verify(role = ["SYS_ADMIN"])
     fun delete(@PathVariable id: String): Result {
         val deleteResult = projectRepository.delete(Query().addCriteria(Criteria("_id").`is`(id)))
         return ok(deleteResult)
     }
 
     @PostMapping("")
+    @Verify(role = ["SYS_ADMIN"])
     fun create(@RequestBody dto: CreateProjectDto): Result {
         if (dto.type == ProjectType.SPRINGCLOUD) Status.BAD_REQUEST.error("暂不支持SpringCloud项目")
         val projectId = IDUtil.id()
@@ -69,6 +72,7 @@ class ProjectController {
     }
 
     @PatchMapping("")
+    @Verify(role = ["SYS_ADMIN"])
     fun update(@RequestBody @Valid dto: UpdateProjectDto): Result {
         projectRepository.update(Project(
                 id = dto.id,

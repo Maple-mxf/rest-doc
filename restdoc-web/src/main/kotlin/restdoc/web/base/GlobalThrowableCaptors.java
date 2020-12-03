@@ -55,7 +55,7 @@ public class GlobalThrowableCaptors {
         );
         response.setHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE);
 
-        return failure(Status.BAD_REQUEST,errMsg);
+        return failure(Status.BAD_REQUEST, errMsg);
     }
 
     @ExceptionHandler(value = ConstraintViolationException.class)
@@ -63,7 +63,7 @@ public class GlobalThrowableCaptors {
     @ResponseStatus(code = HttpStatus.OK)
     public Object handlerConstraintViolationException(ConstraintViolationException e, HttpServletResponse response) {
         response.setHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE);
-        return failure(Status.BAD_REQUEST,e.getMessage());
+        return failure(Status.BAD_REQUEST, e.getMessage());
     }
 
 
@@ -72,9 +72,8 @@ public class GlobalThrowableCaptors {
     @ResponseStatus(code = HttpStatus.OK)
     public Object handlerVerifyException(VerifyException e, HttpServletResponse response) {
         response.setHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE);
-        return failure(Status.BAD_REQUEST,e.getMessage());
+        return failure(Status.BAD_REQUEST, e.getMessage());
     }
-
 
 
     @ExceptionHandler(value = AuthException.class)
@@ -82,7 +81,7 @@ public class GlobalThrowableCaptors {
     @ResponseStatus(code = HttpStatus.OK)
     public Object handlerAuthException(AuthException e, HttpServletResponse response) {
         response.setHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE);
-        return failure(Status.BAD_REQUEST,e.getMessage());
+        return failure(Status.FORBIDDEN, "无权限");
     }
 
     @ExceptionHandler(value = NoHandlerFoundException.class)
@@ -90,7 +89,7 @@ public class GlobalThrowableCaptors {
     @ResponseStatus(code = HttpStatus.OK)
     public Object handlerNotFoundException(NoHandlerFoundException e, HttpServletResponse response) {
         response.setHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE);
-        return failure(Status.BAD_REQUEST,e.getMessage());
+        return failure(Status.BAD_REQUEST, e.getMessage());
     }
 
 
@@ -100,6 +99,6 @@ public class GlobalThrowableCaptors {
     public Object handlerGlobalException(HttpServletRequest request, Throwable e, HttpServletResponse response) {
         e.printStackTrace();
         response.setHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE);
-        return failure(Status.BAD_REQUEST,e.getMessage());
+        return failure(Status.BAD_REQUEST, e.getMessage());
     }
 }

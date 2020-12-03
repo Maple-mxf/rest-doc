@@ -12,3 +12,4 @@ dubbo:
     address: zookeeper://127.0.0.1:2181
 #  monitor:
 #    protocol: registry
+#// http://152.136.104.144:8432/restdoc/or/746946688983240704

@@ -28,7 +28,6 @@ import javax.validation.Valid
  *
  */
 @RestController
-@Verify
 class ResourceController {
 
     @Autowired
@@ -44,6 +43,7 @@ class ResourceController {
     lateinit var projectRepository: ProjectRepository
 
     @PostMapping("/{projectId}/resource")
+    @Verify(role = ["SYS_ADMIN"])
     fun create(@PathVariable projectId: String, @Valid @RequestBody dto: CreateResourceDto): Result {
         val resource = Resource(
                 id = IDUtil.id(),
@@ -58,6 +58,7 @@ class ResourceController {
     }
 
     @RequestMapping("/{projectId}/resource/dtree")
+    @Verify(role = ["*"])
     fun getResourceDTree(@PathVariable projectId: String,
                          @RequestParam at: ApplicationType): Any {
 
@@ -206,7 +207,7 @@ class ResourceController {
         return ok(mutableListOf(rootNav))
     }
 
-
+    @Verify(role = ["SYS_ADMIN"])
     @DeleteMapping("/{projectId}/resource/{id}")
     fun delete(@PathVariable id: String, @PathVariable projectId: String): Result {
         val project = projectRepository.findById(projectId)
@@ -224,6 +225,7 @@ class ResourceController {
     }
 
     @PatchMapping("/resource")
+    @Verify(role = ["SYS_ADMIN"])
     fun patch(@RequestBody @Valid dto: UpdateNodeDto): Result {
         val updateResult = resourceRepository.update(Query().addCriteria(Criteria("_id").`is`(dto.id)),
                 Update().set("name", dto.name)

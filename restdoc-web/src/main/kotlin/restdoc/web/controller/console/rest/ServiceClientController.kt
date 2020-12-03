@@ -17,7 +17,7 @@ import restdoc.web.util.IDUtil.now
 
 
 @RestController
-@Verify
+
 class ServiceClientController {
 
     @Autowired
@@ -33,6 +33,7 @@ class ServiceClientController {
     lateinit var restWebDocumentRepository: RestWebDocumentRepository
 
     @Deprecated(message = "")
+    @Verify
     @GetMapping("/serviceClient/list")
     fun list(@RequestParam(defaultValue = "DUBBO") type: ApplicationType): Any {
         val clientKeys = this.clientRegistryCenter.getClientKeysFilterApplicationType(type)
@@ -59,6 +60,7 @@ class ServiceClientController {
         return res
     }
 
+    @Verify(role = ["SYS_ADMIN"])
     @PostMapping("/{projectId}/serviceClient/apiEmptyTemplate/sync")
     fun syncClientApiEmptyTemplate(@RequestBody dto: SyncApiEmptyTemplateDto): Any {
 

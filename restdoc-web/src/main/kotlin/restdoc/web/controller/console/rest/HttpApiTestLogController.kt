@@ -18,11 +18,8 @@ import restdoc.web.core.Result
 import restdoc.web.core.Status
 import restdoc.web.core.ok
 import restdoc.web.repository.HttpApiTestLogRepository
-import restdoc.web.util.dp.JsonDeProjector
-import java.lang.reflect.Method
 
 @RestController
-@Verify
 class HttpApiTestLogController {
 
     @Autowired
@@ -31,6 +28,7 @@ class HttpApiTestLogController {
     @Autowired
     private lateinit var mapper: ObjectMapper
 
+    @Verify(role = ["*"])
     @RequestMapping("/document/{documentId}/httpapitestlog/page")
     fun page(dto: LayuiPageDto, @PathVariable documentId: String): Any {
         val query = Query(Criteria("documentId").`is`(documentId))
@@ -39,6 +37,7 @@ class HttpApiTestLogController {
         return layuiTableOK(data = page.content, count = page.totalElements.toInt())
     }
 
+    @Verify(role = ["*"])
     @PostMapping("/document/httpapitestlog/{id}/deProject")
     fun deProjectLogData(@PathVariable id: String): Result {
 
@@ -61,18 +60,25 @@ class HttpApiTestLogController {
         return ok(vo)
     }
 
+    /**
+     *
+     * @see restdoc.web.model.Role.SYS_ADMIN
+     */
+    @Verify(role = ["SYS_ADMIN"])
     @DeleteMapping("/document/httpapitestlog/batch")
     fun batchDelete(@RequestBody dto: BatchDeleteDto): Result {
         val deleteResult = httpApiTestLogRepository.delete(Query(Criteria("id").`in`(dto.ids)))
         return ok()
     }
 
+    @Verify(role = ["SYS_ADMIN"])
     @DeleteMapping("/document/httpapitestlog/{id}")
     fun delete(@PathVariable id: String): Result {
         httpApiTestLogRepository.deleteById(id)
         return ok()
     }
 
+    @Verify(role = ["*"])
     @PostMapping("/document/httpapitestlog/{id}/log2testresult")
     fun log2TestResult(@PathVariable id: String): Result {
         val log = httpApiTestLogRepository.findById(id).orElseThrow { Status.BAD_REQUEST.instanceError() }

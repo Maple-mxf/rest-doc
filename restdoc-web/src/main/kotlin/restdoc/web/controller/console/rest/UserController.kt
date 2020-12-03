@@ -20,7 +20,7 @@ import java.util.*
 
 @RestController
 @RequestMapping("/user")
-@Verify
+@Verify(role = ["SYS_ADMIN"])
 class UserController {
 
     @Autowired

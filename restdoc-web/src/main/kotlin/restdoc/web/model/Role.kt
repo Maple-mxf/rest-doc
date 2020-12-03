@@ -1,6 +1,9 @@
 package restdoc.web.model
 
-enum class Rule {
+/**
+ * @see Enum.compareTo
+ */
+enum class Role {
     SYS_ADMIN,
     VIEWER
 }

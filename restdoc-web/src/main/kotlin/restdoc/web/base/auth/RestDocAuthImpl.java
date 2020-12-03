@@ -11,16 +11,19 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 
 /**
- *
  * @since 2.0
  */
-public class AuthMetadataImpl implements AuthMetadata {
+public class RestDocAuthImpl implements AuthMetadata {
 
     private RedisTemplate<String, Object> redisTemplate;
 
+    public static final String CONSOLE_GROUP = "console";
+
+    public static final String VIEW_GROUP = "view";
+
     private ObjectMapper mapper;
 
-    public AuthMetadataImpl(RedisTemplate<String, Object> redisTemplate,ObjectMapper mapper) {
+    public RestDocAuthImpl(RedisTemplate<String, Object> redisTemplate, ObjectMapper mapper) {
         this.redisTemplate = redisTemplate;
         this.mapper = mapper;
     }
@@ -32,13 +35,20 @@ public class AuthMetadataImpl implements AuthMetadata {
     @Override
     public Collection<AuthRegistration> setupAuthRules() {
         // 添加Default认证组(需要携带Token)
-        AuthRegistration defaultAuthRule = AuthRegistration.builder()
+        AuthRegistration consolePageAuthRule = AuthRegistration.builder()
                 .group("Default")
                 .addAuthPathPattern("/**")
                 .setupCredentialFunction(new DefaultBaseCookieVerify())
                 .build();
 
-        return ImmutableSet.of(defaultAuthRule);
+ /*       AuthRegistration viewPageAuthRule = AuthRegistration.builder()
+                .group(VIEW_GROUP)
+                .addAuthPathPattern("/or/**","/**")
+                .setupCredentialFunction()
+                .build();*/
+
+
+        return ImmutableSet.of(consolePageAuthRule);
     }
 
     private class DefaultBaseCookieVerify extends AbstractCookieCredentialFunction {
@@ -48,40 +58,15 @@ public class AuthMetadataImpl implements AuthMetadata {
 
         @Override
         public Credential mapCookieToCredential(HttpServletRequest request, Cookie cookie) {
-            LinkedHashMap<String,Object> map = (LinkedHashMap<String, Object>) redisTemplate.opsForValue().get(cookie.getValue());
-            User user =  mapper.convertValue(map,User.class);
+            LinkedHashMap<String, Object> map = (LinkedHashMap<String, Object>) redisTemplate.opsForValue().get(cookie.getValue());
+            User user = mapper.convertValue(map, User.class);
             if (user == null) return null;
 
             return Credential.builder(true)
                     .identity(user.getId())
-                    .roles("*")
+                    .roles(user.getRole().name())
                     .userInfo(user)
                     .build();
         }
     }
-
-    /*private class DefaultTokenVerify extends AbstractHeaderCredentialFunction {
-
-        public DefaultTokenVerify() {
-            super(Token.ACCESS_TOKEN);
-        }
-
-        @Override
-        public @NonNull
-        Credential mapHeaderValueToCredential(@NonNull HttpServletRequest request, @NonNull String headerValue) {
-            User user = (User) redisTemplate.opsForValue().get(headerValue);
-            if (user == null) Status.UNAUTHORIZED.error();
-
-            return Credential.builder(true)
-                    .identity(user.getId())
-                    .roles("*")
-                    .userInfo(user)
-                    .build();
-        }
-
-        @Override
-        public RuntimeException ifErrorThrowing() {
-            return Status.UNAUTHORIZED.instanceError();
-        }
-    }*/
 }

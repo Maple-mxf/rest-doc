@@ -61,7 +61,7 @@ public class AuthenticationInterceptor extends BaseInterceptor {
     private AuthContext authContext;
 
     /**
-     * @see AuthMetadataImpl
+     * @see RestDocAuthImpl
      */
     public AuthenticationInterceptor(AuthContext authContext, AuthMetadata authMetadata) {
         this.authContext = authContext;
@@ -114,7 +114,7 @@ public class AuthenticationInterceptor extends BaseInterceptor {
             }
 
             CredentialFunction credentialFunction = rule.getCredentialFunction();
-
+            
             Credential credential = credentialFunction.apply(request);
 
             if (checkupCredential(credential, verify, credentialFunction, require)) {
