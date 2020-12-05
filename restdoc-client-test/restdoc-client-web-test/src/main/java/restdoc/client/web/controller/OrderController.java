@@ -2,7 +2,9 @@ package restdoc.client.web.controller;
 
 import org.springframework.web.bind.annotation.*;
 import restdoc.client.web.model.dto.CreateOrderDto;
+import restdoc.client.web.model.dto.RequestParamDto;
 import restdoc.client.web.model.dto.UploadFileDto;
+import restdoc.client.web.model.vo.NoDefaultConstructorVo;
 import restdoc.client.web.model.vo.Response;
 
 import javax.servlet.http.HttpServletRequest;
@@ -38,4 +40,21 @@ public class OrderController {
         return Response.ok();
     }
 
+    @GetMapping("/NoDefaultConstructorVo")
+    public NoDefaultConstructorVo echoNoDefaultConstructorVo() {
+        return new NoDefaultConstructorVo("field");
+    }
+
+    /**
+     * buildRequestParamDto 错误示例
+     *
+     * @param dto
+     * @return
+     */
+    @GetMapping("/buildRequestParamDto")
+    @Deprecated
+    public Response buildRequestParamDto(@RequestParam @RequestBody RequestParamDto dto) {
+        System.err.println(dto.getName());
+        return Response.ok();
+    }
 }

@@ -2,6 +2,10 @@ package restdoc.remoting.common;
 
 import java.util.*;
 
+
+/**
+ * RestWebApiDescriptor
+ */
 public class RestWebApiDescriptor implements ApiDescriptor {
 
     private String name;
@@ -24,6 +28,8 @@ public class RestWebApiDescriptor implements ApiDescriptor {
     @Deprecated
     private String[] uriVarFields;
 
+    private String packageName;
+
     private String responseType;
 
     /**
@@ -39,6 +45,8 @@ public class RestWebApiDescriptor implements ApiDescriptor {
 
     private Set<ParameterDescriptor> requestBodyParameters = new HashSet<>(4);
 
+    private ParameterDescriptor responseBodyDescriptor =  null;
+
     private Map<String, List<ParameterDescriptor>> responseHeaderParameters = new HashMap<>(4);
 
     public Map<String, List<ParameterDescriptor>> getRequestHeaderParameters() {
@@ -52,8 +60,7 @@ public class RestWebApiDescriptor implements ApiDescriptor {
     public Set<ParameterDescriptor> getMatrixVariableParameters() {
         return matrixVariableParameters;
     }
-
-
+    
     public Set<ParameterDescriptor> getPathVariableParameters() {
         return pathVariableParameters;
     }
@@ -74,6 +81,14 @@ public class RestWebApiDescriptor implements ApiDescriptor {
         this.name = name;
     }
 
+    public ParameterDescriptor getResponseBodyDescriptor() {
+        return responseBodyDescriptor;
+    }
+
+    public void setResponseBodyDescriptor(ParameterDescriptor responseBodyDescriptor) {
+        this.responseBodyDescriptor = responseBodyDescriptor;
+    }
+
     /**
      * ParameterDescriptor
      */
@@ -88,6 +103,11 @@ public class RestWebApiDescriptor implements ApiDescriptor {
         private Object requireNotEqualsValue = null;
 
         private Object defaultValue = null;
+
+        private String supplementary = null;
+
+        public ParameterDescriptor() {
+        }
 
         public ParameterDescriptor(String name) {
             this.name = name;
@@ -149,6 +169,14 @@ public class RestWebApiDescriptor implements ApiDescriptor {
 
         public void setType(String type) {
             this.type = type;
+        }
+
+        public String getSupplementary() {
+            return supplementary;
+        }
+
+        public void setSupplementary(String supplementary) {
+            this.supplementary = supplementary;
         }
 
         @Override
