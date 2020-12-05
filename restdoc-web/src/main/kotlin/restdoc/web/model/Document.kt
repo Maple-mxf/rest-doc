@@ -228,6 +228,9 @@ data class RestWebDocument(
          */
         var order: Int? = 0,
 
+        /**
+         *
+         */
         var queryParamFieldDescriptor: List<QueryParamFieldDescriptor>? = null
 )
 

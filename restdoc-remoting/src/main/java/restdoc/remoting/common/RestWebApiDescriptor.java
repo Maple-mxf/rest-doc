@@ -104,7 +104,7 @@ public class RestWebApiDescriptor implements ApiDescriptor {
 
         private Object defaultValue = null;
 
-        private String supplementary = null;
+        private Object supplementary = null;
 
         public ParameterDescriptor() {
         }
@@ -171,11 +171,11 @@ public class RestWebApiDescriptor implements ApiDescriptor {
             this.type = type;
         }
 
-        public String getSupplementary() {
+        public Object getSupplementary() {
             return supplementary;
         }
 
-        public void setSupplementary(String supplementary) {
+        public void setSupplementary(Object supplementary) {
             this.supplementary = supplementary;
         }
 

@@ -46,7 +46,7 @@
   ],
   "pathVariableParameters": [
     {
-      "name": null,
+      "name": "oid",
       "require": true,
       "requireEqualsValue": null,
       "requireNotEqualsValue": null,
@@ -61,18 +61,21 @@
       "require": true,
       "requireEqualsValue": null,
       "requireNotEqualsValue": null,
-      "defaultValue": "\n\t\t\n\t\t\n\n\t\t\t\t\n",
-      "supplementary": null,
-      "type": "java.lang.String"
+      "defaultValue": null,
+      "supplementary": {
+        "type": "",
+        "money": 0.0
+      },
+      "type": "java.lang.Object"
     },
     {
-      "name": null,
+      "name": "key",
       "require": true,
       "requireEqualsValue": null,
       "requireNotEqualsValue": null,
-      "defaultValue": null,
-      "supplementary": "{\"type\":\"\",\"money\":0.0}",
-      "type": "java.lang.Object"
+      "defaultValue": "\n\t\t\n\t\t\n\n\t\t\t\t\n",
+      "supplementary": null,
+      "type": "java.lang.String"
     }
   ],
   "responseBodyDescriptor": {
@@ -81,7 +84,11 @@
     "requireEqualsValue": null,
     "requireNotEqualsValue": null,
     "defaultValue": null,
-    "supplementary": "{\"code\":\"\",\"data\":null,\"message\":\"\"}",
+    "supplementary": {
+      "code": "",
+      "data": null,
+      "message": ""
+    },
     "type": null
   },
   "responseHeaderParameters": {},

@@ -3,6 +3,7 @@ package restdoc.client.restweb.context;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.MethodParameter;
@@ -16,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.condition.MediaTypeExpression;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
+import restdoc.client.api.AgentConfigurationProperties;
 import restdoc.remoting.common.RestWebApiDescriptor;
 
 import java.lang.annotation.Annotation;
@@ -28,6 +30,16 @@ import java.util.stream.Collectors;
 
 /**
  * The EndpointsListener provided report client api list info to server
+ * <p>
+ * Springboot应用启动需要做的任务有
+ * 1 如果console端已经同步过了当前应用的API信息之后，则对已经存在的API文档进行记录建议开发者进行补充文档
+ * 2 如果{@link AgentConfigurationProperties} 的service属性为空，则将当前应用的service补充维应用的ContextPath(去掉第一个"/")
+ * 3 当透析一个API时，为每个API文档生成一份模板数据(测试用例) 仅为模板数据，并不准确
+ * 4 导入的API的唯一ID为(controller+function).hashcode().toString()
+ * 5 开发者可以将console端已有的API文档和应用内部已有的API可以做关联(关联关系可以理解为所属)
+ * 6 所有的API文档具有关联性(API之间具有依赖性)
+ * 7 如果部分API文档是通过应用生成的 则console端则应用增加标记图标，加强开发辨识度
+ *
  *
  * @author Maple
  */
@@ -35,12 +47,12 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
 
     private static Logger log = LoggerFactory.getLogger(EndpointsListener.class);
 
-    @Deprecated
-    private ObjectMapper mapper = new ObjectMapper();
-
     private List<RestWebApiDescriptor> restWebExposedAPIList;
 
     private final Environment environment;
+
+    @Autowired
+    ObjectMapper mapper = new ObjectMapper();
 
     private final Set<Class<?>> springAcceptAnnotationTypes = ofSet(
             CookieValue.class,
@@ -175,15 +187,7 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
         RestWebApiDescriptor emptyDescriptor = new RestWebApiDescriptor();
         emptyDescriptor.setName(requestMappingInfo.getName());
 
-        Set<RequestMethod> methods = requestMappingInfo.getMethodsCondition().getMethods();
-
-        boolean isAllowRequestBody = true;
-
-        if (methods.contains(RequestMethod.GET))
-            isAllowRequestBody = false;
-
         MethodParameter[] parameters = handlerMethod.getMethodParameters();
-
 
         for (MethodParameter parameter : parameters) {
             if (parameter.getParameterAnnotations().length > 0) {
@@ -200,8 +204,8 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
 
                         String pathVariableName = pathVariable.name().isEmpty() ?
                                 pathVariable.value() :
-                                pathVariable.value();
-                        if (pathVariableName.isEmpty()) pathVariableName = parameter.getParameterName();
+                                pathVariable.name();
+                        if (pathVariableName.isEmpty()) pathVariableName = parameter.getParameter().getName();
 
                         parameterDescriptor.setRequire(pathVariable.required());
                         parameterDescriptor.setName(pathVariableName);
@@ -211,14 +215,18 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
                     } else if (annotation.annotationType().equals(RequestParam.class)) {
 
                         RequestParam requestParam = (RequestParam) annotation;
+
+                        String requestParamName = requestParam.name().isEmpty() ?
+                                requestParam.value() :
+                                requestParam.name();
+
+                        if (requestParamName.isEmpty()) requestParamName = parameter.getParameter().getName();
+
+                        parameterDescriptor.setName(requestParamName);
                         parameterDescriptor.setRequire(requestParam.required());
                         parameterDescriptor.setDefaultValue(requestParam.defaultValue());
 
-                        if (!isAllowRequestBody) {
-                            emptyDescriptor.getQueryParamParameters().add(parameterDescriptor);
-                        } else {
-                            emptyDescriptor.getRequestBodyParameters().add(parameterDescriptor);
-                        }
+                        emptyDescriptor.getQueryParamParameters().add(parameterDescriptor);
                     }
                     // If has request part
                     else if (annotation.annotationType().equals(RequestPart.class)) {
@@ -227,7 +235,7 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
                         String requestPartName = requestPart.name().isEmpty() ?
                                 requestPart.value() :
                                 requestPart.name();
-                        if (requestPartName.isEmpty()) requestPartName = parameter.getParameterName();
+                        if (requestPartName.isEmpty()) requestPartName = parameter.getParameter().getName();
 
                         parameterDescriptor.setName(requestPartName);
                         parameterDescriptor.setRequire(requestPart.required());
@@ -240,9 +248,8 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
                                     .noneMatch(t -> t == Map.class)) {
                                 Object dtoInstance = instantiate(parameter.getParameterType());
                                 try {
-                                    String valueAsString = mapper.writeValueAsString(dtoInstance);
-                                    parameterDescriptor.setSupplementary(valueAsString);
                                     parameterDescriptor.setType(Object.class.getName());
+                                    parameterDescriptor.setSupplementary(dtoInstance);
 
                                 } catch (Exception ignored) {
                                     // TODO
@@ -258,8 +265,9 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
 
                         parameterDescriptor.setRequire(matrixVariable.required());
                         String matrixVariableName = matrixVariable.name().isEmpty() ?
-                                matrixVariable.value() : matrixVariable.name();
-                        if (matrixVariableName.isEmpty()) matrixVariableName = parameter.getParameterName();
+                                matrixVariable.value() :
+                                matrixVariable.name();
+                        if (matrixVariableName.isEmpty()) matrixVariableName = parameter.getParameter().getName();
 
                         parameterDescriptor.setName(matrixVariableName);
                         parameterDescriptor.setDefaultValue(matrixVariable.defaultValue());
@@ -279,8 +287,7 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
 
                                 Object dtoInstance = instantiate(parameter.getParameterType());
                                 try {
-                                    String valueAsString = mapper.writeValueAsString(dtoInstance);
-                                    parameterDescriptor.setSupplementary(valueAsString);
+                                    parameterDescriptor.setSupplementary(dtoInstance);
                                     parameterDescriptor.setType(Object.class.getName());
                                 } catch (Exception ignored) {
                                     // TODO
@@ -301,22 +308,26 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
                                 .getOrDefault(HttpHeaders.COOKIE, new ArrayList<>());
 
                         String cookieName = cookieValue.name().isEmpty() ? cookieValue.value() : cookieValue.name();
+                        if (cookieName.isEmpty()) cookieName = parameter.getParameter().getName();
 
-                        if (!cookieName.isEmpty()) {
-                            RestWebApiDescriptor.ParameterDescriptor cookieDescriptor
-                                    = new RestWebApiDescriptor.ParameterDescriptor(cookieValue.name());
+                        RestWebApiDescriptor.ParameterDescriptor cookieDescriptor
+                                = new RestWebApiDescriptor.ParameterDescriptor(cookieName);
+                        cookieDescriptor.setDefaultValue(cookieValue.defaultValue());
+                        cookieValues.add(cookieDescriptor);
 
-                            cookieDescriptor.setDefaultValue(cookieValue.defaultValue());
-                            cookieValues.add(cookieDescriptor);
-
-                            emptyDescriptor.getRequestHeaderParameters().put(HttpHeaders.COOKIE, cookieValues);
-                        }
+                        emptyDescriptor.getRequestHeaderParameters().put(HttpHeaders.COOKIE, cookieValues);
 
                     } else if (annotation.annotationType().equals(RequestHeader.class)) {
                         RequestHeader requestHeader = (RequestHeader) annotation;
+
+                        String requestHeaderName = requestHeader.name().isEmpty() ?
+                                requestHeader.value() :
+                                requestHeader.name();
+                        if (requestHeaderName.isEmpty()) requestHeaderName = parameter.getParameter().getName();
+
+                        parameterDescriptor.setName(requestHeaderName);
                         parameterDescriptor.setDefaultValue(requestHeader.defaultValue());
                         parameterDescriptor.setRequire(requestHeader.required());
-                        parameterDescriptor.setName(requestHeader.name());
 
                         emptyDescriptor.getRequestHeaderParameters()
                                 .put(requestHeader.name(), Collections.singletonList(parameterDescriptor));
@@ -333,8 +344,8 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
                 RestWebApiDescriptor.ParameterDescriptor parameterDescriptor =
                         new RestWebApiDescriptor.ParameterDescriptor();
                 try {
-                    parameterDescriptor.setSupplementary(mapper.writeValueAsString(responseInstance));
                     emptyDescriptor.setResponseBodyDescriptor(parameterDescriptor);
+                    parameterDescriptor.setSupplementary(responseInstance);
                 } catch (Exception ignored) {
                     ignored.printStackTrace();
                 }
@@ -343,7 +354,9 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
 
         try {
             System.err.println(mapper.writeValueAsString(emptyDescriptor));
-        }catch (Exception e){e.printStackTrace();}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         return emptyDescriptor;
     }
