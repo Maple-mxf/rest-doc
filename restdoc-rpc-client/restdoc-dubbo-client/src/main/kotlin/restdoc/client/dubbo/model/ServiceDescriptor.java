@@ -79,8 +79,7 @@ public class ServiceDescriptor {
     public MethodDescriptor getMethod(String methodName, Class<?>[] paramTypes) {
         List<MethodDescriptor> methodModels = methods.get(methodName);
         if (CollectionUtils.isNotEmpty(methodModels)) {
-            for (int i = 0; i < methodModels.size(); i++) {
-                MethodDescriptor descriptor = methodModels.get(i);
+            for (MethodDescriptor descriptor : methodModels) {
                 if (Arrays.equals(paramTypes, descriptor.getParameterClasses())) {
                     return descriptor;
                 }

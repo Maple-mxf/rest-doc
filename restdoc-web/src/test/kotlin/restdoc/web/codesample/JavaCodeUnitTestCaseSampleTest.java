@@ -11,11 +11,9 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.http.HttpMethod;
 import org.springframework.test.context.junit4.SpringRunner;
-import restdoc.web.core.ServiceException;
-import restdoc.web.model.RestWebDocument;
-import restdoc.web.model.URIVarDescriptor;
+import restdoc.web.model.doc.http.RestWebDocument;
+import restdoc.web.model.doc.http.URIVarDescriptor;
 
 import java.io.IOException;
 import java.io.StringWriter;

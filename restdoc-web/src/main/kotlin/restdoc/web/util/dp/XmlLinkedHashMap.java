@@ -11,13 +11,11 @@ import java.util.Map;
  *
  * @see JacksonXmlRootElement#localName()
  * @see JacksonXmlRootElement#namespace()
- * @param <String>
- * @param <Object>
  */
-@JacksonXmlRootElement(localName = "HttpApiResponse")
-public class XmlLinkedHashMap<String, Object> extends LinkedHashMap<String, Object> {
+@JacksonXmlRootElement(localName = "root")
+public class XmlLinkedHashMap  extends LinkedHashMap<String, Object> {
     public XmlLinkedHashMap() {super();}
-    public XmlLinkedHashMap(Map<? extends String, ? extends Object> m) {
+    public XmlLinkedHashMap(Map<? extends String, ?> m) {
         super(m);
     }
 }

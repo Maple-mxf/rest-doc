@@ -12,7 +12,7 @@ import restdoc.web.controller.console.model.*
 import restdoc.web.core.Result
 import restdoc.web.core.Status
 import restdoc.web.core.ok
-import restdoc.web.model.DocType
+import restdoc.web.model.doc.DocType
 import restdoc.web.model.ProjectType
 import restdoc.web.model.Resource
 import restdoc.web.repository.DubboDocumentRepository

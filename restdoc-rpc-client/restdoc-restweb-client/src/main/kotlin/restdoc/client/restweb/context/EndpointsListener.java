@@ -14,7 +14,7 @@ import org.springframework.util.MimeType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.condition.MediaTypeExpression;
+import org.springframework.web.servlet.mvc.condition.*;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 import restdoc.client.api.AgentConfigurationProperties;
@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
  * 5 开发者可以将console端已有的API文档和应用内部已有的API可以做关联(关联关系可以理解为所属)
  * 6 所有的API文档具有关联性(API之间具有依赖性)
  * 7 如果部分API文档是通过应用生成的 则console端则应用增加标记图标，加强开发辨识度
- *
+ * 8 应用SDK代码全部更改为java 去掉kotlin
  *
  * @author Maple
  */
@@ -53,43 +53,6 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
 
     @Autowired
     ObjectMapper mapper = new ObjectMapper();
-
-    private final Set<Class<?>> springAcceptAnnotationTypes = ofSet(
-            CookieValue.class,
-            RequestParam.class,
-            PathVariable.class,
-            RequestBody.class,
-            RequestPart.class,
-            MatrixVariable.class,
-            CookieValue.class,
-            RequestHeader.class
-    );
-
-    private static class AcceptableParameter {
-        private Annotation annotation;
-        private MethodParameter methodParameter;
-
-        public AcceptableParameter(Annotation annotation, MethodParameter methodParameter) {
-            this.annotation = annotation;
-            this.methodParameter = methodParameter;
-        }
-
-        public Annotation getAnnotation() {
-            return annotation;
-        }
-
-        public void setAnnotation(Annotation annotation) {
-            this.annotation = annotation;
-        }
-
-        public MethodParameter getMethodParameter() {
-            return methodParameter;
-        }
-
-        public void setMethodParameter(MethodParameter methodParameter) {
-            this.methodParameter = methodParameter;
-        }
-    }
 
     public EndpointsListener(Environment environment) {
         this.environment = environment;
@@ -290,7 +253,6 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
                                     parameterDescriptor.setSupplementary(dtoInstance);
                                     parameterDescriptor.setType(Object.class.getName());
                                 } catch (Exception ignored) {
-                                    // TODO
                                     ignored.printStackTrace();
                                 }
                             }
@@ -358,6 +320,12 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
             e.printStackTrace();
         }
 
+        ParamsRequestCondition paramsCondition = requestMappingInfo.getParamsCondition();
+        ConsumesRequestCondition consumesCondition = requestMappingInfo.getConsumesCondition();
+        RequestCondition<?> customCondition = requestMappingInfo.getCustomCondition();
+        ProducesRequestCondition producesCondition = requestMappingInfo.getProducesCondition();
+        requestMappingInfo.getPatternsCondition()
+
         return emptyDescriptor;
     }
 
@@ -415,10 +383,7 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
 
     private static boolean isPrimitive(Class<?> type) {
         if (type.isPrimitive()) return true;
-        if (SIMPLE_TYPES.contains(type)) {
-            return true;
-        }
-        return type.equals(MultipartFile.class);
+        return SIMPLE_TYPES.contains(type) || type.equals(MultipartFile.class);
     }
 
     private static Object instantiate(Class<?> beanType) {

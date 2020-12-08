@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import restdoc.web.core.Status;
-import restdoc.web.model.BodyFieldDescriptor;
+import restdoc.web.model.doc.http.BodyFieldDescriptor;
 
 import java.util.ArrayList;
 import java.util.List;

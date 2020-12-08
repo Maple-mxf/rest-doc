@@ -5,6 +5,13 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.data.domain.PageRequest
 import restdoc.web.base.getBean
 import restdoc.web.model.*
+import restdoc.web.model.doc.DocType
+import restdoc.web.model.doc.dubbo.MethodParamDescriptor
+import restdoc.web.model.doc.dubbo.MethodReturnValueDescriptor
+import restdoc.web.model.doc.http.BodyFieldDescriptor
+import restdoc.web.model.doc.http.HeaderFieldDescriptor
+import restdoc.web.model.doc.http.QueryParamDescriptor
+import restdoc.web.model.doc.http.URIVarDescriptor
 import restdoc.web.util.FieldType
 import restdoc.web.util.URLUtil
 import restdoc.web.util.dp.JsonDeProjector

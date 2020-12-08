@@ -10,6 +10,8 @@ import restdoc.web.core.ok
 import restdoc.web.core.schedule.ClientRegistryCenter
 import restdoc.web.core.schedule.ScheduleController
 import restdoc.web.model.*
+import restdoc.web.model.doc.http.RestWebDocument
+import restdoc.web.model.doc.http.URIVarDescriptor
 import restdoc.web.repository.ResourceRepository
 import restdoc.web.repository.RestWebDocumentRepository
 import restdoc.web.util.IDUtil

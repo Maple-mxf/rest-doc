@@ -29,5 +29,7 @@ public abstract class AbstractURLCredentialFunction extends AbstractCredentialFu
      * @return auth Credential
      */
     protected abstract Credential mapCookieToCredential(HttpServletRequest request,String urlParamValue);
+
+
 }
 

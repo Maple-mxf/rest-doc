@@ -1,7 +1,7 @@
 package restdoc.remoting.protocol;
 
 /**
- * @author ubuntu-m
+ * @author Maple
  */
 public enum SerializeType {
 

@@ -30,7 +30,6 @@ import static restdoc.web.util.Predicates.or;
 /**
  * The utilities class for {@link Stream}
  *
- * @since 2.7.5
  */
 public interface Streams {
 

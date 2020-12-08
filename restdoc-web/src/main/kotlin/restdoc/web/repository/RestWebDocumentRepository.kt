@@ -2,7 +2,7 @@ package restdoc.web.repository
 
 import org.springframework.stereotype.Repository
 import restdoc.web.base.mongo.BaseRepository
-import restdoc.web.model.RestWebDocument
+import restdoc.web.model.doc.http.RestWebDocument
 
 @Repository
 interface RestWebDocumentRepository : BaseRepository<RestWebDocument, String>

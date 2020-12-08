@@ -11,7 +11,7 @@ import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestTemplate
 import restdoc.web.base.getBean
-import restdoc.web.model.RestWebDocument
+import restdoc.web.model.doc.http.RestWebDocument
 import restdoc.web.util.dp.JsonProjector
 import restdoc.web.util.PathValue
 import java.io.StringWriter

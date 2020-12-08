@@ -2,7 +2,6 @@ package restdoc.client.api
 
 import io.netty.channel.Channel
 import restdoc.remoting.ChannelEventListener
-import restdoc.remoting.RemotingClient
 import restdoc.remoting.netty.NettyClientConfig
 import restdoc.remoting.netty.NettyRemotingClient
 import restdoc.remoting.netty.NettyRequestProcessor

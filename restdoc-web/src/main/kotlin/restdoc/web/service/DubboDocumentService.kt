@@ -7,6 +7,10 @@ import org.springframework.stereotype.Service
 import restdoc.remoting.common.DubboApiDescriptor
 import restdoc.web.controller.console.model.NavNode
 import restdoc.web.model.*
+import restdoc.web.model.doc.DocType
+import restdoc.web.model.doc.dubbo.DubboDocument
+import restdoc.web.model.doc.dubbo.MethodParamDescriptor
+import restdoc.web.model.doc.dubbo.MethodReturnValueDescriptor
 import restdoc.web.repository.DubboDocumentRepository
 import restdoc.web.repository.ResourceRepository
 import restdoc.web.util.IDUtil.now

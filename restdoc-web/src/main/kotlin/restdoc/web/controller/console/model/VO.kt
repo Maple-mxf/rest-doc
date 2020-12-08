@@ -6,8 +6,7 @@ import restdoc.web.base.getBean
 import restdoc.web.core.code.CURLCodeSampleGenerator
 import restdoc.web.core.code.JavaCodeSampleGenerator
 import restdoc.web.core.code.PythonCodeSampleGenerator
-import restdoc.web.model.*
-import javax.print.DocFlavor
+import restdoc.web.model.doc.http.*
 
 
 fun findChild(parentNode: NavNode, navNodes: List<NavNode>) {

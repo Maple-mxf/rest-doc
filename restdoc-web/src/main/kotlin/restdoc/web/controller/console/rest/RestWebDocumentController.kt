@@ -23,6 +23,8 @@ import restdoc.web.core.failure
 import restdoc.web.core.ok
 import restdoc.web.core.schedule.ClientRegistryCenter
 import restdoc.web.model.*
+import restdoc.web.model.doc.DocType
+import restdoc.web.model.doc.http.*
 import restdoc.web.repository.ProjectRepository
 import restdoc.web.repository.ResourceRepository
 import restdoc.web.repository.RestWebDocumentRepository

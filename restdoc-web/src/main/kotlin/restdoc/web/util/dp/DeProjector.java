@@ -1,6 +1,6 @@
 package restdoc.web.util.dp;
 
-import restdoc.web.model.BodyFieldDescriptor;
+import restdoc.web.model.doc.http.BodyFieldDescriptor;
 
 import java.util.List;
 
