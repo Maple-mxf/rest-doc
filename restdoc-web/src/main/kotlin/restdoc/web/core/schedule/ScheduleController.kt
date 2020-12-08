@@ -24,6 +24,7 @@ import restdoc.remoting.protocol.LanguageCode
 import restdoc.remoting.protocol.RemotingCommand
 import restdoc.remoting.protocol.RemotingSerializable
 import restdoc.remoting.protocol.RemotingSysResponseCode
+import restdoc.rpc.client.common.model.RestWebApiDescriptor
 import restdoc.web.core.ServiceException
 import restdoc.web.core.Status
 import restdoc.web.util.MD5Util

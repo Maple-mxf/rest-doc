@@ -14,7 +14,7 @@ import org.springframework.http.HttpMethod
 import org.springframework.web.bind.annotation.*
 import restdoc.remoting.common.ApplicationType
 import restdoc.remoting.common.DubboApiDescriptor
-import restdoc.remoting.common.RestWebApiDescriptor
+import restdoc.rpc.client.common.model.RestWebApiDescriptor
 import restdoc.web.base.auth.Verify
 import restdoc.web.controller.console.model.*
 import restdoc.web.core.Result
@@ -538,7 +538,7 @@ class RestWebDocumentController {
                         requestHeaderDescriptor = null,
                         requestBodyDescriptor = null,
                         responseBodyDescriptors = null,
-                        method = if (it.supportMethod.isEmpty()) HttpMethod.POST else HttpMethod.valueOf(it.supportMethod[0]),
+                        method = if (it.methods.isEmpty()) HttpMethod.POST else HttpMethod.valueOf(it.methods[0]),
                         uriVarDescriptors = null,
                         content = null,
                         responseHeaderDescriptor = null)
@@ -640,7 +640,7 @@ class RestWebDocumentController {
                                 requestBodyDescriptor = null,
                                 requestHeaderDescriptor = null,
                                 responseBodyDescriptors = null,
-                                method = if (api.supportMethod.isEmpty()) HttpMethod.POST else HttpMethod.valueOf(api.supportMethod[0]),
+                                method = if (api.methods.isEmpty()) HttpMethod.POST else HttpMethod.valueOf(api.methods[0]),
                                 uriVarDescriptors = null,
                                 content = null,
                                 responseHeaderDescriptor = null,

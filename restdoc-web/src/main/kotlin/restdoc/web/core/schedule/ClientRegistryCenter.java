@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import restdoc.remoting.annotation.Nullable;
 import restdoc.remoting.common.ApplicationClientInfo;
 import restdoc.remoting.common.ApplicationType;
-import restdoc.remoting.common.ApiDescriptor;
+import restdoc.rpc.client.common.model.ApiDescriptor;
 import restdoc.web.util.MD5Util;
 
 import java.nio.charset.StandardCharsets;

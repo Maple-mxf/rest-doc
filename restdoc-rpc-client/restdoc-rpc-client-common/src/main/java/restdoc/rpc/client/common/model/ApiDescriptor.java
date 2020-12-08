@@ -1,4 +1,4 @@
-package restdoc.remoting.common;
+package restdoc.rpc.client.common.model;
 
 public interface ApiDescriptor {
 
@@ -9,6 +9,5 @@ public interface ApiDescriptor {
      *
      * @return unique key
      */
-    @Deprecated
     String uniqueKey();
 }

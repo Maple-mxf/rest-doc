@@ -1,5 +1,7 @@
 package restdoc.remoting.common;
 
+import restdoc.rpc.client.common.model.ApiDescriptor;
+
 import java.util.List;
 
 public class DubboApiDescriptor implements ApiDescriptor {

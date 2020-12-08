@@ -125,6 +125,11 @@
             <artifactId>jackson-dataformat-xml</artifactId>
             <version>2.10.1</version>
         </dependency>
+        <dependency>
+            <groupId>com.github.open-source-sharing</groupId>
+            <artifactId>restdoc-rpc-client-common</artifactId>
+            <version>2.0.RELEASE</version>
+        </dependency>
 
     </dependencies>
 

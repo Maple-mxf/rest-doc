@@ -1,4 +1,7 @@
-package restdoc.remoting.common;
+package restdoc.rpc.client.common.model;
+
+import restdoc.rpc.client.common.model.http.HeaderExpression;
+import restdoc.rpc.client.common.model.http.ParamExpression;
 
 import java.util.*;
 
@@ -10,31 +13,24 @@ public class RestWebApiDescriptor implements ApiDescriptor {
 
     private String name;
 
-    @Deprecated
-    private String[] supportMethod;
-
     private String[] methods;
 
     private String pattern;
 
     private String function;
 
-    @Deprecated
-    private String[] consumer;
-
-    @Deprecated
-    private String[] produces;
-
-    @Deprecated
     private String[] uriVarFields;
 
     private String packageName;
 
     private String responseType;
 
-    /**
-     * @see org.springframework.util.MultiValueMap
-     */
+    private List<HeaderExpression> requestHeaderExpressions;
+
+    private List<HeaderExpression> responseHeaderExpressions;
+
+    private List<ParamExpression> paramExpressions;
+
     private Map<String, List<ParameterDescriptor>> requestHeaderParameters = new HashMap<>(4);
 
     private Set<ParameterDescriptor> queryParamParameters = new HashSet<>(4);
@@ -45,7 +41,7 @@ public class RestWebApiDescriptor implements ApiDescriptor {
 
     private Set<ParameterDescriptor> requestBodyParameters = new HashSet<>(4);
 
-    private ParameterDescriptor responseBodyDescriptor =  null;
+    private ParameterDescriptor responseBodyDescriptor = null;
 
     private Map<String, List<ParameterDescriptor>> responseHeaderParameters = new HashMap<>(4);
 
@@ -60,7 +56,7 @@ public class RestWebApiDescriptor implements ApiDescriptor {
     public Set<ParameterDescriptor> getMatrixVariableParameters() {
         return matrixVariableParameters;
     }
-    
+
     public Set<ParameterDescriptor> getPathVariableParameters() {
         return pathVariableParameters;
     }
@@ -219,36 +215,12 @@ public class RestWebApiDescriptor implements ApiDescriptor {
         this.function = function;
     }
 
-    public String[] getSupportMethod() {
-        return supportMethod;
-    }
-
-    public void setSupportMethod(String[] supportMethod) {
-        this.supportMethod = supportMethod;
-    }
-
     public String getController() {
         return controller;
     }
 
     public void setController(String controller) {
         this.controller = controller;
-    }
-
-    public String[] getProduces() {
-        return produces;
-    }
-
-    public void setProduces(String[] produces) {
-        this.produces = produces;
-    }
-
-    public String[] getConsumer() {
-        return consumer;
-    }
-
-    public void setConsumer(String[] consumer) {
-        this.consumer = consumer;
     }
 
     public String[] getUriVarFields() {
@@ -259,17 +231,60 @@ public class RestWebApiDescriptor implements ApiDescriptor {
         this.uriVarFields = uriVarFields;
     }
 
-    @Override
-    public String toString() {
-        return "ApiEmptyTemplate{" +
-                "supportMethod=" + Arrays.toString(supportMethod) +
-                ", pattern='" + pattern + '\'' +
-                ", function='" + function + '\'' +
-                ", consumer=" + Arrays.toString(consumer) +
-                ", produces=" + Arrays.toString(produces) +
-                ", uriVarField=" + Arrays.toString(uriVarFields) +
-                ", controller='" + controller + '\'' +
-                '}';
+    public String getPackageName() {
+        return packageName;
+    }
+
+    public void setPackageName(String packageName) {
+        this.packageName = packageName;
+    }
+
+    public List<HeaderExpression> getRequestHeaderExpressions() {
+        return requestHeaderExpressions;
+    }
+
+    public void setRequestHeaderExpressions(List<HeaderExpression> requestHeaderExpressions) {
+        this.requestHeaderExpressions = requestHeaderExpressions;
+    }
+
+    public List<HeaderExpression> getResponseHeaderExpressions() {
+        return responseHeaderExpressions;
+    }
+
+    public void setResponseHeaderExpressions(List<HeaderExpression> responseHeaderExpressions) {
+        this.responseHeaderExpressions = responseHeaderExpressions;
+    }
+
+    public List<ParamExpression> getParamExpressions() {
+        return paramExpressions;
+    }
+
+    public void setParamExpressions(List<ParamExpression> paramExpressions) {
+        this.paramExpressions = paramExpressions;
+    }
+
+    public void setRequestHeaderParameters(Map<String, List<ParameterDescriptor>> requestHeaderParameters) {
+        this.requestHeaderParameters = requestHeaderParameters;
+    }
+
+    public void setQueryParamParameters(Set<ParameterDescriptor> queryParamParameters) {
+        this.queryParamParameters = queryParamParameters;
+    }
+
+    public void setMatrixVariableParameters(Set<ParameterDescriptor> matrixVariableParameters) {
+        this.matrixVariableParameters = matrixVariableParameters;
+    }
+
+    public void setPathVariableParameters(Set<ParameterDescriptor> pathVariableParameters) {
+        this.pathVariableParameters = pathVariableParameters;
+    }
+
+    public void setRequestBodyParameters(Set<ParameterDescriptor> requestBodyParameters) {
+        this.requestBodyParameters = requestBodyParameters;
+    }
+
+    public void setResponseHeaderParameters(Map<String, List<ParameterDescriptor>> responseHeaderParameters) {
+        this.responseHeaderParameters = responseHeaderParameters;
     }
 
     public String[] getMethods() {

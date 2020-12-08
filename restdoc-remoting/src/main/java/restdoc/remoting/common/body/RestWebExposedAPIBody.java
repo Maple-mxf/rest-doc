@@ -1,7 +1,7 @@
 package restdoc.remoting.common.body;
 
 import restdoc.remoting.common.ApplicationType;
-import restdoc.remoting.common.RestWebApiDescriptor;
+import restdoc.rpc.client.common.model.RestWebApiDescriptor;
 
 import java.util.List;
 

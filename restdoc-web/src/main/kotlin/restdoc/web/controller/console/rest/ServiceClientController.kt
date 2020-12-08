@@ -113,7 +113,7 @@ class ServiceClientController {
                                 requestHeaderDescriptor = mutableListOf(),
                                 requestBodyDescriptor = mutableListOf(),
                                 responseBodyDescriptors = mutableListOf(),
-                                method = method(template.supportMethod.map { HttpMethod.valueOf(it) }),
+                                method = method(template.methods.map { HttpMethod.valueOf(it) }),
                                 uriVarDescriptors = uriVarDescriptors
                         )
                     }
