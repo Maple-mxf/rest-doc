@@ -1,4 +1,4 @@
-package restdoc.remoting.common;
+package restdoc.rpc.client.common.model.dubbo;
 
 import restdoc.rpc.client.common.model.ApiDescriptor;
 

@@ -1,16 +1,16 @@
-package restdoc.remoting.common.body;
+package restdoc.rpc.client.common.model.springcloud;
 
-import restdoc.remoting.common.ApplicationType;
-import restdoc.remoting.common.SpringCloudApiDescriptor;
+import restdoc.rpc.client.common.model.ApplicationType;
+import restdoc.rpc.client.common.model.BaseExposedApiBody;
 
 import java.util.List;
 
 @Deprecated
-public class SpringCloudExposeAPIBody extends BaseExposedAPIBody {
+public class SpringCloudExposeApiBody extends BaseExposedApiBody {
 
     private List<SpringCloudApiDescriptor> apiList;
 
-    public SpringCloudExposeAPIBody() {
+    public SpringCloudExposeApiBody() {
         super(ApplicationType.SPRINGCLOUD);
     }
 

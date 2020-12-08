@@ -2,16 +2,15 @@ package restdoc.client.restweb
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
-import org.springframework.boot.context.properties.EnableConfigurationProperties
-import org.springframework.boot.info.BuildProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
 import org.springframework.core.env.Environment
 import org.springframework.web.client.RestTemplate
-import restdoc.client.api.*
+import restdoc.client.api.AgentClientConfiguration
+import restdoc.client.api.AgentConfigurationProperties
+import restdoc.client.api.AgentImpl
 import restdoc.client.restweb.context.EndpointsListener
 import restdoc.client.restweb.handler.ExportAPIHandler
 import restdoc.client.restweb.handler.InvokerAPIHandler
@@ -19,7 +18,7 @@ import restdoc.client.restweb.handler.ReportClientInfoHandler
 import restdoc.remoting.netty.NettyRequestProcessor
 
 /**
- * @author Overman
+ * @author Maple
  */
 @Configuration
 @Import(value = [EnvConfiguration::class])

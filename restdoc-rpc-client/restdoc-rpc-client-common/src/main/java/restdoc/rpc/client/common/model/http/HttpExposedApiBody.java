@@ -1,16 +1,15 @@
-package restdoc.remoting.common.body;
+package restdoc.rpc.client.common.model.http;
 
-import restdoc.remoting.common.ApplicationType;
-import restdoc.rpc.client.common.model.RestWebApiDescriptor;
+import restdoc.rpc.client.common.model.ApplicationType;
+import restdoc.rpc.client.common.model.BaseExposedApiBody;
 
 import java.util.List;
 
-@Deprecated
-public class RestWebExposedAPIBody extends BaseExposedAPIBody {
+public class HttpExposedApiBody extends BaseExposedApiBody {
 
     private List<RestWebApiDescriptor> apiList;
 
-    public RestWebExposedAPIBody() {
+    public HttpExposedApiBody() {
         super(ApplicationType.REST_WEB);
     }
 

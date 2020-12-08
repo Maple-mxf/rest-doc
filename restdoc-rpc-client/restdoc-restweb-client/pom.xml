@@ -64,7 +64,6 @@
             <groupId>com.github.open-source-sharing</groupId>
             <version>2.0.RELEASE</version>
         </dependency>
-
     </dependencies>
 
     <build>

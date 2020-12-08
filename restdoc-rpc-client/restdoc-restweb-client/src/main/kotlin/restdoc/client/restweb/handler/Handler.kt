@@ -7,9 +7,9 @@ import restdoc.client.api.model.ClientInfo
 import restdoc.client.api.model.RestWebInvocation
 import restdoc.client.restweb.RestWebInvokerImpl
 import restdoc.client.restweb.context.EndpointsListener
-import restdoc.remoting.common.ApplicationType
+import restdoc.rpc.client.common.model.ApplicationType
 import restdoc.remoting.common.RemotingUtil
-import restdoc.remoting.common.body.RestWebExposedAPIBody
+import restdoc.rpc.client.common.model.http.HttpExposedApiBody
 import restdoc.remoting.netty.NettyRequestProcessor
 import restdoc.remoting.protocol.RemotingCommand
 import restdoc.remoting.protocol.RemotingSerializable
@@ -71,7 +71,7 @@ open class ExportAPIHandler(
 
     override fun rejectRequest(): Boolean = false
     override fun processRequest(ctx: ChannelHandlerContext, request: RemotingCommand?): RemotingCommand {
-        val body = RestWebExposedAPIBody()
+        val body = HttpExposedApiBody()
         body.apiList = endpointsListener.restWebExposedAPIList
         var service = environment.getProperty("server.servlet.context-path", "")
 

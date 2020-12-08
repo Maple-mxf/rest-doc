@@ -1,7 +1,6 @@
-package restdoc.rpc.client.common.model;
+package restdoc.rpc.client.common.model.http;
 
-import restdoc.rpc.client.common.model.http.HeaderExpression;
-import restdoc.rpc.client.common.model.http.ParamExpression;
+import restdoc.rpc.client.common.model.ApiDescriptor;
 
 import java.util.*;
 

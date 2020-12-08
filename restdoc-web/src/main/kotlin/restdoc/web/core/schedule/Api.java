@@ -1,6 +1,6 @@
 package restdoc.web.core.schedule;
 
-import restdoc.remoting.common.ApplicationType;
+import restdoc.rpc.client.common.model.ApplicationType;
 import restdoc.rpc.client.common.model.ApiDescriptor;
 
 import java.util.List;

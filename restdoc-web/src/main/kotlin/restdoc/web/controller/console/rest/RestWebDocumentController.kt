@@ -12,9 +12,9 @@ import org.springframework.data.mongodb.core.query.Update
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.http.HttpMethod
 import org.springframework.web.bind.annotation.*
-import restdoc.remoting.common.ApplicationType
-import restdoc.remoting.common.DubboApiDescriptor
-import restdoc.rpc.client.common.model.RestWebApiDescriptor
+import restdoc.rpc.client.common.model.ApplicationType
+import restdoc.rpc.client.common.model.dubbo.DubboApiDescriptor
+import restdoc.rpc.client.common.model.http.RestWebApiDescriptor
 import restdoc.web.base.auth.Verify
 import restdoc.web.controller.console.model.*
 import restdoc.web.core.Result

@@ -13,10 +13,10 @@ import restdoc.client.dubbo.DubboInvokerImpl
 import restdoc.client.api.model.DubboInvocation
 import restdoc.client.dubbo.DubboRefBeanManager
 import restdoc.client.dubbo.model.ServiceDescriptor
-import restdoc.remoting.common.ApplicationType
-import restdoc.remoting.common.DubboApiDescriptor
+import restdoc.rpc.client.common.model.ApplicationType
+import restdoc.rpc.client.common.model.dubbo.DubboApiDescriptor
 import restdoc.remoting.common.RemotingUtil
-import restdoc.remoting.common.body.DubboExposedAPIBody
+import restdoc.rpc.client.common.model.DubboExposedApiBody
 import restdoc.remoting.netty.NettyRequestProcessor
 import restdoc.remoting.protocol.RemotingCommand
 import restdoc.remoting.protocol.RemotingSerializable
@@ -85,7 +85,7 @@ open class ExportAPIHandler(private val beanFactory: ConfigurableListableBeanFac
     override fun processRequest(ctx: ChannelHandlerContext, request: RemotingCommand): RemotingCommand {
         val response = RemotingCommand.createResponseCommand(RemotingSysResponseCode.SUCCESS, null)
 
-        val body = DubboExposedAPIBody()
+        val body = DubboExposedApiBody()
 
         val beansOfType = beanFactory.getBeansOfType(ServiceBean::class.java)
         body.apiList = beansOfType.toMap().map {

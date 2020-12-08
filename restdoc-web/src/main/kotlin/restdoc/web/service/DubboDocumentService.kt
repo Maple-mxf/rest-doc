@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.stereotype.Service
-import restdoc.remoting.common.DubboApiDescriptor
+import restdoc.rpc.client.common.model.dubbo.DubboApiDescriptor
 import restdoc.web.controller.console.model.NavNode
 import restdoc.web.model.*
 import restdoc.web.model.doc.DocType

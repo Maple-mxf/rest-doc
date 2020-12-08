@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.data.mongodb.core.query.Update
 import org.springframework.web.bind.annotation.*
-import restdoc.remoting.common.ApplicationType
+import restdoc.rpc.client.common.model.ApplicationType
 import restdoc.web.base.auth.Verify
 import restdoc.web.controller.console.model.*
 import restdoc.web.core.Result

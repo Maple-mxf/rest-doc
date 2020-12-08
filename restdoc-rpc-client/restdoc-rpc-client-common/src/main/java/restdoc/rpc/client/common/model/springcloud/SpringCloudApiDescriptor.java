@@ -1,4 +1,4 @@
-package restdoc.remoting.common;
+package restdoc.rpc.client.common.model.springcloud;
 
 import restdoc.rpc.client.common.model.ApiDescriptor;
 

@@ -20,7 +20,7 @@ import org.springframework.web.servlet.mvc.condition.ProducesRequestCondition;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 import restdoc.client.api.AgentConfigurationProperties;
-import restdoc.rpc.client.common.model.RestWebApiDescriptor;
+import restdoc.rpc.client.common.model.http.RestWebApiDescriptor;
 import restdoc.rpc.client.common.model.http.HeaderExpression;
 import restdoc.rpc.client.common.model.http.ParamExpression;
 
@@ -92,7 +92,8 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
 
                                 RestWebApiDescriptor emptyTemplate = new RestWebApiDescriptor();
 
-
+                                emptyTemplate.setName(requestMappingInfo.getName());
+                                emptyTemplate.setPackageName(handlerMethod.getBean().getClass().getPackage().getName());
                                 emptyTemplate.setFunction(handlerMethod.toString());
                                 emptyTemplate.setPattern(pattern);
                                 emptyTemplate.setController(handlerMethod.getBeanType().toString());
@@ -106,7 +107,7 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
                             });
                 }).collect(Collectors.toList());
 
-        log.info("RESTDOC-CLIENT collect api empty templates {} ", restWebExposedAPIList);
+        log.info("RESTdoc collect api empty templates size {} ", restWebExposedAPIList.size());
     }
 
     public List<RestWebApiDescriptor> getRestWebExposedAPIList() {
@@ -314,14 +315,14 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
                     .collect(Collectors.toList()));
         }
 
-        if (CollectionUtils.isEmpty(consumesCondition.getExpressions())){
+        if (CollectionUtils.isEmpty(consumesCondition.getExpressions())) {
             emptyDescriptor.setRequestHeaderExpressions(consumesCondition.getExpressions()
                     .stream()
                     .map(t -> new HeaderExpression(t.toString()))
                     .collect(Collectors.toList()));
         }
 
-        if (CollectionUtils.isEmpty(producesCondition.getExpressions())){
+        if (CollectionUtils.isEmpty(producesCondition.getExpressions())) {
             emptyDescriptor.setResponseHeaderExpressions(producesCondition.getExpressions()
                     .stream()
                     .map(t -> new HeaderExpression(t.toString()))

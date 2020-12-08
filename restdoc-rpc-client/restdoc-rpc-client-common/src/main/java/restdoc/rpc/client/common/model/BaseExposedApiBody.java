@@ -1,16 +1,16 @@
-package restdoc.remoting.common.body;
+package restdoc.rpc.client.common.model;
 
-import restdoc.remoting.common.ApplicationType;
+import restdoc.rpc.client.common.model.ApplicationType;
 import restdoc.rpc.client.common.model.ApiDescriptor;
 import restdoc.remoting.protocol.RemotingSerializable;
 
 import java.util.List;
 
-public abstract class BaseExposedAPIBody extends RemotingSerializable {
+public abstract class BaseExposedApiBody extends RemotingSerializable {
 
     private ApplicationType applicationType;
 
-    public BaseExposedAPIBody(ApplicationType applicationType) {
+    public BaseExposedApiBody(ApplicationType applicationType) {
         this.applicationType = applicationType;
     }
 

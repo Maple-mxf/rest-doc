@@ -11,10 +11,13 @@ import restdoc.client.api.model.ClientInfo
 import restdoc.client.api.model.RestWebInvocation
 import restdoc.client.api.model.RestWebInvocationResult
 import restdoc.remoting.ChannelEventListener
-import restdoc.remoting.common.*
-import restdoc.remoting.common.body.DubboExposedAPIBody
-import restdoc.remoting.common.body.RestWebExposedAPIBody
-import restdoc.remoting.common.body.SpringCloudExposeAPIBody
+import restdoc.remoting.common.ApplicationClientInfo
+import restdoc.rpc.client.common.model.ApplicationType
+import restdoc.remoting.common.RemotingHelper
+import restdoc.remoting.common.RequestCode
+import restdoc.rpc.client.common.model.DubboExposedApiBody
+import restdoc.rpc.client.common.model.http.HttpExposedApiBody
+import restdoc.rpc.client.common.model.springcloud.SpringCloudExposeApiBody
 import restdoc.remoting.exception.RemotingCommandException
 import restdoc.remoting.exception.RemotingSendRequestException
 import restdoc.remoting.exception.RemotingTimeoutException
@@ -24,7 +27,7 @@ import restdoc.remoting.protocol.LanguageCode
 import restdoc.remoting.protocol.RemotingCommand
 import restdoc.remoting.protocol.RemotingSerializable
 import restdoc.remoting.protocol.RemotingSysResponseCode
-import restdoc.rpc.client.common.model.RestWebApiDescriptor
+import restdoc.rpc.client.common.model.http.RestWebApiDescriptor
 import restdoc.web.core.ServiceException
 import restdoc.web.core.Status
 import restdoc.web.util.MD5Util
@@ -112,13 +115,13 @@ class ScheduleController @Autowired constructor(scheduleProperties: ScheduleProp
             val at = ApplicationType.valueOf(on.get("applicationType").asText())
             val exposedAPIBody = when {
                 ApplicationType.DUBBO == at -> {
-                    RemotingSerializable.decode(getClientAPIResponse.body, DubboExposedAPIBody::class.java) as DubboExposedAPIBody
+                    RemotingSerializable.decode(getClientAPIResponse.body, DubboExposedApiBody::class.java) as DubboExposedApiBody
                 }
                 ApplicationType.REST_WEB == at -> {
-                    RemotingSerializable.decode(getClientAPIResponse.body, RestWebExposedAPIBody::class.java) as RestWebExposedAPIBody
+                    RemotingSerializable.decode(getClientAPIResponse.body, HttpExposedApiBody::class.java) as HttpExposedApiBody
                 }
                 else -> {
-                    RemotingSerializable.decode(getClientAPIResponse.body, SpringCloudExposeAPIBody::class.java) as SpringCloudExposeAPIBody
+                    RemotingSerializable.decode(getClientAPIResponse.body, SpringCloudExposeApiBody::class.java) as SpringCloudExposeApiBody
                 }
             }
 
@@ -188,7 +191,6 @@ class ScheduleController @Autowired constructor(scheduleProperties: ScheduleProp
      * @see executeRemotingTask
      * @since 1.0
      */
-    @Deprecated(message = "syncGetEmptyApiTemplates")
     fun syncGetEmptyApiTemplates(clientId: String?): List<RestWebApiDescriptor> {
 
         val request = RemotingCommand.createRequestCommand(RequestCode.GET_EMPTY_API_TEMPLATES, null)
@@ -199,7 +201,7 @@ class ScheduleController @Autowired constructor(scheduleProperties: ScheduleProp
 
         return if (response.code == RemotingSysResponseCode.SUCCESS) {
             (RemotingSerializable.decode(response.body,
-                    RestWebExposedAPIBody::class.java) as RestWebExposedAPIBody).apiList
+                    HttpExposedApiBody::class.java) as HttpExposedApiBody).apiList
         } else {
             throw ServiceException(response.remark, Status.INTERNAL_SERVER_ERROR)
         }

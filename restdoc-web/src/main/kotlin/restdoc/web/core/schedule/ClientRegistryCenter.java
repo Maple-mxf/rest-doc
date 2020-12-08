@@ -6,7 +6,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import restdoc.remoting.annotation.Nullable;
 import restdoc.remoting.common.ApplicationClientInfo;
-import restdoc.remoting.common.ApplicationType;
+import restdoc.rpc.client.common.model.ApplicationType;
 import restdoc.rpc.client.common.model.ApiDescriptor;
 import restdoc.web.util.MD5Util;
 

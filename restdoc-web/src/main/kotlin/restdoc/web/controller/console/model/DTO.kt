@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.data.domain.PageRequest
 import restdoc.web.base.getBean
-import restdoc.web.model.*
+import restdoc.web.model.ProjectType
 import restdoc.web.model.doc.DocType
 import restdoc.web.model.doc.dubbo.MethodParamDescriptor
 import restdoc.web.model.doc.dubbo.MethodReturnValueDescriptor
@@ -159,14 +159,6 @@ data class HeaderDto(
         val headerConstraint: Boolean
 )
 
-@Deprecated(message = "ResponseFieldDto")
-data class ResponseFieldDto(
-        val responseFieldPath: String,
-        val responseFieldValue: Any? = null,
-        val responseFieldType: String,
-        val responseFieldDescription: String? = null,
-        val responseFieldConstraint: Boolean
-)
 
 @Deprecated(message = "CreateResourceDto")
 data class CreateResourceDto(

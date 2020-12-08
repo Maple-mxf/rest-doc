@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-import restdoc.remoting.common.DubboApiDescriptor
+import restdoc.rpc.client.common.model.dubbo.DubboApiDescriptor
 import restdoc.web.base.auth.Verify
 import restdoc.web.core.Result
 import restdoc.web.core.Status

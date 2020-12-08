@@ -1,6 +1,5 @@
-package restdoc.remoting.common.body;
+package restdoc.rpc.client.common.model;
 
-import restdoc.remoting.common.ApplicationType;
 import restdoc.remoting.common.DubboApiDescriptor;
 
 import java.util.List;
@@ -9,11 +8,11 @@ import java.util.List;
  * ReportClientExportInterfacesBody
  */
 @Deprecated
-public class DubboExposedAPIBody extends BaseExposedAPIBody {
+public class DubboExposedApiBody extends BaseExposedApiBody {
 
     private List<DubboApiDescriptor> apiList;
 
-    public DubboExposedAPIBody() {
+    public DubboExposedApiBody() {
         super(ApplicationType.DUBBO);
     }
 

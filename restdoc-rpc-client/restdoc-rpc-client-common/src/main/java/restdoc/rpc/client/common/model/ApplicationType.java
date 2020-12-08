@@ -1,4 +1,4 @@
-package restdoc.remoting.common;
+package restdoc.rpc.client.common.model;
 
 public enum ApplicationType {
 
