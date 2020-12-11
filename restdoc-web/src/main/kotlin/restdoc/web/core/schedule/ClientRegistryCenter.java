@@ -5,7 +5,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import restdoc.remoting.annotation.Nullable;
-import restdoc.remoting.common.ApplicationClientInfo;
+import restdoc.rpc.client.common.model.ApplicationClientInfo;
 import restdoc.rpc.client.common.model.ApplicationType;
 import restdoc.rpc.client.common.model.ApiDescriptor;
 import restdoc.web.util.MD5Util;

@@ -11,7 +11,7 @@ import restdoc.client.api.model.ClientInfo
 import restdoc.client.api.model.RestWebInvocation
 import restdoc.client.api.model.RestWebInvocationResult
 import restdoc.remoting.ChannelEventListener
-import restdoc.remoting.common.ApplicationClientInfo
+import restdoc.rpc.client.common.model.ApplicationClientInfo
 import restdoc.rpc.client.common.model.ApplicationType
 import restdoc.remoting.common.RemotingHelper
 import restdoc.remoting.common.RequestCode

@@ -1,8 +1,7 @@
-package restdoc.remoting.common;
+package restdoc.rpc.client.common.model;
 
 import io.netty.channel.Channel;
 import restdoc.remoting.protocol.LanguageCode;
-import restdoc.rpc.client.common.model.ApplicationType;
 
 import java.net.InetSocketAddress;
 import java.util.Objects;

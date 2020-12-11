@@ -1,8 +1,8 @@
 package restdoc.client.api.model
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder
-import restdoc.rpc.client.common.model.ApplicationType
 import restdoc.remoting.protocol.RemotingSerializable
+import restdoc.rpc.client.common.model.ApplicationType
 import java.beans.ConstructorProperties
 
 /**

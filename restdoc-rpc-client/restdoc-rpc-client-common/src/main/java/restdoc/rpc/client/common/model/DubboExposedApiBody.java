@@ -1,6 +1,7 @@
 package restdoc.rpc.client.common.model;
 
-import restdoc.remoting.common.DubboApiDescriptor;
+
+import restdoc.rpc.client.common.model.dubbo.DubboApiDescriptor;
 
 import java.util.List;
 

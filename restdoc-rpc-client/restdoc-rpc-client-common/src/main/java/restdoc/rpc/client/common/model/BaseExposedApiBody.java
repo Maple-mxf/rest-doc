@@ -1,7 +1,5 @@
 package restdoc.rpc.client.common.model;
 
-import restdoc.rpc.client.common.model.ApplicationType;
-import restdoc.rpc.client.common.model.ApiDescriptor;
 import restdoc.remoting.protocol.RemotingSerializable;
 
 import java.util.List;
