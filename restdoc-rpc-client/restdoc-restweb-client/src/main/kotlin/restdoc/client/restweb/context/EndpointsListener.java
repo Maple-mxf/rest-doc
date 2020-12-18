@@ -20,9 +20,9 @@ import org.springframework.web.servlet.mvc.condition.ProducesRequestCondition;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 import restdoc.client.api.AgentConfigurationProperties;
-import restdoc.rpc.client.common.model.http.RestWebApiDescriptor;
 import restdoc.rpc.client.common.model.http.HeaderExpression;
 import restdoc.rpc.client.common.model.http.ParamExpression;
+import restdoc.rpc.client.common.model.http.RestWebApiDescriptor;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
@@ -81,8 +81,6 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
                     RequestMappingInfo requestMappingInfo = hm.getKey();
                     HandlerMethod handlerMethod = hm.getValue();
 
-                    transparentApi(requestMappingInfo, handlerMethod);
-
                     return requestMappingInfo.getPatternsCondition()
                             .getPatterns()
                             .stream()
@@ -93,6 +91,16 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
                                 RestWebApiDescriptor emptyTemplate = new RestWebApiDescriptor();
 
                                 emptyTemplate.setName(requestMappingInfo.getName());
+
+                                Set<RequestMethod> methods = requestMappingInfo.getMethodsCondition().getMethods();
+                                if (methods.isEmpty()) emptyTemplate.setMethod(RequestMethod.POST.name());
+                                else if (methods.size() == 1)
+                                    emptyTemplate.setMethod((new ArrayList<>(methods)).get(0).name());
+                                else if (methods.contains(RequestMethod.GET)) emptyTemplate.setMethod(methods.stream()
+                                        .max(Enum::compareTo)
+                                        .map(Enum::name)
+                                        .orElse(RequestMethod.POST.name()));
+
                                 emptyTemplate.setPackageName(handlerMethod.getBean().getClass().getPackage().getName());
                                 emptyTemplate.setFunction(handlerMethod.toString());
                                 emptyTemplate.setPattern(pattern);
@@ -102,6 +110,8 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
                                         .map(snippet -> snippet.replaceFirst("\\{", "")
                                                 .replaceAll("\\}", ""))
                                         .toArray(String[]::new));
+
+                                this.transparentApi(emptyTemplate, requestMappingInfo, handlerMethod);
 
                                 return emptyTemplate;
                             });
@@ -116,7 +126,6 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
 
 
     /**
-     * @return {@link RestWebApiDescriptor}
      * @see RequestMapping
      * @see javax.servlet.http.HttpServletRequest
      * transparentApi
@@ -129,8 +138,7 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
      * @see org.springframework.web.bind.annotation.RequestHeader
      * @see MultipartFile
      */
-    private RestWebApiDescriptor transparentApi(RequestMappingInfo requestMappingInfo, HandlerMethod handlerMethod) {
-        RestWebApiDescriptor emptyDescriptor = new RestWebApiDescriptor();
+    private void transparentApi(RestWebApiDescriptor emptyDescriptor, RequestMappingInfo requestMappingInfo, HandlerMethod handlerMethod) {
         emptyDescriptor.setName(requestMappingInfo.getName());
 
         MethodParameter[] parameters = handlerMethod.getMethodParameters();
@@ -329,7 +337,6 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
                     .collect(Collectors.toList()));
         }
 
-        return emptyDescriptor;
     }
 
     private static final Map<Class<?>, Object> PRIMITIVE_DEFAULT_VALUE = new HashMap<Class<?>, Object>() {

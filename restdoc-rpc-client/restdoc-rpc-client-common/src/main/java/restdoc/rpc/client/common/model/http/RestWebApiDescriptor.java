@@ -12,7 +12,10 @@ public class RestWebApiDescriptor implements ApiDescriptor {
 
     private String name;
 
+    @Deprecated
     private String[] methods;
+
+    private String method;
 
     private String pattern;
 
@@ -240,6 +243,14 @@ public class RestWebApiDescriptor implements ApiDescriptor {
 
     public List<HeaderExpression> getRequestHeaderExpressions() {
         return requestHeaderExpressions;
+    }
+
+    public String getMethod() {
+        return method;
+    }
+
+    public void setMethod(String method) {
+        this.method = method;
     }
 
     public void setRequestHeaderExpressions(List<HeaderExpression> requestHeaderExpressions) {
