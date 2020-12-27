@@ -1,10 +1,10 @@
-package restdoc.client.api
+package restdoc.client.api;
 
 
 /**
  * Agent Status
  */
-enum class Status {
+public enum Status {
 
     /**
      *

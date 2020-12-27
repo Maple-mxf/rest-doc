@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.core.query.Query
 import org.springframework.stereotype.Service
 import restdoc.rpc.client.common.model.dubbo.DubboApiDescriptor
 import restdoc.web.controller.console.model.NavNode
-import restdoc.web.model.*
+import restdoc.web.model.Resource
 import restdoc.web.model.doc.DocType
 import restdoc.web.model.doc.dubbo.DubboDocument
 import restdoc.web.model.doc.dubbo.MethodParamDescriptor
@@ -18,7 +18,7 @@ import restdoc.web.util.ReflectUtils
 
 
 /**
- * @author Overman
+ * @author Maple
  */
 interface DubboDocumentService {
     fun sync(projectId: String, apiList: Collection<DubboApiDescriptor>)
