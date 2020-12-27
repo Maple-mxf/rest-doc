@@ -6,25 +6,36 @@ import java.util.*;
 
 
 /**
- * RestWebApiDescriptor
+ * The class RestWebApiDescriptor
+ *
+ * @author Maple
+ * @since 1.0.RELEASE
  */
 public class RestWebApiDescriptor implements ApiDescriptor {
 
+    /*Http Api interface default name*/
     private String name;
 
     @Deprecated
     private String[] methods;
 
+    /*RestDoc recommend request method*/
     private String method;
 
+    /*URL path*/
     private String pattern;
 
+    /*MethodName*/
     private String function;
 
-    private String[] uriVarFields;
+    /*UriFields*/
+    /*@Deprecated
+    private String[] uriVarFields;*/
 
+    /*Controller class package Name*/
     private String packageName;
 
+    /*Http Api interface response type*/
     private String responseType;
 
     private List<HeaderExpression> requestHeaderExpressions;
@@ -104,6 +115,11 @@ public class RestWebApiDescriptor implements ApiDescriptor {
 
         private Object supplementary = null;
 
+        /**
+         * @see Class#getName()
+         */
+        private String type;
+
         public ParameterDescriptor() {
         }
 
@@ -115,11 +131,6 @@ public class RestWebApiDescriptor implements ApiDescriptor {
             this.name = name;
             this.require = require;
         }
-
-        /**
-         * @see Class#getName()
-         */
-        private String type;
 
         public Object getDefaultValue() {
             return defaultValue;
@@ -223,14 +234,6 @@ public class RestWebApiDescriptor implements ApiDescriptor {
 
     public void setController(String controller) {
         this.controller = controller;
-    }
-
-    public String[] getUriVarFields() {
-        return uriVarFields;
-    }
-
-    public void setUriVarFields(String[] uriVarFields) {
-        this.uriVarFields = uriVarFields;
     }
 
     public String getPackageName() {

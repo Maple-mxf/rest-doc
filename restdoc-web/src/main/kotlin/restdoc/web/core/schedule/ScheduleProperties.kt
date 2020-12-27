@@ -8,6 +8,7 @@ import org.springframework.boot.context.properties.ConstructorBinding
  * Schedule server config properties
  *
  * @author Maple
+ * @since 1.0.RELEASE
  */
 @ConstructorBinding
 @ConfigurationProperties(prefix = "restdoc.schedule")

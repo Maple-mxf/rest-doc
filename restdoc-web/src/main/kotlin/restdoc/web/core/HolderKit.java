@@ -1,7 +1,6 @@
 package restdoc.web.core;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -13,13 +12,10 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 /**
- * @author maxuefeng
- * @since 2020/5/28
+ * @author Maple
  */
 @Component
 public class HolderKit {
-
-    private final RedisTemplate<String, Object> redisTemplate;
 
     /**
      * @see AuthContext
@@ -29,8 +25,7 @@ public class HolderKit {
     private final
     ObjectMapper mapper;
 
-    public HolderKit(RedisTemplate<String, Object> redisTemplate, AuthContext authContext, ObjectMapper mapper) {
-        this.redisTemplate = redisTemplate;
+    public HolderKit(AuthContext authContext, ObjectMapper mapper) {
         this.authContext = authContext;
         this.mapper = mapper;
     }

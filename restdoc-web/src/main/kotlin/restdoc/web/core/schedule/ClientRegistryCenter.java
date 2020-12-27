@@ -56,6 +56,7 @@ public class ClientRegistryCenter implements CommandLineRunner {
      * unregistry client
      *
      * @param remote remote address {@link Channel#remoteAddress()}
+     *               Unregister
      */
     public void unregistryClient(String remote) {
         String key = MD5Util.MD5Encode(remote, StandardCharsets.UTF_8.name());

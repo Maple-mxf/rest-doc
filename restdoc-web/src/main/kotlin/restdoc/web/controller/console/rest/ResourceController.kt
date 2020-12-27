@@ -1,7 +1,7 @@
 package restdoc.web.controller.console.rest
 
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.domain.Sort
+import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.data.mongodb.core.query.Update
@@ -42,6 +42,9 @@ class ResourceController {
     @Autowired
     lateinit var projectRepository: ProjectRepository
 
+    @Autowired
+    lateinit var mongoTemplate: MongoTemplate
+
     @PostMapping("/{projectId}/resource")
     @Verify(role = ["SYS_ADMIN"])
     fun create(@PathVariable projectId: String, @Valid @RequestBody dto: CreateResourceDto): Result {
@@ -57,14 +60,18 @@ class ResourceController {
         return ok()
     }
 
+
+    /**
+     * @sample Resource
+     */
     @RequestMapping("/{projectId}/resource/dtree")
     @Verify(role = ["*"])
     fun getResourceDTree(@PathVariable projectId: String,
                          @RequestParam at: ApplicationType): Any {
 
         val resourceQuery = Query(Criteria("projectId").`is`(projectId))
-        resourceQuery.with(Sort.by(Sort.Order.desc("order"), Sort.Order.desc("createTime")))
         val resources = resourceRepository.list(resourceQuery)
+                .sortedWith(compareBy({ it.order }, { it.createTime }))
 
         val resourceIds = resources.map { it.id }.toMutableList()
         resourceIds.add("root")
@@ -77,22 +84,25 @@ class ResourceController {
                     iconClass = "dtree-icon-weibiaoti5")
         }
 
-        val docQuery = Query(Criteria("resource").`in`(resourceIds).and("projectId").`is`(projectId))
-        docQuery.with(Sort.by(Sort.Order.desc("order"), Sort.Order.asc("createTime")))
+        val docQuery = Query(Criteria("projectId").`is`(projectId).and("resource").`in`(resourceIds))
 
         val apiNodes = if (at == ApplicationType.REST_WEB) {
-            docQuery.fields()
-                    .exclude("requestHeaderDescriptor")
-                    .exclude("requestBodyDescriptor")
-                    .exclude("responseBodyDescriptors")
-                    .exclude("description")
-                    .exclude("uriVarDescriptors")
-                    .exclude("queryParamFieldDescriptor")
 
-            val webDocs = restWebDocumentRepository.list(docQuery)
-            webDocs.map {
-                DTreeVO(id = it.id!!,
-                        title = it.name!!,
+            docQuery.fields()
+                    .include("_id")
+                    .include("createTime")
+                    .include("name")
+                    .include("order")
+                    .include("docType")
+                    .include("resource")
+
+            val docs =
+                    mongoTemplate.find(docQuery, DocPojo::class.java, "restdoc_restweb_document")
+                            .sortedWith(compareBy({ it.order }, { it.createTime }))
+
+            docs.map {
+                DTreeVO(id = it._id,
+                        title = it.name,
                         parentId = it.resource,
                         type = if (it.docType == DocType.API) NodeType.API else NodeType.WIKI,
                         iconClass = "dtree-icon-normal-file")

@@ -46,6 +46,7 @@ import java.util.stream.Collectors;
  * 8 应用SDK代码全部更改为java 去掉kotlin
  *
  * @author Maple
+ * @since 1.0.RELEASE
  */
 public class EndpointsListener implements ApplicationListener<ContextRefreshedEvent> {
 
@@ -101,15 +102,17 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
                                         .map(Enum::name)
                                         .orElse(RequestMethod.POST.name()));
 
-                                emptyTemplate.setPackageName(handlerMethod.getBean().getClass().getPackage().getName());
-                                emptyTemplate.setFunction(handlerMethod.toString());
+                                emptyTemplate.setPackageName(handlerMethod.getBeanType().getPackage().getName());
+                                emptyTemplate.setFunction(handlerMethod.getMethod().getName());
                                 emptyTemplate.setPattern(pattern);
                                 emptyTemplate.setController(handlerMethod.getBeanType().toString());
-                                emptyTemplate.setUriVarFields(Arrays.stream(pattern.split("/"))
+
+                                /*@Deprecated*/
+                                /*emptyTemplate.setUriVarFields(Arrays.stream(pattern.split("/"))
                                         .filter(snippet -> snippet.matches("^[\\{][a-zA-Z]+[0-9A-Za-z]*[\\}]$"))
                                         .map(snippet -> snippet.replaceFirst("\\{", "")
                                                 .replaceAll("\\}", ""))
-                                        .toArray(String[]::new));
+                                        .toArray(String[]::new));*/
 
                                 this.transparentApi(emptyTemplate, requestMappingInfo, handlerMethod);
 
@@ -126,9 +129,13 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
 
 
     /**
+     * Transparent application api endpoint interface
+     *
+     * @param emptyDescriptor    Empty descriptor
+     * @param handlerMethod      Endpoint api method
+     * @param requestMappingInfo {@link RequestMappingInfo}
      * @see RequestMapping
      * @see javax.servlet.http.HttpServletRequest
-     * transparentApi
      * @see org.springframework.web.bind.annotation.PathVariable
      * @see org.springframework.web.bind.annotation.RequestParam
      * @see org.springframework.web.bind.annotation.RequestPart
@@ -138,8 +145,12 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
      * @see org.springframework.web.bind.annotation.RequestHeader
      * @see MultipartFile
      */
-    private void transparentApi(RestWebApiDescriptor emptyDescriptor, RequestMappingInfo requestMappingInfo, HandlerMethod handlerMethod) {
-        emptyDescriptor.setName(requestMappingInfo.getName());
+    private void transparentApi(RestWebApiDescriptor emptyDescriptor,
+                                RequestMappingInfo requestMappingInfo,
+                                HandlerMethod handlerMethod) {
+
+        emptyDescriptor.setName(requestMappingInfo.getName() == null ?
+                handlerMethod.getMethod().getName() : requestMappingInfo.getName());
 
         MethodParameter[] parameters = handlerMethod.getMethodParameters();
 
@@ -202,7 +213,7 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
                                     .noneMatch(t -> t == Map.class)) {
                                 Object dtoInstance = instantiate(parameter.getParameterType());
                                 try {
-                                    parameterDescriptor.setType(Object.class.getName());
+                                    parameterDescriptor.setType(parameter.getParameterType().getName());
                                     parameterDescriptor.setSupplementary(dtoInstance);
 
                                 } catch (Exception ignored) {
@@ -235,6 +246,8 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
 
                         RequestBody requestBody = (RequestBody) annotation;
                         parameterDescriptor.setRequire(requestBody.required());
+
+                        // Complex Type
                         if (!isPrimitive(parameter.getParameterType())) {
                             if (Arrays.stream(parameter.getParameterType().getGenericInterfaces())
                                     .noneMatch(t -> t == Map.class)) {
@@ -305,12 +318,6 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
             }
         }
 
-        try {
-            System.err.println(mapper.writeValueAsString(emptyDescriptor));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
         ParamsRequestCondition paramsCondition = requestMappingInfo.getParamsCondition();
         ConsumesRequestCondition consumesCondition = requestMappingInfo.getConsumesCondition();
         ProducesRequestCondition producesCondition = requestMappingInfo.getProducesCondition();
@@ -338,7 +345,8 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
         }
         try {
             System.err.println(mapper.writeValueAsString(emptyDescriptor));
-        }catch (Exception e){}
+        } catch (Exception e) {
+        }
     }
 
     private static final Map<Class<?>, Object> PRIMITIVE_DEFAULT_VALUE = new HashMap<Class<?>, Object>() {
@@ -401,7 +409,8 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
     private static Object instantiate(Class<?> beanType) {
         try {
             Constructor<?>[] constructors = beanType.getConstructors();
-            Object dtoInstance = Arrays.stream(constructors).filter(ct -> ct.getParameterCount() == 0)
+            Object dtoInstance = Arrays.stream(constructors)
+                    .filter(ct -> ct.getParameterCount() == 0)
                     .findAny()
                     .map(ct -> {
                         try {

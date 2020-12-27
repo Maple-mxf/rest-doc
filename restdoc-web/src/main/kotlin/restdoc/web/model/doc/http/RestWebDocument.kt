@@ -4,6 +4,7 @@ import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
 import org.springframework.http.HttpMethod
 import restdoc.web.model.doc.DocType
+import java.util.*
 
 /**
  */
@@ -103,5 +104,16 @@ data class RestWebDocument(
         /**
          * Doc的来源
          */
-        var stem: Stem = Stem.CONSOLE
+        var stem: Stem = Stem.CONSOLE,
+
+        /**
+         * Create Time
+         */
+        var createTime: Long = Date().time,
+
+        /**
+         *
+         */
+        var lastUpdateTime: Long = Date().time
+
 )

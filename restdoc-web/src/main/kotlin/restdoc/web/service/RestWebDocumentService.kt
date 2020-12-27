@@ -59,9 +59,10 @@ open class RestWebDocumentServiceImpl : RestWebDocumentService {
                     // Map value to document
                     val documents = it.value.map { template ->
 
-                        val uriVarDescriptors = template.uriVarFields.map { uriField ->
-                            URIVarDescriptor(uriField, "", null)
-                        }
+                        val uriVarDescriptors = template.pathVariableParameters
+                                .map { pp ->
+                                    URIVarDescriptor(pp.name, "", null)
+                                }
 
                         RestWebDocument(id = IDUtil.id(),
                                 projectId = projectId,
