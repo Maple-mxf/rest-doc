@@ -10,7 +10,7 @@ import restdoc.client.api.Agent;
 import restdoc.client.api.AgentClientConfiguration;
 import restdoc.client.api.AgentConfigurationProperties;
 import restdoc.client.api.AgentImpl;
-import restdoc.client.dubbo.handler.ExportAPIHandler;
+import restdoc.client.dubbo.handler.ExportApiHandler;
 import restdoc.client.dubbo.handler.InvokeApiHandler;
 import restdoc.client.dubbo.handler.ReportClientInfoHandler;
 import restdoc.remoting.netty.NettyRequestProcessor;
@@ -24,7 +24,7 @@ import restdoc.remoting.netty.NettyRequestProcessor;
 @Import(value = {DubboInvokerImpl.class,
         InvokeApiHandler.class,
         ReportClientInfoHandler.class,
-        ExportAPIHandler.class,
+        ExportApiHandler.class,
         DubboRefBeanManager.class,
         EnvConfiguration.class})
 @EnableConfigurationProperties(value ={AgentConfigurationProperties.class})
@@ -38,7 +38,7 @@ public class DubboAgentClientConfiguration implements AgentClientConfiguration {
     private ReportClientInfoHandler reportClientInfoHandler;
 
     @Autowired
-    private ExportAPIHandler exportAPIHandler;
+    private ExportApiHandler exportApiHandler;
 
     @Autowired
     @Qualifier(value = "dubboAgentImpl")
@@ -49,7 +49,7 @@ public class DubboAgentClientConfiguration implements AgentClientConfiguration {
     @Override
     public NettyRequestProcessor getReportClientInfoHandler(){return  this.reportClientInfoHandler;}
     @Override
-    public NettyRequestProcessor getExportAPIHandler(){return this.exportAPIHandler;}
+    public NettyRequestProcessor getExportAPIHandler(){return this.exportApiHandler;}
     @Override
     public Agent getAgent(){return this.agentImpl;}
 }
