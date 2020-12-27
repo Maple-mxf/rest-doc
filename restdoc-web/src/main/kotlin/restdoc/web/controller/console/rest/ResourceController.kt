@@ -12,9 +12,9 @@ import restdoc.web.controller.console.model.*
 import restdoc.web.core.Result
 import restdoc.web.core.Status
 import restdoc.web.core.ok
-import restdoc.web.model.doc.DocType
 import restdoc.web.model.ProjectType
 import restdoc.web.model.Resource
+import restdoc.web.model.doc.DocType
 import restdoc.web.repository.DubboDocumentRepository
 import restdoc.web.repository.ProjectRepository
 import restdoc.web.repository.ResourceRepository
@@ -57,7 +57,7 @@ class ResourceController {
                 createTime = now(),
                 createBy = "System")
         resourceRepository.save(resource)
-        return ok()
+        return ok(resource)
     }
 
 

@@ -22,15 +22,17 @@ import restdoc.web.core.Status
 import restdoc.web.core.failure
 import restdoc.web.core.ok
 import restdoc.web.core.schedule.ClientRegistryCenter
-import restdoc.web.model.*
+import restdoc.web.model.Project
+import restdoc.web.model.Resource
 import restdoc.web.model.doc.DocType
 import restdoc.web.model.doc.http.*
 import restdoc.web.repository.ProjectRepository
 import restdoc.web.repository.ResourceRepository
 import restdoc.web.repository.RestWebDocumentRepository
-import restdoc.web.util.*
+import restdoc.web.util.FieldType
 import restdoc.web.util.IDUtil.id
 import restdoc.web.util.IDUtil.now
+import restdoc.web.util.MD5Util
 import java.net.URL
 import java.util.*
 import javax.validation.Valid
@@ -674,7 +676,8 @@ class RestWebDocumentController {
 
         mongoTemplate.save(document)
 
-        return ok(document.id)
+        // var json = {"id":data.field.addId,"title": data.field.addNodeName,"parentId": node.nodeId};
+        return ok(document)
     }
 
     @Verify(role = ["SYS_ADMIN"])

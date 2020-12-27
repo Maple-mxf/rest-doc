@@ -120,11 +120,12 @@
 
             var dtreeData = null;
 
-            function setDTreeData() {
+            function setDTreeData(async) {
+                if (async == null) async = false;
                 $.ajax({
                     type: 'GET',
                     url: "/restdoc/" + projectId + "/resource/dtree?at=REST_WEB",
-                    async: false,
+                    async: async,
                     success: function (data) {
                         if (data['code'] === 0) {
                             dtreeData = data['data'];
@@ -175,7 +176,8 @@
                         toolbarId: "modify",
                         title: "编辑",
                         handler: function (node, $div) {
-                            editNode(node);
+
+                            editNode(node, $div);
                         }
                     },
                     {
@@ -211,8 +213,19 @@
                                                 async: false,
                                                 contentType: "application/json",
                                                 success: function (res) {
-                                                    resetCreateDiv();
-                                                    if (res.code !== '200') layer.msg(res.message);
+                                                    if (res.code === '200') {
+                                                        resetCreateDiv();
+                                                        var json = {
+                                                            "id": res.data.id,
+                                                            "title": res.data.name,
+                                                            "parentId": node.nodeId,
+                                                            "iconClass":"dtree-icon-weibiaoti5"
+                                                        };
+                                                        DemoTree.partialRefreshAdd($div, json);
+                                                        setDTreeData(false);
+                                                    } else {
+                                                        layer.msg(res.message);
+                                                    }
                                                 }
                                             });
                                             layer.close(ix);
@@ -230,7 +243,8 @@
                         title: "新建API文档",
                         handler: function (node, $div) {
                             commonToolHandler(node, node.nodeId, function (res, $obj, first) {
-                                createDoc("新建API文档", node, "API");
+                                createDoc($div, "新建API文档", node, "API");
+
                             });
                         }
                     },
@@ -239,7 +253,7 @@
                         title: "新建WIKI文档",
                         handler: function (node, $div) {
                             commonToolHandler(node, node.nodeId, function (res, $obj, first) {
-                                createDoc("新建WIKI文档", node, "WIKI");
+                                createDoc($div, "新建WIKI文档", node, "WIKI");
                             });
                         }
                     },
@@ -271,7 +285,8 @@
 
             var DemoTree = dtree.render(dtreeOptions);
 
-            function editNode(node) {
+            function editNode(node, $div) {
+                console.info(node);
                 commonToolHandler(node, node.parentId, function () {
                     $("#name").val(node.context);
                     layer.open({
@@ -283,21 +298,22 @@
                         btn: ['确定', '取消'],
                         yes: function (ix, layero) {
                             var url = nodeIsResource(node.nodeId) ? "/restdoc/resource" : "/restdoc/document/baseinfo";
+                            var text = $("#name").val();
                             $.ajax({
                                 method: "PATCH",
                                 url: url,
                                 contentType: "application/json",
                                 async: false,
                                 data: JSON.stringify({
-                                    name: $("#name").val(),
+                                    name: text,
                                     id: node.nodeId,
                                     pid: dtree.selectVal("parentResourceSelect").parentResourceSelect_select_nodeId,
                                     order: 0
                                 }),
                                 success: function (res) {
                                     if (res.code === '200') {
-                                        layer.msg('操作成功');
-                                        reloadNavTree();
+                                        setDTreeData();
+                                        DemoTree.partialRefreshEdit($div, text);
                                     } else {
                                         layer.msg(res.message);
                                     }
@@ -308,7 +324,7 @@
                         end: function () {
                             destroyTree();
                         }
-                    })
+                    });
                 })
             }
 
@@ -361,7 +377,7 @@
             }
 
             function resetCreateDiv() {
-                reloadNavTree();
+                // reloadNavTree();
                 $("#name").val("");
             }
 
@@ -409,7 +425,7 @@
                 })
             }
 
-            function createDoc(windowTitle, node, docType) {
+            function createDoc($div, windowTitle, node, docType) {
                 layer.open({
                     type: 1,
                     scrollbar: false,
@@ -441,8 +457,14 @@
                                 success: function (res) {
                                     if (res.code === '200') {
                                         resetCreateDiv();
-                                        dtree.selectVal("dtreeTableContent", res.data);
-                                        $("#apiDocFrame").attr("src", '/restdoc/' + projectId + '/document/' + res.data + '/view');
+                                        setDTreeData(false);
+
+                                        var json = {"id": res.data.id, "title": res.data.name, "parentId": node.nodeId,
+                                            "iconClass":"dtree-icon-normal-file"};
+                                        DemoTree.partialRefreshAdd($div, json);
+
+                                        dtree.click(DemoTree, res.data.id);
+
                                     } else {
                                         layer.msg(res.message);
                                     }
