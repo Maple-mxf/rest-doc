@@ -21,14 +21,17 @@ import static java.util.stream.Collectors.toList;
 
 /**
  * Project JSON/XML
+ *
+ * @author Maple
+ * @since 1.0.RELEASE
  */
 public abstract class BaseProjector<R> implements Projector<R> {
 
     // Filter Json array field
-    protected final static Pattern ARRAY_PATTERN = compile("([a-zA-Z0-9_]+[a-zA-Z0-9_\\-]*)(\\[\\d*\\])+");
+    final static Pattern ARRAY_PATTERN = compile("([a-zA-Z0-9_]+[a-zA-Z0-9_\\-]*)(\\[\\d*\\])+");
 
     // Filter the field
-    protected final static String FIELD_REGEX = "^[a-zA-Z0-9_]+[a-zA-Z0-9]*$";
+    private final static String FIELD_REGEX = "^[a-zA-Z0-9_]+[a-zA-Z0-9]*$";
 
     public abstract R project();
 
@@ -36,7 +39,7 @@ public abstract class BaseProjector<R> implements Projector<R> {
     protected final List<Node> nodes = new ArrayList<>();
 
     // Nodes
-    protected Node nodeTree = new Node("root", "", FieldType.OBJECT, new ArrayList<>());
+    Node nodeTree = new Node("root", "", FieldType.OBJECT, new ArrayList<>());
 
     /**
      * Build tree node
@@ -45,7 +48,7 @@ public abstract class BaseProjector<R> implements Projector<R> {
      * @see Node
      */
     @VisibleForTesting
-    protected void buildForTreeNode(List<PathValue> pathValues) {
+    void buildForTreeNode(List<PathValue> pathValues) {
         this.nodes.addAll(pathValues.stream()
                 .map(pv -> new Node(pv.getPath(), pv.getValue(), FieldType.OBJECT, new ArrayList<>()))
                 .collect(toList()));

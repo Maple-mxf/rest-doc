@@ -21,7 +21,7 @@ typealias MapToCodeSample = (RestWebDocument) -> String
 
 
 /**
- * @author Overman
+ * @author Maple
  */
 @Component
 open class CURLCodeSampleGenerator(private val restTemplate: RestTemplate) : MapToCodeSample {

@@ -16,6 +16,8 @@ import java.util.List;
  * <p>
  * <p>
  * JacksonXml parse flatten list data to xml string
+ *
+ * @author Maple
  */
 public class JacksonXmlProjector extends BaseProjector<String> {
 
