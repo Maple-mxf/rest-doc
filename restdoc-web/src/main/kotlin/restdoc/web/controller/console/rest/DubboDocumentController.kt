@@ -106,7 +106,7 @@ class DubboDocumentController {
             ok(TestDubboMicroserviceResult(
                     method = document.methodName,
                     paramTypes = document.paramDescriptors.joinToString(separator = ",") { it.type },
-                    success = invocationResult.isSuccessful,
+                    success = invocationResult.successful,
                     errorMessage = if (invocationResult.exceptionMsg == null || invocationResult.exceptionMsg!!.isBlank()) "无异常信息" else invocationResult.exceptionMsg,
                     returnType = invocationResult.returnValueType,
                     returnValue = if (invocationResult.returnValue == null || invocationResult.returnValue!!.isBlank()) "无返回值" else invocationResult.returnValue,

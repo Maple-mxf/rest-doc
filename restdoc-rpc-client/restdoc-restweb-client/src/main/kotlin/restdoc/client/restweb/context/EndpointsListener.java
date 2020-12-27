@@ -336,7 +336,9 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
                     .map(t -> new HeaderExpression(t.toString()))
                     .collect(Collectors.toList()));
         }
-
+        try {
+            System.err.println(mapper.writeValueAsString(emptyDescriptor));
+        }catch (Exception e){}
     }
 
     private static final Map<Class<?>, Object> PRIMITIVE_DEFAULT_VALUE = new HashMap<Class<?>, Object>() {

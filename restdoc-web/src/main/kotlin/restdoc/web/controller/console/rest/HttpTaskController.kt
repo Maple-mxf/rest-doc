@@ -75,7 +75,7 @@ class HttpTaskController {
         }
 
         val vo = RestWebInvocationResultVO(
-                isSuccessful = res.isSuccessful,
+                isSuccessful = res.successful,
                 exceptionMsg = res.exceptionMsg,
                 invocation = res.invocation,
                 status = res.status,
@@ -113,12 +113,12 @@ class HttpTaskController {
         } catch (e: Throwable) {
             e.printStackTrace()
             return RestWebInvocationResult(
-                    isSuccessful = false,
-                    exceptionMsg = e.message,
-                    status = -1,
-                    invocation = invocation,
-                    responseHeaders = mutableMapOf(),
-                    responseBody = null
+                     false,
+                    e.message,
+                    invocation,
+                     -1,
+                     mutableMapOf(),
+                     null
             )
         }
     }
@@ -146,7 +146,7 @@ class HttpTaskController {
             val responseEntity = httpTaskExecutor.execute(restWebInvocation)
 
             invocationResult = RestWebInvocationResult().apply {
-                isSuccessful = true
+                successful = true
                 status = responseEntity?.statusCodeValue ?: -1
                 responseHeaders = responseEntity?.headers?.map { it.key to it.value }?.toMap()?.toMutableMap()
                         ?: mutableMapOf()

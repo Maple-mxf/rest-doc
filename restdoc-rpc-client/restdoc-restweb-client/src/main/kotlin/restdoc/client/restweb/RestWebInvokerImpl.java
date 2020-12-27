@@ -1,6 +1,5 @@
 package restdoc.client.restweb;
 
-import org.jetbrains.annotations.NotNull;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -39,18 +38,18 @@ public class RestWebInvokerImpl implements Invoker<RestWebInvocation> {
         this.port = Integer.parseInt(environment.getProperty("server.port", "8080"));
     }
 
-    @NotNull
     @Override
-    public InvocationResult rpcInvoke(@NotNull RestWebInvocation invocation) {
-        String url = autocompleteURL(invocation.url);
+    public InvocationResult rpcInvoke(RestWebInvocation invocation) {
+        String url = autocompleteURL(invocation.getUrl());
         HttpHeaders requestHeaders = new HttpHeaders();
-        invocation.requestHeaders.forEach(requestHeaders::addAll);
-        HttpEntity httpEntity = new HttpEntity(invocation.requestBody, requestHeaders);
+        invocation.getRequestHeaders().forEach(requestHeaders::addAll);
 
-        ResponseEntity<Object> responseEntity = null;
+        HttpEntity httpEntity = new HttpEntity(invocation.getRequestBody(), requestHeaders);
+
+        ResponseEntity<Object> responseEntity;
 
         try {
-            responseEntity = restTemplate.exchange(url, HttpMethod.valueOf(invocation.method), httpEntity, Object.class, invocation.uriVariable);
+            responseEntity = restTemplate.exchange(url, HttpMethod.valueOf(invocation.getMethod()), httpEntity, Object.class, invocation.getUriVariable());
 
             Map<String, List<String>> responseHeaders = responseEntity.getHeaders().entrySet()
                     .stream()

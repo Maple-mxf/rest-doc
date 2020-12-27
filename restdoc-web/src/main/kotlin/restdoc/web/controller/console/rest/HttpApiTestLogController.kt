@@ -85,7 +85,7 @@ class HttpApiTestLogController {
 
         val invocationResult = RestWebInvocationResult()
         invocationResult.apply {
-            isSuccessful = log.success
+            successful = log.success
             status = log.responseStatus
             responseHeaders = if (log.responseHeader != null) log.responseHeader!!.map { it.key to it.value.toMutableList() }.toMap().toMutableMap() else mutableMapOf()
             responseBody = log.responseBody

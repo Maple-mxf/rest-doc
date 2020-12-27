@@ -2,6 +2,7 @@ package restdoc.client.api;
 
 import org.springframework.boot.CommandLineRunner;
 import restdoc.remoting.common.RequestCode;
+import restdoc.remoting.exception.RemotingException;
 import restdoc.remoting.netty.NettyRequestProcessor;
 
 
@@ -43,7 +44,7 @@ public interface AgentClientConfiguration extends CommandLineRunner {
     NettyRequestProcessor getExportAPIHandler();
 
 
-    default void run(String... args) {
+    default void run(String... args) throws RemotingException {
 
         Agent agent = this.getAgent();
 
