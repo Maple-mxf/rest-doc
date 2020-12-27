@@ -3,7 +3,7 @@ package restdoc.web
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.runApplication
-import restdoc.web.core.schedule.ScheduleProperties
+import restdoc.web.schedule.ScheduleProperties
 
 /**
  *

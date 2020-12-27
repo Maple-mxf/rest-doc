@@ -1,4 +1,4 @@
-package restdoc.web.core.schedule
+package restdoc.web.schedule
 
 import restdoc.remoting.InvokeCallback
 import restdoc.remoting.protocol.RemotingCommand

@@ -14,7 +14,7 @@ import restdoc.web.model.doc.http.QueryParamDescriptor
 import restdoc.web.model.doc.http.URIVarDescriptor
 import restdoc.web.util.FieldType
 import restdoc.web.util.URLUtil
-import restdoc.web.util.dp.JsonDeProjector
+import restdoc.web.project.JsonDeProjector
 import java.net.URI
 
 data class CreateProjectDto(val name: String, val desc: String?, val type: ProjectType)

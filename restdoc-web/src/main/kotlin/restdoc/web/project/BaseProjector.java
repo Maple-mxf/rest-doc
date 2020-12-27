@@ -1,4 +1,4 @@
-package restdoc.web.util.dp;
+package restdoc.web.project;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;

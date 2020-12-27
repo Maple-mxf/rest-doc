@@ -10,7 +10,7 @@ import restdoc.web.base.auth.Verify
 import restdoc.web.core.Result
 import restdoc.web.core.Status
 import restdoc.web.core.ok
-import restdoc.web.core.schedule.ClientRegistryCenter
+import restdoc.web.schedule.ClientRegistryCenter
 import restdoc.web.model.ProjectType
 import restdoc.web.repository.ProjectRepository
 import restdoc.web.service.DubboDocumentService

@@ -1,11 +1,9 @@
-package restdoc.web.util.project;
+package restdoc.web.project;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import org.junit.Test;
 import restdoc.web.util.PathValue;
-import restdoc.web.util.dp.JacksonXmlProjector;
-import restdoc.web.util.dp.JsonProjector;
 
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;

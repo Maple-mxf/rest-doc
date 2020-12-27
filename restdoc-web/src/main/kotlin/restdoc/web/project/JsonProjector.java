@@ -1,4 +1,4 @@
-package restdoc.web.util.dp;
+package restdoc.web.project;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -57,7 +57,7 @@ import static restdoc.web.core.StandardKt.throwError;
  * </pre>
  *
  * @author Maple
- * @since 1.0
+ * @since 1.0.RELEASE
  */
 public class JsonProjector extends BaseProjector<ObjectNode> {
 

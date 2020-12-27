@@ -21,7 +21,7 @@ import restdoc.web.core.Result
 import restdoc.web.core.Status
 import restdoc.web.core.failure
 import restdoc.web.core.ok
-import restdoc.web.core.schedule.ClientRegistryCenter
+import restdoc.web.schedule.ClientRegistryCenter
 import restdoc.web.model.Project
 import restdoc.web.model.Resource
 import restdoc.web.model.doc.DocType

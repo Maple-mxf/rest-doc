@@ -1,4 +1,4 @@
-package restdoc.web.util.dp;
+package restdoc.web.project;
 
 public interface Projector<R> {
 

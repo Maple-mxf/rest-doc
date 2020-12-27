@@ -1,4 +1,4 @@
-package restdoc.web.core.schedule
+package restdoc.web.schedule
 
 import com.fasterxml.jackson.databind.node.ObjectNode
 import io.netty.channel.Channel

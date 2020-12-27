@@ -3,7 +3,7 @@ package restdoc.web.service
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Service
-import restdoc.web.core.schedule.ScheduleController
+import restdoc.web.schedule.ScheduleController
 import restdoc.web.model.Resource
 import restdoc.web.model.doc.http.RestWebDocument
 import restdoc.web.model.doc.http.URIVarDescriptor

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam
 import restdoc.rpc.client.common.model.ApplicationType
 import restdoc.web.base.auth.Verify
 import restdoc.web.core.Status
-import restdoc.web.core.schedule.ClientRegistryCenter
+import restdoc.web.schedule.ClientRegistryCenter
 
 @Controller
 @Verify

@@ -1,4 +1,4 @@
-package restdoc.web.util.dp;
+package restdoc.web.project;
 
 import restdoc.web.model.doc.http.BodyFieldDescriptor;
 

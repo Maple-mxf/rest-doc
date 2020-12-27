@@ -1,4 +1,4 @@
-package restdoc.web.core.schedule;
+package restdoc.web.schedule;
 
 import restdoc.rpc.client.common.model.ApplicationType;
 import restdoc.rpc.client.common.model.ApiDescriptor;

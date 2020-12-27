@@ -6,8 +6,8 @@ import restdoc.rpc.client.common.model.ApplicationType
 import restdoc.web.base.auth.Verify
 import restdoc.web.controller.console.model.SyncApiEmptyTemplateDto
 import restdoc.web.core.ok
-import restdoc.web.core.schedule.ClientRegistryCenter
-import restdoc.web.core.schedule.ScheduleController
+import restdoc.web.schedule.ClientRegistryCenter
+import restdoc.web.schedule.ScheduleController
 import restdoc.web.repository.ResourceRepository
 import restdoc.web.repository.RestWebDocumentRepository
 import restdoc.web.service.RestWebDocumentService

@@ -1,4 +1,4 @@
-package restdoc.web.core.schedule;
+package restdoc.web.schedule;
 
 import io.netty.channel.Channel;
 import org.checkerframework.checker.nullness.qual.NonNull;

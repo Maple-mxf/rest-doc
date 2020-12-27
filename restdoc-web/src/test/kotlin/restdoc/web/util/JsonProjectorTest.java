@@ -2,8 +2,8 @@ package restdoc.web.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
-import restdoc.web.util.dp.BaseProjector;
-import restdoc.web.util.dp.JsonProjector;
+import restdoc.web.project.BaseProjector;
+import restdoc.web.project.JsonProjector;
 
 import java.io.File;
 import java.io.IOException;

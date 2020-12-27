@@ -15,7 +15,7 @@ import restdoc.web.controller.console.model.UpdateDubboDocumentDto
 import restdoc.web.core.Result
 import restdoc.web.core.Status
 import restdoc.web.core.ok
-import restdoc.web.core.schedule.*
+import restdoc.web.schedule.*
 import restdoc.web.repository.DubboDocumentRepository
 
 /**

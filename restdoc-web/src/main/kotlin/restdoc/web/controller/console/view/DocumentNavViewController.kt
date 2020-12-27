@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import restdoc.rpc.client.common.model.ApplicationType
 import restdoc.web.base.auth.Verify
-import restdoc.web.core.schedule.ClientRegistryCenter
+import restdoc.web.schedule.ClientRegistryCenter
 import restdoc.web.model.ProjectType
 import restdoc.web.repository.ProjectRepository
 
