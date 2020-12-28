@@ -21,7 +21,6 @@ import restdoc.web.core.Result
 import restdoc.web.core.Status
 import restdoc.web.core.failure
 import restdoc.web.core.ok
-import restdoc.web.schedule.ClientRegistryCenter
 import restdoc.web.model.Project
 import restdoc.web.model.Resource
 import restdoc.web.model.doc.DocType
@@ -29,6 +28,7 @@ import restdoc.web.model.doc.http.*
 import restdoc.web.repository.ProjectRepository
 import restdoc.web.repository.ResourceRepository
 import restdoc.web.repository.RestWebDocumentRepository
+import restdoc.web.schedule.ClientRegistryCenter
 import restdoc.web.util.FieldType
 import restdoc.web.util.IDUtil.id
 import restdoc.web.util.IDUtil.now
@@ -195,7 +195,8 @@ class RestWebDocumentController {
                 responseHeaderDescriptor = responseHeaderDescriptor,
                 method = HttpMethod.valueOf(dto.method),
                 uriVarDescriptors = uriVarDescriptor,
-                description = dto.description)
+                description = dto.description,
+                lastUpdateTime = Date().time)
 
         val updateResult = restWebDocumentRepository.update(document)
 
@@ -404,7 +405,7 @@ class RestWebDocumentController {
                     it.value = dto.value
                     it.description = dto.description
                 }
-
+        doc.lastUpdateTime = Date().time
         restWebDocumentRepository.update(doc)
 
         return ok(transformRestDocumentToVO(doc))
@@ -422,7 +423,7 @@ class RestWebDocumentController {
                     it.value = dto.value.split(",")
                     it.description = dto.description
                 }
-
+        doc.lastUpdateTime = Date().time
         restWebDocumentRepository.update(doc)
 
         return ok(transformRestDocumentToVO(doc))
@@ -440,7 +441,7 @@ class RestWebDocumentController {
                     it.value = dto.value
                     it.description = dto.description
                 }
-
+        doc.lastUpdateTime = Date().time
         restWebDocumentRepository.update(doc)
 
         return ok(transformRestDocumentToVO(doc))
@@ -458,7 +459,7 @@ class RestWebDocumentController {
                     it.value = dto.value
                     it.description = dto.description
                 }
-
+        doc.lastUpdateTime = Date().time
         restWebDocumentRepository.update(doc)
 
         return ok(transformRestDocumentToVO(doc))
@@ -472,6 +473,7 @@ class RestWebDocumentController {
         val doc = restWebDocumentRepository.findById(id).orElseThrow(Status.BAD_REQUEST::instanceError)
 
         doc.description = dto.description
+        doc.lastUpdateTime = Date().time
         restWebDocumentRepository.update(doc)
 
         return ok(transformRestDocumentToVO(doc))
@@ -701,7 +703,9 @@ class RestWebDocumentController {
                 queryParamFieldDescriptor = originDocument.queryParamFieldDescriptor,
                 content = originDocument.content,
                 responseHeaderDescriptor = originDocument.responseHeaderDescriptor,
-                docType = originDocument.docType)
+                docType = originDocument.docType,
+                createTime = Date().time,
+                lastUpdateTime = Date().time)
 
         mongoTemplate.save(newDocument)
         return ok(mapOf(
