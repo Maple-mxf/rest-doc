@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.stream.Stream;
 
 /**
+ * @author Maple
  */
 public abstract class AbstractCookieCredentialFunction extends AbstractCredentialFunction {
 

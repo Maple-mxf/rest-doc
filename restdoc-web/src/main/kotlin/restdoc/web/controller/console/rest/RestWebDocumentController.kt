@@ -683,7 +683,10 @@ class RestWebDocumentController {
     @Verify(role = ["SYS_ADMIN"])
     @PostMapping("/copy")
     fun copyDocument(@RequestBody dto: CopyDocumentDocDto): Result {
-        val originDocument = restWebDocumentRepository.findById(dto.documentId).orElseThrow { Status.INVALID_REQUEST.instanceError() }
+
+        val originDocument = restWebDocumentRepository.findById(dto.documentId)
+                .orElseThrow { Status.INVALID_REQUEST.instanceError() }
+
         val newDocument = RestWebDocument(
                 id = id(),
                 projectId = originDocument.projectId,
@@ -699,8 +702,13 @@ class RestWebDocumentController {
                 content = originDocument.content,
                 responseHeaderDescriptor = originDocument.responseHeaderDescriptor,
                 docType = originDocument.docType)
+
         mongoTemplate.save(newDocument)
-        return ok(newDocument.id)
+        return ok(mapOf(
+                "id" to newDocument.id,
+                "resource" to newDocument.resource,
+                "name" to newDocument.name
+        ))
     }
 
     @Verify(role = ["SYS_ADMIN"])

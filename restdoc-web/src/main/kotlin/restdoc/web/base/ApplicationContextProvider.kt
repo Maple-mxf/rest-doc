@@ -9,6 +9,8 @@ lateinit var applicationContext: ApplicationContext
 
 /**
  * ApplicationContextProvider
+ *
+ * @author Maple
  */
 @Component
 open class ApplicationContextProvider : ApplicationContextAware {

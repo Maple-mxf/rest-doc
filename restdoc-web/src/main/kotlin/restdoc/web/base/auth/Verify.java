@@ -4,6 +4,8 @@ import java.lang.annotation.*;
 
 /**
  * 权限认证
+ *
+ * @author Maple
  */
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)

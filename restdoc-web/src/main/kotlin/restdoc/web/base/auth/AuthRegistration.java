@@ -11,6 +11,8 @@ import java.util.Set;
 import java.util.function.Function;
 
 /**
+ *
+ * @author Maple
  */
 public final class AuthRegistration {
 

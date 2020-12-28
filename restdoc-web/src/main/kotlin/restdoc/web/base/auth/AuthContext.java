@@ -5,6 +5,8 @@ import org.springframework.stereotype.Component;
 import javax.servlet.http.HttpServletRequest;
 
 /**
+ *
+ * @author Maple
  */
 @Component
 public class AuthContext {

@@ -9,6 +9,7 @@ import java.util.function.Function;
 /**
  * 用户身份凭证
  *
+ * @author Maple
  * @see Function#identity()
  */
 public final class Credential implements Serializable {

@@ -85,16 +85,35 @@
     </div>
 </div>
 
-<form class="layui-form layui-form-pane" action="" id="create" style="display: none">
-    <div class="layui-row" style="margin-top: 5%">
-        <div class="layui-col-md12">
-            <div id="parentResourceSelectDiv">
-                <ul id='parentResourceSelect' class='dtree' data-id='0'></ul>
+<form class="layui-form" action="" id="create" style="display: none">
+    <div class="layui-row" style="margin-top: 10%">
+        <div class="layui-col-md1">
+        </div>
+        <div class="layui-col-md10">
+            <div class="layui-row">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">父级</label>
+                    <div class="layui-input-block">
+                        <div id="parentResourceSelectDiv">
+                            <ul id='parentResourceSelect' class='dtree' data-id='0'></ul>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <input style="margin-top: 5%" type="text" id="name" name="name" required lay-verify="required"
-                   placeholder="请输入名称"
-                   autocomplete="off"
-                   class="layui-input">
+
+            <div class="layui-row" style="margin-top: 5%">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">名称</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="name" name="name" required lay-verify="required"
+                               placeholder="请输入名称"
+                               autocomplete="off"
+                               class="layui-input">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md1">
         </div>
     </div>
 </form>
@@ -167,29 +186,31 @@
                 dtreeOptions['toolbarExt'] = [
                     {
                         toolbarId: "copyDoc",
-                        title: "复制文档",
+                        title: "拷贝文档",
+                        icon: "dtree-icon-jia1",
                         handler: function (node, $div) {
-                            copyDoc(node);
+                            copyDoc(node, $div);
                         }
                     },
                     {
                         toolbarId: "modify",
                         title: "编辑",
+                        icon: "dtree-icon-bianji",
                         handler: function (node, $div) {
-
                             editNode(node, $div);
                         }
                     },
                     {
                         toolbarId: "createResource",
                         title: "新建目录",
+                        icon: "dtree-icon-jia1",
                         handler: function (node, $div) {
                             commonToolHandler(node, node.nodeId, function (res, $obj, first) {
                                 layer.open({
                                     type: 1,
                                     scrollbar: false,
                                     content: $('#create'),
-                                    area: ['600px', '400px'],
+                                    area: ['800px', '400px'],
                                     title: '新建目录',
                                     btn: ['确定', '取消'],
                                     yes: function (ix, layero) {
@@ -219,7 +240,7 @@
                                                             "id": res.data.id,
                                                             "title": res.data.name,
                                                             "parentId": node.nodeId,
-                                                            "iconClass":"dtree-icon-weibiaoti5"
+                                                            "iconClass": "dtree-icon-weibiaoti5"
                                                         };
                                                         DemoTree.partialRefreshAdd($div, json);
                                                         setDTreeData(false);
@@ -241,16 +262,17 @@
                     {
                         toolbarId: "createApi",
                         title: "新建API文档",
+                        icon: "dtree-icon-jia1",
                         handler: function (node, $div) {
                             commonToolHandler(node, node.nodeId, function (res, $obj, first) {
                                 createDoc($div, "新建API文档", node, "API");
-
                             });
                         }
                     },
                     {
                         toolbarId: "createWiki",
                         title: "新建WIKI文档",
+                        icon: "dtree-icon-jia1",
                         handler: function (node, $div) {
                             commonToolHandler(node, node.nodeId, function (res, $obj, first) {
                                 createDoc($div, "新建WIKI文档", node, "WIKI");
@@ -260,6 +282,7 @@
                     {
                         toolbarId: "del",
                         title: "删除",
+                        icon: "dtree-icon-delete1",
                         handler: function (node, $div) {
                             deleteNode(node);
                         }
@@ -293,7 +316,7 @@
                         type: 1,
                         scrollbar: false,
                         content: $('#create'),
-                        area: ['600px', '400px'],
+                        area: ['800px', '400px'],
                         title: '编辑',
                         btn: ['确定', '取消'],
                         yes: function (ix, layero) {
@@ -390,14 +413,14 @@
                 })
             }
 
-            function copyDoc(node) {
+            function copyDoc(node, $div) {
                 commonToolHandler(node, node.parentId, function () {
                     $("#name").val(node.context);
                     layer.open({
                         type: 1,
                         scrollbar: false,
                         content: $('#create'),
-                        area: ['600px', '400px'],
+                        area: ['800px', '400px'],
                         title: '拷贝文档',
                         btn: ['确定', '取消'],
                         yes: function (ix, layero) {
@@ -412,11 +435,18 @@
                                 }),
                                 async: false,
                                 success: function (res) {
-                                    $("#name").val("");
+                                    console.info(node);
+                                    if (res.code === '200') {
+                                        resetCreateDiv();
+                                        reloadNavTree();
+                                        dtree.click(DemoTree, res.data.id);
+                                    } else {
+                                        layer.msg(res.message);
+                                    }
                                 }
                             });
                             layer.close(ix);
-                            reloadNavTree();
+
                         },
                         end: function () {
                             destroyTree();
@@ -430,7 +460,7 @@
                     type: 1,
                     scrollbar: false,
                     content: $('#create'),
-                    area: ['600px', '400px'],
+                    area: ['800px', '400px'],
                     title: windowTitle,
                     btn: ['确定', '取消'],
                     yes: function (ix, layero) {
@@ -459,8 +489,10 @@
                                         resetCreateDiv();
                                         setDTreeData(false);
 
-                                        var json = {"id": res.data.id, "title": res.data.name, "parentId": node.nodeId,
-                                            "iconClass":"dtree-icon-normal-file"};
+                                        var json = {
+                                            "id": res.data.id, "title": res.data.name, "parentId": node.nodeId,
+                                            "iconClass": "dtree-icon-normal-file"
+                                        };
                                         DemoTree.partialRefreshAdd($div, json);
 
                                         dtree.click(DemoTree, res.data.id);
@@ -522,7 +554,9 @@
                 var value = $("#searchInput").val();
                 if (value) {
                     if (!DemoTree.searchNode(value)) layer.msg("该名称节点不存在！", {icon: 5});
-                } else DemoTree.menubarMethod().refreshTree();  // 内置方法刷新树
+                } else {
+                    reloadNavTree();
+                }
             }
 
             $("#searchDocBtn").click(function () {

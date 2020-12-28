@@ -8,7 +8,11 @@ import restdoc.web.core.code.JavaCodeSampleGenerator
 import restdoc.web.core.code.PythonCodeSampleGenerator
 import restdoc.web.model.doc.http.*
 
-
+/**
+ * findChild
+ *
+ * @author Maple
+ */
 fun findChild(parentNode: NavNode, navNodes: List<NavNode>) {
     val children: MutableList<NavNode> = navNodes.filter { it.pid == parentNode.id }.toMutableList()
     parentNode.children = children

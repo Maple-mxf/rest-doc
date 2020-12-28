@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 import static org.springframework.web.servlet.HandlerMapping.LOOKUP_PATH;
 
 /**
- *
+ * @author Maple
  */
 public class AuthenticationInterceptor extends BaseInterceptor {
 
@@ -114,7 +114,7 @@ public class AuthenticationInterceptor extends BaseInterceptor {
             }
 
             CredentialFunction credentialFunction = rule.getCredentialFunction();
-            
+
             Credential credential = credentialFunction.apply(request);
 
             if (checkupCredential(credential, verify, credentialFunction, require)) {

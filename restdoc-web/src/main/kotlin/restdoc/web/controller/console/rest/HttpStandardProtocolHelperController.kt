@@ -16,6 +16,8 @@ import javax.annotation.PostConstruct
 
 /**
  * @see org.springframework.http.HttpHeaders
+ *
+ * @author Maple
  */
 @RequestMapping("/httpstandard/helper")
 @RestController
@@ -95,6 +97,8 @@ class HttpStandardProtocolHelperController {
 
     @PostMapping("/uri/var/extract")
     fun extractURIVars(@RequestBody dto: URLExtractDto): Result {
+        if (dto.url.isBlank()) return ok(mapOf<String, String>())
+
         return try {
             val uriTemplate = UriTemplate(dto.url)
             ok(uriTemplate.variableNames.map { it to "" }.toMap())

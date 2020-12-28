@@ -3,7 +3,7 @@ package restdoc.web.base.auth;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- *
+ * @author Maple
  */
 public abstract class AbstractCredentialFunction implements CredentialFunction {
 

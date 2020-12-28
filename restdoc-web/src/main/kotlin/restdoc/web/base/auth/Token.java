@@ -1,7 +1,7 @@
 package restdoc.web.base.auth;
 
 /**
- *
+ * @author Maple
  */
 public interface Token {
 

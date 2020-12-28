@@ -5,7 +5,7 @@ import com.google.common.base.Strings;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- *
+ * @author Maple
  */
 public abstract class AbstractURLCredentialFunction extends AbstractCredentialFunction {
 
@@ -25,10 +25,9 @@ public abstract class AbstractURLCredentialFunction extends AbstractCredentialFu
 
     /**
      * @param urlParamValue restdoc.web.base on url param {@link HttpServletRequest#getQueryString()}
-     *
      * @return auth Credential
      */
-    protected abstract Credential mapCookieToCredential(HttpServletRequest request,String urlParamValue);
+    protected abstract Credential mapCookieToCredential(HttpServletRequest request, String urlParamValue);
 
 
 }

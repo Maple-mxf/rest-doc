@@ -4,6 +4,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.function.Function;
 
 /**
+ *
+ * @author Maple
  */
 @FunctionalInterface
 public interface CredentialFunction extends Function<HttpServletRequest, Credential> {

@@ -6,6 +6,8 @@ import java.util.Collection;
 
 /**
  * 认证的元信息
+ *
+ * @author Maple
  */
 public interface AuthMetadata {
 

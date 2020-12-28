@@ -15,6 +15,15 @@ import org.springframework.lang.NonNull;
 
 import java.io.Serializable;
 
+
+/**
+ * BaseMongoRepositoryFactoryBean
+ *
+ * @param <T>
+ * @param <S>
+ * @param <ID>
+ * @author Maple
+ */
 public class BaseMongoRepositoryFactoryBean<T extends MongoRepository<S, ID>, S, ID extends Serializable>
         extends MongoRepositoryFactoryBean<T, S, ID> {
 
@@ -42,8 +51,7 @@ public class BaseMongoRepositoryFactoryBean<T extends MongoRepository<S, ID>, S,
             MongoEntityInformation<?, Serializable> entityInformation = getEntityInformation(information.getDomainType());
             if (isQueryDslRepository(repositoryInterface)) {
                 return new QuerydslMongoRepository(entityInformation, mongoOperations);
-            }
-            else {
+            } else {
                 return new BaseRepositoryImpl<>((MongoEntityInformation<S, ID>) entityInformation, this.mongoOperations);
             }
         }

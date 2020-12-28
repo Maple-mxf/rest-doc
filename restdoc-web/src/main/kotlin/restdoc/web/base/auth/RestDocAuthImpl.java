@@ -11,6 +11,8 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 
 /**
+ *
+ * @author Maple
  * @since 2.0
  */
 public class RestDocAuthImpl implements AuthMetadata {

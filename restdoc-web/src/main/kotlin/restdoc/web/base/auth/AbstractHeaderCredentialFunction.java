@@ -5,7 +5,7 @@ import com.google.common.base.Strings;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- *
+ * @author Maple
  */
 public abstract class AbstractHeaderCredentialFunction extends AbstractCredentialFunction {
 

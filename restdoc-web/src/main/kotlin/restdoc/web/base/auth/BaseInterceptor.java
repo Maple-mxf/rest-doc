@@ -18,6 +18,7 @@ import java.util.Optional;
  * {@link Method}
  *
  * @author maxuefeng
+ * @author Maple
  * {@link Annotation}
  * 注解实例调用getClass()方法的结果是一个Proxy对象 具体打印结果是com.sun.proxy.$Proxy72
  * 注解实例调用annotationType()方法的结果是一个正确的Class对象  而非一个Proxy对象
