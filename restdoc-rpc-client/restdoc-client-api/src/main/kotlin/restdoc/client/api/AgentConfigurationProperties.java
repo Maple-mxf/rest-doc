@@ -2,6 +2,12 @@ package restdoc.client.api;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+
+/**
+ * The class AgentConfigurationProperties
+ *
+ * @author Maple
+ */
 @ConfigurationProperties(prefix = "restdoc")
 public class AgentConfigurationProperties {
 

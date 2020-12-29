@@ -1,10 +1,18 @@
 package restdoc.client.api;
 
-public enum RemotingTaskType {
+/**
+ * The enum class RemotingTaskType
+ *
+ * @author Maple
+ */
+enum RemotingTaskType {
 
-    /**
-     */
+    /*ONE_WAY*/
     ONE_WAY,
+
+    /*SYNC*/
     SYNC,
+
+    /*ASYNC*/
     ASYNC
 }

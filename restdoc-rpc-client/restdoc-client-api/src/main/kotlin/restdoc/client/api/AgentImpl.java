@@ -13,6 +13,13 @@ import java.util.Date;
 import java.util.NoSuchElementException;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+/**
+ * The class AgentImpl default implement agent
+ * Provide remoting client and config
+ *
+ * @author Maple
+ * @since 2.0.RELEASE
+ */
 public class AgentImpl implements Agent {
 
     private final AgentConfigurationProperties agentConfigurationProperties;

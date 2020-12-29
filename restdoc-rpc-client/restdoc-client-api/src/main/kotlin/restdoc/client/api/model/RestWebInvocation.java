@@ -6,7 +6,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public class RestWebInvocation extends RemotingSerializable implements Invocation{
+/**
+ * The class RestWebInvocation
+ *
+ * @author Maple
+ */
+public class RestWebInvocation extends RemotingSerializable implements Invocation {
 
     private String url;
 

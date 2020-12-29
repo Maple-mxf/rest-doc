@@ -5,11 +5,17 @@ import restdoc.remoting.protocol.RemotingSerializable;
 import java.util.List;
 import java.util.Objects;
 
+
+/**
+ * The class DubboInvocation
+ *
+ * @author Maple
+ */
 public class DubboInvocation extends RemotingSerializable implements Invocation {
 
-    private String  methodName;
+    private String methodName;
 
-   private List<ObjectHolder<Object>> parameters;
+    private List<ObjectHolder<Object>> parameters;
 
     @Deprecated
     private String refName;

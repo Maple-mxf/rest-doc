@@ -4,6 +4,11 @@ import restdoc.remoting.protocol.RemotingCommand;
 
 import java.util.Objects;
 
+/**
+ * Base invoke result class
+ *
+ * @author Maple
+ */
 public class InvokeResult {
 
     private RemotingCommand response;
