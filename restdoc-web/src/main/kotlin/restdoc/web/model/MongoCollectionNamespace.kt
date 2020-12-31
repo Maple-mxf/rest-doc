@@ -43,3 +43,8 @@ const val USER_COLLECTION = "restdoc_user"
  */
 const val TEAM_COLLECTION = "restdoc_team"
 
+/**
+ * @author Maple
+ * @see restdoc.web.model.doc.ApiSyncLog
+ */
+const val API_SYNC_LOG_COLLECTION = "restdoc_api_sync_log"

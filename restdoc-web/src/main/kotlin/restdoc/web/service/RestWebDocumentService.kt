@@ -5,6 +5,7 @@ import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Service
 import restdoc.web.model.Resource
 import restdoc.web.model.doc.http.RestWebDocument
+import restdoc.web.model.doc.http.Stem
 import restdoc.web.model.doc.http.URIVarDescriptor
 import restdoc.web.schedule.ScheduleController
 import restdoc.web.util.IDUtil
@@ -26,18 +27,8 @@ open class RestWebDocumentServiceImpl : RestWebDocumentService {
 
         val pid = "root"
 
-        emptyApiTemplates
-                .groupBy {
-                    it.packageName
-                }
-                .entries
-                .map {
-                    it.key to
-                            it.value.groupBy { t -> t.controller }
-                                    .map {
-
-                                    }
-                }
+        val map = emptyApiTemplates.groupBy { it.packageName }.entries
+                .map { it.key to it.value.groupBy { t -> t.controller } }.toMap()
 
 
         return emptyApiTemplates
@@ -74,8 +65,12 @@ open class RestWebDocumentServiceImpl : RestWebDocumentService {
                                 requestBodyDescriptor = mutableListOf(),
                                 responseBodyDescriptors = mutableListOf(),
                                 method = HttpMethod.valueOf(template.method),
-                                uriVarDescriptors = uriVarDescriptors
-                        )
+                                uriVarDescriptors = uriVarDescriptors,
+                                stem = Stem.DEVELOPER_APPLICATION)
+                                .apply {
+
+                                    // Set baseInfo
+                                }
                     }
                     resource to documents
                 }

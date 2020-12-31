@@ -6,9 +6,9 @@ package restdoc.web.model.doc.http
 enum class Stem {
 
     /**
-     * 来源于应用
+     * 来源于开发者应用 Developer Application
      */
-    APPLICATION,
+    DEVELOPER_APPLICATION,
 
     /**
      * 来源于可视化页面创建
