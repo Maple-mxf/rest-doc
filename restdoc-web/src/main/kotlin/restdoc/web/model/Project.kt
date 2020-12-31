@@ -3,7 +3,7 @@ package restdoc.web.model
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
 
-@Document(collection = "restdoc_project")
+@Document(collection = PROJECT_COLLECTION)
 data class Project(
         @Id
         val id: String,

@@ -5,7 +5,7 @@ import org.springframework.data.mongodb.core.index.HashIndexed
 import org.springframework.data.mongodb.core.mapping.Document
 
 
-@Document(collection = "restdoc_resource")
+@Document(collection = RESOURCE_COLLECTION)
 data class Resource(
 
         /**

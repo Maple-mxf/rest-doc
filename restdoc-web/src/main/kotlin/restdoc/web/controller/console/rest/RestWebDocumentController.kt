@@ -535,14 +535,14 @@ class RestWebDocumentController {
                 RestWebDocument(
                         id = MD5Util.MD5Encode(it.controller + it.pattern, "UTF-8"),
                         projectId = null,
-                        name = it.function.split("#").last(),
+                        name = it.endpoint.split("#").last(),
                         resource = it.controller,
                         url = it.pattern,
                         description = null,
                         requestHeaderDescriptor = null,
                         requestBodyDescriptor = null,
                         responseBodyDescriptors = null,
-                        method = if (it.methods.isEmpty()) HttpMethod.POST else HttpMethod.valueOf(it.methods[0]),
+                        method = HttpMethod.resolve(it.method),
                         uriVarDescriptors = null,
                         content = null,
                         responseHeaderDescriptor = null)
@@ -590,7 +590,8 @@ class RestWebDocumentController {
     @PostMapping("/serviceClient/{clientId}/syncApi")
     fun syncServiceInstanceApi(@PathVariable clientId: String, @RequestBody dto: SyncRestApiDto): Any {
         val apiList =
-                clientRegistryCenter.getExposedAPIFilterApplicationType(clientId, ApplicationType.REST_WEB) as Collection<RestWebApiDescriptor>
+                clientRegistryCenter.getExposedAPIFilterApplicationType(clientId, ApplicationType.REST_WEB)
+                        as Collection<RestWebApiDescriptor>
 
         val groupByResourceAPIList = apiList.groupBy { it.controller }.toMap()
 
@@ -644,7 +645,7 @@ class RestWebDocumentController {
                                 requestBodyDescriptor = null,
                                 requestHeaderDescriptor = null,
                                 responseBodyDescriptors = null,
-                                method = if (api.methods.isEmpty()) HttpMethod.POST else HttpMethod.valueOf(api.methods[0]),
+                                method = HttpMethod.resolve(api.method),
                                 uriVarDescriptors = null,
                                 content = null,
                                 responseHeaderDescriptor = null,

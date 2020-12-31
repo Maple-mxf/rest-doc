@@ -3,12 +3,13 @@ package restdoc.web.model.doc.http
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
 import org.springframework.http.HttpMethod
+import restdoc.web.model.HTTP_DOCUMENT_COLLECTION
 import restdoc.web.model.doc.DocType
 import java.util.*
 
 /**
  */
-@Document(collection = "restdoc_restweb_document")
+@Document(collection = HTTP_DOCUMENT_COLLECTION)
 data class RestWebDocument(
 
         /**

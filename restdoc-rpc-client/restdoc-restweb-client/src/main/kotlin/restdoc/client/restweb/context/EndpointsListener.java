@@ -103,7 +103,7 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
                                         .orElse(RequestMethod.POST.name()));
 
                                 emptyTemplate.setPackageName(handlerMethod.getBeanType().getPackage().getName());
-                                emptyTemplate.setFunction(handlerMethod.getMethod().getName());
+                                emptyTemplate.setEndpoint(handlerMethod.getMethod().getName());
                                 emptyTemplate.setPattern(pattern);
                                 emptyTemplate.setController(handlerMethod.getBeanType().toString());
 

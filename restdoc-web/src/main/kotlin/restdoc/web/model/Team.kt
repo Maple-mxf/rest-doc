@@ -6,7 +6,7 @@ import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
 
 @Serializable
-@Document(collection = "restdoc_team")
+@Document(collection = TEAM_COLLECTION)
 data class Team(
         @Id val id: String,
         var name: String,

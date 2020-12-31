@@ -4,7 +4,7 @@ import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.index.Indexed
 import org.springframework.data.mongodb.core.mapping.Document
 
-@Document(collection = "restdoc_user")
+@Document(collection = USER_COLLECTION)
 data class User(
         @Id val id: String,
         @Indexed(unique = true) var account: String,

@@ -16,9 +16,6 @@ public class RestWebApiDescriptor implements ApiDescriptor {
     /*Http Api interface default name*/
     private String name;
 
-    @Deprecated
-    private String[] methods;
-
     /*RestDoc recommend request method*/
     private String method;
 
@@ -26,11 +23,7 @@ public class RestWebApiDescriptor implements ApiDescriptor {
     private String pattern;
 
     /*MethodName*/
-    private String function;
-
-    /*UriFields*/
-    /*@Deprecated
-    private String[] uriVarFields;*/
+    private String endpoint;
 
     /*Controller class package Name*/
     private String packageName;
@@ -38,6 +31,7 @@ public class RestWebApiDescriptor implements ApiDescriptor {
     /*Http Api interface response type*/
     private String responseType;
 
+    /**/
     private List<HeaderExpression> requestHeaderExpressions;
 
     private List<HeaderExpression> responseHeaderExpressions;
@@ -220,12 +214,12 @@ public class RestWebApiDescriptor implements ApiDescriptor {
         this.pattern = pattern;
     }
 
-    public String getFunction() {
-        return function;
+    public String getEndpoint() {
+        return endpoint;
     }
 
-    public void setFunction(String function) {
-        this.function = function;
+    public void setEndpoint(String endpoint) {
+        this.endpoint = endpoint;
     }
 
     public String getController() {
@@ -300,17 +294,9 @@ public class RestWebApiDescriptor implements ApiDescriptor {
         this.responseHeaderParameters = responseHeaderParameters;
     }
 
-    public String[] getMethods() {
-        return methods;
-    }
-
-    public void setMethods(String[] methods) {
-        this.methods = methods;
-    }
-
     @Override
     public String uniqueKey() {
-        return controller + function;
+        return controller + endpoint;
     }
 
     public String getResponseType() {

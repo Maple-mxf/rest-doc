@@ -3,6 +3,7 @@ package restdoc.web.model.doc.dubbo
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.index.CompoundIndex
 import org.springframework.data.mongodb.core.mapping.Document
+import restdoc.web.model.DUBBO_DOCUMENT_COLLECTION
 import restdoc.web.model.doc.DocType
 import restdoc.web.util.IDUtil
 
@@ -12,7 +13,7 @@ import restdoc.web.util.IDUtil
  * @author Maple
  */
 @CompoundIndex(def = "{'javaClassName': 1, 'methodName': 1, 'paramTypes': 1}", unique = true)
-@Document(collection = "restdoc_dubbo_document")
+@Document(collection = DUBBO_DOCUMENT_COLLECTION)
 class DubboDocument {
     /**
      *

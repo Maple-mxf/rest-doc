@@ -12,6 +12,7 @@ import restdoc.web.controller.console.model.*
 import restdoc.web.core.Result
 import restdoc.web.core.Status
 import restdoc.web.core.ok
+import restdoc.web.model.HTTP_DOCUMENT_COLLECTION
 import restdoc.web.model.ProjectType
 import restdoc.web.model.Resource
 import restdoc.web.model.doc.DocType
@@ -97,7 +98,7 @@ class ResourceController {
                     .include("resource")
 
             val docs =
-                    mongoTemplate.find(docQuery, DocPojo::class.java, "restdoc_restweb_document")
+                    mongoTemplate.find(docQuery, DocPojo::class.java, HTTP_DOCUMENT_COLLECTION)
                             .sortedWith(compareBy({ it.order }, { it.createTime }))
 
             docs.map {

@@ -13,7 +13,7 @@ import java.util.*
  *
  * WebApiTestLog => {HeaderFieldDescriptor, BodyFieldDescriptor}
  */
-@Document(collection = "restdoc_http_api_test_log")
+@Document(collection = HTTP_API_TEST_LOG_COLLECTION)
 class HttpApiTestLog {
 
     @Id

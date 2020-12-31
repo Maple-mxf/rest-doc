@@ -3,10 +3,10 @@ package restdoc.web.service
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Service
-import restdoc.web.schedule.ScheduleController
 import restdoc.web.model.Resource
 import restdoc.web.model.doc.http.RestWebDocument
 import restdoc.web.model.doc.http.URIVarDescriptor
+import restdoc.web.schedule.ScheduleController
 import restdoc.web.util.IDUtil
 
 interface RestWebDocumentService {
@@ -66,14 +66,14 @@ open class RestWebDocumentServiceImpl : RestWebDocumentService {
 
                         RestWebDocument(id = IDUtil.id(),
                                 projectId = projectId,
-                                name = template.function,
+                                name = template.endpoint,
                                 resource = resource.id!!,
                                 url = template.pattern,
-                                description = String.format("%s:%s", template.controller, template.function),
+                                description = String.format("%s:%s", template.controller, template.endpoint),
                                 requestHeaderDescriptor = mutableListOf(),
                                 requestBodyDescriptor = mutableListOf(),
                                 responseBodyDescriptors = mutableListOf(),
-                                method = method(template.methods.map { HttpMethod.valueOf(it) }),
+                                method = HttpMethod.valueOf(template.method),
                                 uriVarDescriptors = uriVarDescriptors
                         )
                     }
@@ -81,11 +81,4 @@ open class RestWebDocumentServiceImpl : RestWebDocumentService {
                 }
                 .toMap()
     }
-
-    private fun method(methods: Collection<HttpMethod>): HttpMethod {
-        if (methods.isEmpty()) return HttpMethod.GET
-        if (methods.size == 1) return methods.toTypedArray()[0]
-        return if (methods.contains(HttpMethod.GET)) HttpMethod.GET else HttpMethod.POST
-    }
-
 }
