@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.stream.Stream;
 
 /**
+ * The class AbstractCookieCredentialFunction
+ *
  * @author Maple
  */
 public abstract class AbstractCookieCredentialFunction extends AbstractCredentialFunction {
@@ -32,7 +34,7 @@ public abstract class AbstractCookieCredentialFunction extends AbstractCredentia
     }
 
     /**
-     * @param cookie restdoc.web.base on {@link Cookie} map to CREDENTIAL object instance
+     * @param cookie  restdoc.web.base on {@link Cookie} map to CREDENTIAL object instance
      * @param request request obj
      */
     public abstract Credential mapCookieToCredential(HttpServletRequest request, Cookie cookie);

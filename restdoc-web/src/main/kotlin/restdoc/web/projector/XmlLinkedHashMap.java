@@ -1,4 +1,4 @@
-package restdoc.web.project;
+package restdoc.web.projector;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 

@@ -593,6 +593,13 @@ class RestWebDocumentController {
                 clientRegistryCenter.getExposedAPIFilterApplicationType(clientId, ApplicationType.REST_WEB)
                         as Collection<RestWebApiDescriptor>
 
+        val map = apiList.groupBy { it.packageName }
+                .entries
+                .map {
+                    it.key to it.value.groupBy { t -> t.controller }
+                }
+                .toMap()
+
         val groupByResourceAPIList = apiList.groupBy { it.controller }.toMap()
 
         val rootNav = NavNode(

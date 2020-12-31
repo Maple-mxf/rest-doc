@@ -1,4 +1,4 @@
-package restdoc.web.project;
+package restdoc.web.projector;
 
 import restdoc.web.model.doc.http.BodyFieldDescriptor;
 

@@ -235,6 +235,10 @@ public class RestWebApiDescriptor implements ApiDescriptor {
     }
 
     public void setPackageName(String packageName) {
+        if (packageName == null) {
+            this.packageName = "NonPackage";
+            return;
+        }
         this.packageName = packageName;
     }
 

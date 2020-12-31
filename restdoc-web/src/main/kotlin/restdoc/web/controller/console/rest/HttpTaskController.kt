@@ -22,7 +22,7 @@ import restdoc.web.model.TestMode
 import restdoc.web.util.IDUtil
 import restdoc.web.util.PathValue
 import restdoc.web.util.URLUtil
-import restdoc.web.project.JsonProjector
+import restdoc.web.projector.JsonProjector
 import java.net.URL
 import java.util.*
 import javax.validation.Valid

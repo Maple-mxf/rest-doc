@@ -11,7 +11,7 @@ import restdoc.web.base.auth.Verify
 import restdoc.web.controller.console.model.XmlTextDto
 import restdoc.web.core.Result
 import restdoc.web.core.ok
-import restdoc.web.project.XmlLinkedHashMap
+import restdoc.web.projector.XmlLinkedHashMap
 
 @RestController
 @RequestMapping("/textprotocol")
