@@ -8,11 +8,10 @@ import restdoc.remoting.exception.RemotingException;
 import java.util.concurrent.TimeUnit;
 
 /**
- * ReconnectHandler
+ * The class ReconnectHandler provide reconnect server/client
  *
- * @author Overman
+ * @author Maple
  */
-@Deprecated
 @ChannelHandler.Sharable
 public class ReconnectHandler extends ChannelInboundHandlerAdapter {
 

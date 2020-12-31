@@ -26,7 +26,6 @@ public enum TlsMode {
                 return tlsMode;
             }
         }
-
         return PERMISSIVE;
     }
 

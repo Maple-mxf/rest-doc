@@ -255,7 +255,6 @@ function renderRequestBodyTableOnEditState(requestBodyFields) {
     }
 }
 
-
 $("#editRequestHeaderTableBtn").click(function () {
 
     if (requestHeaderTableIsEditState) {
@@ -307,7 +306,6 @@ function resetRequestBodyTable() {
     renderRequestBodyTable(doc['requestBodyDescriptor']);
     $('#editRequestBodyTableBtn').removeClass('edit-state');
 }
-
 
 function resetRequestHeaderTable() {
     $('#saveRequestHeaderTableBtn,#cancelRequestHeaderTableBtn').css("display", 'none');
@@ -431,4 +429,132 @@ $('#saveResponseBodyTableBtn').click(function () {
         }
     });
 });
+
+$("#copyURL").click(function () {
+    const input = document.createElement('input');
+    document.body.appendChild(input);
+    input.setAttribute('value', url);
+    input.select();
+    if (document.execCommand('copy')) {
+        document.execCommand('copy');
+        layer.tips('复制成功', '#copyURL', {
+            tipsMore: true
+        });
+    }
+    document.body.removeChild(input);
+});
+
+function renderURITable(uriFields) {
+    if (uriFields !== null && uriFields.length > 0) {
+        var allLine = "";
+
+        for (let i = 0; i < uriFields.length; i++) {
+            var param = "'" + uriFields[i]['field'] + "'";
+            var fun = "openEditVarPage(" + param + ")";
+
+            var line = '<td>' + uriFields[i]['field'] + '</td>' +
+                '<td>' + uriFields[i]['value'] + '</td>' +
+                '<td>' + uriFields[i]['description'] + '</td>';
+
+            var start = "<tr  ondblclick=" + fun + " >",
+                end = "</tr>";
+            allLine = allLine + start + line + end;
+        }
+        $("#uriFieldListTableBody").html(allLine);
+    }
+}
+
+function renderQueryParamTable(queryParamFields) {
+    if (queryParamFields !== null && queryParamFields.length > 0) {
+        var allLine = "";
+
+        for (let i = 0; i < queryParamFields.length; i++) {
+            var line = '<td>' + queryParamFields[i]['field'] + '</td>' +
+                '<td> ' + queryParamFields[i]['value'] + ' </td>' +
+                '<td> ' + queryParamFields[i]['description'] + '</td>';
+
+            var start = "<tr >",
+                end = "</tr>";
+            allLine = allLine + start + line + end;
+        }
+        $("#queryParamListTableBody").html(allLine);
+    }
+}
+
+function renderRequestHeaderTable(headerFields) {
+    if (headerFields !== null && headerFields.length > 0) {
+        var allLine = "";
+        for (let i = 0; i < headerFields.length; i++) {
+            var line = '<td>' + headerFields[i]['field'] + '</td>' + '<td>' + headerFields[i]['value'] + '</td>' + '<td>' + headerFields[i]['optional'] + '</td>' + '<td>' + headerFields[i]['description'] + '</td>';
+
+            // var start = "<tr ondblclick=" + fun + ">", end = "</tr>";
+            var start = "<tr>", end = "</tr>";
+            allLine = allLine + start + line + end;
+        }
+        $("#requestHeaderListTableBody").html(allLine);
+    }
+}
+
+function renderResponseHeaderTable(headerFields) {
+    if (headerFields !== null && headerFields.length > 0) {
+        var allLine = "";
+        for (let i = 0; i < headerFields.length; i++) {
+            var line = '<td>' + headerFields[i]['field'] + '</td>' + '<td>' + headerFields[i]['value'] + '</td>' + '<td>' + headerFields[i]['optional'] + '</td>' + '<td>' + headerFields[i]['description'] + '</td>';
+            var start = "<tr>", end = "</tr>";
+            allLine = allLine + start + line + end;
+        }
+        $("#responseHeaderListTableBody").html(allLine);
+    }
+}
+
+function renderRequestBodyTable(requestBodyFields) {
+    if (requestBodyFields !== null && requestBodyFields.length > 0) {
+        var allLine = "";
+        for (let i = 0; i < requestBodyFields.length; i++) {
+            var start = "<tr >", end = "</tr>";
+            var line = '<td>' + requestBodyFields[i]['path'] + '</td>' + '<td>' + requestBodyFields[i]['type'].toLowerCase() + '</td>' + '<td>' + requestBodyFields[i]['value'] + '</td>' + '<td>' + requestBodyFields[i]['optional'] + '</td>' + '<td>' + requestBodyFields[i]['description'] + '</td>';
+            allLine = allLine + start + line + end;
+        }
+        $("#requestBodyFieldListTableBody").html(allLine)
+    }
+}
+
+function renderResponseBodyTable(responseBodyFields) {
+    if (responseBodyFields !== null && responseBodyFields.length > 0) {
+        var allLine = "";
+        for (let i = 0; i < responseBodyFields.length; i++) {
+            // var start = "<tr ondblclick=" + fun + ">", end = "</tr>";
+            var start = "<tr>", end = "</tr>";
+
+            var line = '<td>' + responseBodyFields[i]['path'] + '</td>' + '<td>' + responseBodyFields[i]['type'].toLowerCase() + '</td>' + '<td>' + responseBodyFields[i]['value'] + '</td>' + '<td>' + responseBodyFields[i]['description'] + '</td>';
+            allLine = allLine + start + line + end;
+        }
+        $("#responseBodyFieldListTableBody").html(allLine);
+    }
+}
+
+function renderDescription(description) {
+    $("#descriptionArea").html(description)
+}
+
+function updateDocumentTable(type, data) {
+    var returnValue = null;
+    $.ajax({
+        method: 'PATCH',
+        url: '/restdoc/document/' + documentId + '/snippet/' + type,
+        contentType: 'application/json;charset=utf-8',
+        dataType: 'json',
+        data: JSON.stringify(data),
+        async: false,
+        success: function (data) {
+            if ('200' === data['code']) {
+                returnValue = data['data'];
+                layer.msg("文档修改成功");
+            } else {
+                layer.msg(data['message']);
+            }
+        }
+    });
+    return returnValue;
+}
 
