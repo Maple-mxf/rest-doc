@@ -35,13 +35,13 @@
 <input type="hidden" id="projectId" th:value="${projectId}">
 
 <div class="layui-fluid">
-    <iframe src="" id="docContentFrame" frameborder="0" style="width: 100%;height: 1000px;">
+    <iframe src="" id="docContentFrame" frameborder="0"  height="1000px" style="width: 100%; ">
     </iframe>
 </div>
 <script th:src="@{/layui/layui.js}"></script>
 <script th:src="@{/admin/js/jquery.js}"></script>
 <script th:src="@{/admin/js/util.js}"></script>
-
+<script th:src="@{/admin/js/api_navigation.js}"></script>
 <script>
 
     layui.config({
@@ -52,21 +52,20 @@
         'element',
         'jquery',
         'tree'], function () {
-        var tree = layui.tree;
         var $ = layui.jquery;
         var layer = layui.layer;
         var element = layui.element;
-        var treeData = null;
         var projectId = $("#projectId").val();
 
         $("#docContentFrame").attr("src", "/restdoc/project/" + projectId + "/navigation/view");
-
         element.on('nav(test)', function (elem) {
             if ('clientServiceList' === elem[0].id) {
                 layer.closeAll();
                 $("#docContentFrame").attr("src", '/restdoc/microservice/view/list?ap=REST_WEB&projectId=' + projectId);
+                // setIframeHeight("docContentFrame");
             } else if ('projectSettings' === elem[0].id) {
                 $("#docContentFrame").attr("src", '/restdoc/project/' + projectId + '/settings/view');
+                // setIframeHeight("docContentFrame");
             }
         });
     });

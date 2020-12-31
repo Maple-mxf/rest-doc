@@ -72,12 +72,13 @@
                 </div>
                 <div class="layui-col-md1"></div>
             </div>
-            <div class="layui-row" style="margin-top: 20px; height: 350px;overflow: auto;" id="tableContentDiv">
+            <div class="layui-row layui-bg-gray" style="margin-top: 20px; height: 350px;overflow: auto; "   id="tableContentDiv">
                 <ul id="dtreeTableContent" class="dtree" data-id="0"></ul>
             </div>
         </div>
-        <div class="layui-col-md10">
-            <iframe id="apiDocFrame" src="" style="width: 100%;" scrolling="auto" frameborder="no" border="0"
+        <div class="layui-col-md1"></div>
+        <div class="layui-col-md9">
+            <iframe id="apiDocFrame" src="" style="width: 100%;" scrolling="no" frameborder="no" border="0"
                     marginwidth="0"
                     marginheight="0"></iframe>
         </div>
@@ -119,19 +120,14 @@
 
 <script th:src="@{/layui/layui.js}"></script>
 <script th:src="@{/admin/js/jquery.js}"></script>
+<script th:src="@{/admin/js/api_navigation.js}"></script>
+
 <script th:inline="javascript">
     var projectId = $("#projectId").val();
     var lay = null;
 
     // 根据readOnly进行动态渲染页面 屏蔽修改操作
     var readOnly = [[${readOnly}]];
-
-    function setFrameHeight() {
-        var ifm = document.getElementById("apiDocFrame");
-        ifm.height = document.documentElement.clientHeight;
-    }
-
-    setFrameHeight();
 
     layui.config({
         base: '/restdoc/layui/lay/extends/'
@@ -581,6 +577,7 @@
                 if (obj.param.leaf) {
                     if (!nodeIsResource(obj.param.nodeId)) {
                         $("#apiDocFrame").attr("src", '/restdoc/' + projectId + '/document/' + obj.param.nodeId + '/view');
+                        setIframeHeight("apiDocFrame");
                     }
                 } else {
                     DemoTree.clickSpread(obj.dom);
@@ -589,6 +586,7 @@
             var docId = getFirstDocument(dtreeData);
             if (null != docId) {
                 $("#apiDocFrame").attr("src", '/restdoc/' + projectId + '/document/' + docId + '/view');
+                setIframeHeight("apiDocFrame");
             }
 
             function nodeIsResource(nodeId) {
@@ -603,45 +601,6 @@
                 return true;
             }
         });
-
-    function getFirstDocument(array) {
-        if (array == null || array.length === 0) return null;
-        var length = array.length;
-        var flag = 0;
-        for (let i = 0; i < length; i++) {
-            var node = array[i];
-            if ("API" === node['type'] || "WIKI" === node['type']) {
-                if (flag === 0) {
-                    return node['id']
-                }
-            } else {
-                var result = findFirstChildren(node);
-                if (result != null) return result;
-            }
-        }
-        return null;
-    }
-
-    function findFirstChildren(parentNode) {
-        if (parentNode != null && parentNode['children'].length === 0) {
-            return null;
-        } else {
-            var children = parentNode['children'];
-            var length = children.length;
-
-            for (let i = 0; i < length; i++) {
-                if (children[i]['type'] === 'WIKI' || children[i]['type'] === 'API') {
-                    return children[i]['id']
-                } else {
-                    var result = findFirstChildren(children[i]);
-                    if (null != result) {
-                        return result;
-                    }
-                }
-            }
-            return null;
-        }
-    }
 </script>
 </body>
 </html>

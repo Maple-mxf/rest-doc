@@ -87,7 +87,7 @@
         $("#type").find("option[value='SPRINGCLOUD']").attr("selected", true);
     }
 
-    $('#accessURL').val(window.location.protocol + "://" + window.location.host + "/restdoc/or/" + project.id);
+    $('#accessURL').val(window.location.protocol + "//" + window.location.host + "/restdoc/or/" + project.id);
 
     layui.use([
         'util', 'layer',
