@@ -27,8 +27,8 @@ import static restdoc.web.core.StandardKt.failure;
 
 
 /**
- * @author maxuefeng
- * @since 2019/11/18
+ * @author Maple
+ * @since 1.0.RELEASE
  */
 @ControllerAdvice
 public class GlobalThrowableCaptors {

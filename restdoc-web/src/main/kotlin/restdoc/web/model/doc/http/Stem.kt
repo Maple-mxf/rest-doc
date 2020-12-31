@@ -1,7 +1,10 @@
 package restdoc.web.model.doc.http
 
 /**
- * Doc的来源
+ * The enum class Stem
+ *
+ * @author Maple
+ * @since 2.0.RELEASE
  */
 enum class Stem {
 
