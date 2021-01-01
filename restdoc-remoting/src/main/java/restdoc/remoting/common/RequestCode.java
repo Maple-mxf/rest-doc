@@ -2,25 +2,21 @@ package restdoc.remoting.common;
 
 /**
  * The RequestCode is constant
+ *
+ * @author Maple
+ * @since 1.0.RELEASE
  */
 public interface RequestCode {
 
     /**
-     * Client execute http request task
+     * acknowledge version
      */
-    @Deprecated
-    int SUBMIT_HTTP_PROCESS = 0;
-
-    /**
-     * Return the http request execute result
-     */
-    @Deprecated
-    int POST_EXECUTE_RESULT = 1;
+    int ACKNOWLEDGE_VERSION = 1;
 
     /**
      *
      */
-    int REPORT_CLIENT_INFO = 2;
+    int GET_CLIENT_INFO = 2;
 
     /**
      *
@@ -30,7 +26,7 @@ public interface RequestCode {
     /**
      *
      */
-    int REPORT_EXPOSED_API = 4;
+    int GET_EXPOSED_API = 4;
 
     /**
      *

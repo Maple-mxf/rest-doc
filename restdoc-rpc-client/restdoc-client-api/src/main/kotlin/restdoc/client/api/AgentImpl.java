@@ -2,16 +2,23 @@ package restdoc.client.api;
 
 import io.netty.channel.Channel;
 import org.springframework.beans.factory.annotation.Autowired;
+import restdoc.client.api.exception.DiffVersionException;
+import restdoc.client.api.model.Version;
 import restdoc.remoting.ChannelEventListener;
+import restdoc.remoting.common.RequestCode;
 import restdoc.remoting.exception.*;
 import restdoc.remoting.netty.NettyClientConfig;
 import restdoc.remoting.netty.NettyRemotingClient;
 import restdoc.remoting.netty.NettyRequestProcessor;
 import restdoc.remoting.protocol.RemotingCommand;
+import restdoc.remoting.protocol.RemotingSerializable;
+import restdoc.remoting.protocol.RemotingSysResponseCode;
 
 import java.util.Date;
 import java.util.NoSuchElementException;
 import java.util.concurrent.CopyOnWriteArrayList;
+
+import static restdoc.remoting.protocol.RemotingCommand.createRequestCommand;
 
 /**
  * The class AgentImpl default implement agent
@@ -30,9 +37,15 @@ public class AgentImpl implements Agent {
 
     private final CopyOnWriteArrayList<RemotingTask> remotingTasks = new CopyOnWriteArrayList<>();
 
+    private final String ackVersionTaskId = "ackVersion";
+
     @Autowired
     public AgentImpl(AgentConfigurationProperties agentConfigurationProperties) {
         this.agentConfigurationProperties = agentConfigurationProperties;
+        RemotingTask acknowledgeVersionTask = new RemotingTask(ackVersionTaskId,
+                RemotingTaskType.SYNC, createRequestCommand(RequestCode.ACKNOWLEDGE_VERSION, null),
+                3000, null);
+        this.addTask(acknowledgeVersionTask);
 
         NettyClientConfig config = new NettyClientConfig();
         config.setHost(agentConfigurationProperties.getHost());
@@ -41,7 +54,7 @@ public class AgentImpl implements Agent {
         ChannelEventListener channelEventListener =
                 new ChannelEventListener() {
                     @Override
-                    public void onChannelConnect(String remoteAddr, Channel channel) throws InterruptedException, RemotingSendRequestException, RemotingTimeoutException, RemotingTooMuchRequestException, RemotingConnectException {
+                    public void onChannelConnect(String remoteAddr, Channel channel) {
                     }
 
                     @Override
@@ -78,6 +91,20 @@ public class AgentImpl implements Agent {
     @Override
     public String getServerRemoteAddress() {
         return this.agentConfigurationProperties.getHost() + ":" + this.agentConfigurationProperties.getPort();
+    }
+
+    @Override
+    public Boolean acknowledgeVersion() throws DiffVersionException, InterruptedException, RemotingConnectException, RemotingTimeoutException, RemotingTooMuchRequestException, RemotingSendRequestException {
+        InvokeResult invokeResult = this.invoke(ackVersionTaskId);
+        RemotingCommand response;
+        if (invokeResult != null && (response = invokeResult.getResponse()) != null
+                && RemotingSysResponseCode.SUCCESS == response.getCode()) {
+            Version version = RemotingSerializable.decode(response.getBody(), Version.class);
+
+            if (!ClientAgentVersion.getCurrentVersion().equals(version.getVersion()))
+                throw new DiffVersionException();
+        }
+        return false;
     }
 
     @Override

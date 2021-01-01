@@ -11,13 +11,8 @@ import restdoc.client.api.model.ClientInfo
 import restdoc.client.api.model.RestWebInvocation
 import restdoc.client.api.model.RestWebInvocationResult
 import restdoc.remoting.ChannelEventListener
-import restdoc.rpc.client.common.model.ApplicationClientInfo
-import restdoc.rpc.client.common.model.ApplicationType
 import restdoc.remoting.common.RemotingHelper
 import restdoc.remoting.common.RequestCode
-import restdoc.rpc.client.common.model.DubboExposedApiBody
-import restdoc.rpc.client.common.model.http.HttpExposedApiBody
-import restdoc.rpc.client.common.model.springcloud.SpringCloudExposeApiBody
 import restdoc.remoting.exception.RemotingCommandException
 import restdoc.remoting.exception.RemotingSendRequestException
 import restdoc.remoting.exception.RemotingTimeoutException
@@ -27,9 +22,15 @@ import restdoc.remoting.protocol.LanguageCode
 import restdoc.remoting.protocol.RemotingCommand
 import restdoc.remoting.protocol.RemotingSerializable
 import restdoc.remoting.protocol.RemotingSysResponseCode
+import restdoc.rpc.client.common.model.ApplicationClientInfo
+import restdoc.rpc.client.common.model.ApplicationType
+import restdoc.rpc.client.common.model.DubboExposedApiBody
+import restdoc.rpc.client.common.model.http.HttpExposedApiBody
 import restdoc.rpc.client.common.model.http.RestWebApiDescriptor
+import restdoc.rpc.client.common.model.springcloud.SpringCloudExposeApiBody
 import restdoc.web.core.ServiceException
 import restdoc.web.core.Status
+import restdoc.web.schedule.handler.AcknowledgeVersionHandler
 import restdoc.web.util.MD5Util
 import java.net.InetSocketAddress
 import java.nio.charset.StandardCharsets
@@ -73,22 +74,25 @@ class ScheduleController @Autowired constructor(scheduleProperties: ScheduleProp
                         clientRegistryCenter.unregistryAPI(remote)
                     }
                 })
+
+        //
+        this.remotingServer.registerProcessor(RequestCode.ACKNOWLEDGE_VERSION, AcknowledgeVersionHandler(), null)
     }
 
 
     private fun callClient(channel: Channel) {
         val getClientInfoRequest =
-                RemotingCommand.createRequestCommand(RequestCode.REPORT_CLIENT_INFO, null)
+                RemotingCommand.createRequestCommand(RequestCode.GET_CLIENT_INFO, null)
 
-        val getClientAPIListRequest = RemotingCommand.createRequestCommand(RequestCode.REPORT_EXPOSED_API, null)
+        val getClientAPIListRequest = RemotingCommand.createRequestCommand(RequestCode.GET_EXPOSED_API, null)
 
         val getClientInfoResponse = this.remotingServer.invokeSync(channel, getClientInfoRequest, 10000L)
 
-        if (getClientInfoResponse.code == RemotingSysResponseCode.SUCCESS){
+        if (getClientInfoResponse.code == RemotingSysResponseCode.SUCCESS) {
             val address = channel.remoteAddress() as InetSocketAddress
             val body = RemotingSerializable.decode(getClientInfoResponse.body, ClientInfo::class.java)
             val remote = RemotingHelper.parseChannelRemoteAddr(channel)
-            val id =  MD5Util.MD5Encode(remote, StandardCharsets.UTF_8.name())
+            val id = MD5Util.MD5Encode(remote, StandardCharsets.UTF_8.name())
 
             val clientChannelInfo = ApplicationClientInfo(
                     id,

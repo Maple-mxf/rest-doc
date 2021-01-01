@@ -1,5 +1,6 @@
 package restdoc.client.api;
 
+import restdoc.client.api.exception.DiffVersionException;
 import restdoc.remoting.exception.*;
 import restdoc.remoting.netty.NettyRemotingClient;
 import restdoc.remoting.netty.NettyRequestProcessor;
@@ -33,6 +34,12 @@ public interface Agent {
      * Get ServerRemoteAddress
      */
     String getServerRemoteAddress();
+
+    /**
+     * @return true/false
+     * @throws DiffVersionException if console and client version not match,will be throws
+     */
+    Boolean acknowledgeVersion() throws DiffVersionException, InterruptedException, RemotingConnectException, RemotingTimeoutException, RemotingTooMuchRequestException, RemotingSendRequestException;
 
     /**
      * Invoke Task

@@ -23,7 +23,8 @@ public class RemotingTask {
 
     private InvokeCallback invokeCallback;
 
-    public RemotingTask(String taskId, RemotingTaskType type, RemotingCommand request, long timeoutMills, InvokeCallback invokeCallback) {
+    public RemotingTask(String taskId, RemotingTaskType type,
+                        RemotingCommand request, long timeoutMills, InvokeCallback invokeCallback) {
         this.taskId = taskId;
         this.type = type;
         this.request = request;
