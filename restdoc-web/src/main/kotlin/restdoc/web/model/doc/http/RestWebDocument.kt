@@ -77,15 +77,14 @@ data class RestWebDocument(
         var uriVarDescriptors: List<URIVarDescriptor>?,
 
         /**
-         *
-         */
-        @Deprecated(message = "content")
-        val content: String? = null,
-
-        /**
-         *
+         * responseHeaderDescriptor
          */
         var responseHeaderDescriptor: List<HeaderFieldDescriptor>? = null,
+
+        /**
+         * matrixVariableDescriptors
+         */
+        var matrixVariableDescriptors: List<MatrixVariableDescriptor>? = null,
 
         /**
          *
@@ -97,10 +96,6 @@ data class RestWebDocument(
          */
         var order: Int? = 0,
 
-        /**
-         *
-         */
-        var queryParamFieldDescriptor: List<QueryParamFieldDescriptor>? = null,
 
         /**
          * Doc的来源

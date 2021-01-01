@@ -1,18 +1,20 @@
 package restdoc.web.service
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.google.common.base.Objects
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Service
+import restdoc.rpc.client.common.model.http.RestWebApiDescriptor
 import restdoc.web.model.Resource
-import restdoc.web.model.doc.http.RestWebDocument
-import restdoc.web.model.doc.http.Stem
-import restdoc.web.model.doc.http.URIVarDescriptor
+import restdoc.web.model.doc.http.*
+import restdoc.web.projector.JsonDeProjector
 import restdoc.web.schedule.ScheduleController
-import restdoc.web.util.IDUtil
+import java.util.*
 
 interface RestWebDocumentService {
 
-    fun syncHttpApiDoc(clientId: String, projectId: String): Map<Resource, List<RestWebDocument>>
+    fun syncHttpApiDoc(clientId: String, projectId: String, user: String): Map<Resource, Map<Resource,List<RestWebDocument>>>
 }
 
 @Service
@@ -21,59 +23,98 @@ open class RestWebDocumentServiceImpl : RestWebDocumentService {
     @Autowired
     lateinit var scheduleController: ScheduleController
 
-    override fun syncHttpApiDoc(clientId: String, projectId: String): Map<Resource, List<RestWebDocument>> {
+    @Autowired
+    lateinit var mapper: ObjectMapper
+
+    private fun mappingBody(rbps: Collection<RestWebApiDescriptor.ParameterDescriptor>) =
+            rbps.flatMap { rbp ->
+                if ("java.lang.Object" == rbp.type && rbp.supplementary != null && rbp.supplementary.toString().isNotBlank()) {
+                    try {
+                        val tree = mapper.readTree(rbp.supplementary.toString())
+                        JsonDeProjector(tree).deProject()
+                    } catch (e: Exception) {
+                        e.printStackTrace(); listOf<BodyFieldDescriptor>()
+                    }
+                } else listOf()
+            }
+
+    private fun mappingHeader(rhps: Map<String, List<RestWebApiDescriptor.ParameterDescriptor>>) = rhps
+            .map { rhp ->
+                HeaderFieldDescriptor(field = rhp.key, value = listOf(), description = rhp.key)
+            }
+
+
+    override fun syncHttpApiDoc(clientId: String, projectId: String, user: String): Map<Resource, Map<Resource,List<RestWebDocument>>> {
         // Invoke remote client api info
         val emptyApiTemplates = scheduleController.syncGetEmptyApiTemplates(clientId)
 
-        val pid = "root"
-
-        val map = emptyApiTemplates.groupBy { it.packageName }.entries
-                .map { it.key to it.value.groupBy { t -> t.controller } }.toMap()
-
-
-        return emptyApiTemplates
-                // Group by resource
-                .groupBy { it.controller }
+        val ret = emptyApiTemplates
+                .groupBy { it.packageName }
+                .entries
+                .map { it.key to it.value.groupBy { t -> t.controller } }
                 .map {
 
-                    // Map key to resource
-                    val resource = Resource(
-                            id = IDUtil.id(),
-                            tag = it.key,
-                            name = it.key,
-                            pid = pid,
+                    val packageSource = Resource(
+                            id = Objects.hashCode(it.first).toString(),
+                            tag = it.first,
+                            name = it.first,
+                            pid = "root",
                             projectId = projectId,
-                            createTime = IDUtil.now(),
-                            createBy = "Default"
-                    )
+                            createTime = Date().time,
+                            order = 0,
+                            createBy = user)
 
-                    // Map value to document
-                    val documents = it.value.map { template ->
-
-                        val uriVarDescriptors = template.pathVariableParameters
-                                .map { pp ->
-                                    URIVarDescriptor(pp.name, "", null)
-                                }
-
-                        RestWebDocument(id = IDUtil.id(),
+                    val classResourceMap = it.second.entries.map { t ->
+                        val classResource = Resource(
+                                id = Objects.hashCode(t.key).toString(),
+                                tag = t.key,
+                                name = t.key,
+                                pid = packageSource.id,
                                 projectId = projectId,
-                                name = template.endpoint,
-                                resource = resource.id!!,
-                                url = template.pattern,
-                                description = String.format("%s:%s", template.controller, template.endpoint),
-                                requestHeaderDescriptor = mutableListOf(),
-                                requestBodyDescriptor = mutableListOf(),
-                                responseBodyDescriptors = mutableListOf(),
-                                method = HttpMethod.valueOf(template.method),
-                                uriVarDescriptors = uriVarDescriptors,
-                                stem = Stem.DEVELOPER_APPLICATION)
-                                .apply {
+                                createTime = Date().time,
+                                order = 0,
+                                createBy = user)
 
-                                    // Set baseInfo
+                        val docs = t.value.map { d ->
+
+                            val requestHeaderDescriptors = mappingHeader(d.requestHeaderParameters)
+                            val responseHeaderDescriptors = mappingHeader(d.responseHeaderParameters)
+                            val requestBodyDescriptors = mappingBody(d.requestBodyParameters)
+                            val responseBodyDescriptors = mappingBody(listOf(d.responseBodyDescriptor))
+                            val queryParamDescriptors = d.queryParamParameters.map { qpp -> QueryParamDescriptor(field = qpp.name, value = qpp.defaultValue) }
+                            val uriVarsDescriptors = d.pathVariableParameters.map { pvp -> URIVarDescriptor(field = pvp.name, value = pvp.defaultValue) }
+                            val matrixVarDescriptors = d.matrixVariableParameters.map { mvp ->
+                                MatrixVariableDescriptor().apply {
+                                    this.field = mvp.name
+                                    this.defaultValue = mvp.defaultValue
+                                    this.pathVar = mvp.supplementary.toString()
+                                    this.required = mvp.require
                                 }
-                    }
-                    resource to documents
-                }
-                .toMap()
+                            }
+
+                            RestWebDocument(
+                                    id = Objects.hashCode(d.controller, d.pattern).toString(),
+                                    projectId = projectId,
+                                    name = d.name,
+                                    resource = classResource.id!!,
+                                    url = d.pattern,
+                                    description = d.pattern,
+                                    requestHeaderDescriptor = requestHeaderDescriptors,
+                                    requestBodyDescriptor = requestBodyDescriptors,
+                                    responseBodyDescriptors = responseBodyDescriptors,
+                                    queryParamDescriptors = queryParamDescriptors,
+                                    method = HttpMethod.resolve(d.method),
+                                    uriVarDescriptors = uriVarsDescriptors,
+                                    responseHeaderDescriptor = responseHeaderDescriptors,
+                                    matrixVariableDescriptors = matrixVarDescriptors,
+                                    stem = Stem.DEVELOPER_APPLICATION
+                            )
+                        }
+                        classResource to docs
+                    }.toMap()
+                    packageSource to classResourceMap
+                }.toMap()
+
+        return ret
     }
 }

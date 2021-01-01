@@ -544,7 +544,6 @@ class RestWebDocumentController {
                         responseBodyDescriptors = null,
                         method = HttpMethod.resolve(it.method),
                         uriVarDescriptors = null,
-                        content = null,
                         responseHeaderDescriptor = null)
             }
 
@@ -654,7 +653,6 @@ class RestWebDocumentController {
                                 responseBodyDescriptors = null,
                                 method = HttpMethod.resolve(api.method),
                                 uriVarDescriptors = null,
-                                content = null,
                                 responseHeaderDescriptor = null,
                                 docType = DocType.API)
 
@@ -680,7 +678,6 @@ class RestWebDocumentController {
                 requestBodyDescriptor = null,
                 responseBodyDescriptors = null,
                 uriVarDescriptors = null,
-                content = null,
                 responseHeaderDescriptor = null,
                 docType = dto.docType)
 
@@ -708,8 +705,7 @@ class RestWebDocumentController {
                 requestBodyDescriptor = originDocument.requestBodyDescriptor,
                 responseBodyDescriptors = originDocument.responseBodyDescriptors,
                 uriVarDescriptors = originDocument.uriVarDescriptors,
-                queryParamFieldDescriptor = originDocument.queryParamFieldDescriptor,
-                content = originDocument.content,
+                queryParamDescriptors = originDocument.queryParamDescriptors,
                 responseHeaderDescriptor = originDocument.responseHeaderDescriptor,
                 docType = originDocument.docType,
                 createTime = Date().time,

@@ -31,7 +31,9 @@ public class RestWebApiDescriptor implements ApiDescriptor {
     /*Http Api interface response type*/
     private String responseType;
 
-    /**/
+    /**
+     * @see HeaderExpression
+     */
     private List<HeaderExpression> requestHeaderExpressions;
 
     private List<HeaderExpression> responseHeaderExpressions;
@@ -101,10 +103,6 @@ public class RestWebApiDescriptor implements ApiDescriptor {
 
         private Boolean require = true;
 
-        private Object requireEqualsValue = null;
-
-        private Object requireNotEqualsValue = null;
-
         private Object defaultValue = null;
 
         private Object supplementary = null;
@@ -150,22 +148,6 @@ public class RestWebApiDescriptor implements ApiDescriptor {
             this.require = require;
         }
 
-        public Object getRequireEqualsValue() {
-            return requireEqualsValue;
-        }
-
-        public void setRequireEqualsValue(Object requireEqualsValue) {
-            this.requireEqualsValue = requireEqualsValue;
-        }
-
-        public Object getRequireNotEqualsValue() {
-            return requireNotEqualsValue;
-        }
-
-        public void setRequireNotEqualsValue(Object requireNotEqualsValue) {
-            this.requireNotEqualsValue = requireNotEqualsValue;
-        }
-
         public String getType() {
             return type;
         }
@@ -189,15 +171,13 @@ public class RestWebApiDescriptor implements ApiDescriptor {
             ParameterDescriptor that = (ParameterDescriptor) o;
             return Objects.equals(name, that.name) &&
                     Objects.equals(require, that.require) &&
-                    Objects.equals(requireEqualsValue, that.requireEqualsValue) &&
-                    Objects.equals(requireNotEqualsValue, that.requireNotEqualsValue) &&
                     Objects.equals(defaultValue, that.defaultValue) &&
                     Objects.equals(type, that.type);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(name, require, requireEqualsValue, requireNotEqualsValue, defaultValue, type);
+            return Objects.hash(name, require, defaultValue, type);
         }
     }
 

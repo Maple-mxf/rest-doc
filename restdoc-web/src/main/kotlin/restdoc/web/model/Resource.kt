@@ -4,7 +4,9 @@ import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.index.HashIndexed
 import org.springframework.data.mongodb.core.mapping.Document
 
-
+/**
+ * @see
+ */
 @Document(collection = RESOURCE_COLLECTION)
 data class Resource(
 
