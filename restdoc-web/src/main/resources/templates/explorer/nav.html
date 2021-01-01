@@ -12,32 +12,42 @@
     <link rel="stylesheet" th:href="@{/admin/css/nav.css}"/>
     <link rel="stylesheet" th:href="@{/admin/css/pear-tree/dtree.css}"/>
     <link rel="stylesheet" th:href="@{/admin/css/pear-tree/font/dtreefont.css}"/>
+
 </head>
-<body>
-<div class="layui-row" style="width: 100%">
-    <ul class="layui-nav layui-bg-green" id="navigation" lay-filter="test">
-        <li class="layui-nav-item">
-            <a href="/restdoc/project/view"> <i class="layui-icon layui-icon-return"
-                                                style="font-size: 17px;  color: white;"></i>&nbsp;</a>
-        </li>
-        <li class="layui-nav-item layui-this"><a id="home" th:href="@{'/'+${projectId}+'/document/nav/view'}">文档</a>
-        </li>
-        <li class="layui-nav-item"><a id="clientServiceList" href="javascript:;">服务实例
-            <span class="layui-badge-dot" th:if="${hasInstance}"></span>
-        </a>
-        </li>
-        <li class="layui-nav-item"><a id="projectSettings" href="javascript:;">设置
-        </a>
-        </li>
-    </ul>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <ul class="layui-nav layui-bg-green" id="navigation" lay-filter="test">
+            <li class="layui-nav-item">
+                <a href="/restdoc/project/view"> <i class="layui-icon layui-icon-return"
+                                                    style="font-size: 17px;  color: white;"></i>&nbsp;</a>
+            </li>
+            <li class="layui-nav-item layui-this"><a id="home" th:href="@{'/'+${projectId}+'/document/nav/view'}">文档</a>
+            </li>
+            <li class="layui-nav-item"><a id="clientServiceList" href="javascript:;">服务实例
+                <span class="layui-badge-dot" th:if="${hasInstance}"></span>
+            </a>
+            </li>
+            <li class="layui-nav-item"><a id="projectSettings" href="javascript:;">设置
+            </a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="layui-body" style="left: 50px">
+        <div class="layui-fluid">
+            <iframe src="" id="docContentFrame" frameborder="0"  height="1000px" style="width: 100%; ">
+            </iframe>
+        </div>
+    </div>
+    <div class="layui-footer" style="left: 0">
+        © RESTdoc - 提供开源技术支持
+    </div>
 </div>
+
 
 <input type="hidden" id="projectId" th:value="${projectId}">
 
-<div class="layui-fluid">
-    <iframe src="" id="docContentFrame" frameborder="0"  height="1000px" style="width: 100%; ">
-    </iframe>
-</div>
 <script th:src="@{/layui/layui.js}"></script>
 <script th:src="@{/admin/js/jquery.js}"></script>
 <script th:src="@{/admin/js/util.js}"></script>

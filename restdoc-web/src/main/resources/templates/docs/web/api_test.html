@@ -29,7 +29,7 @@
                     <div class="layui-form-item">
                         <div class="layui-input-inline">
                             <select id="method" name="method" lay-verify="method">
-                                <option value="NON" disabled>请选择请求方式</option>
+                                <option value="NON" disabled>请求方式</option>
                                 <option value="GET">GET</option>
                                 <option value="POST">POST</option>
                                 <option value="PUT">PUT</option>
@@ -45,12 +45,15 @@
                                    style="width: 220%"
                                    class="layui-input">
                         </div>
-                        <button class="layui-btn" style="margin-left: 23%;float: left" lay-submit lay-filter="execute">
-                            <i class="layui-icon layui-icon-triangle-r" style="font-size: 17px; color: white;"></i>调试
-                        </button>
-                        <button class="layui-btn" lay-submit lay-filter="save" id="saveDocBtn">
-                            <i class="layui-icon layui-icon-email" style="font-size: 18px; color: white;"></i> 保存
-                        </button>
+                        <div class="layui-input-inline">
+                            <button class="layui-btn" style="margin-left: 23%;float: left" lay-submit lay-filter="execute">
+                                <i class="layui-icon layui-icon-triangle-r" style="font-size: 17px; color: white;"></i>调试
+                            </button>
+                            <button class="layui-btn" lay-submit lay-filter="save" id="saveDocBtn">
+                                <i class="layui-icon layui-icon-email" style="font-size: 18px; color: white;"></i> 保存
+                            </button>
+                        </div>
+
                     </div>
                 </fieldset>
 

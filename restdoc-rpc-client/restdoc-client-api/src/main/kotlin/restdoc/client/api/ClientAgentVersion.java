@@ -7,6 +7,8 @@ package restdoc.client.api;
  */
 public class ClientAgentVersion {
 
+    private ClientAgentVersion(){}
+
     /**
      * @since 2.0
      */
