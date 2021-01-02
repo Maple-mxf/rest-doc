@@ -2,7 +2,7 @@
 RESTdoc Project是一款提升研发效能的API文档工具，无代码侵入，测试用例代码自动生成。
 
 ## 开发背景(Development Background)
-- API多端对接问题多，增加时间成本；
+- API多端对接问题多，增加调试时间成本；
 - 编写文档时间成本较高；
 - 传统的API文档工具(swagger)对代码有一定的侵入性。
 

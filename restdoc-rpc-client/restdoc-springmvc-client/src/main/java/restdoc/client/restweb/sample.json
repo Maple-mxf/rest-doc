@@ -1,0 +1,57 @@
+{
+  "name": "buildRequestParamDto",
+  "methods": null,
+  "method": "GET",
+  "pattern": "/buildRequestParamDto",
+  "function": "buildRequestParamDto",
+  "uriVarFields": [],
+  "packageName": "restdoc.client.web.controller",
+  "responseType": null,
+  "requestHeaderExpressions": [],
+  "responseHeaderExpressions": [],
+  "paramExpressions": null,
+  "requestHeaderParameters": {},
+  "queryParamParameters": [
+    {
+      "name": "dto",
+      "require": true,
+      "requireEqualsValue": null,
+      "requireNotEqualsValue": null,
+      "defaultValue": "\n\t\t\n\t\t\n\n\t\t\t\t\n",
+      "supplementary": {
+        "name": ""
+      },
+      "type": "restdoc.client.web.model.dto.RequestParamDto"
+    }
+  ],
+  "matrixVariableParameters": [],
+  "pathVariableParameters": [],
+  "requestBodyParameters": [
+    {
+      "name": "dto",
+      "require": true,
+      "requireEqualsValue": null,
+      "requireNotEqualsValue": null,
+      "defaultValue": "\n\t\t\n\t\t\n\n\t\t\t\t\n",
+      "supplementary": {
+        "name": ""
+      },
+      "type": "restdoc.client.web.model.dto.RequestParamDto"
+    }
+  ],
+  "responseBodyDescriptor": {
+    "name": null,
+    "require": true,
+    "requireEqualsValue": null,
+    "requireNotEqualsValue": null,
+    "defaultValue": null,
+    "supplementary": {
+      "code": "",
+      "data": null,
+      "message": ""
+    },
+    "type": null
+  },
+  "responseHeaderParameters": {},
+  "controller": "class restdoc.client.web.controller.OrderController"
+}
