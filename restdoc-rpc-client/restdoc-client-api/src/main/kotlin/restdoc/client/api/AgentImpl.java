@@ -94,7 +94,9 @@ public class AgentImpl implements Agent {
     }
 
     @Override
-    public Boolean acknowledgeVersion() throws DiffVersionException, InterruptedException, RemotingConnectException, RemotingTimeoutException, RemotingTooMuchRequestException, RemotingSendRequestException {
+    public Boolean acknowledgeVersion() throws DiffVersionException, InterruptedException,
+            RemotingConnectException, RemotingTimeoutException,
+            RemotingTooMuchRequestException, RemotingSendRequestException {
         InvokeResult invokeResult = this.invoke(ackVersionTaskId);
         RemotingCommand response;
         if (invokeResult != null && (response = invokeResult.getResponse()) != null
@@ -102,7 +104,9 @@ public class AgentImpl implements Agent {
             Version version = RemotingSerializable.decode(response.getBody(), Version.class);
 
             if (!ClientAgentVersion.getCurrentVersion().equals(version.getVersion()))
+            {
                 throw new DiffVersionException();
+            }
         }
         return false;
     }

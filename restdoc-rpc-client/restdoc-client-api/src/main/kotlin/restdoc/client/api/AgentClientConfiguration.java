@@ -9,8 +9,13 @@ import restdoc.remoting.netty.NettyRequestProcessor;
 
 /**
  * The class AgentClientConfiguration
+ * <p>
+ * SPI Interface
+ * <p>
+ * classpath/META-INF/restdoc.client.api.AgentClientConfiguration
  *
  * @author Maple
+ * @see java.util.ServiceLoader
  */
 public interface AgentClientConfiguration extends CommandLineRunner {
 

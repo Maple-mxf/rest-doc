@@ -7,6 +7,7 @@ import org.springframework.core.PriorityOrdered;
 import restdoc.client.api.Agent;
 import restdoc.client.api.AgentClientConfiguration;
 import restdoc.client.api.AgentImpl;
+import restdoc.client.api.SPI;
 import restdoc.client.restweb.handler.ExportApiHandler;
 import restdoc.client.restweb.handler.InvokerApiHandler;
 import restdoc.client.restweb.handler.ReportClientInfoHandler;
@@ -20,6 +21,7 @@ import restdoc.remoting.netty.NettyRequestProcessor;
 @Configuration
 @Import(value = {EnvConfiguration.class})
 @AutoConfigureBefore(value = {EnvConfiguration.class})
+@SPI(name = "restdoc.client.restweb.RestWebAgentClientConfiguration")
 public class RestWebAgentClientConfiguration implements AgentClientConfiguration, PriorityOrdered {
 
     private final AgentImpl agentImpl;

@@ -1,6 +1,0 @@
-restdoc:
-  host: 127.0.0.1
-  port: 4321
-  service: Mall-Service
-server:
-  port: 5545

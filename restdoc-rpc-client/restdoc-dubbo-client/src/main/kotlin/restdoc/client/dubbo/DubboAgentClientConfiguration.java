@@ -6,10 +6,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import restdoc.client.api.Agent;
-import restdoc.client.api.AgentClientConfiguration;
-import restdoc.client.api.AgentConfigurationProperties;
-import restdoc.client.api.AgentImpl;
+import restdoc.client.api.*;
 import restdoc.client.dubbo.handler.ExportApiHandler;
 import restdoc.client.dubbo.handler.InvokeApiHandler;
 import restdoc.client.dubbo.handler.ReportClientInfoHandler;
@@ -28,7 +25,7 @@ import restdoc.remoting.netty.NettyRequestProcessor;
         DubboRefBeanManager.class,
         EnvConfiguration.class})
 @EnableConfigurationProperties(value ={AgentConfigurationProperties.class})
-//@ConditionalOnClass(value = [EnvConfiguration::class])
+@SPI(name = "restdoc.client.dubbo.DubboAgentClientConfiguration")
 public class DubboAgentClientConfiguration implements AgentClientConfiguration {
 
     @Autowired

@@ -14,13 +14,11 @@ import restdoc.web.getCurrentVersion
 class AcknowledgeVersionHandler : NettyRequestProcessor {
     override fun rejectRequest() = false
 
-    override fun processRequest(ctx: ChannelHandlerContext?, request: RemotingCommand?): RemotingCommand {
+    override fun processRequest(ctx: ChannelHandlerContext, request: RemotingCommand): RemotingCommand {
         val response = RemotingCommand.createResponseCommand(RemotingSysResponseCode.SUCCESS, null, null)
         val version = Version()
         version.version = getCurrentVersion()
         response.body = version.encode()
         return response
     }
-
-
 }
