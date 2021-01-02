@@ -101,8 +101,8 @@ function renderURIVarEditStateTable(uriFields) {
             var start = "<tr>", end = "</tr>";
             var line =
                 '<td><input name="field" class="layui-input" value="' + uriFields[i]['field'] + '"> </td>' +
-                '<td><input name="value" class="layui-input" value="' + uriFields[i]['value'] + '"></td>' +
-                '<td> <input name="description" class="layui-input" value="' + uriFields[i]['description'] + '"> </td>';
+                '<td><input name="value" class="layui-input" value="' + escapeHtml(uriFields[i]['value']) + '"></td>' +
+                '<td> <input name="description" class="layui-input" value="' + escapeHtml(uriFields[i]['description']) + '"> </td>';
 
             allLine = allLine + start + line + end;
         }
@@ -135,8 +135,8 @@ function renderQueryParamEditStateTable(queryParamFields) {
             var start = "<tr>", end = "</tr>";
             var line =
                 '<td><input name="field" class="layui-input" value="' + queryParamFields[i]['field'] + '"> </td>' +
-                '<td><input name="value" class="layui-input" value="' + queryParamFields[i]['value'] + '"></td>' +
-                '<td> <input name="description" class="layui-input" value="' + queryParamFields[i]['description'] + '"> </td>';
+                '<td><input name="value" class="layui-input" value="' + escapeHtml(queryParamFields[i]['value']) + '"></td>' +
+                '<td> <input name="description" class="layui-input" value="' + escapeHtml(queryParamFields[i]['description']) + '"> </td>';
 
             allLine = allLine + start + line + end;
         }
@@ -246,7 +246,7 @@ function renderRequestBodyTableOnEditState(requestBodyFields) {
                 '<option value="ARRAY" ' + (requestBodyFields[i]['type'] === "ARRAY" ? "selected" : "") + '>array</option>' +
                 '</select></div></td>' +
 
-                '<td><input name="value" class="layui-input" value="' + requestBodyFields[i]['value'] + '"></td>' +
+                '<td><input name="value" class="layui-input" value="' + escapeHtml(requestBodyFields[i]['value']) + '"></td>' +
 
                 '<td>' +
                 ' <div class="layui-form-item"><select name="optional">' +
@@ -254,7 +254,7 @@ function renderRequestBodyTableOnEditState(requestBodyFields) {
                 '<option value="false" ' + (requestBodyFields[i]['optional'] === false ? 'selected' : '') + '>否</option>' +
                 '</select></div></td>' +
 
-                '<td> <input name="description" class="layui-input" value="' + requestBodyFields[i]['description'] + '"> </td>';
+                '<td> <input name="description" class="layui-input" value="' + escapeHtml(requestBodyFields[i]['description']) + '"> </td>';
 
             allLine = allLine + start + line + end;
         }
@@ -285,13 +285,13 @@ function renderRequestHeaderOnEditState(requestHeaderFields) {
             var start = "<tr>", end = "</tr>";
             var line =
                 '<td><input name="field" class="layui-input" value="' + requestHeaderFields[i]['field'] + '"> </td>' +
-                '<td><input name="value" class="layui-input" value="' + requestHeaderFields[i]['value'] + '"></td>' +
+                '<td><input name="value" class="layui-input" value="' + escapeHtml(requestHeaderFields[i]['value']) + '"></td>' +
                 '<td>  <div class="layui-form-item"><select name="optional">' +
                 '<option value="true" ' + (requestHeaderFields[i]['optional'] === true ? 'selected' : '') + '>是</option>' +
                 '<option value="false" ' + (requestHeaderFields[i]['optional'] === false ? 'selected' : '') + '>否</option>' +
                 '</select></div></td>' +
 
-                '<td> <input name="description" class="layui-input" value="' + requestHeaderFields[i]['description'] + '"> </td>';
+                '<td> <input name="description" class="layui-input" value="' + escapeHtml(requestHeaderFields[i]['description']) + '"> </td>';
 
             allLine = allLine + start + line + end;
         }
