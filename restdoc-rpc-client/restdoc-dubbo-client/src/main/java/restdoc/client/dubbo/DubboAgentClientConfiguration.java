@@ -27,7 +27,6 @@ import restdoc.remoting.netty.NettyRequestProcessor;
         DubboRefBeanManager.class,
         EnvConfiguration.class})
 @EnableConfigurationProperties(value = {AgentConfigurationProperties.class})
-@SPI(name = "restdoc.client.dubbo.DubboAgentClientConfiguration")
 public class DubboAgentClientConfiguration implements AgentClientConfiguration {
 
     @Autowired

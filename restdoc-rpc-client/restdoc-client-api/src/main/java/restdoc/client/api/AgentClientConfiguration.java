@@ -80,11 +80,9 @@ public interface AgentClientConfiguration {
      * @return Agent instance
      * @see this#getAgent(ServerProperties)
      */
-    @Deprecated
-    default Agent getAgent() {
-        return null;
-    }
+    Agent getAgent();
 
+    @Deprecated
     default Agent getAgent(ServerProperties serverProperties) {
         synchronized (this) {
             if (ContextHolder.agent == null)
