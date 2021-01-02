@@ -17,8 +17,9 @@
         <module>restdoc-dubbo-client</module>
         <module>restdoc-client-api</module>
         <module>restdoc-springcloud-client</module>
-        <module>restdoc-restweb-client</module>
+        <module>restdoc-springboot-client</module>
         <module>restdoc-rpc-client-common</module>
+        <module>restdoc-springfu-client</module>
     </modules>
 
 
