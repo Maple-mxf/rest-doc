@@ -1,6 +1,5 @@
 package restdoc.client.api;
 
-import org.springframework.boot.CommandLineRunner;
 import restdoc.client.api.exception.DiffVersionException;
 import restdoc.remoting.common.RequestCode;
 import restdoc.remoting.exception.RemotingException;
@@ -16,8 +15,15 @@ import restdoc.remoting.netty.NettyRequestProcessor;
  *
  * @author Maple
  * @see java.util.ServiceLoader
+ * @see SPI
  */
-public interface AgentClientConfiguration extends CommandLineRunner {
+@SPI(name = "restdoc.client.api.AgentClientConfiguration")
+public interface AgentClientConfiguration {
+
+    /**
+     * @return module name
+     */
+    String module();
 
     /**
      * Registry RemotingTask
@@ -50,7 +56,10 @@ public interface AgentClientConfiguration extends CommandLineRunner {
     NettyRequestProcessor getExportAPIHandler();
 
 
-    default void run(String... args) throws RemotingException, DiffVersionException, InterruptedException {
+    /**
+     * After started hook call
+     */
+    default void start() throws RemotingException, DiffVersionException, InterruptedException {
 
         Agent agent = this.getAgent();
 
@@ -67,5 +76,20 @@ public interface AgentClientConfiguration extends CommandLineRunner {
         if (!agent.acknowledgeVersion()) throw new RemotingException("Version ack failed");
     }
 
-    Agent getAgent();
+    /**
+     * @return Agent instance
+     * @see this#getAgent(ServerProperties)
+     */
+    @Deprecated
+    default Agent getAgent() {
+        return null;
+    }
+
+    default Agent getAgent(ServerProperties serverProperties) {
+        synchronized (this) {
+            if (ContextHolder.agent == null)
+                ContextHolder.agent = new AgentImpl(serverProperties);
+            return ContextHolder.agent;
+        }
+    }
 }

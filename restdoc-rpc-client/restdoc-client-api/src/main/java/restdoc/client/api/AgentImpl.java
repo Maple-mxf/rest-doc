@@ -1,7 +1,6 @@
 package restdoc.client.api;
 
 import io.netty.channel.Channel;
-import org.springframework.beans.factory.annotation.Autowired;
 import restdoc.client.api.exception.DiffVersionException;
 import restdoc.client.api.model.Version;
 import restdoc.remoting.ChannelEventListener;
@@ -29,7 +28,7 @@ import static restdoc.remoting.protocol.RemotingCommand.createRequestCommand;
  */
 public class AgentImpl implements Agent {
 
-    private final AgentConfigurationProperties agentConfigurationProperties;
+    private final ServerProperties serverProperties;
 
     private final NettyRemotingClient remotingClient;
 
@@ -39,17 +38,16 @@ public class AgentImpl implements Agent {
 
     private final String ackVersionTaskId = "ackVersion";
 
-    @Autowired
-    public AgentImpl(AgentConfigurationProperties agentConfigurationProperties) {
-        this.agentConfigurationProperties = agentConfigurationProperties;
+    public AgentImpl(ServerProperties serverProperties) {
+        this.serverProperties = serverProperties;
         RemotingTask acknowledgeVersionTask = new RemotingTask(ackVersionTaskId,
                 RemotingTaskType.SYNC, createRequestCommand(RequestCode.ACKNOWLEDGE_VERSION, null),
                 3000, null);
         this.addTask(acknowledgeVersionTask);
 
         NettyClientConfig config = new NettyClientConfig();
-        config.setHost(agentConfigurationProperties.getHost());
-        config.setPort(agentConfigurationProperties.getPort());
+        config.setHost(serverProperties.host());
+        config.setPort(serverProperties.port());
 
         ChannelEventListener channelEventListener =
                 new ChannelEventListener() {
@@ -90,7 +88,7 @@ public class AgentImpl implements Agent {
 
     @Override
     public String getServerRemoteAddress() {
-        return this.agentConfigurationProperties.getHost() + ":" + this.agentConfigurationProperties.getPort();
+        return this.serverProperties.host() + ":" + this.serverProperties.port();
     }
 
     @Override

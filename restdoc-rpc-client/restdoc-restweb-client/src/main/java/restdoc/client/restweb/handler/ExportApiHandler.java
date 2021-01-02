@@ -3,7 +3,7 @@ package restdoc.client.restweb.handler;
 import io.netty.channel.ChannelHandlerContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
-import restdoc.client.api.AgentConfigurationProperties;
+import restdoc.client.restweb.AgentConfigurationProperties;
 import restdoc.client.restweb.context.EndpointsListener;
 import restdoc.remoting.netty.NettyRequestProcessor;
 import restdoc.remoting.protocol.RemotingCommand;

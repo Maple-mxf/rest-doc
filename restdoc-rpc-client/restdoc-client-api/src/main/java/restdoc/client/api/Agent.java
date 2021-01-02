@@ -7,11 +7,11 @@ import restdoc.remoting.netty.NettyRequestProcessor;
 
 import java.util.NoSuchElementException;
 
-
 /**
- * The class Agent
+ * The class Agent.
  *
  * @author Maple
+ * @since 1.0.RELEASE
  */
 public interface Agent {
 
@@ -39,17 +39,20 @@ public interface Agent {
      * @return true/false
      * @throws DiffVersionException if console and client version not match,will be throws
      */
-    Boolean acknowledgeVersion() throws DiffVersionException, InterruptedException, RemotingConnectException, RemotingTimeoutException, RemotingTooMuchRequestException, RemotingSendRequestException;
+    Boolean acknowledgeVersion() throws DiffVersionException, InterruptedException, RemotingConnectException,
+            RemotingTimeoutException, RemotingTooMuchRequestException, RemotingSendRequestException;
 
     /**
      * Invoke Task
      */
-    InvokeResult invoke(String taskId) throws NoSuchElementException, InterruptedException, RemotingTooMuchRequestException, RemotingTimeoutException, RemotingSendRequestException, RemotingConnectException;
+    InvokeResult invoke(String taskId) throws NoSuchElementException, InterruptedException, RemotingTooMuchRequestException,
+            RemotingTimeoutException, RemotingSendRequestException, RemotingConnectException;
 
     /**
      * Invoke task
      */
-    InvokeResult invoke(RemotingTask remotingTask) throws InterruptedException, RemotingTimeoutException, RemotingSendRequestException, RemotingConnectException, RemotingTooMuchRequestException;
+    InvokeResult invoke(RemotingTask remotingTask) throws InterruptedException, RemotingTimeoutException, RemotingSendRequestException,
+            RemotingConnectException, RemotingTooMuchRequestException;
 
     /**
      *

@@ -1,4 +1,4 @@
-package restdoc.client.api;
+package restdoc.client.dubbo;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

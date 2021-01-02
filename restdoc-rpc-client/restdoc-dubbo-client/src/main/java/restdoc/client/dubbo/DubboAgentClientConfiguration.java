@@ -65,4 +65,9 @@ public class DubboAgentClientConfiguration implements AgentClientConfiguration {
     public Agent getAgent() {
         return this.agentImpl;
     }
+
+    @Override
+    public String module() {
+        return "Dubbo-client-module";
+    }
 }

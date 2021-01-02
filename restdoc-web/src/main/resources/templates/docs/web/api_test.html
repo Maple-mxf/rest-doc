@@ -23,7 +23,7 @@
 <input type="hidden" name="projectId" id="projectId" th:value="${projectId}"/>
 <div class="layui-fluid" style="margin-top: 10px">
     <div class="layui-row">
-        <div class="layui-col-md8">
+        <div class="layui-col-md7">
             <form class="layui-form layui-form-pane" action="" id="request_form">
                 <fieldset class="layui-elem-field site-demo-button" style="margin-top: 10px;">
                     <div class="layui-form-item">
@@ -170,7 +170,7 @@
                 </div>
             </form>
         </div>
-        <div class="layui-col-md4" id="testLogDiv" style="display: none">
+        <div class="layui-col-md5" id="testLogDiv" style="display: none">
             <div class="layui-row" style="text-align: center">
                 调试记录
             </div>
@@ -198,16 +198,20 @@
 <script type="text/html" id="testLogTableToolbar">
     <div class="layui-btn-container">
         <button title="导入历史数据" class="layui-btn layui-btn-sm layui-btn-primary" lay-event="export">
-            <i class="layui-icon layui-icon-export" style="font-size: 20px; color: black;"></i>
+<!--            <i class="layui-icon layui-icon-export" style="font-size: 20px; color: black;"></i>-->
+            <label>导入</label>
         </button>
         <button title="详情" class="layui-btn layui-btn-sm layui-btn-primary" lay-event="detail">
-            <i class="layui-icon layui-icon-file" style="font-size: 20px; color: black;"></i>
+<!--            <i class="layui-icon layui-icon-file" style="font-size: 20px; color: black;"></i>-->
+            <label>详情</label>
         </button>
         <button title="刷新数据" class="layui-btn  layui-btn-primary layui-btn-sm" lay-event="refresh">
-            <i class="layui-icon layui-icon-refresh" style="font-size: 20px; color: black;"></i>
+<!--            <i class="layui-icon layui-icon-refresh" style="font-size: 20px; color: black;"></i>-->
+            <label>刷新</label>
         </button>
         <button title="删除" class="layui-btn layui-btn-primary layui-btn-sm" lay-event="del" id="deleteTestLogBtn">
-            <i class="layui-icon layui-icon-delete" style="font-size: 20px; color: black;"></i>
+<!--            <i class="layui-icon layui-icon-delete" style="font-size: 20px; color: black;"></i>-->
+            <label>删除</label>
         </button>
     </div>
 </script>
@@ -307,7 +311,7 @@
                         {type: 'checkbox', fixed: 'left'},
 
                         {
-                            width: 60, field: 'success', title: '状态', align: 'center', templet: function (res) {
+                            width: 100, field: 'success', title: '状态', align: 'center', templet: function (res) {
                                 if (res.success) {
                                     return "<i class='layui-icon layui-icon-ok-circle' style='=font-size: 17px; color: #5FB878;'></i>"
                                 } else {
@@ -315,7 +319,7 @@
                                 }
                             }
                         },
-                        {field: 'testMode', title: '模式', align: 'center', width: 100},
+                        {field: 'testMode', title: '模式', align: 'center', width: 120},
                         {field: 'remote', title: '地址', align: 'center'}/*,
                         {
                             field: 'createTime',

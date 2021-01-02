@@ -1,5 +1,6 @@
 package restdoc.client.restweb;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -32,6 +33,7 @@ public class RestWebAgentClientConfiguration implements AgentClientConfiguration
 
     private final InvokerApiHandler invokerApiHandler;
 
+    @Autowired
     public RestWebAgentClientConfiguration(AgentImpl agentImpl,
                                            ReportClientInfoHandler reportClientInfoHandler,
                                            ExportApiHandler exportApiHandler,
@@ -67,4 +69,8 @@ public class RestWebAgentClientConfiguration implements AgentClientConfiguration
         return this.agentImpl;
     }
 
+    @Override
+    public String module() {
+        return "SpringMVC-module";
+    }
 }

@@ -7,6 +7,8 @@ import java.util.Objects;
 
 /**
  * The class RestWebInvocationResult
+ *
+ * @author Maple
  */
 public class RestWebInvocationResult extends InvocationResult {
 
