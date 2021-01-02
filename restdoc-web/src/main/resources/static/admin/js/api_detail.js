@@ -1,6 +1,15 @@
 var queryTableIsEditState = false, uriTableIsEditState = false, requestHeaderTableIsEditState = false,
     requestBodyTableIsEditState = false, responseBodyTableIsEditState = false;
 
+function escapeHtml(unsafe) {
+    return unsafe
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
 // 保存URI数据
 $('#saveURIVarTableBtn').click(function () {
     var trLines = $('#uriFieldListTableBody').children('tr');
@@ -349,6 +358,7 @@ $("#saveRequestHeaderTableBtn").click(function () {
     });
 });
 
+/*字符转义*/
 function renderResponseBodyTableOnEditState(responseBodyFields) {
     if (responseBodyFields !== null && responseBodyFields.length > 0) {
         var allLine = '';
@@ -365,11 +375,12 @@ function renderResponseBodyTableOnEditState(responseBodyFields) {
                 '<option value="ARRAY" ' + (responseBodyFields[i]['type'] === "ARRAY" ? "selected" : "") + '>array</option>' +
                 '</select></div></td>' +
 
-                '<td><input name="value" class="layui-input" value="' + responseBodyFields[i]['value'] + '"></td>' +
-                '<td> <input name="description" class="layui-input" value="' + responseBodyFields[i]['description'] + '"> </td>';
+                '<td><input name="value" class="layui-input" value="' + escapeHtml(responseBodyFields[i]['value']) + '"></td>' +
+                '<td> <input name="description" class="layui-input" value="' + escapeHtml(responseBodyFields[i]['description']) + '"> </td>';
 
             allLine = allLine + start + line + end;
         }
+        console.info(allLine);
         $("#responseBodyFieldListTableBody").html(allLine);
         gform.render();
     }

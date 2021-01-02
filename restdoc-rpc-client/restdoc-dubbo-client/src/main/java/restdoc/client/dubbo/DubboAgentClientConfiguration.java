@@ -1,6 +1,5 @@
 package restdoc.client.dubbo;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -13,9 +12,12 @@ import restdoc.client.dubbo.handler.ReportClientInfoHandler;
 import restdoc.remoting.netty.NettyRequestProcessor;
 
 /**
- * DubboAgentClientConfiguration
+ * The class DubboAgentClientConfiguration
+ * SPI interface
  *
  * @author Maple
+ * @see java.util.ServiceLoader
+ * @since 1.0.RELEASE
  */
 @Configuration
 @Import(value = {DubboInvokerImpl.class,
@@ -24,7 +26,7 @@ import restdoc.remoting.netty.NettyRequestProcessor;
         ExportApiHandler.class,
         DubboRefBeanManager.class,
         EnvConfiguration.class})
-@EnableConfigurationProperties(value ={AgentConfigurationProperties.class})
+@EnableConfigurationProperties(value = {AgentConfigurationProperties.class})
 @SPI(name = "restdoc.client.dubbo.DubboAgentClientConfiguration")
 public class DubboAgentClientConfiguration implements AgentClientConfiguration {
 
@@ -41,12 +43,26 @@ public class DubboAgentClientConfiguration implements AgentClientConfiguration {
     @Qualifier(value = "dubboAgentImpl")
     private AgentImpl agentImpl;
 
+    public DubboAgentClientConfiguration() {
+    }
+
     @Override
-    public NettyRequestProcessor getInvokeAPIHandler()  {return this.invokeAPIHandler;}
+    public NettyRequestProcessor getInvokeAPIHandler() {
+        return this.invokeAPIHandler;
+    }
+
     @Override
-    public NettyRequestProcessor getReportClientInfoHandler(){return  this.reportClientInfoHandler;}
+    public NettyRequestProcessor getReportClientInfoHandler() {
+        return this.reportClientInfoHandler;
+    }
+
     @Override
-    public NettyRequestProcessor getExportAPIHandler(){return this.exportApiHandler;}
+    public NettyRequestProcessor getExportAPIHandler() {
+        return this.exportApiHandler;
+    }
+
     @Override
-    public Agent getAgent(){return this.agentImpl;}
+    public Agent getAgent() {
+        return this.agentImpl;
+    }
 }
