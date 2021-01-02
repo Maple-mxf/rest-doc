@@ -15,7 +15,7 @@ RESTdoc分为两个模块，console和client， console是文档可视化工作�
 
 ## 快速开始(Quick Start)
 -  [安装Console](#安装Console)；
--  [安装Console](#增加maven依赖)。
+-  [增加maven依赖](#增加maven依赖)。
 
 ## 安装Console
 
