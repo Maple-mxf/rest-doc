@@ -25,7 +25,6 @@ import java.util.stream.Collectors;
 
 import static restdoc.web.core.StandardKt.failure;
 
-
 /**
  * @author Maple
  * @since 1.0.RELEASE

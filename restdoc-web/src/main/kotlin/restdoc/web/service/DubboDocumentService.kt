@@ -26,6 +26,8 @@ interface DubboDocumentService {
 
 /**
  * DubboDocumentServiceImpl
+ *
+ * @author Maple
  */
 @Service
 open class DubboDocumentServiceImpl : DubboDocumentService {

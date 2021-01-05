@@ -11,13 +11,22 @@
     <link rel="stylesheet" th:href="@{/admin/css/pear-tree/dtree.css}"/>
     <link rel="stylesheet" th:href="@{/admin/css/doc-common.css}"/>
     <link rel="stylesheet" th:href="@{/admin/css/nav.css}"/>
+    <link rel="stylesheet"
+          href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/default.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
     <style>
-        .layui-table{
+        .layui-table {
             table-layout: fixed;
-            word-break:break-all;
+            word-break: break-all;
         }
-        .layui-table td{
-            word-wrap:break-word;
+
+        .layui-table td {
+            word-wrap: break-word;
+        }
+
+        .layui-elem-field legend {
+            font-size: 16px;
         }
     </style>
 </head>
@@ -34,9 +43,15 @@
             <div class="layui-row layui-col-space10">
                 <div class="layui-col-md9">
 
-                    <span style="margin-left: 2%"><h2 th:text="${document.name}"></h2></span>
+                    <div class="layui-row">
+                        <span style="margin-left: 2%"><h1 th:text="${document.name}"></h1></span>
+                    </div>
+                    <div class="layui-row" style="margin-top: 5px">
+                        <span style="color: #c2c2c2">更新时间：
+                            <span th:text="${#dates.format(document.lastUpdateTime, 'yyyy-MM-dd HH:mm')}"></span></span>
+                    </div>
                     <div class="layui-row code-block" style="margin-top: 1%; height: 60px;line-height: 60px; ">
-                        <span style="margin-left: 2%">HTTP1.1 GET <span th:text="${document.url}"></span></span>
+                        <span style="margin-left: 2%"><span th:text="${document.method}"></span> <span th:text="${document.url}"></span></span>
                         <span id="urlSpan" style="position: absolute;right: 10px;margin-top: -1%"><i
                                 class="layui-icon layui-icon-file-b" style="font-size: 25px; color: whitesmoke;"
                                 title="复制URL" id="copyURL"></i></span>
@@ -48,27 +63,33 @@
                                  id="descriptionArea"></div>
                         </blockquote>
                     </div>
+                    <div class="layui-row">
+                        请求示例
+                        <pre>
+                            <code class="language-http" th:utext="${document.fakeCodeSample}" style="font-family: Consolas,serif;font-size: 14px">
+
+                            </code>
+                        </pre>
+                    </div>
 
                     <div class="layui-row line-row-block"
                          th:if="${document.queryParamDescriptors!=null and !document.queryParamDescriptors.isEmpty()}">
-
-
                         <fieldset class="layui-elem-field">
                             <legend>Query Param <span style="cursor: pointer">
                                 <i id="editQueryParamTableBtn" class="layui-icon layui-icon-edit"
-                                   style="font-size: 19px;"></i></span>
+                                   style="font-size: 16px;"></i></span>
                             </legend>
                             <div class="layui-field-box">
                                 <div class="layui-row">
                                     <form action="" class="layui-row">
-                                        <table class="layui-table" id="queryParamListTable" lay-size="lg">
+                                        <table class="layui-table" id="queryParamListTable">
                                             <colgroup>
                                                 <col width="250">
                                                 <col width="250">
                                                 <col width="300">
                                             </colgroup>
                                             <thead>
-                                            <tr>
+                                            <tr class="layui-bg-green">
                                                 <th>参数</th>
                                                 <th>示例值</th>
                                                 <th>说明</th>
@@ -99,7 +120,8 @@
                             </div>
                         </fieldset>
                     </div>
-                    <div class="layui-row line-row-block" th:if="${document.uriVarDescriptors!=null and !document.uriVarDescriptors.isEmpty()}">
+                    <div class="layui-row line-row-block"
+                         th:if="${document.uriVarDescriptors!=null and !document.uriVarDescriptors.isEmpty()}">
                         <fieldset class="layui-elem-field">
                             <legend>URI Variable <span style="cursor: pointer">
                                 <i id="editURIVarTableBtn" class="layui-icon layui-icon-edit"
@@ -108,14 +130,14 @@
                             <div class="layui-field-box">
                                 <div class="layui-row">
                                     <form action="" class="layui-row">
-                                        <table class="layui-table" id="uriFieldListTable" lay-size="lg">
+                                        <table class="layui-table" id="uriFieldListTable">
                                             <colgroup>
                                                 <col width="250">
                                                 <col width="250">
                                                 <col width="300">
                                             </colgroup>
                                             <thead>
-                                            <tr>
+                                            <tr class="layui-bg-green">
                                                 <th>参数</th>
                                                 <th>示例值</th>
                                                 <th>说明</th>
@@ -156,7 +178,7 @@
                             <div class="layui-field-box">
                                 <div class="layui-row">
                                     <form class="layui-form">
-                                        <table class="layui-table" id="requestHeaderListTable" lay-size="lg">
+                                        <table class="layui-table" id="requestHeaderListTable">
                                             <colgroup>
                                                 <col width="200">
                                                 <col width="250">
@@ -164,7 +186,7 @@
                                                 <col width="200">
                                             </colgroup>
                                             <thead>
-                                            <tr>
+                                            <tr class="layui-bg-green">
                                                 <th>参数</th>
                                                 <th>示例值</th>
                                                 <th>是否可选</th>
@@ -207,7 +229,7 @@
                             <div class="layui-field-box">
                                 <div class="layui-row">
                                     <form class="layui-form">
-                                        <table class="layui-table" id="requestBodyFieldListTable" lay-size="lg">
+                                        <table class="layui-table" id="requestBodyFieldListTable">
                                             <colgroup>
                                                 <col width="150">
                                                 <col width="150">
@@ -216,7 +238,7 @@
                                                 <col width="200">
                                             </colgroup>
                                             <thead>
-                                            <tr>
+                                            <tr class="layui-bg-green">
                                                 <th>参数</th>
                                                 <th>类型</th>
                                                 <th>示例值</th>
@@ -262,7 +284,7 @@
                             <div class="layui-field-box">
                                 <form class="layui-form">
                                     <div class="layui-row">
-                                        <table class="layui-table" id="responseBodyFieldListTable" lay-size="lg">
+                                        <table class="layui-table" id="responseBodyFieldListTable">
                                             <colgroup>
                                                 <col width="150">
                                                 <col width="150">
@@ -270,7 +292,7 @@
                                                 <col width="300">
                                             </colgroup>
                                             <thead>
-                                            <tr>
+                                            <tr class="layui-bg-green">
                                                 <th>参数</th>
                                                 <th>类型</th>
                                                 <th>示例值</th>
@@ -331,7 +353,7 @@
                             </div>
                         </div>
                         <form class="layui-form">
-                            <table class="layui-table" id="responseHeaderListTable" lay-size="lg">
+                            <table class="layui-table" id="responseHeaderListTable">
                                 <colgroup>
                                     <col width="200">
                                     <col width="250">
@@ -339,7 +361,7 @@
                                     <col width="250">
                                 </colgroup>
                                 <thead>
-                                <tr>
+                                <tr class="layui-bg-green">
                                     <th>参数</th>
                                     <th>示例值</th>
                                     <th>是否可选</th>
@@ -359,23 +381,30 @@
                                 <li>Java</li>
                                 <li>Python</li>
                             </ul>
-                            <div class="layui-tab-content" style="height: 500px;">
+                            <div class="layui-tab-content" style="height: 700px;">
                                 <div class="layui-tab-item layui-show">
                                     <div class="language-html line-numbers-mode">
-                                        <pre class="layui-code" lay-title="CURL" lay-skin="notepad"
-                                             th:text="${document.curlCodeSample}"></pre>
+                                        <pre>
+                                            <code style="font-family: Consolas,serif;font-size: 14px" class="curl"
+                                                  th:text="${document.curlCodeSample}"></code>
+                                        </pre>
                                     </div>
                                 </div>
                                 <div class="layui-tab-item">
                                     <div>
-                                        <pre class="layui-code" lay-title="CURL" lay-skin="notepad"
-                                             th:text="${document.javaCodeSample}"></pre>
+                                        <pre>
+                                            <code class="language-java"
+                                                  style="font-family: Consolas,serif;font-size: 14px"
+                                                  th:text="${document.javaCodeSample}"></code>
+                                        </pre>
                                     </div>
                                 </div>
                                 <div class="layui-tab-item">
                                     <div>
-                                        <pre class="layui-code" lay-title="CURL" lay-skin="notepad"
-                                             th:text="${document.pythonCodeSample}"></pre>
+                                        <pre class="python">
+                                            <code class="python" style="font-family: Consolas,serif;font-size: 14px"
+                                                  th:text="${document.pythonCodeSample}"></code>
+                                        </pre>
                                     </div>
                                 </div>
                             </div>

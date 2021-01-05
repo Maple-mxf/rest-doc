@@ -11,9 +11,10 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 
 /**
+ * The class RestDocAuthImpl
  *
  * @author Maple
- * @since 2.0
+ * @since 2.0.RELEASE
  */
 public class RestDocAuthImpl implements AuthMetadata {
 
@@ -66,7 +67,7 @@ public class RestDocAuthImpl implements AuthMetadata {
 
             return Credential.builder(true)
                     .identity(user.getId())
-                    .roles(user.getRole().name())
+                    .roles(user.getRole())
                     .userInfo(user)
                     .build();
         }

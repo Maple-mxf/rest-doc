@@ -12,6 +12,8 @@ import restdoc.web.controller.console.model.UpdateProjectDto
 import restdoc.web.core.Result
 import restdoc.web.core.Status
 import restdoc.web.core.ok
+import restdoc.web.model.ANY_ROLE
+import restdoc.web.model.SYS_ADMIN
 import restdoc.web.model.Project
 import restdoc.web.model.ProjectType
 import restdoc.web.repository.ProjectRepository
@@ -34,7 +36,7 @@ class ProjectController {
      * Add Search
      */
     @GetMapping("/list")
-    @Verify(role = ["SYS_ADMIN"])
+    @Verify(role = [SYS_ADMIN])
     fun list(@RequestParam(required = false, defaultValue = "0") page: Int,
              @RequestParam(required = false, defaultValue = "12") size: Int,
              @RequestParam type: ProjectType
@@ -44,18 +46,18 @@ class ProjectController {
 
 
     @GetMapping("/{id}")
-    @Verify(role = ["*"])
+    @Verify(role = [ANY_ROLE])
     fun get(@PathVariable id: String): Result = ok(mongoTemplate.findById(id, Project::class.java))
 
     @DeleteMapping("/{id}")
-    @Verify(role = ["SYS_ADMIN"])
+    @Verify(role = [SYS_ADMIN])
     fun delete(@PathVariable id: String): Result {
         val deleteResult = projectRepository.delete(Query().addCriteria(Criteria("_id").`is`(id)))
         return ok(deleteResult)
     }
 
     @PostMapping("")
-    @Verify(role = ["SYS_ADMIN"])
+    @Verify(role = [SYS_ADMIN])
     fun create(@RequestBody dto: CreateProjectDto): Result {
         if (dto.type == ProjectType.SPRINGCLOUD) Status.BAD_REQUEST.error("暂不支持SpringCloud项目")
         val projectId = IDUtil.id()
@@ -72,7 +74,7 @@ class ProjectController {
     }
 
     @PatchMapping("")
-    @Verify(role = ["SYS_ADMIN"])
+    @Verify(role = [SYS_ADMIN])
     fun update(@RequestBody @Valid dto: UpdateProjectDto): Result {
         projectRepository.update(Project(
                 id = dto.id,

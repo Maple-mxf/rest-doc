@@ -10,13 +10,14 @@ import restdoc.web.base.auth.Verify
 import restdoc.web.core.Result
 import restdoc.web.core.Status
 import restdoc.web.core.ok
-import restdoc.web.schedule.ClientRegistryCenter
 import restdoc.web.model.ProjectType
+import restdoc.web.model.SYS_ADMIN
 import restdoc.web.repository.ProjectRepository
+import restdoc.web.schedule.ClientRegistryCenter
 import restdoc.web.service.DubboDocumentService
 
 @RestController
-@Verify(role = ["SYS_ADMIN"])
+@Verify(role = [SYS_ADMIN])
 class MicroserviceController {
 
     @Autowired

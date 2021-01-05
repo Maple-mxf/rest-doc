@@ -10,8 +10,8 @@ import restdoc.web.base.auth.Verify
 import restdoc.web.controller.show.model.AuthDTO
 import restdoc.web.core.*
 import restdoc.web.model.ProjectType
-import restdoc.web.model.Role
 import restdoc.web.model.User
+import restdoc.web.model.VIEWER
 import restdoc.web.repository.ProjectRepository
 import restdoc.web.util.MD5Util
 import java.util.concurrent.TimeUnit
@@ -36,7 +36,7 @@ class ShowReadOnlyController {
      * @see Role.VIEWER
      */
     @GetMapping("/{projectId}")
-    @Verify(require = false, role = ["VIEWER"])
+    @Verify(require = false, role = [VIEWER])
     fun routeEntrance(@PathVariable projectId: String, model: Model): String {
         val project = projectRepository.findById(projectId)
                 .orElseThrow { restdoc.web.core.Status.INVALID_REQUEST.instanceError("id不存在") }
@@ -59,7 +59,7 @@ class ShowReadOnlyController {
         val encryptPassword = MD5Util.encryptPassword(dto.password, project.id, 1024)
 
         return if (encryptPassword == project.accessPassword) {
-            val user = User(id = "default", account = "or", password = null, createTime = null, role = Role.VIEWER, teamId = "")
+            val user = User(id = "default", account = "or", password = null, createTime = null, role = VIEWER, teamId = "")
             val cookieValue: String = MD5Util.MD5Encode(request.remoteHost, "UTF-8")
             val cookie = Cookie(ACCESS_TOKEN, cookieValue)
             cookie.path = "/"

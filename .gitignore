@@ -1,1 +1,11 @@
 /restdoc-remoting/target/
+/restdoc-rpc-client/restdoc-client-api/target
+/restdoc-rpc-client/restdoc-dubbo-client/target
+/restdoc-rpc-client/restdoc-springmvc-client/target
+/restdoc-rpc-client/restdoc-springfu-client/target
+/restdoc-rpc-client/restdoc-rpc-client-common/target
+/restdoc-client-test/restdoc-client-dubbo-test/target
+/restdoc-client-test/restdoc-client-springcloud-test/target
+/restdoc-client-test/restdoc-client-springfu-test/target
+/restdoc-client-test/restdoc-client-web-test/target
+/restdoc-web/target

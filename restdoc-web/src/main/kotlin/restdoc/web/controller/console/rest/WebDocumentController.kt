@@ -21,8 +21,10 @@ import restdoc.web.core.Result
 import restdoc.web.core.Status
 import restdoc.web.core.failure
 import restdoc.web.core.ok
+import restdoc.web.model.ANY_ROLE
 import restdoc.web.model.Project
 import restdoc.web.model.Resource
+import restdoc.web.model.SYS_ADMIN
 import restdoc.web.model.doc.DocType
 import restdoc.web.model.doc.http.*
 import restdoc.web.repository.ProjectRepository
@@ -38,11 +40,14 @@ import java.util.*
 import javax.validation.Valid
 
 /**
+ * WebDocumentController
+ *
+ * @author Maple
  * @see Project
  */
 @RestController
 @RequestMapping("/document")
-class RestWebDocumentController {
+class WebDocumentController {
 
     @Autowired
     private lateinit var mongoTemplate: MongoTemplate
@@ -88,7 +93,7 @@ class RestWebDocumentController {
     }
 
     @PostMapping("")
-    @Verify(role = ["SYS_ADMIN"])
+    @Verify(role = [SYS_ADMIN])
     fun create(@RequestBody @Valid dto: RequestDto): Result {
 
         dto.url = dto.lookupPath()
@@ -125,7 +130,7 @@ class RestWebDocumentController {
         return ok(document.id)
     }
 
-    @Verify(role = ["SYS_ADMIN"])
+    @Verify(role = [SYS_ADMIN])
     @PutMapping("")
     fun patch(@RequestBody @Valid dto: RequestDto): Result {
 
@@ -210,14 +215,14 @@ class RestWebDocumentController {
     }
 
     @GetMapping("/httpTask/{taskId}")
-    @Verify(role = ["*"])
+    @Verify(role = [ANY_ROLE])
     fun execute(@PathVariable taskId: String): Result {
         val result = redisTemplate.opsForValue().get(taskId) ?: return failure(Status.INVALID_REQUEST, "请刷新页面重试")
         val map = result as LinkedHashMap<String, Any>
         return ok(map)
     }
 
-    @Verify(role = ["SYS_ADMIN"])
+    @Verify(role = [SYS_ADMIN])
     @DeleteMapping("/{id}")
     fun delete(@PathVariable id: String): Result {
         restWebDocumentRepository.deleteById(id)
@@ -376,7 +381,7 @@ class RestWebDocumentController {
     }
 
     @GetMapping("/{id}/snippet")
-    @Verify(role = ["*"])
+    @Verify(role = [ANY_ROLE])
     fun getSnippet(@PathVariable id: String, @RequestParam type: String): LayuiTable {
         val uriVars = restWebDocumentRepository.findById(id)
                 .map {
@@ -394,7 +399,7 @@ class RestWebDocumentController {
     }
 
     @PatchMapping("/{id}/snippet/uri")
-    @Verify(role = ["SYS_ADMIN"])
+    @Verify(role = [SYS_ADMIN])
     fun patchURIVarsSnippet(@PathVariable id: String,
                             @Valid @RequestBody dto: UpdateURIVarSnippetDto): Result {
 
@@ -411,7 +416,7 @@ class RestWebDocumentController {
         return ok(transformRestDocumentToVO(doc))
     }
 
-    @Verify(role = ["SYS_ADMIN"])
+    @Verify(role = [SYS_ADMIN])
     @PatchMapping("/{id}/snippet/requestHeader")
     fun patchRequestHeaderSnippet(@PathVariable id: String,
                                   @Valid @RequestBody dto: UpdateRequestHeaderSnippetDto): Result {
@@ -429,7 +434,7 @@ class RestWebDocumentController {
         return ok(transformRestDocumentToVO(doc))
     }
 
-    @Verify(role = ["SYS_ADMIN"])
+    @Verify(role = [SYS_ADMIN])
     @PatchMapping("/{id}/snippet/requestBody")
     fun patchRequestBodySnippet(@PathVariable id: String,
                                 @Valid @RequestBody dto: UpdateRequestBodySnippetDto): Result {
@@ -447,7 +452,7 @@ class RestWebDocumentController {
         return ok(transformRestDocumentToVO(doc))
     }
 
-    @Verify(role = ["SYS_ADMIN"])
+    @Verify(role = [SYS_ADMIN])
     @PatchMapping("/{id}/snippet/responseBody")
     fun patchResponseBodySnippet(@PathVariable id: String,
                                  @Valid @RequestBody dto: UpdateResponseBodySnippetDto): Result {
@@ -539,8 +544,6 @@ class RestWebDocumentController {
                         resource = it.controller,
                         url = it.pattern,
                         description = null,
-                        requestHeaderDescriptor = null,
-                        requestBodyDescriptor = null,
                         responseBodyDescriptors = null,
                         method = HttpMethod.resolve(it.method),
                         uriVarDescriptors = null,
@@ -585,7 +588,7 @@ class RestWebDocumentController {
         return ok()
     }
 
-    @Verify(role = ["SYS_ADMIN"])
+    @Verify(role = [SYS_ADMIN])
     @PostMapping("/serviceClient/{clientId}/syncApi")
     fun syncServiceInstanceApi(@PathVariable clientId: String, @RequestBody dto: SyncRestApiDto): Any {
         val apiList =
@@ -648,8 +651,6 @@ class RestWebDocumentController {
                                 resource = resourceId,
                                 url = api.pattern,
                                 description = api.pattern,
-                                requestBodyDescriptor = null,
-                                requestHeaderDescriptor = null,
                                 responseBodyDescriptors = null,
                                 method = HttpMethod.resolve(api.method),
                                 uriVarDescriptors = null,
@@ -664,7 +665,7 @@ class RestWebDocumentController {
         return ok(SyncDocumentResultVo(totalQuantity = totalQuantity, savedQuantity = savedQuantity))
     }
 
-    @Verify(role = ["SYS_ADMIN"])
+    @Verify(role = [SYS_ADMIN])
     @PostMapping("/emptydoc")
     fun createEmptyApiDoc(@RequestBody dto: CreateEmptyDocDto): Result {
         val document = RestWebDocument(
@@ -674,8 +675,6 @@ class RestWebDocumentController {
                 resource = dto.resourceId,
                 url = "",
                 description = null,
-                requestHeaderDescriptor = null,
-                requestBodyDescriptor = null,
                 responseBodyDescriptors = null,
                 uriVarDescriptors = null,
                 responseHeaderDescriptor = null,
@@ -687,7 +686,7 @@ class RestWebDocumentController {
         return ok(document)
     }
 
-    @Verify(role = ["SYS_ADMIN"])
+    @Verify(role = [SYS_ADMIN])
     @PostMapping("/copy")
     fun copyDocument(@RequestBody dto: CopyDocumentDocDto): Result {
 
@@ -719,7 +718,7 @@ class RestWebDocumentController {
         ))
     }
 
-    @Verify(role = ["SYS_ADMIN"])
+    @Verify(role = [SYS_ADMIN])
     @PatchMapping("/baseinfo")
     fun updateBaseInfo(@RequestBody @Valid dto: UpdateNodeDto): Result {
         val updateResult = restWebDocumentRepository.update(Query().addCriteria(Criteria("_id").`is`(dto.id)),
@@ -731,7 +730,7 @@ class RestWebDocumentController {
         return ok()
     }
 
-    @Verify(role = ["SYS_ADMIN"])
+    @Verify(role = [SYS_ADMIN])
     @PatchMapping("/uridescriptor")
     fun updateURIVarDescriptor(@RequestBody dto: BatchUpdateURIVarSnippetDto): Result {
         val descriptor = dto.values.map { URIVarDescriptor(field = it.field, value = it.value, description = it.description) }
@@ -740,7 +739,7 @@ class RestWebDocumentController {
         return ok(descriptor)
     }
 
-    @Verify(role = ["SYS_ADMIN"])
+    @Verify(role = [SYS_ADMIN])
     @PatchMapping("/requestbodydescriptor")
     fun updateRequestBodyDescriptor(@RequestBody dto: BatchUpdateRequestBodySnippetDto): Result {
         val descriptor = dto.values
@@ -757,7 +756,7 @@ class RestWebDocumentController {
         return ok(descriptor)
     }
 
-    @Verify(role = ["SYS_ADMIN"])
+    @Verify(role = [SYS_ADMIN])
     @PatchMapping("/requestheaderdescriptor")
     fun updateRequestBodyDescriptor(@RequestBody dto: BatchUpdateRequestHeaderSnippetDto): Result {
         val descriptor = dto.values
@@ -773,7 +772,7 @@ class RestWebDocumentController {
         return ok(descriptor)
     }
 
-    @Verify(role = ["SYS_ADMIN"])
+    @Verify(role = [SYS_ADMIN])
     @PatchMapping("/responsebodydescriptor")
     fun updateResponseBodyDescriptor(@RequestBody dto: BatchUpdateResponseBodySnippetDto): Result {
         val descriptor = dto.values
@@ -789,7 +788,7 @@ class RestWebDocumentController {
         return ok(descriptor)
     }
 
-    @Verify(role = ["SYS_ADMIN"])
+    @Verify(role = [SYS_ADMIN])
     @PatchMapping("/queryparamdescriptor")
     fun updateQueryParamDescriptor(@RequestBody dto: BatchUpdateQueryParamSnippetDto): Result {
         val descriptor = dto.values

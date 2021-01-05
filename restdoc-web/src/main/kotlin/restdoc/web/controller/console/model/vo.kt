@@ -4,9 +4,11 @@ import org.springframework.http.HttpMethod
 import restdoc.client.api.model.Invocation
 import restdoc.web.base.getBean
 import restdoc.web.core.code.CURLCodeSampleGenerator
+import restdoc.web.core.code.FakeCodeSampleGenerator
 import restdoc.web.core.code.JavaCodeSampleGenerator
 import restdoc.web.core.code.PythonCodeSampleGenerator
 import restdoc.web.model.doc.http.*
+import java.util.*
 
 /**
  * findChild
@@ -63,7 +65,7 @@ data class BodyFieldDescriptorVO(val path: String, val value: Any = "",
 data class URIVarDescriptorVO(val field: String, val value: String, val description: String)
 
 
-data class RestWebDocumentVO(
+internal data class RestWebDocumentVO(
 
         val id: String,
 
@@ -129,6 +131,11 @@ data class RestWebDocumentVO(
         val responseHeaderDescriptors: List<HeaderFieldDescriptorVO> = listOf(),
 
         /**
+         * fakeCodeSample
+         */
+        val fakeCodeSample: String = "",
+
+        /**
          * CURL Code sample
          */
         val curlCodeSample: String = "",
@@ -141,16 +148,21 @@ data class RestWebDocumentVO(
         /**
          * Python code sample
          */
-        val pythonCodeSample: String = ""
+        val pythonCodeSample: String = "",
+
+        /**
+         * lastUpdateTime
+         */
+        val lastUpdateTime: Long = Date().time
 )
 
-fun transformHeaderToVO(headers: List<HeaderFieldDescriptor>) =
+internal fun transformHeaderToVO(headers: List<HeaderFieldDescriptor>) =
         headers.map {
             HeaderFieldDescriptorVO(field = it.field, value = it.value.joinToString(separator = ","), description = it.description
                     ?: "", optional = if (it.optional) "是" else "否")
         }.toMutableList()
 
-fun transformNormalParamToVO(params: List<BodyFieldDescriptor>) =
+internal fun transformNormalParamToVO(params: List<BodyFieldDescriptor>) =
         params.map {
             BodyFieldDescriptorVO(path = it.path, value = it.value
                     ?: "", optional = if (it.optional) "是" else "否", type = it.type.name.toLowerCase(), description = it.description
@@ -168,28 +180,32 @@ fun transformURIFieldToVO(uriVars: List<URIVarDescriptor>) =
         }.toMutableList()
 
 
-fun transformRestDocumentToVO(doc: RestWebDocument) = RestWebDocumentVO(
-        id = doc.id!!,
-        method = doc.method.name,
-        projectId = doc.projectId!!,
-        name = doc.name ?: "",
-        resource = doc.resource,
-        url = doc.url,
-        description = if (doc.description == null || doc.description!!.isBlank()) "API说明" else doc.description!!,
-        requestHeaderDescriptor = transformHeaderToVO(doc.requestHeaderDescriptor ?: listOf()),
-        responseBodyDescriptors = transformNormalParamToVO(doc.responseBodyDescriptors ?: listOf()),
-        requestBodyDescriptor = transformNormalParamToVO(doc.requestBodyDescriptor ?: listOf()),
-        uriVarDescriptors = transformURIFieldToVO(doc.uriVarDescriptors ?: listOf()),
-        responseHeaderDescriptors = transformHeaderToVO(doc.responseHeaderDescriptor ?: listOf()),
-        queryParamDescriptors = if (doc.queryParamDescriptors != null) doc.queryParamDescriptors!! else listOf(),
-        curlCodeSample = getBean(CURLCodeSampleGenerator::class.java).invoke(doc),
-        javaCodeSample = getBean(JavaCodeSampleGenerator::class.java).invoke(doc),
-        pythonCodeSample = getBean(PythonCodeSampleGenerator::class.java).invoke(doc)
-)
+internal fun transformRestDocumentToVO(doc: RestWebDocument): RestWebDocumentVO {
+    return RestWebDocumentVO(
+            id = doc.id!!,
+            method = doc.method.name,
+            projectId = doc.projectId!!,
+            name = doc.name ?: "",
+            resource = doc.resource,
+            url = doc.url,
+            description = if (doc.description == null || doc.description!!.isBlank()) "API说明" else doc.description!!,
+            requestHeaderDescriptor = transformHeaderToVO(doc.requestHeaderDescriptor ?: listOf()),
+            responseBodyDescriptors = transformNormalParamToVO(doc.responseBodyDescriptors ?: listOf()),
+            requestBodyDescriptor = transformNormalParamToVO(doc.requestBodyDescriptor ?: listOf()),
+            uriVarDescriptors = transformURIFieldToVO(doc.uriVarDescriptors ?: listOf()),
+            responseHeaderDescriptors = transformHeaderToVO(doc.responseHeaderDescriptor ?: listOf()),
+            queryParamDescriptors = if (doc.queryParamDescriptors != null) doc.queryParamDescriptors!! else listOf(),
+            curlCodeSample = getBean(CURLCodeSampleGenerator::class.java).invoke(doc),
+            javaCodeSample = getBean(JavaCodeSampleGenerator::class.java).invoke(doc),
+            pythonCodeSample = getBean(PythonCodeSampleGenerator::class.java).invoke(doc),
+            fakeCodeSample = getBean(FakeCodeSampleGenerator::class.java).invoke(doc),
+            lastUpdateTime = doc.lastUpdateTime
+    )
+}
 
-data class ResourcePath(val path: String, val id: String)
+internal data class ResourcePath(val path: String, val id: String)
 
-data class TestDubboMicroserviceResult(
+internal data class TestDubboMicroserviceResult(
         val method: String,
         val paramTypes: String,
         val success: Boolean,
@@ -199,7 +215,7 @@ data class TestDubboMicroserviceResult(
         val time: Long = 0L
 )
 
-data class SyncDocumentResultVo(val totalQuantity: Int, val savedQuantity: Int)
+internal data class SyncDocumentResultVo(val totalQuantity: Int, val savedQuantity: Int)
 
 data class DTreeVO(val id: String,
                    val title: String,

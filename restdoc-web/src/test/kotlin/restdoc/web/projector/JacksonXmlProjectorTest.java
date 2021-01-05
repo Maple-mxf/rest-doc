@@ -8,9 +8,7 @@ import restdoc.web.util.PathValue;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
-import java.io.File;
-import java.io.IOException;
-import java.io.StringWriter;
+import java.io.*;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -75,5 +73,21 @@ public class JacksonXmlProjectorTest {
 
         System.err.println(new JacksonXmlProjector(pathValues).project());
         System.err.println(mapper.writeValueAsString(new JsonProjector(pathValues).projectToMap()));
+    }
+
+    @Test
+    public void testProject2Xml4() throws IOException {
+        OutputStream os = new ByteArrayOutputStream();
+
+        XmlLinkedHashMap xmlLinkedHashMap = new XmlLinkedHashMap();
+        xmlLinkedHashMap.put("key", "value");
+
+        xmlMapper.writerWithDefaultPrettyPrinter()
+                .writeValue(os, xmlLinkedHashMap);
+
+        String xmlString = os.toString();
+
+        os.close();
+        System.err.println(xmlString);
     }
 }

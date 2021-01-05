@@ -3,25 +3,50 @@ package restdoc.web.service
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.common.base.Objects
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.mongodb.core.MongoTemplate
+import org.springframework.data.mongodb.core.query.Criteria
+import org.springframework.data.mongodb.core.query.Query
 import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Service
 import restdoc.rpc.client.common.model.http.RestWebApiDescriptor
+import restdoc.web.distributelock.DistributeLock
+import restdoc.web.distributelock.DistributeLockType
+import restdoc.web.distributelock.LockKey
+import restdoc.web.model.RESOURCE_COLLECTION
 import restdoc.web.model.Resource
 import restdoc.web.model.doc.http.*
 import restdoc.web.projector.JsonDeProjector
 import restdoc.web.schedule.ScheduleController
 import java.util.*
 
-interface RestWebDocumentService {
+/**
+ * WebDocumentService
+ *
+ * @author Maple
+ */
+interface WebDocumentService {
 
-    fun syncHttpApiDoc(clientId: String, projectId: String, user: String): Map<Resource, Map<Resource,List<RestWebDocument>>>
+    /**
+     * @return {[Key(package)] -> ([Key(class)] => Docs)}
+     */
+    fun syncHttpApiDoc(clientId: String, projectId: String, user: String): Map<Resource, Map<Resource, List<RestWebDocument>>>
+
+    fun contrastHttpApiDoc(clientId: String, projectId: String, user: String);
 }
 
+/**
+ * RestWebDocumentServiceImpl
+ *
+ * @author Maple
+ */
 @Service
-open class RestWebDocumentServiceImpl : RestWebDocumentService {
+open class RestWebDocumentServiceImpl : WebDocumentService {
 
     @Autowired
     lateinit var scheduleController: ScheduleController
+
+    @Autowired
+    lateinit var mongoTemplate: MongoTemplate
 
     @Autowired
     lateinit var mapper: ObjectMapper
@@ -38,13 +63,11 @@ open class RestWebDocumentServiceImpl : RestWebDocumentService {
                 } else listOf()
             }
 
-    private fun mappingHeader(rhps: Map<String, List<RestWebApiDescriptor.ParameterDescriptor>>) = rhps
-            .map { rhp ->
-                HeaderFieldDescriptor(field = rhp.key, value = listOf(), description = rhp.key)
-            }
+    private fun mappingHeader(rhps: Map<String, List<RestWebApiDescriptor.ParameterDescriptor>>) =
+            rhps.map { rhp -> HeaderFieldDescriptor(field = rhp.key, value = listOf(), description = rhp.key) }
 
-
-    override fun syncHttpApiDoc(clientId: String, projectId: String, user: String): Map<Resource, Map<Resource,List<RestWebDocument>>> {
+    @DistributeLock(name = "syncHttpApiDoc", message = "syncHttpApiDoc Must be single progress", type = DistributeLockType.MONGODB)
+    override fun syncHttpApiDoc(clientId: String, projectId: String, user: String): Map<Resource, Map<Resource, List<RestWebDocument>>> {
         // Invoke remote client api info
         val emptyApiTemplates = scheduleController.syncGetEmptyApiTemplates(clientId)
 
@@ -116,5 +139,31 @@ open class RestWebDocumentServiceImpl : RestWebDocumentService {
                 }.toMap()
 
         return ret
+    }
+
+
+    /**
+     * Contrast/Compared Api doc
+     */
+    override fun contrastHttpApiDoc(clientId: String,
+                                    @LockKey projectId: String,
+                                    user: String) {
+        val apiDocs = this.syncHttpApiDoc(clientId, projectId, user)
+        val rootSources = apiDocs.keys.toMutableSet()
+        rootSources.addAll(apiDocs.values.flatMap { it.keys })
+
+        // Query Mongo
+        val resourceQuery = Query.query(Criteria("projectId").`is`(projectId))
+        resourceQuery.fields().include("_id")
+        val resourceIds = mongoTemplate.find(resourceQuery, Id::class.java, RESOURCE_COLLECTION).map { it._id }.toSet()
+
+        //
+        val newResources = rootSources.filter { !resourceIds.contains(it.id) }
+        mongoTemplate.insertAll(newResources)
+
+
+        rootSources.forEach {
+        }
+
     }
 }

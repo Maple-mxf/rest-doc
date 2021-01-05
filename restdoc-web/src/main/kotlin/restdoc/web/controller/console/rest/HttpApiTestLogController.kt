@@ -62,7 +62,6 @@ class HttpApiTestLogController {
 
     /**
      *
-     * @see restdoc.web.model.Role.SYS_ADMIN
      */
     @Verify(role = ["SYS_ADMIN"])
     @DeleteMapping("/document/httpapitestlog/batch")

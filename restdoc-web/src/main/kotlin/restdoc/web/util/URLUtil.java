@@ -1,5 +1,9 @@
 package restdoc.web.util;
 
+import org.springframework.web.servlet.mvc.method.annotation.MatrixVariableMapMethodArgumentResolver;
+import org.springframework.web.util.DefaultUriBuilderFactory;
+import org.springframework.web.util.UriTemplateHandler;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.AbstractMap;
@@ -8,7 +12,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * @author Maple
+ * @see org.springframework.web.client.RestTemplate
+ */
 public class URLUtil {
+
+    public static final UriTemplateHandler URI_TEMPLATE_HANDLER = initUriTemplateHandler();
 
     /**
      * @see URL#getQuery()
@@ -28,5 +38,18 @@ public class URLUtil {
                         })
                         .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
+    }
+
+    private static DefaultUriBuilderFactory initUriTemplateHandler() {
+        DefaultUriBuilderFactory uriFactory = new DefaultUriBuilderFactory();
+        uriFactory.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.URI_COMPONENT);
+        return uriFactory;
+    }
+
+    /**
+     * @see org.springframework.web.bind.annotation.MatrixVariable
+     * @see MatrixVariableMapMethodArgumentResolver
+     */
+    public static void parseMatrixVar(String urlString) {
     }
 }

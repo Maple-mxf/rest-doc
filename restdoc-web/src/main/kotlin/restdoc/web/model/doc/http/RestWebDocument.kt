@@ -13,12 +13,12 @@ import java.util.*
 data class RestWebDocument(
 
         /**
-         *
+         * id
          */
         @Id var id: String?,
 
         /**
-         *
+         * projectId
          */
         var projectId: String?,
 
@@ -26,7 +26,6 @@ data class RestWebDocument(
          *
          */
         var name: String?,
-
 
         /**
          *
@@ -47,32 +46,32 @@ data class RestWebDocument(
         var description: String? = null,
 
         /**
-         *
+         * requestHeaderDescriptor
          */
-        var requestHeaderDescriptor: List<HeaderFieldDescriptor>? = null,
+        var requestHeaderDescriptor: List<HeaderFieldDescriptor> = listOf(),
 
         /**
-         *
+         * requestBodyDescriptor
          */
-        var requestBodyDescriptor: List<BodyFieldDescriptor>? = null,
+        var requestBodyDescriptor: List<BodyFieldDescriptor> = listOf(),
 
         /**
-         *
+         * responseBodyDescriptors
          */
         var responseBodyDescriptors: List<BodyFieldDescriptor>? = null,
 
         /**
-         *
+         * queryParamDescriptors
          */
         var queryParamDescriptors: List<QueryParamDescriptor>? = null,
 
         /**
-         *
+         * method
          */
         val method: HttpMethod = HttpMethod.GET,
 
         /**
-         *
+         * uriVarDescriptors
          */
         var uriVarDescriptors: List<URIVarDescriptor>?,
 
@@ -96,9 +95,14 @@ data class RestWebDocument(
          */
         var order: Int? = 0,
 
+        /**
+         * Wiki Content
+         * If document is api doc. content is not used
+         */
+        var content: String? = null,
 
         /**
-         * Doc的来源
+         * stem Doc的来源
          */
         var stem: Stem = Stem.CONSOLE,
 

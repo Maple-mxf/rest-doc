@@ -3,11 +3,9 @@ package restdoc.web.projector;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import restdoc.web.util.PathValue;
 
-import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.StringWriter;
+import java.io.OutputStream;
 import java.util.List;
 
 
@@ -36,21 +34,24 @@ public class JacksonXmlProjector extends BaseProjector<String> {
      */
     @Override
     public String project() {
-        XMLOutputFactory xmlOutputFactory = XMLOutputFactory.newFactory();
-        StringWriter out = new StringWriter();
+        OutputStream os = null;
         try {
-            XMLStreamWriter sw = xmlOutputFactory.createXMLStreamWriter(out);
-            sw.writeStartDocument();
-            mapper.writeValue(sw, new XmlLinkedHashMap(jsonProjector.projectToMap()));
-            sw.writeEndDocument();
+            os = new ByteArrayOutputStream();
+            mapper.writerWithDefaultPrettyPrinter()
+                    .writeValue(os, new XmlLinkedHashMap(jsonProjector.projectToMap()));
 
-            sw.close();
-            out.close();
-
-            return out.toString();
-        } catch (XMLStreamException | IOException e) {
+            return os.toString();
+        } catch (IOException e) {
             e.printStackTrace();
             return "";
+        } finally {
+            if (os != null) {
+                try {
+                    os.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 }

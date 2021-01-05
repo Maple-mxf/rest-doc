@@ -7,15 +7,15 @@ import restdoc.web.base.auth.Verify
 import restdoc.web.controller.console.model.SyncApiEmptyTemplateDto
 import restdoc.web.core.HolderKit
 import restdoc.web.core.ok
+import restdoc.web.model.SYS_ADMIN
 import restdoc.web.repository.ResourceRepository
 import restdoc.web.repository.RestWebDocumentRepository
 import restdoc.web.schedule.ClientRegistryCenter
 import restdoc.web.schedule.ScheduleController
-import restdoc.web.service.RestWebDocumentService
+import restdoc.web.service.WebDocumentService
 
 
 @RestController
-
 class ServiceClientController {
 
     @Autowired
@@ -34,7 +34,7 @@ class ServiceClientController {
     lateinit var restWebDocumentRepository: RestWebDocumentRepository
 
     @Autowired
-    lateinit var restWebDocumentService: RestWebDocumentService
+    lateinit var restWebDocumentService: WebDocumentService
 
     @Deprecated(message = "")
     @Verify
@@ -64,7 +64,7 @@ class ServiceClientController {
         return res
     }
 
-    @Verify(role = ["SYS_ADMIN"])
+    @Verify(role = [SYS_ADMIN])
     @PostMapping("/{projectId}/serviceClient/apiEmptyTemplate/sync")
     @Deprecated(message = "syncClientApiEmptyTemplate")
     fun syncClientApiEmptyTemplate(@RequestBody dto: SyncApiEmptyTemplateDto): Any {

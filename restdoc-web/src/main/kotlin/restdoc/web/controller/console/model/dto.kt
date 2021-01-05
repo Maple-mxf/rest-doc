@@ -12,9 +12,9 @@ import restdoc.web.model.doc.http.BodyFieldDescriptor
 import restdoc.web.model.doc.http.HeaderFieldDescriptor
 import restdoc.web.model.doc.http.QueryParamDescriptor
 import restdoc.web.model.doc.http.URIVarDescriptor
+import restdoc.web.projector.JsonDeProjector
 import restdoc.web.util.FieldType
 import restdoc.web.util.URLUtil
-import restdoc.web.projector.JsonDeProjector
 import java.net.URI
 
 data class CreateProjectDto(val name: String, val desc: String?, val type: ProjectType)

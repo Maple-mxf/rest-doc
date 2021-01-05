@@ -4,6 +4,7 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.util.UriTemplate
+import restdoc.web.base.auth.Verify
 import restdoc.web.controller.console.model.QueryParamKeyValueVO
 import restdoc.web.controller.console.model.SearchHeaderKeyVO
 import restdoc.web.controller.console.model.SearchHeaderValueVO
@@ -12,6 +13,7 @@ import restdoc.web.core.Result
 import restdoc.web.core.Status
 import restdoc.web.core.failure
 import restdoc.web.core.ok
+import restdoc.web.model.SYS_ADMIN
 import javax.annotation.PostConstruct
 
 /**
@@ -21,6 +23,7 @@ import javax.annotation.PostConstruct
  */
 @RequestMapping("/httpstandard/helper")
 @RestController
+@Verify(role = [SYS_ADMIN])
 class HttpStandardProtocolHelperController {
 
     private val headers: MutableList<String> = mutableListOf()

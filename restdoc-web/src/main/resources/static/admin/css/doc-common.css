@@ -1,7 +1,7 @@
 
 table{
     font-family: 'Roboto', sans-serif;
-    font-size: 15px;
+    font-size: 14px;
 }
 
 ul{
@@ -36,14 +36,17 @@ textarea{
     font-size: 15px;
     font-family: Roboto, serif;
 }
-.layui-table td, .layui-table th {
+.layui-table td  {
     color: #0C0C0C;
+    font-size: 14px;
+}
+.layui-table th{
+    color: white;
     font-size: 15px;
+    font-weight: bold;
+    text-align: left;
 }
 
-.layui-table th {
-    text-align: center;
-}
 
 #urlSpan:hover {
     cursor: pointer;
