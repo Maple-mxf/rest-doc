@@ -2,6 +2,8 @@ var queryTableIsEditState = false, uriTableIsEditState = false, requestHeaderTab
     requestBodyTableIsEditState = false, responseBodyTableIsEditState = false;
 
 function escapeHtml(unsafe) {
+    if (unsafe == null) return null;
+    console.info(unsafe);
     return unsafe
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")

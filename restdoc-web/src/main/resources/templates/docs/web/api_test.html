@@ -28,14 +28,14 @@
                 <fieldset class="layui-elem-field site-demo-button" style="margin-top: 10px;">
                     <div class="layui-form-item">
                         <div class="layui-input-inline">
-                            <select id="method" name="method" lay-verify="method">
-                                <option value="NON" disabled>请求方式</option>
+                            <select id="method" name="method" lay-filter="method">
                                 <option value="GET">GET</option>
                                 <option value="POST">POST</option>
                                 <option value="PUT">PUT</option>
                                 <option value="DELETE">DELETE</option>
                                 <option value="PATCH">PATCH</option>
                                 <option value="OPTION">OPTION</option>
+                                <option value="TRANCE">TRANCE</option>
                             </select>
                         </div>
                         <div class="layui-input-inline">
@@ -79,7 +79,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="layui-collapse group">
+                <div class="layui-collapse group" id="requestBodyDiv">
                     <div class="layui-colla-item">
                         <h2 class="layui-colla-title ">HTTP Request Body</h2>
                         <div class="layui-colla-content" id="body-fieldset">
@@ -198,19 +198,19 @@
 <script type="text/html" id="testLogTableToolbar">
     <div class="layui-btn-container">
         <button title="导入历史数据" class="layui-btn layui-btn-sm layui-btn-primary" lay-event="export">
-<!--            <i class="layui-icon layui-icon-export" style="font-size: 20px; color: black;"></i>-->
+            <!--            <i class="layui-icon layui-icon-export" style="font-size: 20px; color: black;"></i>-->
             <label>导入</label>
         </button>
         <button title="详情" class="layui-btn layui-btn-sm layui-btn-primary" lay-event="detail">
-<!--            <i class="layui-icon layui-icon-file" style="font-size: 20px; color: black;"></i>-->
+            <!--            <i class="layui-icon layui-icon-file" style="font-size: 20px; color: black;"></i>-->
             <label>详情</label>
         </button>
         <button title="刷新数据" class="layui-btn  layui-btn-primary layui-btn-sm" lay-event="refresh">
-<!--            <i class="layui-icon layui-icon-refresh" style="font-size: 20px; color: black;"></i>-->
+            <!--            <i class="layui-icon layui-icon-refresh" style="font-size: 20px; color: black;"></i>-->
             <label>刷新</label>
         </button>
         <button title="删除" class="layui-btn layui-btn-primary layui-btn-sm" lay-event="del" id="deleteTestLogBtn">
-<!--            <i class="layui-icon layui-icon-delete" style="font-size: 20px; color: black;"></i>-->
+            <!--            <i class="layui-icon layui-icon-delete" style="font-size: 20px; color: black;"></i>-->
             <label>删除</label>
         </button>
     </div>
@@ -256,6 +256,22 @@
 
         var treeData = null;
         var documentId = $("#documentId").val();
+
+        var document = [[${initDocument}]];
+        if (document !== null) {
+            initBaseInput(document);
+            $("#method").find("option[value=" + document['method'] + "]").attr("selected", true);
+            element.render('collapse');
+            form.render('select');
+        }
+
+        form.on('select(method)', function (data) {
+            if (data.value === 'GET') {
+                $('#requestBodyDiv').css('display', 'none');
+            } else {
+                $('#requestBodyDiv').css('display', 'block');
+            }
+        });
 
         $.ajax({
             type: 'GET',
@@ -820,10 +836,14 @@
             map['resource'] = value['resource'];
             map['method'] = value["method"];
             map['headers'] = header;
-            map['requestFields'] = requestFields;
+
+            if ('GET' !== map['method'])
+                map['requestFields'] = requestFields;
+
             map['responseFields'] = responseFields;
             map['uriFields'] = uriFields;
             map['responseHeaders'] = responseHeader;
+
 
             return map;
         }
@@ -942,11 +962,7 @@
             return array
         }
 
-        var document = [[${initDocument}]];
-        if (document !== null) {
-            initBaseInput(document);
-            element.render('collapse');
-        }
+
     });
 
     function deleteResponseBodyBtn(obj) {

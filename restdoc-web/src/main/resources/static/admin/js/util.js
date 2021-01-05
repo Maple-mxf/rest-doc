@@ -52,8 +52,8 @@ function formatJson(ugly) {
 }
 
 function initBaseInput(doc) {
-    // 设定method
-    $("#method").find("option[value=" + doc['method'] + "]").attr("selected", true);
+
+
 
     // 设定api地址
     $('#url').val(doc['url']);
