@@ -7,15 +7,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/layui/css/layui.css}"/>
-    <link rel="stylesheet" th:href="@{/admin/css/pearForm.css}"/>
-    <link rel="stylesheet" th:href="@{/admin/css/easyeditor.css}"/>
     <link rel="stylesheet" th:href="@{/admin/css/fangge-style.css}"/>
-    <link rel="stylesheet" th:href="@{/admin/css/pear-tree/dtree.css}"/>
     <link rel="stylesheet" th:href="@{/admin/css/doc-common.css}"/>
     <link rel="stylesheet" th:href="@{/admin/css/code.css}"/>
     <link rel="stylesheet" th:href="@{/admin/css/nav.css}"/>
     <link rel="stylesheet" th:href="@{/admin/css/pear-tree/dtree.css}"/>
     <link rel="stylesheet" th:href="@{/admin/css/pear-tree/font/dtreefont.css}"/>
+    <script src='https://unpkg.com/nprogress@0.2.0/nprogress.js'></script>
+    <link rel='stylesheet' href='https://unpkg.com/nprogress@0.2.0/nprogress.css'/>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/overlayscrollbars/1.13.1/css/OverlayScrollbars.min.css"
+          integrity="sha512-jN4O0AUkRmE6Jwc8la2I5iBmS+tCDcfUd1eq8nrZIBnDKTmCp5YxxNN1/aetnAH32qT+dDbk1aGhhoaw5cJNlw=="
+          crossorigin="anonymous"/>
+    <script th:src="@{/admin/js/jquery.js}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/overlayscrollbars/1.13.1/js/jquery.overlayScrollbars.min.js"
+            integrity="sha512-3Ofi0j25Ar6Hyqk2sdvfuoVCvvN6nE6Dh/eoMc8RQ/bnCvO8wpE+M5KyJz6T08T7pl/x82I/3Y5Amz9n3T9Esw=="
+            crossorigin="anonymous"></script>
+    <script type="application/ld+json">
+
+        {
+            "@context": "http://schema.org",
+            "@type": "SoftwareSourceCode",
+            "url": "https://kingsora.github.io/OverlayScrollbars",
+            "name": "Overlay Scrollbars",
+            "description": "A javascript scrollbar plugin which hides the native scrollbars and provides custom styleable overlay scrollbars, but keeps the native functionality and feeling.",
+            "disambiguatingDescription": "javascript overlay scrollbars plugin",
+            "license": "https://en.wikipedia.org/wiki/MIT_License",
+            "keywords": "js,javascript,OverlayScrollbars,overlay,scrollbars,custom,scrollbar,plugin,jquery,scrollbars,polyfill",
+            "isAccessibleForFree": true,
+            "image": "https://kingsora.github.io/OverlayScrollbars/img/logo.png",
+            "codeRepository": "https://github.com/KingSora/OverlayScrollbars",
+            "programmingLanguage": {
+                "@type": "ComputerLanguage",
+                "name": "javascript",
+                "alternateName": "js"
+            }
+        }
+
+    </script>
+
     <style>
         body {
             font-family: 'Roboto', sans-serif;
@@ -79,7 +109,10 @@
         <div class="layui-col-md9">
             <iframe id="apiDocFrame" src="" style="width: 100%;" scrolling="no" frameborder="no" border="0"
                     marginwidth="0"
-                    marginheight="0">
+                    marginheight="0"
+
+                    onload="window.osiFrame = OverlayScrollbars(document.getElementById('apiDocFrame').contentWindow.document.body, { autoUpdate : false, resize: 'both' })"
+            >
 
             </iframe>
         </div>
@@ -120,10 +153,10 @@
 </form>
 
 <script th:src="@{/layui/layui.js}"></script>
-<script th:src="@{/admin/js/jquery.js}"></script>
 <script th:src="@{/admin/js/api_navigation.js}"></script>
 
 <script th:inline="javascript">
+    $('#tableContentDiv').overlayScrollbars({ /* your options */ });
     var projectId = $("#projectId").val();
     var lay = null;
 
@@ -142,6 +175,7 @@
 
             var dtreeData = null;
 
+            NProgress.start();
             function setDTreeData(async) {
                 if (async == null) async = false;
                 $.ajax({
@@ -160,7 +194,6 @@
                     }
                 });
             }
-
             setDTreeData();
 
             var dtreeOptions = {
@@ -312,9 +345,9 @@
             }
 
             var DemoTree = dtree.render(dtreeOptions);
-
+            NProgress.done();
             function editNode(node, $div) {
-                console.info(node);
+
                 commonToolHandler(node, node.parentId, function () {
                     $("#name").val(node.context);
                     layer.open({
@@ -355,7 +388,6 @@
                     });
                 })
             }
-
             function deleteNode(node) {
                 layer.confirm('删除后不可恢复! 确认删除' + node.context + '?', {icon: 3, title: '提示'},
                     function (index) {
@@ -403,13 +435,9 @@
                         layer.close(index);
                     });
             }
-
             function resetCreateDiv() {
-                // reloadNavTree();
                 $("#name").val("");
             }
-
-
             function reloadNavTree() {
                 setDTreeData();
                 dtree.reload(DemoTree, {

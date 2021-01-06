@@ -41,7 +41,7 @@ textarea{
     font-size: 14px;
 }
 .layui-table th{
-    /*color: white;*/
+    color: black;
     font-size: 15px;
     font-weight: bold;
     text-align: left;

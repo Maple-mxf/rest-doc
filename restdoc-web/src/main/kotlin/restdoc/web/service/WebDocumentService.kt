@@ -8,6 +8,8 @@ import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Propagation
+import org.springframework.transaction.annotation.Transactional
 import restdoc.rpc.client.common.model.http.RestWebApiDescriptor
 import restdoc.web.distributelock.DistributeLock
 import restdoc.web.distributelock.DistributeLockType
@@ -31,7 +33,7 @@ interface WebDocumentService {
      */
     fun syncHttpApiDoc(clientId: String, projectId: String, user: String): Map<Resource, Map<Resource, List<RestWebDocument>>>
 
-    fun contrastHttpApiDoc(clientId: String, projectId: String, user: String);
+    fun contrastHttpApiDoc(clientId: String, projectId: String, user: String)
 }
 
 /**
@@ -66,6 +68,7 @@ open class RestWebDocumentServiceImpl : WebDocumentService {
     private fun mappingHeader(rhps: Map<String, List<RestWebApiDescriptor.ParameterDescriptor>>) =
             rhps.map { rhp -> HeaderFieldDescriptor(field = rhp.key, value = listOf(), description = rhp.key) }
 
+    @Transactional(propagation = Propagation.MANDATORY)
     @DistributeLock(name = "syncHttpApiDoc", message = "syncHttpApiDoc Must be single progress", type = DistributeLockType.MONGODB)
     override fun syncHttpApiDoc(clientId: String, projectId: String, user: String): Map<Resource, Map<Resource, List<RestWebDocument>>> {
         // Invoke remote client api info
