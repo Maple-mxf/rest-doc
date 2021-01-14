@@ -78,7 +78,7 @@ public interface AgentClientConfiguration {
 
     /**
      * @return Agent instance
-     * @see this#getAgent(ServerProperties)
+     * @see AgentClientConfiguration#getAgent(ServerProperties)
      */
     Agent getAgent();
 

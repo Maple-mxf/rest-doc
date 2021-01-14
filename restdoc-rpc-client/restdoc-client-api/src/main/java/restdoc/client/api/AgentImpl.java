@@ -106,7 +106,7 @@ public class AgentImpl implements Agent {
                 throw new DiffVersionException();
             }
         }
-        return false;
+        return true;
     }
 
     @Override

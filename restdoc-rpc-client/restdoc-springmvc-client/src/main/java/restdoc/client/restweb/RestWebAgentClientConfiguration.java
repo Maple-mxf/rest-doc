@@ -1,6 +1,7 @@
 package restdoc.client.restweb;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -21,7 +22,8 @@ import restdoc.remoting.netty.NettyRequestProcessor;
 @Configuration
 @Import(value = {EnvConfiguration.class})
 @AutoConfigureBefore(value = {EnvConfiguration.class})
-public class RestWebAgentClientConfiguration implements AgentClientConfiguration, PriorityOrdered {
+public class RestWebAgentClientConfiguration implements AgentClientConfiguration,
+        PriorityOrdered, CommandLineRunner {
 
     private final AgentImpl agentImpl;
 
@@ -40,6 +42,11 @@ public class RestWebAgentClientConfiguration implements AgentClientConfiguration
         this.reportClientInfoHandler = reportClientInfoHandler;
         this.exportApiHandler = exportApiHandler;
         this.invokerApiHandler = invokerApiHandler;
+    }
+
+    @Override
+    public void run(String... args) throws Exception {
+        start();
     }
 
     @Override

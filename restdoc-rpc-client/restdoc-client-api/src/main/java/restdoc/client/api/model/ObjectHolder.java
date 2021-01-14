@@ -4,7 +4,7 @@ package restdoc.client.api.model;
 /**
  * ObjectHolder
  *
- * @param <T>
+ * @param <T> object type
  * @author Maple
  */
 public class ObjectHolder<T> {

@@ -30,8 +30,10 @@
 .dtree-laySimple-item cite{font-size:12px!important;}
 .dtree-laySimple-item:hover cite{color:#01AAED!important;}
 .dtree-laySimple-dtreefont{font-size: 14px!important;}
-.dtree-laySimple-ficon{font-size: 14px!important;color:#393D49!important;}
-.dtree-laySimple-icon{color:#393D49!important;}
+/*.dtree-laySimple-ficon{font-size: 14px!important;color:#393D49!important;}*/
+.dtree-laySimple-ficon{font-size: 14px!important;color:#FF5722!important;}
+/*.dtree-laySimple-icon{color:#393D49!important;}*/
+.dtree-laySimple-icon{color:#FF5722!important;}
 .dtree-laySimple-checkbox:hover{color:#01AAED!important;}
 .dtree-laySimple-choose{color:#01AAED!important;}
 

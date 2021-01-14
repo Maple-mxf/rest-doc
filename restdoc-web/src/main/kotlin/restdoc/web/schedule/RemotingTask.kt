@@ -3,6 +3,10 @@ package restdoc.web.schedule
 import restdoc.remoting.InvokeCallback
 import restdoc.remoting.protocol.RemotingCommand
 
+/**
+ * RemotingTaskType
+ */
+@Deprecated(message = "RemotingTaskType")
 enum class RemotingTaskType {
     /**
      */
@@ -11,6 +15,7 @@ enum class RemotingTaskType {
     ASYNC
 }
 
+@Deprecated(message = "RemotingTask")
 data class RemotingTask(
         val type: RemotingTaskType,
         val request: RemotingCommand,

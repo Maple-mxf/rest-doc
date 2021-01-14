@@ -57,7 +57,7 @@
 		    <input type="checkbox" name="enable" value="{{d.id}}" lay-skin="switch" lay-text="启用|禁用" lay-filter="user-enable" checked = "{{ d.enable == 0 ? 'true' : 'false' }}">
 		</script>
 		
-		<script type="text/html" id="task-process">
+		<script type="text/html" id="taskWrapper-process">
 			{{#if (d.priority == 0) { }}
 			<div class="layui-progress-bar layui-bg-red" style="width: {{d.process}};margin-top: 15px;"></div>
 			{{# }else if(d.priority == 1){ }}
@@ -67,7 +67,7 @@
 			{{# } }}
 		</script>
 		
-		<script type="text/html" id="task-priority">
+		<script type="text/html" id="taskWrapper-priority">
 		    {{#if (d.priority == 0) { }}
 		    <button class="pear-btn pear-btn-danger pear-btn-sm" plain>紧急</button>
 		    {{# }else if(d.priority == 1){ }}
@@ -77,7 +77,7 @@
 		    {{# } }}
 		</script>
 		
-		<script type="text/html" id="task-createTime">
+		<script type="text/html" id="taskWrapper-createTime">
 		    {{layui.util.toDateString(d.createTime, 'yyyy-MM-dd')}}
 		</script>
 		
@@ -96,17 +96,17 @@
 		                {type:'checkbox'},
 		                {title: '任务名称', field: 'taskName', align:'center', width:100},
 		                {title: '任务描述', field: 'taskInfo', align:'center'},
-		                {title: '进度', field: 'process', align:'center', width:350, templet:'#task-process'},
-		                {title: '优先级', field: 'priority', align:'center', width:150,templet:"#task-priority"},
+		                {title: '进度', field: 'process', align:'center', width:350, templet:'#taskWrapper-process'},
+		                {title: '优先级', field: 'priority', align:'center', width:150,templet:"#taskWrapper-priority"},
 					    {title: '执行人', field: 'realName', align:'center',width:150},
-						{title: '发布时间', field: 'createTime', align:'center',width:200, templet:"#task-createTime"},
+						{title: '发布时间', field: 'createTime', align:'center',width:200, templet:"#taskWrapper-createTime"},
 		            
 		            ]
 		        ]
 		
 		        table.render({
 		            elem: '#user-table',
-		            url: '../../admin/data/task.json',
+		            url: '../../admin/data/taskWrapper.json',
 		            page: true ,
 		            cols: cols ,
 		            skin: 'line',

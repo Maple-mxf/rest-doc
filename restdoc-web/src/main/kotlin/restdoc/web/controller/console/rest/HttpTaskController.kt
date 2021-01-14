@@ -15,7 +15,7 @@ import restdoc.web.controller.console.model.RequestDto
 import restdoc.web.controller.console.model.RestWebInvocationResultVO
 import restdoc.web.core.Status
 import restdoc.web.core.ok
-import restdoc.web.schedule.ScheduleController
+import restdoc.web.schedule.ScheduleServiceImpl
 import restdoc.web.model.HttpApiTestLog
 import restdoc.web.model.HttpTaskExecutor
 import restdoc.web.model.TestMode
@@ -35,7 +35,7 @@ class HttpTaskController {
     private lateinit var httpTaskExecutor: HttpTaskExecutor
 
     @Autowired
-    private lateinit var scheduleController: ScheduleController
+    private lateinit var scheduleServiceImpl: ScheduleServiceImpl
 
     @Autowired
     private lateinit var mongoTemplate: MongoTemplate
@@ -105,7 +105,7 @@ class HttpTaskController {
         }
 
         try {
-            val executeResult = scheduleController
+            val executeResult = scheduleServiceImpl
                     .syncSubmitRemoteHttpTask(dto.remoteAddress!!.replaceFirst("tcp://", ""), taskId, invocation)
 
             return executeResult

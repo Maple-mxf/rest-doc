@@ -5,6 +5,7 @@ import restdoc.rpc.client.common.model.BaseExposedApiBody;
 
 import java.util.List;
 
+@Deprecated
 public class HttpExposedApiBody extends BaseExposedApiBody {
 
     private List<RestWebApiDescriptor> apiList;

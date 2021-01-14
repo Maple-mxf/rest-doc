@@ -31,7 +31,7 @@ class DubboDocumentController {
     lateinit var clientRegistryCenter: ClientRegistryCenter
 
     @Autowired
-    lateinit var scheduleController: ScheduleController
+    lateinit var scheduleServiceImpl: ScheduleServiceImpl
 
     @PatchMapping("/dubboDocument/{id}")
     fun patch(@PathVariable id: String,
@@ -98,7 +98,7 @@ class DubboDocumentController {
 
         val start = System.currentTimeMillis()
         // DubboInvocationResult
-        val response = scheduleController.executeRemotingTask(applicationClientInfo!!.clientId, remotingTask)
+        val response = scheduleServiceImpl.executeRemotingTask(applicationClientInfo!!.clientId, remotingTask)
         val end = System.currentTimeMillis()
 
         return if (response.success && response.response != null) {

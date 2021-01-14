@@ -11,7 +11,7 @@ import restdoc.web.model.SYS_ADMIN
 import restdoc.web.repository.ResourceRepository
 import restdoc.web.repository.RestWebDocumentRepository
 import restdoc.web.schedule.ClientRegistryCenter
-import restdoc.web.schedule.ScheduleController
+import restdoc.web.schedule.ScheduleServiceImpl
 import restdoc.web.service.WebDocumentService
 
 
@@ -22,7 +22,7 @@ class ServiceClientController {
     lateinit var clientRegistryCenter: ClientRegistryCenter
 
     @Autowired
-    lateinit var scheduleController: ScheduleController
+    lateinit var scheduleServiceImpl: ScheduleServiceImpl
 
     @Autowired
     lateinit var holderKit: HolderKit

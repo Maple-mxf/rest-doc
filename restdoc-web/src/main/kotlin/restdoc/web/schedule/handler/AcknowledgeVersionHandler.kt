@@ -7,12 +7,6 @@ import restdoc.remoting.protocol.RemotingCommand
 import restdoc.remoting.protocol.RemotingSysResponseCode
 import restdoc.web.getCurrentVersion
 
-/**
- * @see restdoc.web.RestDocVersionKt.getCurrentVersion
- * @see restdoc.web.schedule.ScheduleController
- *
- * @author Maple
- */
 class AcknowledgeVersionHandler : NettyRequestProcessor {
     override fun rejectRequest() = false
 

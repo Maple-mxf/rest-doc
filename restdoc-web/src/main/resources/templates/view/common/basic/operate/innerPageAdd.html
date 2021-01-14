@@ -34,7 +34,7 @@
         </div>
         <div class="bottom">
             <div class="button-container">
-                <button type="submit" class="layui-btn layui-btn-normal layui-btn-sm" lay-submit="" lay-filter="task-save">
+                <button type="submit" class="layui-btn layui-btn-normal layui-btn-sm" lay-submit="" lay-filter="taskWrapper-save">
                     <i class="layui-icon layui-icon-ok"></i>
                     提交
                 </button>
@@ -51,7 +51,7 @@
             let form = layui.form;
             let $ = layui.jquery;
 
-            form.on('submit(task-save)', function (data) {
+            form.on('submit(taskWrapper-save)', function (data) {
                 // 以下仅做示例，实现方式及实现位置可多种
                 // 遮罩层
                 // $.ajax({
@@ -68,7 +68,7 @@
                 //             }, function () {
                 //                 //方式一：直接弹窗内完成操作
                 //                 // parent.layer.close(parent.layer.getFrameIndex(window.name)); //关闭当前页
-                //                 // parent.layui.table.reload("task-table");//原页面重新加载
+                //                 // parent.layui.table.reload("taskWrapper-table");//原页面重新加载
 
                 //                 //方式二：调用原页面中的方法
                 //                 parent.innerPageAddCallBack(parent.layer.getFrameIndex(window.name));
@@ -86,7 +86,7 @@
                 }, function () {
                     //方式一：直接弹窗内完成操作
                     //parent.layer.close(parent.layer.getFrameIndex(window.name)); //关闭当前页
-                    //parent.layui.table.reload("task-table");//原页面重新加载
+                    //parent.layui.table.reload("taskWrapper-table");//原页面重新加载
 
                     //方式二：调用原页面中的方法(与方式一效果一样，但职责更明确)
                     parent.innerPageAddCallBack(parent.layer.getFrameIndex(window.name));

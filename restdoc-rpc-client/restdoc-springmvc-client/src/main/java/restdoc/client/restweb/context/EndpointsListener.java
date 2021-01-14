@@ -19,7 +19,6 @@ import org.springframework.web.servlet.mvc.condition.ParamsRequestCondition;
 import org.springframework.web.servlet.mvc.condition.ProducesRequestCondition;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
-import restdoc.client.api.AgentConfigurationProperties;
 import restdoc.rpc.client.common.model.http.HeaderExpression;
 import restdoc.rpc.client.common.model.http.ParamExpression;
 import restdoc.rpc.client.common.model.http.RestWebApiDescriptor;
@@ -37,7 +36,7 @@ import java.util.stream.Collectors;
  * <p>
  * Springboot应用启动需要做的任务有
  * 1 如果console端已经同步过了当前应用的API信息之后，则对已经存在的API文档进行记录建议开发者进行补充文档
- * 2 如果{@link AgentConfigurationProperties} 的service属性为空，则将当前应用的service补充维应用的ContextPath(去掉第一个"/")
+ * 2 如果{@link restdoc.client.api.ServerProperties} 的service属性为空，则将当前应用的service补充维应用的ContextPath(去掉第一个"/")
  * 3 当透析一个API时，为每个API文档生成一份模板数据(测试用例) 仅为模板数据，并不准确
  * 4 导入的API的唯一ID为(controller+function).hashcode().toString()
  * 5 开发者可以将console端已有的API文档和应用内部已有的API可以做关联(关联关系可以理解为所属)

@@ -38,12 +38,12 @@ import java.nio.charset.StandardCharsets
 /**
  * ScheduleServer provided the tcp server dashboard
  */
-@Component
-class ScheduleController @Autowired constructor(scheduleProperties: ScheduleProperties,
-                                                private val clientRegistryCenter: ClientRegistryCenter
+@Component("scheduleServiceImpl")
+class ScheduleServiceImpl @Autowired constructor(scheduleProperties: ScheduleProperties,
+                                                 private val clientRegistryCenter: ClientRegistryCenter
 ) : CommandLineRunner {
 
-    private val log: Logger = LoggerFactory.getLogger(ScheduleController::class.java)
+    private val log: Logger = LoggerFactory.getLogger(ScheduleServiceImpl::class.java)
 
     private val httpTaskExecuteTimeout = (32 shl 9).toLong()
 
@@ -84,9 +84,11 @@ class ScheduleController @Autowired constructor(scheduleProperties: ScheduleProp
         val getClientInfoRequest =
                 RemotingCommand.createRequestCommand(RequestCode.GET_CLIENT_INFO, null)
 
-        val getClientAPIListRequest = RemotingCommand.createRequestCommand(RequestCode.GET_EXPOSED_API, null)
+        val getClientAPIListRequest =
+                RemotingCommand.createRequestCommand(RequestCode.GET_EXPOSED_API, null)
 
-        val getClientInfoResponse = this.remotingServer.invokeSync(channel, getClientInfoRequest, 10000L)
+        val getClientInfoResponse =
+                this.remotingServer.invokeSync(channel, getClientInfoRequest, 10000L)
 
         if (getClientInfoResponse.code == RemotingSysResponseCode.SUCCESS) {
             val address = channel.remoteAddress() as InetSocketAddress
@@ -111,7 +113,8 @@ class ScheduleController @Autowired constructor(scheduleProperties: ScheduleProp
             clientRegistryCenter.registryClient(remote, clientChannelInfo)
         }
 
-        val getClientAPIResponse = this.remotingServer.invokeSync(channel, getClientAPIListRequest, 10000L)
+        val getClientAPIResponse =
+                this.remotingServer.invokeSync(channel, getClientAPIListRequest, 10000L)
 
         if (getClientAPIResponse.code == RemotingSysResponseCode.SUCCESS) {
             val on = RemotingSerializable.decode(getClientAPIResponse.body, ObjectNode::class.java)

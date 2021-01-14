@@ -6,7 +6,7 @@ import org.apache.dubbo.config.context.ConfigManager;
 import org.apache.dubbo.config.spring.ServiceBean;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.stereotype.Component;
-import restdoc.client.api.AgentConfigurationProperties;
+import restdoc.client.dubbo.AgentConfigurationProperties;
 import restdoc.client.dubbo.DubboRefBeanManager;
 import restdoc.client.dubbo.model.ServiceDescriptor;
 import restdoc.remoting.netty.NettyRequestProcessor;

@@ -9,11 +9,11 @@
 <body class="pear-container">
 	<div class="layui-card">
 		<div class="layui-card-body">
-			<table id="task-table" lay-filter="task-table"></table>
+			<table id="taskWrapper-table" lay-filter="taskWrapper-table"></table>
 		</div>
 	</div>
 
-	<script type="text/html" id="task-toolbar">
+	<script type="text/html" id="taskWrapper-toolbar">
 		<button class="pear-btn pear-btn-primary pear-btn-md" lay-event="innerPageAdd">
 			<i class="layui-icon layui-icon-add-1"></i>
 			本页面新增
@@ -55,15 +55,15 @@
 			]
 
 			table.render({
-				elem: '#task-table',
+				elem: '#taskWrapper-table',
 				url: '../../../admin/data/layer.json',
 				page: true,
 				cols: cols,
 				skin: 'line',
-				toolbar: '#task-toolbar',
+				toolbar: '#taskWrapper-toolbar',
 			});
 
-			table.on('toolbar(task-table)', function (obj) {
+			table.on('toolbar(taskWrapper-table)', function (obj) {
 				if (obj.event === 'innerPageAdd') {
 					window.innerPageAdd();
 				} else if (obj.event === 'outerPageAdd') {
@@ -84,7 +84,7 @@
 			window.innerPageAddCallBack = function(index){
 				console.log("innerPageAddCallBack:do anything...");
                 layer.close(index); //关闭弹窗
-                table.reload("task-table");//table重新加载
+                table.reload("taskWrapper-table");//table重新加载
 			}
 
 			window.outerPageAdd = function () {
@@ -100,7 +100,7 @@
 			window.outerPageAddCallBack = function(index){
 				console.log("outerPageAddCallBack:do anything...");
                 parent.layer.close(index); //关闭弹窗
-                table.reload("task-table");//table重新加载
+                table.reload("taskWrapper-table");//table重新加载
 			}
 		})
 	</script>

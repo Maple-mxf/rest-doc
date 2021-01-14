@@ -13,8 +13,8 @@
     <link rel="stylesheet" th:href="@{/admin/css/nav.css}"/>
     <link rel="stylesheet" th:href="@{/admin/css/pear-tree/dtree.css}"/>
     <link rel="stylesheet" th:href="@{/admin/css/pear-tree/font/dtreefont.css}"/>
-    <script src='https://unpkg.com/nprogress@0.2.0/nprogress.js'></script>
-    <link rel='stylesheet' href='https://unpkg.com/nprogress@0.2.0/nprogress.css'/>
+
+    <link href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.css" rel="stylesheet"/>
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/overlayscrollbars/1.13.1/css/OverlayScrollbars.min.css"
           integrity="sha512-jN4O0AUkRmE6Jwc8la2I5iBmS+tCDcfUd1eq8nrZIBnDKTmCp5YxxNN1/aetnAH32qT+dDbk1aGhhoaw5cJNlw=="
@@ -23,6 +23,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/overlayscrollbars/1.13.1/js/jquery.overlayScrollbars.min.js"
             integrity="sha512-3Ofi0j25Ar6Hyqk2sdvfuoVCvvN6nE6Dh/eoMc8RQ/bnCvO8wpE+M5KyJz6T08T7pl/x82I/3Y5Amz9n3T9Esw=="
             crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.js"></script>
     <script type="application/ld+json">
 
         {
@@ -43,9 +44,7 @@
                 "alternateName": "js"
             }
         }
-
     </script>
-
     <style>
         body {
             font-family: 'Roboto', sans-serif;
@@ -102,7 +101,8 @@
                 </div>
                 <div class="layui-col-md1"></div>
             </div>
-            <div class="layui-row layui-bg-gray" style="margin-top: 20px; height: 350px;overflow: auto; "   id="tableContentDiv">
+            <div class="layui-row layui-bg-gray" style="margin-top: 20px; height: 350px;overflow: auto; "
+                 id="tableContentDiv">
                 <ul id="dtreeTableContent" class="dtree" data-id="0"></ul>
             </div>
         </div>
@@ -156,7 +156,7 @@
 <script th:src="@{/admin/js/api_navigation.js}"></script>
 
 <script th:inline="javascript">
-    $('#tableContentDiv').overlayScrollbars({ /* your options */ });
+    $('#tableContentDiv').overlayScrollbars({ /* your options */});
     var projectId = $("#projectId").val();
     var lay = null;
 
@@ -175,7 +175,6 @@
 
             var dtreeData = null;
 
-            NProgress.start();
             function setDTreeData(async) {
                 if (async == null) async = false;
                 $.ajax({
@@ -194,6 +193,7 @@
                     }
                 });
             }
+
             setDTreeData();
 
             var dtreeOptions = {
@@ -249,6 +249,7 @@
                                     scrollbar: false,
                                     content: $('#create'),
                                     area: ['800px', '400px'],
+                                    shade:0,
                                     title: '新建目录',
                                     btn: ['确定', '取消'],
                                     yes: function (ix, layero) {
@@ -345,7 +346,7 @@
             }
 
             var DemoTree = dtree.render(dtreeOptions);
-            NProgress.done();
+
             function editNode(node, $div) {
 
                 commonToolHandler(node, node.parentId, function () {
@@ -355,6 +356,7 @@
                         scrollbar: false,
                         content: $('#create'),
                         area: ['800px', '400px'],
+                        shade:0,
                         title: '编辑',
                         btn: ['确定', '取消'],
                         yes: function (ix, layero) {
@@ -388,6 +390,7 @@
                     });
                 })
             }
+
             function deleteNode(node) {
                 layer.confirm('删除后不可恢复! 确认删除' + node.context + '?', {icon: 3, title: '提示'},
                     function (index) {
@@ -435,9 +438,11 @@
                         layer.close(index);
                     });
             }
+
             function resetCreateDiv() {
                 $("#name").val("");
             }
+
             function reloadNavTree() {
                 setDTreeData();
                 dtree.reload(DemoTree, {
@@ -452,6 +457,7 @@
                     layer.open({
                         type: 1,
                         scrollbar: false,
+                        shade:0,
                         content: $('#create'),
                         area: ['800px', '400px'],
                         title: '拷贝文档',
@@ -494,6 +500,7 @@
                     scrollbar: false,
                     content: $('#create'),
                     area: ['800px', '400px'],
+                    shade:0,
                     title: windowTitle,
                     btn: ['确定', '取消'],
                     yes: function (ix, layero) {

@@ -41,12 +41,14 @@
         }
 
     </script>
+    <link href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.js"></script>
 
 </head>
-<body class="layui-layout-body">
+<body class="layui-layout-body"  >
 <div class="layui-layout layui-layout-admin">
     <div class="layui-header">
-        <ul class="layui-nav layui-bg-green" id="navigation" lay-filter="test">
+        <ul class="layui-nav layui-bg-cycan" id="navigation" lay-filter="test">
             <li class="layui-nav-item">
                 <a href="/restdoc/project/view"> <i class="layui-icon layui-icon-return"
                                                     style="font-size: 17px;  color: white;"></i>&nbsp;</a>
@@ -71,7 +73,7 @@
         </div>
     </div>
     <div class="layui-footer" style="left: 0">
-        © RESTdoc - 提供开源技术支持
+        © RESTdoc - 效率至上
     </div>
 </div>
 
@@ -83,11 +85,20 @@
 <script th:src="@{/admin/js/util.js}"></script>
 <script th:src="@{/admin/js/api_navigation.js}"></script>
 <script>
+    NProgress.configure({ easing: 'ease', speed: 500 });
+
+    $("body").show();
+    NProgress.start();
+    setTimeout(function () {
+        NProgress.done();
+        $(".fade").removeClass("out");
+    }, 1000);
+
+</script>
+<script>
+
 
     $('#apiDocDiv').overlayScrollbars({ /* your options */ });
-
-
-
     layui.config({
         base: '/restdoc/layui/lay/extends/'
     }).use([

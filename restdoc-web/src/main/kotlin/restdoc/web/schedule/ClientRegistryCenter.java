@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
  * @since 2020/10/30
  */
 @Component
+@Deprecated
 public class ClientRegistryCenter implements CommandLineRunner {
 
     /**

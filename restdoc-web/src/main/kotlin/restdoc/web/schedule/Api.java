@@ -6,6 +6,7 @@ import restdoc.rpc.client.common.model.ApiDescriptor;
 import java.util.List;
 import java.util.Objects;
 
+@Deprecated
 public class Api {
 
     private String service;

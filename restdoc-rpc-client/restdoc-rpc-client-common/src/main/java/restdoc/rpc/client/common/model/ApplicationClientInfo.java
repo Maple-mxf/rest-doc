@@ -11,8 +11,10 @@ import java.util.Objects;
  * ApplicationClientInfo
  */
 public class ApplicationClientInfo {
+    @Deprecated
     private final String id;
     private final Channel channel;
+    @Deprecated
     private final String clientId;
     private final LanguageCode language;
     private final int version;
