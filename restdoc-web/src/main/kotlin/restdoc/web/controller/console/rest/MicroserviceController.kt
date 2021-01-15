@@ -13,8 +13,8 @@ import restdoc.web.core.ok
 import restdoc.web.model.ProjectType
 import restdoc.web.model.SYS_ADMIN
 import restdoc.web.repository.ProjectRepository
-import restdoc.web.schedule.ClientRegistryCenter
 import restdoc.web.service.DubboDocumentService
+import java.util.*
 
 @RestController
 @Verify(role = [SYS_ADMIN])
@@ -22,9 +22,6 @@ class MicroserviceController {
 
     @Autowired
     lateinit var projectRepository: ProjectRepository
-
-    @Autowired
-    lateinit var clientRegistryCenter: ClientRegistryCenter
 
     @Autowired
     lateinit var dubboDocumentService: DubboDocumentService
@@ -39,7 +36,9 @@ class MicroserviceController {
                         }
         when (project.type) {
             ProjectType.DUBBO -> {
-                val apiList = this.clientRegistryCenter.getExposedAPIFilterService(service)
+                // TODO  API check
+//                val apiList = this.clientRegistryCenter.getExposedAPIFilterService(service)
+                val apiList = ArrayList<DubboApiDescriptor>()
                 if (apiList != null) {
                     // Convert Dubbo Exposed API to document
                     dubboDocumentService.sync(projectId = projectId, apiList = apiList as Collection<DubboApiDescriptor>)

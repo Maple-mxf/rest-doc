@@ -7,8 +7,8 @@ import org.springframework.data.domain.Sort
 import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.web.bind.annotation.*
-import restdoc.client.api.model.RestWebInvocation
-import restdoc.client.api.model.RestWebInvocationResult
+import restdoc.client.api.model.HttpInvocation
+import restdoc.client.api.model.HttpInvocationResult
 import restdoc.web.base.auth.Verify
 import restdoc.web.controller.console.model.BatchDeleteDto
 import restdoc.web.controller.console.model.HttpApiTestLogDeProjectVO
@@ -82,14 +82,14 @@ class HttpApiTestLogController {
     fun log2TestResult(@PathVariable id: String): Result {
         val log = httpApiTestLogRepository.findById(id).orElseThrow { Status.BAD_REQUEST.instanceError() }
 
-        val invocationResult = RestWebInvocationResult()
+        val invocationResult = HttpInvocationResult()
         invocationResult.apply {
             successful = log.success
             status = log.responseStatus
             responseHeaders = if (log.responseHeader != null) log.responseHeader!!.map { it.key to it.value.toMutableList() }.toMap().toMutableMap() else mutableMapOf()
             responseBody = log.responseBody
 
-            val restWebInvocation = RestWebInvocation()
+            val restWebInvocation = HttpInvocation()
             restWebInvocation.apply {
                 this.method = log.method!!.name
                 this.url = log.url!!

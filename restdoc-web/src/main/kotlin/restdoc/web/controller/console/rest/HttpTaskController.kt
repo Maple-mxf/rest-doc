@@ -8,21 +8,20 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.HttpServerErrorException
+import restdoc.client.api.model.HttpInvocation
+import restdoc.client.api.model.HttpInvocationResult
 import restdoc.client.api.model.InvocationResult
-import restdoc.client.api.model.RestWebInvocation
-import restdoc.client.api.model.RestWebInvocationResult
 import restdoc.web.controller.console.model.RequestDto
 import restdoc.web.controller.console.model.RestWebInvocationResultVO
 import restdoc.web.core.Status
 import restdoc.web.core.ok
-import restdoc.web.schedule.ScheduleServiceImpl
 import restdoc.web.model.HttpApiTestLog
 import restdoc.web.model.HttpTaskExecutor
 import restdoc.web.model.TestMode
+import restdoc.web.projector.JsonProjector
 import restdoc.web.util.IDUtil
 import restdoc.web.util.PathValue
 import restdoc.web.util.URLUtil
-import restdoc.web.projector.JsonProjector
 import java.net.URL
 import java.util.*
 import javax.validation.Valid
@@ -35,9 +34,6 @@ class HttpTaskController {
     private lateinit var httpTaskExecutor: HttpTaskExecutor
 
     @Autowired
-    private lateinit var scheduleServiceImpl: ScheduleServiceImpl
-
-    @Autowired
     private lateinit var mongoTemplate: MongoTemplate
 
     @PostMapping("/submit")
@@ -48,7 +44,7 @@ class HttpTaskController {
         log.url = dto.url
 
         val res = if (dto.remoteAddress != null) {
-            val result = rpcExecuteTask(dto)
+            val result = remoteInvoke(dto)
             log.testMode = TestMode.RPC
             log.remote = dto.remoteAddress
             result
@@ -86,8 +82,8 @@ class HttpTaskController {
         return ok(vo)
     }
 
-    private fun rpcExecuteTask(dto: RequestDto): RestWebInvocationResult {
-        val taskId = IDUtil.id()
+    // TODO  API check
+    private fun remoteInvoke(dto: RequestDto): HttpInvocationResult {
 
         val requestHeaderDescriptor = dto.mapToHeaderDescriptor()
         val requestBodyDescriptor = dto.mapToRequestDescriptor()
@@ -95,7 +91,7 @@ class HttpTaskController {
 
         val bodyMap = JsonProjector(requestBodyDescriptor.map { PathValue(it.path, it.value) }).projectToMap()
 
-        val invocation = RestWebInvocation().apply {
+        val invocation = HttpInvocation().apply {
             url = dto.lookupPath()
             method = dto.method
             requestHeaders = requestHeaderDescriptor.map { bd -> bd.field to bd.value }.toMap().toMutableMap()
@@ -105,24 +101,24 @@ class HttpTaskController {
         }
 
         try {
-            val executeResult = scheduleServiceImpl
-                    .syncSubmitRemoteHttpTask(dto.remoteAddress!!.replaceFirst("tcp://", ""), taskId, invocation)
-
+            /*val executeResult = scheduleServiceImpl
+                    .syncSubmitRemoteHttpTask(dto.remoteAddress!!.replaceFirst("tcp://", ""), invocation)*/
+            val executeResult = HttpInvocationResult()
             return executeResult
         } catch (e: Throwable) {
             e.printStackTrace()
-            return RestWebInvocationResult(
-                     false,
+            return HttpInvocationResult(
+                    false,
                     e.message,
                     invocation,
-                     -1,
-                     mutableMapOf(),
-                     null
+                    -1,
+                    mutableMapOf(),
+                    null
             )
         }
     }
 
-    private fun publicNetExecuteTask(dto: RequestDto): RestWebInvocationResult {
+    private fun publicNetExecuteTask(dto: RequestDto): HttpInvocationResult {
 
         val requestHeaderDescriptor = dto.mapToHeaderDescriptor()
         val requestBodyDescriptor = dto.mapToRequestDescriptor()
@@ -130,7 +126,7 @@ class HttpTaskController {
 
         val bodyMap = JsonProjector(requestBodyDescriptor.map { PathValue(it.path, it.value) }).projectToMap()
 
-        val restWebInvocation = RestWebInvocation()
+        val restWebInvocation = HttpInvocation()
                 .apply {
                     url = dto.lookupPath()
                     method = dto.method
@@ -144,7 +140,7 @@ class HttpTaskController {
         try {
             val responseEntity = httpTaskExecutor.execute(restWebInvocation)
 
-            invocationResult = RestWebInvocationResult().apply {
+            invocationResult = HttpInvocationResult().apply {
                 successful = true
                 status = responseEntity?.statusCodeValue ?: -1
                 responseHeaders = responseEntity?.headers?.map { it.key to it.value }?.toMap()?.toMutableMap()
@@ -156,23 +152,23 @@ class HttpTaskController {
             return invocationResult
         } catch (e: Throwable) {
             invocationResult = when (e) {
-                is HttpServerErrorException.BadGateway -> RestWebInvocationResult(false, "BadGateway", restWebInvocation, e.rawStatusCode, mutableMapOf(), null)
-                is HttpClientErrorException.BadRequest -> RestWebInvocationResult(false, "BadRequest", restWebInvocation, e.rawStatusCode, mutableMapOf(), null)
-                is HttpClientErrorException.Conflict -> RestWebInvocationResult(false, "Conflict", restWebInvocation, e.rawStatusCode, mutableMapOf(), null)
-                is HttpClientErrorException.Forbidden -> RestWebInvocationResult(false, "Forbidden", restWebInvocation, e.rawStatusCode, mutableMapOf(), null)
-                is HttpServerErrorException.GatewayTimeout -> RestWebInvocationResult(false, "GatewayTimeout", restWebInvocation, e.rawStatusCode, mutableMapOf(), null)
-                is HttpClientErrorException.Gone -> RestWebInvocationResult(false, "Gone", restWebInvocation, e.rawStatusCode, mutableMapOf(), null)
-                is HttpClientErrorException.NotFound -> RestWebInvocationResult(false, "NotFound", restWebInvocation, e.rawStatusCode, mutableMapOf(), null)
-                is HttpClientErrorException.MethodNotAllowed -> RestWebInvocationResult(false, "MethodNotAllowed", restWebInvocation, e.rawStatusCode, mutableMapOf(), null)
-                is HttpClientErrorException.NotAcceptable -> RestWebInvocationResult(false, "NotAcceptable", restWebInvocation, e.rawStatusCode, mutableMapOf(), null)
-                is HttpClientErrorException.UnsupportedMediaType -> RestWebInvocationResult(false, "UnsupportedMediaType", restWebInvocation, e.rawStatusCode, mutableMapOf(), null)
-                is HttpClientErrorException.UnprocessableEntity -> RestWebInvocationResult(false, "UnprocessableEntity", restWebInvocation, e.rawStatusCode, mutableMapOf(), null)
-                is HttpClientErrorException.TooManyRequests -> RestWebInvocationResult(false, "TooManyRequests", restWebInvocation, e.rawStatusCode, mutableMapOf(), null)
-                is HttpClientErrorException.Unauthorized -> RestWebInvocationResult(false, "Unauthorized", restWebInvocation, e.rawStatusCode, mutableMapOf(), null)
-                is HttpServerErrorException.InternalServerError -> RestWebInvocationResult(false, "InternalServerError", restWebInvocation, e.rawStatusCode, mutableMapOf(), null)
-                is HttpServerErrorException.NotImplemented -> RestWebInvocationResult(false, "NotImplemented", restWebInvocation, e.rawStatusCode, mutableMapOf(), null)
-                is HttpServerErrorException.ServiceUnavailable -> RestWebInvocationResult(false, "ServiceUnavailable", restWebInvocation, e.rawStatusCode, mutableMapOf(), null)
-                else -> RestWebInvocationResult(false, "未知错误${e.message}", restWebInvocation, -1, mutableMapOf(), null)
+                is HttpServerErrorException.BadGateway -> HttpInvocationResult(false, "BadGateway", restWebInvocation, e.rawStatusCode, mutableMapOf(), null)
+                is HttpClientErrorException.BadRequest -> HttpInvocationResult(false, "BadRequest", restWebInvocation, e.rawStatusCode, mutableMapOf(), null)
+                is HttpClientErrorException.Conflict -> HttpInvocationResult(false, "Conflict", restWebInvocation, e.rawStatusCode, mutableMapOf(), null)
+                is HttpClientErrorException.Forbidden -> HttpInvocationResult(false, "Forbidden", restWebInvocation, e.rawStatusCode, mutableMapOf(), null)
+                is HttpServerErrorException.GatewayTimeout -> HttpInvocationResult(false, "GatewayTimeout", restWebInvocation, e.rawStatusCode, mutableMapOf(), null)
+                is HttpClientErrorException.Gone -> HttpInvocationResult(false, "Gone", restWebInvocation, e.rawStatusCode, mutableMapOf(), null)
+                is HttpClientErrorException.NotFound -> HttpInvocationResult(false, "NotFound", restWebInvocation, e.rawStatusCode, mutableMapOf(), null)
+                is HttpClientErrorException.MethodNotAllowed -> HttpInvocationResult(false, "MethodNotAllowed", restWebInvocation, e.rawStatusCode, mutableMapOf(), null)
+                is HttpClientErrorException.NotAcceptable -> HttpInvocationResult(false, "NotAcceptable", restWebInvocation, e.rawStatusCode, mutableMapOf(), null)
+                is HttpClientErrorException.UnsupportedMediaType -> HttpInvocationResult(false, "UnsupportedMediaType", restWebInvocation, e.rawStatusCode, mutableMapOf(), null)
+                is HttpClientErrorException.UnprocessableEntity -> HttpInvocationResult(false, "UnprocessableEntity", restWebInvocation, e.rawStatusCode, mutableMapOf(), null)
+                is HttpClientErrorException.TooManyRequests -> HttpInvocationResult(false, "TooManyRequests", restWebInvocation, e.rawStatusCode, mutableMapOf(), null)
+                is HttpClientErrorException.Unauthorized -> HttpInvocationResult(false, "Unauthorized", restWebInvocation, e.rawStatusCode, mutableMapOf(), null)
+                is HttpServerErrorException.InternalServerError -> HttpInvocationResult(false, "InternalServerError", restWebInvocation, e.rawStatusCode, mutableMapOf(), null)
+                is HttpServerErrorException.NotImplemented -> HttpInvocationResult(false, "NotImplemented", restWebInvocation, e.rawStatusCode, mutableMapOf(), null)
+                is HttpServerErrorException.ServiceUnavailable -> HttpInvocationResult(false, "ServiceUnavailable", restWebInvocation, e.rawStatusCode, mutableMapOf(), null)
+                else -> HttpInvocationResult(false, "未知错误${e.message}", restWebInvocation, -1, mutableMapOf(), null)
             }
             return invocationResult
         }

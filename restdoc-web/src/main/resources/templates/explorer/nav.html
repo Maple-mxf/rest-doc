@@ -48,7 +48,7 @@
 <body class="layui-layout-body"  >
 <div class="layui-layout layui-layout-admin">
     <div class="layui-header">
-        <ul class="layui-nav layui-bg-cycan" id="navigation" lay-filter="test">
+        <ul class="layui-nav layui-bg-black" id="navigation" lay-filter="test">
             <li class="layui-nav-item">
                 <a href="/restdoc/project/view"> <i class="layui-icon layui-icon-return"
                                                     style="font-size: 17px;  color: white;"></i>&nbsp;</a>
@@ -72,9 +72,7 @@
             </iframe>
         </div>
     </div>
-    <div class="layui-footer" style="left: 0">
-        © RESTdoc - 效率至上
-    </div>
+
 </div>
 
 
@@ -85,7 +83,7 @@
 <script th:src="@{/admin/js/util.js}"></script>
 <script th:src="@{/admin/js/api_navigation.js}"></script>
 <script>
-    NProgress.configure({ easing: 'ease', speed: 500 });
+    NProgress.configure({ easing: 'ease', speed: 300 });
 
     $("body").show();
     NProgress.start();

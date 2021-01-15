@@ -3,7 +3,7 @@ package restdoc.client.restweb.handler;
 import io.netty.channel.ChannelHandlerContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import restdoc.client.api.model.InvocationResult;
-import restdoc.client.api.model.RestWebInvocation;
+import restdoc.client.api.model.HttpInvocation;
 import restdoc.client.restweb.RestWebInvokerImpl;
 import restdoc.remoting.netty.NettyRequestProcessor;
 import restdoc.remoting.protocol.RemotingCommand;
@@ -24,7 +24,7 @@ public class InvokerApiHandler implements NettyRequestProcessor {
 
     @Override
     public RemotingCommand processRequest(ChannelHandlerContext ctx, RemotingCommand request) throws Exception {
-        RestWebInvocation invocation = RemotingSerializable.decode(request.getBody(), RestWebInvocation.class);
+        HttpInvocation invocation = RemotingSerializable.decode(request.getBody(), HttpInvocation.class);
         InvocationResult invocationResult = invoker.rpcInvoke(invocation);
         RemotingCommand response = RemotingCommand.createResponseCommand(RemotingSysResponseCode.SUCCESS, null);
         response.setBody(invocationResult.encode());

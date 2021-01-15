@@ -11,7 +11,7 @@ import java.util.Objects;
  *
  * @author Maple
  */
-public class RestWebInvocation extends RemotingSerializable implements Invocation {
+public class HttpInvocation extends RemotingSerializable implements Invocation {
 
     private String url;
 
@@ -25,10 +25,10 @@ public class RestWebInvocation extends RemotingSerializable implements Invocatio
 
     private Map<String, Object> uriVariable;
 
-    public RestWebInvocation() {
+    public HttpInvocation() {
     }
 
-    public RestWebInvocation(String url, String method, Map<String, List<String>> requestHeaders, Map<String, Object> queryParam, Map<String, Object> requestBody, Map<String, Object> uriVariable) {
+    public HttpInvocation(String url, String method, Map<String, List<String>> requestHeaders, Map<String, Object> queryParam, Map<String, Object> requestBody, Map<String, Object> uriVariable) {
         this.url = url;
         this.method = method;
         this.requestHeaders = requestHeaders;
@@ -89,7 +89,7 @@ public class RestWebInvocation extends RemotingSerializable implements Invocatio
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        RestWebInvocation that = (RestWebInvocation) o;
+        HttpInvocation that = (HttpInvocation) o;
         return Objects.equals(url, that.url) &&
                 Objects.equals(method, that.method) &&
                 Objects.equals(requestHeaders, that.requestHeaders) &&

@@ -6,12 +6,8 @@ import java.util.*;
 
 
 /**
- * The class RestWebApiDescriptor
- *
- * @author Maple
- * @since 1.0.RELEASE
  */
-public class RestWebApiDescriptor implements ApiDescriptor {
+public class HttpApiDescriptor implements ApiDescriptor {
 
     /*Http Api interface default name*/
     private String name;

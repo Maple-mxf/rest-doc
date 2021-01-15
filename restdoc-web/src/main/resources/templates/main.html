@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>RESTdoc效率至上</title>
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}"/>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/admin/css/pearForm.css}"/>
+    <link rel="stylesheet" th:href="@{/admin/css/nav.css}"/>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/overlayscrollbars/1.13.1/css/OverlayScrollbars.min.css"
+          integrity="sha512-jN4O0AUkRmE6Jwc8la2I5iBmS+tCDcfUd1eq8nrZIBnDKTmCp5YxxNN1/aetnAH32qT+dDbk1aGhhoaw5cJNlw=="
+          crossorigin="anonymous"/>
+    <script th:src="@{/admin/js/jquery.js}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/overlayscrollbars/1.13.1/js/jquery.overlayScrollbars.min.js"
+            integrity="sha512-3Ofi0j25Ar6Hyqk2sdvfuoVCvvN6nE6Dh/eoMc8RQ/bnCvO8wpE+M5KyJz6T08T7pl/x82I/3Y5Amz9n3T9Esw=="
+            crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.css" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.js"></script>
+    <style type="text/css">
+
+        .project-item :hover {
+            cursor: pointer;
+        }
+
+        body {
+            /*margin: 10px;*/
+            font-family: 'Roboto', sans-serif;
+            font-size: 14px;
+        }
+
+
+    </style>
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-row">
+            <div class="layui-logo layui-col-md2">REST doc</div>
+            <div class="layui-col-md10" style="margin-left:10%">
+                <ul class="layui-nav">
+                    <li class="layui-nav-item">
+                        <a href="">控制台 </a>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <ul class="layui-nav layui-nav-tree" lay-filter="test">
+                <li class="layui-nav-item">
+                    <a href="">
+                        <i class="layui-icon layui-icon-template-1" style="font-size: 20px; color: #1E9FFF;"></i>
+                        <span  style="font-size: 16px">&nbsp;&nbsp;API项目</span>
+                    </a>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="">
+                        <i class="layui-icon layui-icon-app" style="font-size: 20px; color: #1E9FFF;"></i>
+                        <span  style="font-size: 16px">&nbsp;&nbsp;开发者应用</span>
+                    </a>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="">
+                        <i class="layui-icon layui-icon-group" style="font-size: 20px; color: #1E9FFF;"></i>
+                        <span  style="font-size: 16px">&nbsp;开发团队</span>
+                    </a>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="">
+                        <i class="layui-icon layui-icon-set-fill" style="font-size: 20px; color: #1E9FFF;"></i>
+                        <span  style="font-size: 16px">&nbsp;&nbsp;设置</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="layui-body">
+        <div style="padding: 15px;">
+
+        </div>
+    </div>
+    <div class="layui-footer">
+        © RESTdoc - 效率至上
+    </div>
+</div>
+
+<script th:src="@{/layui/layui.js}"></script>
+<script th:src="@{/admin/js/util.js}"></script>
+<script type="text/javascript" th:inline="javascript">
+    NProgress.configure({easing: 'ease', speed: 600});
+    NProgress.start();
+
+    var lay;
+    layui.use(['element', 'layer'], function () {
+        var element = layui.element;
+        var layer = layui.layer;
+        var $ = layui.jquery;
+        lay = layui.layer;
+    });
+    setTimeout(function () {
+        NProgress.done();
+        $(".fade").removeClass("out");
+    }, 1000);
+</script>
+</body>
+</html>

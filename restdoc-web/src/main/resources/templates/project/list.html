@@ -7,7 +7,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/admin/css/pearForm.css}"/>
     <link rel="stylesheet" th:href="@{/admin/css/nav.css}"/>
-
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/overlayscrollbars/1.13.1/css/OverlayScrollbars.min.css"
+          integrity="sha512-jN4O0AUkRmE6Jwc8la2I5iBmS+tCDcfUd1eq8nrZIBnDKTmCp5YxxNN1/aetnAH32qT+dDbk1aGhhoaw5cJNlw=="
+          crossorigin="anonymous"/>
+    <script th:src="@{/admin/js/jquery.js}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/overlayscrollbars/1.13.1/js/jquery.overlayScrollbars.min.js"
+            integrity="sha512-3Ofi0j25Ar6Hyqk2sdvfuoVCvvN6nE6Dh/eoMc8RQ/bnCvO8wpE+M5KyJz6T08T7pl/x82I/3Y5Amz9n3T9Esw=="
+            crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.css" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.js"></script>
     <style type="text/css">
 
         .project-item :hover {
@@ -34,55 +43,92 @@
 
     </style>
 </head>
-<body>
-<!--<div th:include="nav::nav"></div>-->
-<div class="layui-row" style="width: 100%">
-    <ul class="layui-nav layui-bg-green" id="navigation" lay-filter="" style="font-size: 17px">
-        <li class="layui-nav-item">REST Doc</li>
-        <li class="layui-nav-item" id="restweb-project-nav">
-            <a href="/restdoc/project/view?type=REST_WEB" target="_self">RESTweb项目</a>
-        </li>
-        <li class="layui-nav-item" id="dubbo-project-nav">
-            <a href="/restdoc/project/view?type=DUBBO" target="_self">Dubbo项目</a>
-        </li>
-       <!-- <li class="layui-nav-item" id="springcloud-projct-nav">
-            <a href="/restdoc/project/view?type=SPRINGCLOUD" target="_self">SpringCloud项目</a>
-        </li>-->
-    </ul>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-row">
+            <div class="layui-logo layui-col-md2">REST doc</div>
+            <div class="layui-col-md10" style="margin-left:10%">
+                <ul class="layui-nav">
+                    <li class="layui-nav-item">
+                        <a href="">控制台 </a>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <ul class="layui-nav layui-nav-tree" lay-filter="test">
+                <li class="layui-nav-item">
+                    <a href="">
+                        <i class="layui-icon layui-icon-template-1" style="font-size: 20px; color: #1E9FFF;"></i>
+                        <span  style="font-size: 16px">&nbsp;&nbsp;API项目</span>
+                    </a>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="">
+                        <i class="layui-icon layui-icon-app" style="font-size: 20px; color: #1E9FFF;"></i>
+                        <span  style="font-size: 16px">&nbsp;&nbsp;开发者应用</span>
+                    </a>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="">
+                        <i class="layui-icon layui-icon-group" style="font-size: 20px; color: #1E9FFF;"></i>
+                        <span  style="font-size: 16px">&nbsp;开发团队</span>
+                    </a>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="">
+                        <i class="layui-icon layui-icon-set-fill" style="font-size: 20px; color: #1E9FFF;"></i>
+                        <span  style="font-size: 16px">&nbsp;&nbsp;设置</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="layui-body">
+        <div style="padding: 15px;">
+            <div class="layui-row">
+                <div class="layui-row layui-col-space20 layui-col-md-offset3">
+                    <div class="layui-col-md2">
+                        <a href="javascript:void(0);" id="createProjectBtn"
+                           class="layui-btn  layui-btn-primary  layui-btn-lg">创建项目</a>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row layui-col-space20" id="content">
+            </div>
+            <div class="layui-row layui-col-space12">
+                <div class="layui-inline">
+                    <button class="layui-btn layui-btn-primary  layui-btn-lg" id="previousBtn">上一页</button>
+                </div>
+
+                <div class="layui-inline">
+                    <button class="layui-btn layui-btn-primary  layui-btn-lg" id="nextBtn">下一页</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="layui-footer">
+        © RESTdoc - 效率至上
+    </div>
 </div>
 
 <input type="hidden" th:value="${projectType}" id="projectType">
-<div class="layui-container" style="margin-top: 10px;">
-    <div class="layui-row">
-        <div class="layui-row layui-col-space20 layui-col-md-offset3">
-            <div class="layui-col-md2">
-                <a href="javascript:void(0);" id="createProjectBtn" class="layui-btn  layui-btn-primary  layui-btn-lg">创建项目</a>
-            </div>
-        </div>
-    </div>
-    <div class="layui-row layui-col-space20" id="content">
-    </div>
-    <div class="layui-row layui-col-space12">
-        <div class="layui-inline">
-            <button class="layui-btn layui-btn-primary  layui-btn-lg" id="previousBtn">上一页</button>
-        </div>
 
-        <div class="layui-inline">
-            <button class="layui-btn layui-btn-primary  layui-btn-lg" id="nextBtn">下一页</button>
-        </div>
-    </div>
-
-</div>
 
 <input type="hidden" id="page" value="0">
 <input type="hidden" id="size" value="12">
 <input type="hidden" id="totalElements" value="0">
 
 <script th:src="@{/layui/layui.js}"></script>
-<script th:src="@{/admin/js/jquery.js}"></script>
 <script th:src="@{/admin/js/util.js}"></script>
 <script type="text/javascript" th:inline="javascript">
-
+    NProgress.configure({easing: 'ease', speed: 600});
+    NProgress.start();
 
     function renderPage() {
         requestAndRenderContent();
@@ -362,6 +408,10 @@
         $("#previousBtn").addClass("layui-btn-disabled")
     }
 
+    setTimeout(function () {
+        NProgress.done();
+        $(".fade").removeClass("out");
+    }, 1000);
 </script>
 </body>
 </html>

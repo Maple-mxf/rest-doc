@@ -8,14 +8,13 @@ import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Service
-import restdoc.rpc.client.common.model.http.RestWebApiDescriptor
+import restdoc.rpc.client.common.model.http.HttpApiDescriptor
 import restdoc.web.distributelock.DistributeLock
 import restdoc.web.distributelock.DistributeLockType
 import restdoc.web.model.RESOURCE_COLLECTION
 import restdoc.web.model.Resource
 import restdoc.web.model.doc.http.*
 import restdoc.web.projector.JsonDeProjector
-import restdoc.web.schedule.ScheduleServiceImpl
 import java.util.*
 
 /**
@@ -42,15 +41,12 @@ interface WebDocumentService {
 open class RestWebDocumentServiceImpl : WebDocumentService {
 
     @Autowired
-    lateinit var scheduleServiceImpl: ScheduleServiceImpl
-
-    @Autowired
     lateinit var mongoTemplate: MongoTemplate
 
     @Autowired
     lateinit var mapper: ObjectMapper
 
-    private fun mappingBody(rbps: Collection<RestWebApiDescriptor.ParameterDescriptor>) =
+    private fun mappingBody(rbps: Collection<HttpApiDescriptor.ParameterDescriptor>) =
             rbps.flatMap { rbp ->
                 if ("java.lang.Object" == rbp.type && rbp.supplementary != null && rbp.supplementary.toString().isNotBlank()) {
                     try {
@@ -62,13 +58,15 @@ open class RestWebDocumentServiceImpl : WebDocumentService {
                 } else listOf()
             }
 
-    private fun mappingHeader(rhps: Map<String, List<RestWebApiDescriptor.ParameterDescriptor>>) =
+    private fun mappingHeader(rhps: Map<String, List<HttpApiDescriptor.ParameterDescriptor>>) =
             rhps.map { rhp -> HeaderFieldDescriptor(field = rhp.key, value = listOf(), description = rhp.key) }
 
     @DistributeLock(name = "syncHttpApiDoc", message = "syncHttpApiDoc", type = DistributeLockType.MONGODB)
     override fun syncHttpApiDoc(clientId: String, projectId: String, user: String): Map<Resource, Map<Resource, List<RestWebDocument>>> {
         // Invoke remote client api info
-        val emptyApiTemplates = scheduleServiceImpl.syncGetEmptyApiTemplates(clientId)
+        // TODO  API check
+//        val emptyApiTemplates = scheduleServiceImpl.syncGetEmptyApiTemplates(clientId)
+        val emptyApiTemplates = ArrayList<HttpApiDescriptor>()
 
         val ret = emptyApiTemplates
                 .groupBy { it.packageName }

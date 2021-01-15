@@ -105,6 +105,7 @@ class ClientAdapter(private val remotingServer: NettyRemotingServer,
             else -> OS.Mac
         }
     }
+
     override fun hostName(): String = info.hostname
     override fun state(): ClientState = state
     override fun beforeIdle(): List<ClientCallback> = beforeIdleCallbacks
@@ -157,14 +158,9 @@ class ClientAdapter(private val remotingServer: NettyRemotingServer,
         return true
     }
 
-
     override fun echo(): Long {
         return 0L
     }
 
     override fun at(): ApplicationType = info.applicationType
-
-    init {
-        // afterStartedCallbacks.add(ClientCallback);
-    }
 }

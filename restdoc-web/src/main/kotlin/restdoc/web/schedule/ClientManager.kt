@@ -50,8 +50,8 @@ open class ClientManagerAdapter : ClientManager {
     override fun get(id: String): Client? = adapters[id]
     override fun schedule(id: String, tw: RemotingTaskWrapper): Any? {
         val adapter = adapters[id] ?: throw IllegalArgumentException("Client not exist: $id")
-        return if (tw.async) {
-            adapter.executeAsync(tw.command!!, tw.timeoutMills, tw.callback)
+            return if (tw.async) {
+                adapter.executeAsync(tw.command!!, tw.timeoutMills, tw.callback)
             null
         } else {
             adapter.executeExpectType(tw.command!!, tw.responseType!!, tw.timeoutMills)

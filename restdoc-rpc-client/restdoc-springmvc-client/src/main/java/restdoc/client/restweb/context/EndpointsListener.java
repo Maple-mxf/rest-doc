@@ -21,7 +21,7 @@ import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 import restdoc.rpc.client.common.model.http.HeaderExpression;
 import restdoc.rpc.client.common.model.http.ParamExpression;
-import restdoc.rpc.client.common.model.http.RestWebApiDescriptor;
+import restdoc.rpc.client.common.model.http.HttpApiDescriptor;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
@@ -51,7 +51,7 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
 
     private static Logger log = LoggerFactory.getLogger(EndpointsListener.class);
 
-    private List<RestWebApiDescriptor> restWebExposedAPIList;
+    private List<HttpApiDescriptor> restWebExposedAPIList;
 
     private final Environment environment;
 
@@ -88,7 +88,7 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
                             .map(pattern -> String.join("", contextPath, pattern))
                             .map(pattern -> {
 
-                                RestWebApiDescriptor emptyTemplate = new RestWebApiDescriptor();
+                                HttpApiDescriptor emptyTemplate = new HttpApiDescriptor();
 
                                 emptyTemplate.setName(requestMappingInfo.getName());
 
@@ -122,7 +122,7 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
         log.info("RESTdoc collect api empty templates size {} ", restWebExposedAPIList.size());
     }
 
-    public List<RestWebApiDescriptor> getRestWebExposedAPIList() {
+    public List<HttpApiDescriptor> getRestWebExposedAPIList() {
         return restWebExposedAPIList;
     }
 
@@ -144,7 +144,7 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
      * @see org.springframework.web.bind.annotation.RequestHeader
      * @see MultipartFile
      */
-    private void transparentApi(RestWebApiDescriptor emptyDescriptor,
+    private void transparentApi(HttpApiDescriptor emptyDescriptor,
                                 RequestMappingInfo requestMappingInfo,
                                 HandlerMethod handlerMethod) {
 
@@ -156,8 +156,8 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
         for (MethodParameter parameter : parameters) {
             if (parameter.getParameterAnnotations().length > 0) {
                 String parameterName = parameter.getParameterName();
-                RestWebApiDescriptor.ParameterDescriptor parameterDescriptor =
-                        new RestWebApiDescriptor.ParameterDescriptor(parameterName);
+                HttpApiDescriptor.ParameterDescriptor parameterDescriptor =
+                        new HttpApiDescriptor.ParameterDescriptor(parameterName);
                 parameterDescriptor.setType(parameter.getParameterType().getName());
 
                 Annotation[] annotations = parameter.getParameterAnnotations();
@@ -269,14 +269,14 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
                         parameterDescriptor.setName(HttpHeaders.COOKIE);
                         parameterDescriptor.setDefaultValue(cookieValue.defaultValue());
 
-                        List<RestWebApiDescriptor.ParameterDescriptor> cookieValues = emptyDescriptor.getRequestHeaderParameters()
+                        List<HttpApiDescriptor.ParameterDescriptor> cookieValues = emptyDescriptor.getRequestHeaderParameters()
                                 .getOrDefault(HttpHeaders.COOKIE, new ArrayList<>());
 
                         String cookieName = cookieValue.name().isEmpty() ? cookieValue.value() : cookieValue.name();
                         if (cookieName.isEmpty()) cookieName = parameter.getParameter().getName();
 
-                        RestWebApiDescriptor.ParameterDescriptor cookieDescriptor
-                                = new RestWebApiDescriptor.ParameterDescriptor(cookieName);
+                        HttpApiDescriptor.ParameterDescriptor cookieDescriptor
+                                = new HttpApiDescriptor.ParameterDescriptor(cookieName);
                         cookieDescriptor.setDefaultValue(cookieValue.defaultValue());
                         cookieValues.add(cookieDescriptor);
 
@@ -306,8 +306,8 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
         if (returnType != ResponseEntity.class) {
             Object responseInstance = instantiate(handlerMethod.getMethod().getReturnType());
             if (responseInstance != null) {
-                RestWebApiDescriptor.ParameterDescriptor parameterDescriptor =
-                        new RestWebApiDescriptor.ParameterDescriptor();
+                HttpApiDescriptor.ParameterDescriptor parameterDescriptor =
+                        new HttpApiDescriptor.ParameterDescriptor();
                 try {
                     emptyDescriptor.setResponseBodyDescriptor(parameterDescriptor);
                     parameterDescriptor.setSupplementary(responseInstance);

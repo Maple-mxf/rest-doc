@@ -13,8 +13,7 @@ import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.http.HttpMethod
 import org.springframework.web.bind.annotation.*
 import restdoc.rpc.client.common.model.ApplicationType
-import restdoc.rpc.client.common.model.dubbo.DubboApiDescriptor
-import restdoc.rpc.client.common.model.http.RestWebApiDescriptor
+import restdoc.rpc.client.common.model.http.HttpApiDescriptor
 import restdoc.web.base.auth.Verify
 import restdoc.web.controller.console.model.*
 import restdoc.web.core.Result
@@ -30,7 +29,6 @@ import restdoc.web.model.doc.http.*
 import restdoc.web.repository.ProjectRepository
 import restdoc.web.repository.ResourceRepository
 import restdoc.web.repository.RestWebDocumentRepository
-import restdoc.web.schedule.ClientRegistryCenter
 import restdoc.web.util.FieldType
 import restdoc.web.util.IDUtil.id
 import restdoc.web.util.IDUtil.now
@@ -60,9 +58,6 @@ class WebDocumentController {
 
     @Autowired
     private lateinit var redisTemplate: RedisTemplate<String, Any>
-
-    @Autowired
-    private lateinit var clientRegistryCenter: ClientRegistryCenter
 
     @Autowired
     private lateinit var resourceRepository: ResourceRepository
@@ -500,9 +495,12 @@ class WebDocumentController {
 
         if (ApplicationType.REST_WEB == ap) {
 
-            val restwebAPIList =
-                    this.clientRegistryCenter.getExposedAPIFilterApplicationType(
-                            clientId, ApplicationType.REST_WEB) as Collection<RestWebApiDescriptor>
+//            val restwebAPIList =
+//                    this.clientRegistryCenter.getExposedAPIFilterApplicationType(
+//                            clientId, ApplicationType.REST_WEB) as Collection<HttpApiDescriptor>
+
+            // TODO  API check
+            val restwebAPIList = ArrayList<HttpApiDescriptor>()
 
             val resources = restwebAPIList
                     .groupBy { it.controller }
@@ -578,9 +576,9 @@ class WebDocumentController {
             return ok(rootNav.children)
 
         } else if (ApplicationType.DUBBO == ap) {
-            val restwebAPIList = this.clientRegistryCenter.getExposedAPIFilterApplicationTypeByRemote(clientId, ApplicationType.DUBBO)
-                    as Collection<DubboApiDescriptor>
-
+        /*    val restwebAPIList = this.clientRegistryCenter.getExposedAPIFilterApplicationTypeByRemote(clientId, ApplicationType.DUBBO)
+                    as Collection<DubboApiDescriptor>*/
+            throw RuntimeException("Not support application type $ap")
         } else {
             throw RuntimeException("Not support application type $ap")
         }
@@ -591,9 +589,11 @@ class WebDocumentController {
     @Verify(role = [SYS_ADMIN])
     @PostMapping("/serviceClient/{clientId}/syncApi")
     fun syncServiceInstanceApi(@PathVariable clientId: String, @RequestBody dto: SyncRestApiDto): Any {
-        val apiList =
-                clientRegistryCenter.getExposedAPIFilterApplicationType(clientId, ApplicationType.REST_WEB)
-                        as Collection<RestWebApiDescriptor>
+//        val apiList =
+//                clientRegistryCenter.getExposedAPIFilterApplicationType(clientId, ApplicationType.REST_WEB)
+//                        as Collection<HttpApiDescriptor>
+
+        val apiList = ArrayList<HttpApiDescriptor>()
 
         val map = apiList.groupBy { it.packageName }
                 .entries

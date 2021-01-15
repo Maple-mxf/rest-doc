@@ -8,10 +8,6 @@ import restdoc.web.controller.console.model.SyncApiEmptyTemplateDto
 import restdoc.web.core.HolderKit
 import restdoc.web.core.ok
 import restdoc.web.model.SYS_ADMIN
-import restdoc.web.repository.ResourceRepository
-import restdoc.web.repository.RestWebDocumentRepository
-import restdoc.web.schedule.ClientRegistryCenter
-import restdoc.web.schedule.ScheduleServiceImpl
 import restdoc.web.service.WebDocumentService
 
 
@@ -19,19 +15,7 @@ import restdoc.web.service.WebDocumentService
 class ServiceClientController {
 
     @Autowired
-    lateinit var clientRegistryCenter: ClientRegistryCenter
-
-    @Autowired
-    lateinit var scheduleServiceImpl: ScheduleServiceImpl
-
-    @Autowired
     lateinit var holderKit: HolderKit
-
-    @Autowired
-    lateinit var resourceRepository: ResourceRepository
-
-    @Autowired
-    lateinit var restWebDocumentRepository: RestWebDocumentRepository
 
     @Autowired
     lateinit var restWebDocumentService: WebDocumentService
@@ -40,8 +24,8 @@ class ServiceClientController {
     @Verify
     @GetMapping("/serviceClient/list")
     fun list(@RequestParam(defaultValue = "DUBBO") type: ApplicationType): Any {
-        val clientKeys = this.clientRegistryCenter.getClientKeysFilterApplicationType(type)
-        val services = this.clientRegistryCenter.getMulti(clientKeys)
+//        val clientKeys = this.clientRegistryCenter.getClientKeysFilterApplicationType(type)
+        /*val services = this.clientRegistryCenter.getMulti(clientKeys)
                 .map {
                     mapOf(
                             "id" to it.id,
@@ -53,13 +37,13 @@ class ServiceClientController {
                             "serializationProtocol" to it.serializationProtocol
                     )
                 }
-                .toList()
+                .toList()*/
 
         val res = mutableMapOf<String, Any>()
         res["code"] = 0
-        res["count"] = clientRegistryCenter.clientNum
+//        res["count"] = clientRegistryCenter.clientNum
         res["msg"] = ""
-        res["data"] = services
+//        res["data"] = services
 
         return res
     }

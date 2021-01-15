@@ -8,12 +8,11 @@ import java.util.List;
 /**
  * ReportClientExportInterfacesBody
  */
-@Deprecated
-public class DubboExposedApiBody extends BaseExposedApiBody {
+public class DubboApiPayload extends AbstractApiPayload {
 
     private List<DubboApiDescriptor> apiList;
 
-    public DubboExposedApiBody() {
+    public DubboApiPayload() {
         super(ApplicationType.DUBBO);
     }
 

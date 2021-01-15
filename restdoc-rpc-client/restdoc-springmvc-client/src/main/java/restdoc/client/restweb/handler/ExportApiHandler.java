@@ -9,7 +9,7 @@ import restdoc.remoting.netty.NettyRequestProcessor;
 import restdoc.remoting.protocol.RemotingCommand;
 import restdoc.remoting.protocol.RemotingSysResponseCode;
 import restdoc.rpc.client.common.model.ApplicationType;
-import restdoc.rpc.client.common.model.http.HttpExposedApiBody;
+import restdoc.rpc.client.common.model.http.HttpApiPayload;
 
 public class ExportApiHandler implements NettyRequestProcessor {
 
@@ -30,7 +30,7 @@ public class ExportApiHandler implements NettyRequestProcessor {
 
     @Override
     public RemotingCommand processRequest(ChannelHandlerContext ctx, RemotingCommand request) throws Exception {
-        HttpExposedApiBody apiBody = new HttpExposedApiBody();
+        HttpApiPayload apiBody = new HttpApiPayload();
         apiBody.setApiList(endpointsListener.getRestWebExposedAPIList());
         String service = environment.getProperty("server.servlet.context-path", configurationProperties.getService());
         if (service.isEmpty()) service = "未命名的服务";

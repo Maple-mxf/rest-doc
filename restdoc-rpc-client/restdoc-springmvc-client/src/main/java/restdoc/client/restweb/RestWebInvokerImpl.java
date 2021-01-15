@@ -11,8 +11,8 @@ import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 import restdoc.client.api.Invoker;
 import restdoc.client.api.model.InvocationResult;
-import restdoc.client.api.model.RestWebInvocation;
-import restdoc.client.api.model.RestWebInvocationResult;
+import restdoc.client.api.model.HttpInvocation;
+import restdoc.client.api.model.HttpInvocationResult;
 
 import java.util.AbstractMap;
 import java.util.HashMap;
@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 /**
  * RestWebInvokerImpl
  */
-public class RestWebInvokerImpl implements Invoker<RestWebInvocation> {
+public class RestWebInvokerImpl implements Invoker<HttpInvocation> {
 
     private final RestTemplate restTemplate;
 
@@ -39,7 +39,7 @@ public class RestWebInvokerImpl implements Invoker<RestWebInvocation> {
     }
 
     @Override
-    public InvocationResult rpcInvoke(RestWebInvocation invocation) {
+    public InvocationResult rpcInvoke(HttpInvocation invocation) {
         String url = autocompleteURL(invocation.getUrl());
         HttpHeaders requestHeaders = new HttpHeaders();
         invocation.getRequestHeaders().forEach(requestHeaders::addAll);
@@ -56,7 +56,7 @@ public class RestWebInvokerImpl implements Invoker<RestWebInvocation> {
                     .map(hd -> new AbstractMap.SimpleEntry<>(hd.getKey(), hd.getValue()))
                     .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
-            return new RestWebInvocationResult(
+            return new HttpInvocationResult(
                     true,
                     null,
                     invocation,
@@ -100,10 +100,10 @@ public class RestWebInvokerImpl implements Invoker<RestWebInvocation> {
                 exceptionMessage = "ServiceUnavailable";
             else exceptionMessage = String.format("Unknown Error:%s", e.getMessage());
 
-            return new RestWebInvocationResult(false, exceptionMessage, invocation, e.getRawStatusCode(),
+            return new HttpInvocationResult(false, exceptionMessage, invocation, e.getRawStatusCode(),
                     new HashMap<>(), null);
         } catch (RuntimeException rex) {
-            return new RestWebInvocationResult(false, String.format("Unkown Error:%s", rex.getMessage()), invocation, -1, new HashMap<>(), null);
+            return new HttpInvocationResult(false, String.format("Unkown Error:%s", rex.getMessage()), invocation, -1, new HashMap<>(), null);
         }
     }
 

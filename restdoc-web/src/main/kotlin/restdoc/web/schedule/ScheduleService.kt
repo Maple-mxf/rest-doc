@@ -2,7 +2,6 @@ package restdoc.web.schedule
 
 import io.netty.channel.Channel
 import org.springframework.boot.CommandLineRunner
-import org.springframework.stereotype.Component
 import restdoc.client.api.model.ClientInfo
 import restdoc.remoting.ChannelEventListener
 import restdoc.remoting.common.RequestCode
@@ -13,6 +12,10 @@ import restdoc.remoting.protocol.LanguageCode
 import restdoc.remoting.protocol.RemotingCommand
 import restdoc.remoting.protocol.RemotingSerializable
 import restdoc.rpc.client.common.model.ApplicationClientInfo
+import restdoc.rpc.client.common.model.ApplicationType
+import restdoc.rpc.client.common.model.DubboApiPayload
+import restdoc.rpc.client.common.model.http.HttpApiPayload
+import restdoc.rpc.client.common.model.springcloud.SpringCloudApiPayload
 import java.net.InetSocketAddress
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ExecutorService
@@ -33,9 +36,10 @@ interface ScheduleService : CommandLineRunner {
     fun scheduleAsync(clientId: String, code: Int)
 }
 
-@Component("scheduleServiceAdapterImpl")
+//@Component("scheduleServiceAdapterImpl")
 open class ScheduleServiceAdapterImpl(private val scheduleProperties: ScheduleProperties,
-                                      private val clientManager: ClientManager) : ScheduleService {
+                                      private val clientManager: ClientManager,
+                                      private val apiManager: ApiManager) : ScheduleService {
 
     private val remotingServer: NettyRemotingServer
     private val executor: ExecutorService = Executors.newSingleThreadExecutor()
@@ -108,7 +112,19 @@ open class ScheduleServiceAdapterImpl(private val scheduleProperties: SchedulePr
                         applicationType = body.type
                     }
 
+            // Instance Client
             val adapter = clientManager.add(aci, remotingServer)
+            val code = RequestCode.GET_EMPTY_API_TEMPLATES
+
+            // Schedule call task
+            val apiDescriptors = when {
+                ApplicationType.REST_WEB == aci.applicationType -> schedule<HttpApiPayload>(adapter.id(), code).apiList
+                ApplicationType.DUBBO == aci.applicationType -> schedule<DubboApiPayload>(adapter.id(), code).apiList
+                else -> schedule<SpringCloudApiPayload>(adapter.id(), code).apiList
+            }
+
+            // Init client api
+            apiManager.add(adapter.id(), aci.applicationType, apiDescriptors)
         }
 
         override fun onChannelClose(remote: String, channel: Channel) {

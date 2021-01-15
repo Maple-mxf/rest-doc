@@ -6,25 +6,22 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * The class RestWebInvocationResult
- *
- * @author Maple
  */
-public class RestWebInvocationResult extends InvocationResult {
+public class HttpInvocationResult extends InvocationResult {
 
     private int status = 200;
     private Map<String, List<String>> responseHeaders = new HashMap<>();
     private Object responseBody = null;
 
-    public RestWebInvocationResult() {
+    public HttpInvocationResult() {
     }
 
-    public RestWebInvocationResult(Boolean isSuccessful,
-                                   String exceptionMsg,
-                                   Invocation invocation,
-                                   int status,
-                                   Map<String, List<String>> responseHeaders,
-                                   Object responseBody
+    public HttpInvocationResult(Boolean isSuccessful,
+                                String exceptionMsg,
+                                Invocation invocation,
+                                int status,
+                                Map<String, List<String>> responseHeaders,
+                                Object responseBody
     ) {
         super(isSuccessful, exceptionMsg, invocation);
         this.status = status;
@@ -60,7 +57,7 @@ public class RestWebInvocationResult extends InvocationResult {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        RestWebInvocationResult that = (RestWebInvocationResult) o;
+        HttpInvocationResult that = (HttpInvocationResult) o;
         return status == that.status &&
                 Objects.equals(responseHeaders, that.responseHeaders) &&
                 Objects.equals(responseBody, that.responseBody);

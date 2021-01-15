@@ -4,11 +4,11 @@ import restdoc.remoting.protocol.RemotingSerializable;
 
 import java.util.List;
 
-public abstract class BaseExposedApiBody extends RemotingSerializable {
+public abstract class AbstractApiPayload extends RemotingSerializable {
 
     private ApplicationType applicationType;
 
-    public BaseExposedApiBody(ApplicationType applicationType) {
+    public AbstractApiPayload(ApplicationType applicationType) {
         this.applicationType = applicationType;
     }
 

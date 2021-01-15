@@ -12,7 +12,7 @@ import restdoc.client.dubbo.model.ServiceDescriptor;
 import restdoc.remoting.netty.NettyRequestProcessor;
 import restdoc.remoting.protocol.RemotingCommand;
 import restdoc.remoting.protocol.RemotingSysResponseCode;
-import restdoc.rpc.client.common.model.DubboExposedApiBody;
+import restdoc.rpc.client.common.model.DubboApiPayload;
 import restdoc.rpc.client.common.model.dubbo.DubboApiDescriptor;
 
 import java.lang.reflect.Type;
@@ -44,7 +44,7 @@ public class ExportApiHandler implements NettyRequestProcessor {
     @Override
     public RemotingCommand processRequest(ChannelHandlerContext ctx, RemotingCommand request) throws Exception {
         RemotingCommand response = RemotingCommand.createResponseCommand(RemotingSysResponseCode.SUCCESS, null);
-        DubboExposedApiBody body = new DubboExposedApiBody();
+        DubboApiPayload body = new DubboApiPayload();
         Map<String, ServiceBean> beansOfType = beanFactory.getBeansOfType(ServiceBean.class);
 
         List<DubboApiDescriptor> apiDescriptors = beansOfType.values()

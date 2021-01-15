@@ -7,7 +7,7 @@ import org.springframework.http.HttpMethod
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestTemplate
-import restdoc.client.api.model.RestWebInvocation
+import restdoc.client.api.model.HttpInvocation
 
 @Component
 class HttpTaskExecutor {
@@ -15,7 +15,7 @@ class HttpTaskExecutor {
     @Autowired
     private lateinit var restTemplate: RestTemplate
 
-    fun execute(invocation: RestWebInvocation): ResponseEntity<Any?>? {
+    fun execute(invocation: HttpInvocation): ResponseEntity<Any?>? {
         val requestHeaders = HttpHeaders()
         invocation.requestHeaders.forEach { (k, v) -> requestHeaders.addAll(k, v) }
         val httpEntity = HttpEntity(invocation.requestBody, requestHeaders)

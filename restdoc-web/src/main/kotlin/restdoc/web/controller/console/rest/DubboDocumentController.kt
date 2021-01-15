@@ -1,21 +1,15 @@
 package restdoc.web.controller.console.rest
 
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.web.bind.annotation.*
-import restdoc.client.api.model.DubboInvocation
-import restdoc.client.api.model.DubboInvocationResult
-import restdoc.client.api.model.ObjectHolder
-import restdoc.remoting.InvokeCallback
-import restdoc.remoting.common.RequestCode
-import restdoc.remoting.protocol.RemotingCommand
-import restdoc.remoting.protocol.RemotingSerializable
+import org.springframework.web.bind.annotation.PatchMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RestController
 import restdoc.web.base.auth.Verify
-import restdoc.web.controller.console.model.TestDubboMicroserviceResult
 import restdoc.web.controller.console.model.UpdateDubboDocumentDto
 import restdoc.web.core.Result
 import restdoc.web.core.Status
 import restdoc.web.core.ok
-import restdoc.web.schedule.*
 import restdoc.web.repository.DubboDocumentRepository
 
 /**
@@ -26,12 +20,6 @@ class DubboDocumentController {
 
     @Autowired
     lateinit var dubboDocumentRepository: DubboDocumentRepository
-
-    @Autowired
-    lateinit var clientRegistryCenter: ClientRegistryCenter
-
-    @Autowired
-    lateinit var scheduleServiceImpl: ScheduleServiceImpl
 
     @PatchMapping("/dubboDocument/{id}")
     fun patch(@PathVariable id: String,
@@ -64,7 +52,7 @@ class DubboDocumentController {
     /**
      * Invoke remote microservice
      */
-    @PostMapping("/dubboDocument/{id}/test")
+    /*@PostMapping("/dubboDocument/{id}/test")
     fun testMicroservice(@PathVariable id: String,
                          @RequestBody params: Map<String, Any?>): Result {
 
@@ -115,5 +103,5 @@ class DubboDocumentController {
         } else {
             error("远程服务无响应")
         }
-    }
+    }*/
 }
