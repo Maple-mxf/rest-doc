@@ -2,7 +2,8 @@ package restdoc.rpc.client.common.model.http;
 
 public class HeaderExpression extends AbstractNameValueExpression<String> {
 
-    public HeaderExpression(String expression) {
+    public HeaderExpression(
+          String expression) {
         super(expression);
     }
 

@@ -17,6 +17,7 @@
             crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.css" rel="stylesheet"/>
     <script src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.js"></script>
+
     <style type="text/css">
 
         .project-item :hover {
@@ -24,7 +25,6 @@
         }
 
         body {
-            /*margin: 10px;*/
             font-family: 'Roboto', sans-serif;
             font-size: 14px;
         }
@@ -38,49 +38,47 @@
         <div class="layui-row">
             <div class="layui-logo layui-col-md2">REST doc</div>
             <div class="layui-col-md10" style="margin-left:10%">
-                <ul class="layui-nav">
-                    <li class="layui-nav-item">
-                        <a href="">控制台 </a>
-                    </li>
-                </ul>
             </div>
-
         </div>
     </div>
     <div class="layui-side layui-bg-black">
         <div class="layui-side-scroll">
-            <ul class="layui-nav layui-nav-tree" lay-filter="test">
+            <ul class="layui-nav layui-nav-tree" lay-filter="menu">
                 <li class="layui-nav-item">
-                    <a href="">
+                    <a href="javascript:void(0)" id="apiProject">
                         <i class="layui-icon layui-icon-template-1" style="font-size: 20px; color: #1E9FFF;"></i>
-                        <span  style="font-size: 16px">&nbsp;&nbsp;API项目</span>
+                        <span style="font-size: 16px">&nbsp;&nbsp;API项目</span>
                     </a>
                 </li>
                 <li class="layui-nav-item">
-                    <a href="">
-                        <i class="layui-icon layui-icon-app" style="font-size: 20px; color: #1E9FFF;"></i>
-                        <span  style="font-size: 16px">&nbsp;&nbsp;开发者应用</span>
+                    <a href="javascript:void(0)"  id="devApplication">
+                        <i class="layui-icon layui-icon-app"
+                           style="font-size: 20px; color: #1E9FFF;"></i>
+                        <span style="font-size: 16px">&nbsp;&nbsp;开发者应用</span>
                     </a>
                 </li>
                 <li class="layui-nav-item">
-                    <a href="">
+                    <a href="javascript:void(0)">
                         <i class="layui-icon layui-icon-group" style="font-size: 20px; color: #1E9FFF;"></i>
-                        <span  style="font-size: 16px">&nbsp;开发团队</span>
+                        <span style="font-size: 16px">&nbsp;开发团队</span>
                     </a>
                 </li>
                 <li class="layui-nav-item">
-                    <a href="">
+                    <a href="javascript:void(0)">
                         <i class="layui-icon layui-icon-set-fill" style="font-size: 20px; color: #1E9FFF;"></i>
-                        <span  style="font-size: 16px">&nbsp;&nbsp;设置</span>
+                        <span style="font-size: 16px">&nbsp;&nbsp;设置</span>
                     </a>
                 </li>
             </ul>
         </div>
     </div>
-    <div class="layui-body">
-        <div style="padding: 15px;">
-
-        </div>
+    <div class="layui-body"  id="contentDiv">
+        <iframe id="content" src="/restdoc/project/view" style="width: 100%;height: 900px" scrolling="no"
+                frameborder="no" border="0"
+                marginwidth="0"
+                marginheight="0"
+                onload="window.osiFrame = OverlayScrollbars(document.getElementById('content').contentWindow.document.body, { autoUpdate : false, resize: 'both' })">
+        </iframe>
     </div>
     <div class="layui-footer">
         © RESTdoc - 效率至上
@@ -92,13 +90,22 @@
 <script type="text/javascript" th:inline="javascript">
     NProgress.configure({easing: 'ease', speed: 600});
     NProgress.start();
-
+    $('#contentDiv').overlayScrollbars({ /* your options */ });
     var lay;
     layui.use(['element', 'layer'], function () {
         var element = layui.element;
         var layer = layui.layer;
         var $ = layui.jquery;
         lay = layui.layer;
+
+        element.on('nav(menu)', function (elem) {
+            if ('apiProject' === elem[0].id) {
+                $('#content').attr("src", '/restdoc/project/view');
+            } else if ('devApplication' === elem[0].id) {
+                $("#content").attr("src", '/restdoc/remoteApplication/view/all');
+            }
+
+        });
     });
     setTimeout(function () {
         NProgress.done();

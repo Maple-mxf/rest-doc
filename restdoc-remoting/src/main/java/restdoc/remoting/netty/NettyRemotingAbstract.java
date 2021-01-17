@@ -541,17 +541,25 @@ public abstract class NettyRemotingAbstract {
                     if (event != null && listener != null) {
                         switch (event.getType()) {
                             case IDLE:
+                            {
                                 listener.onChannelIdle(event.getRemoteAddr(), event.getChannel());
                                 break;
+                            }
                             case CLOSE:
+                            {
                                 listener.onChannelClose(event.getRemoteAddr(), event.getChannel());
                                 break;
+                            }
                             case CONNECT:
+                            {
                                 listener.onChannelConnect(event.getRemoteAddr(), event.getChannel());
                                 break;
-                            case EXCEPTION:
-                                listener.onChannelException(event.getRemoteAddr(), event.getChannel());
+                            }
+                            case EXCEPTION: {
+                                NettyExceptionEvent nee = (NettyExceptionEvent) event;
+                                listener.onChannelException(nee.getRemoteAddr(), nee.getChannel(), nee.getCause());
                                 break;
+                            }
                             default:
                                 break;
 

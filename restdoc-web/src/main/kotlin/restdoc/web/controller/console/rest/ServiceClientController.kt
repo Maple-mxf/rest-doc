@@ -10,7 +10,7 @@ import restdoc.web.core.ok
 import restdoc.web.model.SYS_ADMIN
 import restdoc.web.service.WebDocumentService
 
-
+@Deprecated(message = "")
 @RestController
 class ServiceClientController {
 

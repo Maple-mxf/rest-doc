@@ -41,7 +41,7 @@ public class AgentImpl implements Agent {
     public AgentImpl(ServerProperties serverProperties) {
         this.serverProperties = serverProperties;
         RemotingTask acknowledgeVersionTask = new RemotingTask(ackVersionTaskId,
-                RemotingTaskType.SYNC, createRequestCommand(RequestCode.ACKNOWLEDGE_VERSION, null),
+                RemotingTaskType.SYNC, createRequestCommand(RequestCode.AcknowledgeVersion, null),
                 3000, null);
         this.addTask(acknowledgeVersionTask);
 
@@ -60,7 +60,7 @@ public class AgentImpl implements Agent {
                     }
 
                     @Override
-                    public void onChannelException(String remoteAddr, Channel channel) {
+                    public void onChannelException(String remoteAddr, Channel channel, Throwable cause) {
                     }
 
                     @Override

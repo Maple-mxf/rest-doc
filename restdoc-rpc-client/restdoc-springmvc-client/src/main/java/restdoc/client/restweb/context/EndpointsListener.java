@@ -104,14 +104,7 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
                                 emptyTemplate.setPackageName(handlerMethod.getBeanType().getPackage().getName());
                                 emptyTemplate.setEndpoint(handlerMethod.getMethod().getName());
                                 emptyTemplate.setPattern(pattern);
-                                emptyTemplate.setController(handlerMethod.getBeanType().toString());
-
-                                /*@Deprecated*/
-                                /*emptyTemplate.setUriVarFields(Arrays.stream(pattern.split("/"))
-                                        .filter(snippet -> snippet.matches("^[\\{][a-zA-Z]+[0-9A-Za-z]*[\\}]$"))
-                                        .map(snippet -> snippet.replaceFirst("\\{", "")
-                                                .replaceAll("\\}", ""))
-                                        .toArray(String[]::new));*/
+                                emptyTemplate.setController(handlerMethod.getBeanType().getName());
 
                                 this.transparentApi(emptyTemplate, requestMappingInfo, handlerMethod);
 

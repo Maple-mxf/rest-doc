@@ -6,7 +6,7 @@ import java.util.List;
 
 public abstract class AbstractApiPayload extends RemotingSerializable {
 
-    private ApplicationType applicationType;
+    public ApplicationType applicationType;
 
     public AbstractApiPayload(ApplicationType applicationType) {
         this.applicationType = applicationType;
@@ -30,9 +30,7 @@ public abstract class AbstractApiPayload extends RemotingSerializable {
         this.service = service;
     }
 
-    public ApplicationType getApplicationType() {
-        return applicationType;
-    }
+    public  ApplicationType getApplicationType(){return this.applicationType;}
 
     public void setApplicationType(ApplicationType applicationType) {
         this.applicationType = applicationType;

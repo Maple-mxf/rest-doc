@@ -11,7 +11,6 @@ public abstract class AbstractNameValueExpression<T> implements NameValueExpress
 
     protected final boolean isNegated;
 
-
     AbstractNameValueExpression(String expression) {
         int separator = expression.indexOf('=');
         if (separator == -1) {
@@ -40,7 +39,6 @@ public abstract class AbstractNameValueExpression<T> implements NameValueExpress
     public boolean isNegated() {
         return this.isNegated;
     }
-
 
     protected abstract boolean isCaseSensitiveName();
 

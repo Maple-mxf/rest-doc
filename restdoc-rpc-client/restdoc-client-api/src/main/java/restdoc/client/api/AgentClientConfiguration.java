@@ -35,9 +35,9 @@ public interface AgentClientConfiguration {
      * Request process handelr
      */
     default void registryRemotingHandler() {
-        getAgent().addHandler(RequestCode.GET_CLIENT_INFO, getReportClientInfoHandler());
-        getAgent().addHandler(RequestCode.GET_EXPOSED_API, getExportAPIHandler());
-        getAgent().addHandler(RequestCode.INVOKE_API, getInvokeAPIHandler());
+        getAgent().addHandler(RequestCode.CollectClientInfo, getReportClientInfoHandler());
+        getAgent().addHandler(RequestCode.CollectApi, getExportAPIHandler());
+        getAgent().addHandler(RequestCode.InvokeApi, getInvokeAPIHandler());
     }
 
     /**

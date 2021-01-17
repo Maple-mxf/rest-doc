@@ -65,7 +65,10 @@ open class AdminLoginController {
         redisTemplate.opsForValue().set(cookieValue, user)
         redisTemplate.expire(cookieValue, expireTime, TimeUnit.MILLISECONDS)
 
-        return "redirect:project/view"
+        return "redirect:index"
     }
+
+    @GetMapping("/index")
+    fun main() = "main"
 
 }

@@ -2,6 +2,7 @@ package restdoc.web.schedule
 
 import io.netty.channel.Channel
 import restdoc.remoting.InvokeCallback
+import restdoc.remoting.common.RequestCode
 import restdoc.remoting.exception.RemotingSendRequestException
 import restdoc.remoting.exception.RemotingTimeoutException
 import restdoc.remoting.netty.NettyRemotingServer
@@ -10,9 +11,13 @@ import restdoc.remoting.protocol.RemotingSerializable
 import restdoc.remoting.protocol.RemotingSysResponseCode
 import restdoc.rpc.client.common.model.ApplicationClientInfo
 import restdoc.rpc.client.common.model.ApplicationType
-import restdoc.web.util.MD5Util
+import restdoc.rpc.client.common.model.DubboApiPayload
+import restdoc.rpc.client.common.model.http.HttpApiPayload
+import restdoc.rpc.client.common.model.springcloud.SpringCloudApiPayload
 import java.net.InetSocketAddress
-import java.nio.charset.StandardCharsets
+import java.util.*
+import java.util.concurrent.CopyOnWriteArrayList
+import kotlin.collections.ArrayList
 
 /**
  * ClientState
@@ -29,6 +34,8 @@ enum class OS {
     Mac
 }
 
+data class ExceptionLog(val cause: Throwable, val time: Long)
+
 interface ClientCallback {
     fun call(client: Client)
 }
@@ -36,6 +43,10 @@ interface ClientCallback {
 interface Client {
 
     fun id(): String
+
+    fun service(): String
+
+    fun connectTime(): Long
 
     fun host(): String
 
@@ -47,11 +58,17 @@ interface Client {
 
     fun state(): ClientState
 
+    fun channel(): Channel
+
     fun start(): Boolean
 
     fun idle(): Boolean
 
     fun stop(): Boolean
+
+    fun onException(cause: Throwable)
+
+    fun exceptions(): List<ExceptionLog>
 
     fun echo(): Long
 
@@ -76,18 +93,23 @@ interface Client {
 
     fun afterStarted(): List<ClientCallback>
 
-    fun at(): ApplicationType
+    fun applicationType(): ApplicationType
 }
 
-class ClientAdapter(private val remotingServer: NettyRemotingServer,
-                    private val info: ApplicationClientInfo) : Client {
+class ClientAdapter(private val id: String,
+                    private val info: ApplicationClientInfo,
+                    private val remotingServer: NettyRemotingServer,
+                    private val apiManager: ApiManager) : Client {
 
     val at: ApplicationType = info.applicationType
-    val id = id()
 
     private val channel: Channel = info.channel
     private val isa: InetSocketAddress = channel.remoteAddress() as InetSocketAddress
     private var state: ClientState = ClientState.Stopped
+    private val els: MutableList<ExceptionLog> = CopyOnWriteArrayList()
+    private val connectTime: Long = Date().time
+
+
     private val beforeIdleCallbacks = ArrayList<ClientCallback>()
     private val afterIdleCallbacks = ArrayList<ClientCallback>()
     private val beforeStoppedCallbacks = ArrayList<ClientCallback>()
@@ -95,7 +117,7 @@ class ClientAdapter(private val remotingServer: NettyRemotingServer,
     private val beforeStartedCallbacks = ArrayList<ClientCallback>()
     private val afterStartedCallbacks = ArrayList<ClientCallback>()
 
-    override fun id(): String = MD5Util.MD5Encode(info.id, StandardCharsets.UTF_8.name())
+    override fun id(): String = id
     override fun host(): String = isa.address.hostAddress
     override fun port(): Int = isa.port
     override fun os(): OS {
@@ -105,7 +127,8 @@ class ClientAdapter(private val remotingServer: NettyRemotingServer,
             else -> OS.Mac
         }
     }
-
+    override fun service(): String = info.service
+    override fun channel(): Channel = info.channel
     override fun hostName(): String = info.hostname
     override fun state(): ClientState = state
     override fun beforeIdle(): List<ClientCallback> = beforeIdleCallbacks
@@ -114,6 +137,8 @@ class ClientAdapter(private val remotingServer: NettyRemotingServer,
     override fun afterStopped(): List<ClientCallback> = afterStoppedCallbacks
     override fun beforeStarted(): List<ClientCallback> = beforeStartedCallbacks
     override fun afterStarted(): List<ClientCallback> = afterStartedCallbacks
+    override fun connectTime(): Long = connectTime
+    override fun exceptions(): List<ExceptionLog> = els
 
     @Throws(RemotingSendRequestException::class, InterruptedException::class, RemotingTimeoutException::class)
     override fun <R> execute(command: RemotingCommand, type: Class<R>, timeoutMillis: Long): RemotingCommand {
@@ -162,5 +187,31 @@ class ClientAdapter(private val remotingServer: NettyRemotingServer,
         return 0L
     }
 
-    override fun at(): ApplicationType = info.applicationType
+    override fun applicationType(): ApplicationType = info.applicationType
+
+    override fun onException(cause: Throwable) {
+        this.els.add(ExceptionLog(cause, Date().time))
+    }
+
+    init {
+        afterStartedCallbacks.add(object : ClientCallback {
+            override fun call(client: Client) {
+                val code = RequestCode.CollectApi
+                // Schedule call task
+                val apiDescriptors = when {
+                    ApplicationType.REST_WEB == client.applicationType() -> {
+                        client.executeExpectType(RemotingCommand.createRequestCommand(code, null), HttpApiPayload::class.java, 3000L)
+                    }
+                    ApplicationType.DUBBO == client.applicationType() -> {
+                        client.executeExpectType(RemotingCommand.createRequestCommand(code, null), DubboApiPayload::class.java, 3000L)
+                    }
+                    else -> {
+                        client.executeExpectType(RemotingCommand.createRequestCommand(code, null), SpringCloudApiPayload::class.java, 3000L)
+                    }
+                }
+                // Init client api
+                apiManager.add(client.id(), client.applicationType(), apiDescriptors.apiList)
+            }
+        })
+    }
 }

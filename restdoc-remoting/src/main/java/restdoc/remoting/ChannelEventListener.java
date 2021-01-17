@@ -13,7 +13,7 @@ public interface ChannelEventListener {
 
     void onChannelClose(final String remoteAddr, final Channel channel);
 
-    void onChannelException(final String remoteAddr, final Channel channel);
+    void onChannelException(final String remoteAddr, final Channel channel, final Throwable cause);
 
     void onChannelIdle(final String remoteAddr, final Channel channel);
 }

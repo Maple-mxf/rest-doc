@@ -8,6 +8,7 @@ import restdoc.web.core.code.FakeCodeSampleGenerator
 import restdoc.web.core.code.JavaCodeSampleGenerator
 import restdoc.web.core.code.PythonCodeSampleGenerator
 import restdoc.web.model.doc.http.*
+import restdoc.web.schedule.ClientState
 import java.util.*
 
 /**
@@ -220,10 +221,18 @@ internal data class SyncDocumentResultVo(val totalQuantity: Int, val savedQuanti
 data class DTreeVO(val id: String,
                    val title: String,
                    val parentId: String,
-                   var children: List<Any> = listOf(),
+                   var children: MutableList<Any> = mutableListOf(),
                    var type: NodeType = NodeType.RESOURCE,
+                   val checkArr: List<Any> = listOf(
+                           mapOf("type" to 0, "checked" to 0)
+                   ),
                    var iconClass: String? = null,
                    val spread: Boolean = false)
+
+data class DTreeResVO(
+        val status: Map<String, Any> = mutableMapOf("code" to "200", "message" to "操作成功"),
+        val data: List<Any>
+)
 
 data class HttpApiTestLogDeProjectVO(
         val method: HttpMethod,
@@ -252,3 +261,14 @@ data class RestWebInvocationResultVO(val isSuccessful: Boolean,
                                      val responseHeaders: MutableMap<String, MutableList<String>>,
                                      val responseBody: Any?,
                                      val queryParam: Map<String, Any?>? = null)
+
+
+data class RemoteApplicationVO(
+        val id: String,
+        val remoteAddress: String,
+        val hostname: String,
+        val os: String,
+        val service: String,
+        val applicationType: String,
+        val state: ClientState,
+        val connectTime: Long)

@@ -11,11 +11,7 @@ import java.util.Objects;
  * ApplicationClientInfo
  */
 public class ApplicationClientInfo {
-    @Deprecated
-    private final String id;
     private final Channel channel;
-    @Deprecated
-    private final String clientId;
     private final LanguageCode language;
     private final int version;
     private volatile long lastUpdateTimestamp = System.currentTimeMillis();
@@ -25,12 +21,8 @@ public class ApplicationClientInfo {
     private ApplicationType applicationType = ApplicationType.REST_WEB;
     private String serializationProtocol;
 
-    public ApplicationClientInfo(String id, Channel channel, String clientId, LanguageCode language, int version) {
-
-        // id = UUID.randomUUID().toString().replaceAll("-", "");
-        this.id = id;
+    public ApplicationClientInfo(  Channel channel, LanguageCode language, int version) {
         this.channel = channel;
-        this.clientId = clientId;
         this.language = language;
         this.version = version;
 
@@ -40,10 +32,6 @@ public class ApplicationClientInfo {
 
     public Channel getChannel() {
         return channel;
-    }
-
-    public String getClientId() {
-        return clientId;
     }
 
     public LanguageCode getLanguage() {
@@ -110,7 +98,6 @@ public class ApplicationClientInfo {
         return version == that.version &&
                 lastUpdateTimestamp == that.lastUpdateTimestamp &&
                 Objects.equals(channel, that.channel) &&
-                Objects.equals(clientId, that.clientId) &&
                 language == that.language &&
                 Objects.equals(hostname, that.hostname) &&
                 Objects.equals(osname, that.osname) &&
@@ -121,14 +108,13 @@ public class ApplicationClientInfo {
 
     @Override
     public int hashCode() {
-        return Objects.hash(channel, clientId, language, version, lastUpdateTimestamp, hostname, osname, service, applicationType, serializationProtocol);
+        return Objects.hash(channel, language, version, lastUpdateTimestamp, hostname, osname, service, applicationType, serializationProtocol);
     }
 
     @Override
     public String toString() {
         return "ApplicationClientInfo{" +
                 "channel=" + channel +
-                ", clientId='" + clientId + '\'' +
                 ", language=" + language +
                 ", version=" + version +
                 ", lastUpdateTimestamp=" + lastUpdateTimestamp +
@@ -138,9 +124,5 @@ public class ApplicationClientInfo {
                 ", applicationType=" + applicationType +
                 ", serializationProtocol='" + serializationProtocol + '\'' +
                 '}';
-    }
-
-    public String getId() {
-        return id;
     }
 }

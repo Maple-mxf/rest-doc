@@ -6,6 +6,7 @@ import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import restdoc.web.base.auth.Verify
+import restdoc.web.model.ProjectType
 import restdoc.web.repository.ProjectRepository
 
 @Controller
@@ -15,6 +16,7 @@ class DocumentNavViewController {
 
     @Autowired
     private lateinit var projectRepository: ProjectRepository
+
 
     @GetMapping("/{projectId}/document/nav/view")
     fun index(@PathVariable projectId: String, model: Model): String {
@@ -26,12 +28,9 @@ class DocumentNavViewController {
 
         model.addAttribute("projectName", project.name)
 
-        return "explorer/nav"
-        /*when {
+        return when {
             ProjectType.REST_WEB == project.type -> {
-                val instanceNumber = clientRegistryCenter.getClientKeysFilterApplicationType(ApplicationType.REST_WEB).size
-                model.addAttribute("instanceNumber", instanceNumber)
-                if (instanceNumber > 0) model.addAttribute("hasInstance", true)
+                model.addAttribute("hasInstance", false)
                 "explorer/nav"
             }
             ProjectType.DUBBO.equals(project.type) -> {
@@ -40,7 +39,6 @@ class DocumentNavViewController {
             else -> {
                 ""
             }
-        }*/
-
+        }
     }
 }

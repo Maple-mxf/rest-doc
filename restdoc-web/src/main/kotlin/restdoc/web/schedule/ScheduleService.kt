@@ -2,6 +2,7 @@ package restdoc.web.schedule
 
 import io.netty.channel.Channel
 import org.springframework.boot.CommandLineRunner
+import org.springframework.stereotype.Component
 import restdoc.client.api.model.ClientInfo
 import restdoc.remoting.ChannelEventListener
 import restdoc.remoting.common.RequestCode
@@ -12,11 +13,7 @@ import restdoc.remoting.protocol.LanguageCode
 import restdoc.remoting.protocol.RemotingCommand
 import restdoc.remoting.protocol.RemotingSerializable
 import restdoc.rpc.client.common.model.ApplicationClientInfo
-import restdoc.rpc.client.common.model.ApplicationType
-import restdoc.rpc.client.common.model.DubboApiPayload
-import restdoc.rpc.client.common.model.http.HttpApiPayload
-import restdoc.rpc.client.common.model.springcloud.SpringCloudApiPayload
-import java.net.InetSocketAddress
+import restdoc.web.schedule.handler.AcknowledgeVersionHandler
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -36,10 +33,10 @@ interface ScheduleService : CommandLineRunner {
     fun scheduleAsync(clientId: String, code: Int)
 }
 
-//@Component("scheduleServiceAdapterImpl")
-open class ScheduleServiceAdapterImpl(private val scheduleProperties: ScheduleProperties,
-                                      private val clientManager: ClientManager,
-                                      private val apiManager: ApiManager) : ScheduleService {
+@Component("scheduleServiceAdapterImpl")
+class ScheduleServiceAdapterImpl(private val scheduleProperties: ScheduleProperties,
+                                 val clientManager: ClientManager,
+                                 val apiManager: ApiManager) : ScheduleService {
 
     private val remotingServer: NettyRemotingServer
     private val executor: ExecutorService = Executors.newSingleThreadExecutor()
@@ -53,10 +50,12 @@ open class ScheduleServiceAdapterImpl(private val scheduleProperties: SchedulePr
     }
 
     override fun scheduleProperties(): ScheduleProperties = scheduleProperties
+
     override fun addHandler(code: Int, handler: NettyRequestProcessor) {
         this.remotingServer.registerProcessor(code, handler, null)
     }
 
+    @Deprecated(message = "addTask")
     override fun addTask(code: Int, task: RemotingTaskWrapper) {
         this.tasks[code] = task
     }
@@ -68,42 +67,66 @@ open class ScheduleServiceAdapterImpl(private val scheduleProperties: SchedulePr
     }
 
     override fun run(vararg args: String?) {
-
         start()
     }
 
     init {
+        // 1 Init remoting server
         val config = NettyServerConfig()
         config.listenPort = scheduleProperties.port
         remotingServer = NettyRemotingServer(config, ScheduleServiceChannelEventListener())
 
+        // 2 Init request task
         val collectClientInfoTask = RemotingTaskWrapper()
         collectClientInfoTask.apply {
             this.async = false
-            this.command = RemotingCommand.createRequestCommand(RequestCode.GET_CLIENT_INFO, null)
+            this.command = RemotingCommand.createRequestCommand(RequestCode.CollectClientInfo, null)
             responseType = ClientInfo::class.java
         }
 
         val collectClientApiTask = RemotingTaskWrapper()
         collectClientApiTask.apply {
             this.async = false
-            this.command = RemotingCommand.createRequestCommand(RequestCode.GET_EXPOSED_API, null)
+            this.command = RemotingCommand.createRequestCommand(RequestCode.CollectApi, null)
             responseType = ClientInfo::class.java
         }
 
-        this.addTask(RequestCode.GET_CLIENT_INFO, collectClientInfoTask)
-        this.addTask(RequestCode.GET_EXPOSED_API, collectClientApiTask)
+        this.addTask(RequestCode.CollectClientInfo, collectClientInfoTask)
+        this.addTask(RequestCode.CollectApi, collectClientApiTask)
+
+        // 3 Init handler
+        addHandler(RequestCode.AcknowledgeVersion, AcknowledgeVersionHandler())
     }
 
     private inner class ScheduleServiceChannelEventListener : ChannelEventListener {
         override fun onChannelConnect(remote: String, channel: Channel) {
 
-            // Init Client point
-            val request = RemotingCommand.createRequestCommand(RequestCode.GET_CLIENT_INFO, null)
+            if (channel.isActive && channel.isOpen && channel.isRegistered && channel.isWritable){
+                // Instance Client
+                clientManager.add(instanceClient(channel), remotingServer)
+                System.err.println("start client")
+            }
+        }
+
+        override fun onChannelClose(remote: String, channel: Channel) {
+            clientManager.get(channel)?.stop()
+        }
+
+        override fun onChannelException(remote: String, channel: Channel, cause: Throwable) {
+            clientManager.get(channel)?.onException(cause)
+        }
+
+        override fun onChannelIdle(remote: String, channel: Channel) {
+            clientManager.get(channel)?.idle()
+        }
+
+        private fun instanceClient(channel: Channel): ApplicationClientInfo {
+            val request = RemotingCommand.createRequestCommand(RequestCode.CollectClientInfo, null)
             val response = remotingServer.invokeSync(channel, request, 10000L)
             val body = RemotingSerializable.decode(response.body, ClientInfo::class.java)
-            val address = channel.remoteAddress() as InetSocketAddress
-            val aci = ApplicationClientInfo(null, channel, "tcp://${address.address.hostAddress}:${address.port}", LanguageCode.JAVA, 1)
+
+            return ApplicationClientInfo(channel,
+                    LanguageCode.JAVA, 1)
                     .apply {
                         hostname = body.hostname
                         osname = body.osname
@@ -111,29 +134,6 @@ open class ScheduleServiceAdapterImpl(private val scheduleProperties: SchedulePr
                         serializationProtocol = body.serializationProtocol
                         applicationType = body.type
                     }
-
-            // Instance Client
-            val adapter = clientManager.add(aci, remotingServer)
-            val code = RequestCode.GET_EMPTY_API_TEMPLATES
-
-            // Schedule call task
-            val apiDescriptors = when {
-                ApplicationType.REST_WEB == aci.applicationType -> schedule<HttpApiPayload>(adapter.id(), code).apiList
-                ApplicationType.DUBBO == aci.applicationType -> schedule<DubboApiPayload>(adapter.id(), code).apiList
-                else -> schedule<SpringCloudApiPayload>(adapter.id(), code).apiList
-            }
-
-            // Init client api
-            apiManager.add(adapter.id(), aci.applicationType, apiDescriptors)
-        }
-
-        override fun onChannelClose(remote: String, channel: Channel) {
-        }
-
-        override fun onChannelException(remote: String, channel: Channel) {
-        }
-
-        override fun onChannelIdle(remote: String, channel: Channel) {
         }
     }
 }

@@ -43,77 +43,28 @@
 
     </style>
 </head>
-<body class="layui-layout-body">
-<div class="layui-layout layui-layout-admin">
-    <div class="layui-header">
+<body  >
+<div class="layui-row">
+    <div style="padding: 15px;">
         <div class="layui-row">
-            <div class="layui-logo layui-col-md2">REST doc</div>
-            <div class="layui-col-md10" style="margin-left:10%">
-                <ul class="layui-nav">
-                    <li class="layui-nav-item">
-                        <a href="">控制台 </a>
-                    </li>
-                </ul>
-            </div>
-
-        </div>
-    </div>
-    <div class="layui-side layui-bg-black">
-        <div class="layui-side-scroll">
-            <ul class="layui-nav layui-nav-tree" lay-filter="test">
-                <li class="layui-nav-item">
-                    <a href="">
-                        <i class="layui-icon layui-icon-template-1" style="font-size: 20px; color: #1E9FFF;"></i>
-                        <span  style="font-size: 16px">&nbsp;&nbsp;API项目</span>
-                    </a>
-                </li>
-                <li class="layui-nav-item">
-                    <a href="">
-                        <i class="layui-icon layui-icon-app" style="font-size: 20px; color: #1E9FFF;"></i>
-                        <span  style="font-size: 16px">&nbsp;&nbsp;开发者应用</span>
-                    </a>
-                </li>
-                <li class="layui-nav-item">
-                    <a href="">
-                        <i class="layui-icon layui-icon-group" style="font-size: 20px; color: #1E9FFF;"></i>
-                        <span  style="font-size: 16px">&nbsp;开发团队</span>
-                    </a>
-                </li>
-                <li class="layui-nav-item">
-                    <a href="">
-                        <i class="layui-icon layui-icon-set-fill" style="font-size: 20px; color: #1E9FFF;"></i>
-                        <span  style="font-size: 16px">&nbsp;&nbsp;设置</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </div>
-    <div class="layui-body">
-        <div style="padding: 15px;">
-            <div class="layui-row">
-                <div class="layui-row layui-col-space20 layui-col-md-offset3">
-                    <div class="layui-col-md2">
-                        <a href="javascript:void(0);" id="createProjectBtn"
-                           class="layui-btn  layui-btn-primary  layui-btn-lg">创建项目</a>
-                    </div>
-                </div>
-            </div>
-            <div class="layui-row layui-col-space20" id="content">
-            </div>
-            <div class="layui-row layui-col-space12">
-                <div class="layui-inline">
-                    <button class="layui-btn layui-btn-primary  layui-btn-lg" id="previousBtn">上一页</button>
-                </div>
-
-                <div class="layui-inline">
-                    <button class="layui-btn layui-btn-primary  layui-btn-lg" id="nextBtn">下一页</button>
+            <div class="layui-row layui-col-space20 layui-col-md-offset3">
+                <div class="layui-col-md2">
+                    <a href="javascript:void(0);" id="createProjectBtn"
+                       class="layui-btn  layui-btn-primary  layui-btn-lg">创建项目</a>
                 </div>
             </div>
         </div>
+        <div class="layui-row layui-col-space20" id="content">
+        </div>
+        <div class="layui-row layui-col-space12">
+            <div class="layui-inline">
+                <button class="layui-btn layui-btn-primary  layui-btn-lg" id="previousBtn">上一页</button>
+            </div>
 
-    </div>
-    <div class="layui-footer">
-        © RESTdoc - 效率至上
+            <div class="layui-inline">
+                <button class="layui-btn layui-btn-primary  layui-btn-lg" id="nextBtn">下一页</button>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -127,9 +78,6 @@
 <script th:src="@{/layui/layui.js}"></script>
 <script th:src="@{/admin/js/util.js}"></script>
 <script type="text/javascript" th:inline="javascript">
-    NProgress.configure({easing: 'ease', speed: 600});
-    NProgress.start();
-
     function renderPage() {
         requestAndRenderContent();
     }
@@ -235,7 +183,7 @@
 
 
             if (desc == null) desc = "";
-            var snippet = " </div>   <div id='" + projectId + "' ondblclick='clickProject(this)' class=\"layui-col-md3 project-item \">\n" +
+            var snippet = " </div>   <div id='" + projectId + "' ondblclick='clickProject(this)' class=\"layui-col-md2 project-item \">\n" +
                 "            <div class=\"layui-card project-block\">\n" +
                 "                <div class=\"layui-card-header\">" + name + "</div>\n" +
 
@@ -244,8 +192,8 @@
                 "   <label ><a onclick='editProject(\"" + projectId + "\")' title='编辑' href='javascript:void(0);'><i class=\"layui-icon layui-icon-edit\" style=\"font-size: 22px; color: #393D49;\"></i></a></label>     " +
                 "   <label ><a onclick='deleteProject(\"" + projectId + "\")' title='删除' href='javascript:void(0);'><i class=\"layui-icon layui-icon-delete\" style=\"font-size: 22px; color: #393D49;\"></i></a></label>     " +
                 "   <label ><a onclick='projectDetail(\"" + projectId + "\")' title='详情' href='javascript:void(0);'><i class=\"layui-icon layui-icon-list\" style=\"font-size: 22px; color: #393D49;\"></i></a></label>     " +
-                "<label> <a title='查看项目文档' href='/restdoc/" + projectId + "/document/nav/view'><i class=\"layui-icon layui-icon-home\" style=\"font-size: 22px; color: #393D49;\"></i></a>  \n</label>        </div>\n" +
-                "            </div>\n" +
+                "<label> <a target='_blank' title='查看项目文档' href='/restdoc/" + projectId + "/document/nav/view'><i class=\"layui-icon layui-icon-home\" style=\"font-size: 22px; color: #393D49;\"></i></a>  \n</label>        </div>\n" +
+                "            </div>" +
                 "        </div>";
             html = html + snippet;
         }
@@ -407,11 +355,6 @@
     function disablePrevious() {
         $("#previousBtn").addClass("layui-btn-disabled")
     }
-
-    setTimeout(function () {
-        NProgress.done();
-        $(".fade").removeClass("out");
-    }, 1000);
 </script>
 </body>
 </html>

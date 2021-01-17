@@ -30,6 +30,8 @@ interface WebDocumentService {
     fun syncHttpApiDoc(clientId: String, projectId: String, user: String): Map<Resource, Map<Resource, List<RestWebDocument>>>
 
     fun contrastHttpApiDoc(clientId: String, projectId: String, user: String)
+
+    fun groupToTree(projectId: String, user: String, descriptors: List<HttpApiDescriptor>): Map<Resource, Map<Resource, List<RestWebDocument>>>
 }
 
 /**
@@ -40,6 +42,76 @@ interface WebDocumentService {
 @Service
 open class RestWebDocumentServiceImpl : WebDocumentService {
 
+    override fun groupToTree(projectId: String, user: String, descriptors: List<HttpApiDescriptor>):
+            Map<Resource, Map<Resource, List<RestWebDocument>>> {
+        return descriptors
+                .groupBy { it.packageName }
+                .entries
+                .map { it.key to it.value.groupBy { t -> t.controller } }
+                .map {
+
+                    val packageSource = Resource(
+                            id = Objects.hashCode(it.first).toString(),
+                            tag = it.first,
+                            name = it.first,
+                            pid = "root",
+                            projectId = projectId,
+                            createTime = Date().time,
+                            order = 0,
+                            createBy = user)
+
+                    val classResourceMap = it.second.entries.map { t ->
+                        val classResource = Resource(
+                                id = Objects.hashCode(t.key).toString(),
+                                tag = t.key,
+                                name = t.key,
+                                pid = packageSource.id,
+                                projectId = projectId,
+                                createTime = Date().time,
+                                order = 0,
+                                createBy = user)
+
+                        val docs = t.value.map { d ->
+
+                            val requestHeaderDescriptors = mappingHeader(d.requestHeaderParameters)
+                            val responseHeaderDescriptors = mappingHeader(d.responseHeaderParameters)
+                            val requestBodyDescriptors = mappingBody(d.requestBodyParameters)
+                            val responseBodyDescriptors = mappingBody(listOf(d.responseBodyDescriptor))
+                            val queryParamDescriptors = d.queryParamParameters.map { qpp -> QueryParamDescriptor(field = qpp.name, value = qpp.defaultValue) }
+                            val uriVarsDescriptors = d.pathVariableParameters.map { pvp -> URIVarDescriptor(field = pvp.name, value = pvp.defaultValue) }
+                            val matrixVarDescriptors = d.matrixVariableParameters.map { mvp ->
+                                MatrixVariableDescriptor().apply {
+                                    this.field = mvp.name
+                                    this.defaultValue = mvp.defaultValue
+                                    this.pathVar = mvp.supplementary.toString()
+                                    this.required = mvp.require
+                                }
+                            }
+
+                            RestWebDocument(
+                                    id = Objects.hashCode(d.controller, d.pattern).toString(),
+                                    projectId = projectId,
+                                    name = d.name,
+                                    resource = classResource.id!!,
+                                    url = d.pattern,
+                                    description = d.pattern,
+                                    requestHeaderDescriptor = requestHeaderDescriptors,
+                                    requestBodyDescriptor = requestBodyDescriptors,
+                                    responseBodyDescriptors = responseBodyDescriptors,
+                                    queryParamDescriptors = queryParamDescriptors,
+                                    method = HttpMethod.resolve(d.method),
+                                    uriVarDescriptors = uriVarsDescriptors,
+                                    responseHeaderDescriptor = responseHeaderDescriptors,
+                                    matrixVariableDescriptors = matrixVarDescriptors,
+                                    stem = Stem.DEVELOPER_APPLICATION
+                            )
+                        }
+                        classResource to docs
+                    }.toMap()
+                    packageSource to classResourceMap
+                }.toMap()
+    }
+
     @Autowired
     lateinit var mongoTemplate: MongoTemplate
 
@@ -48,10 +120,15 @@ open class RestWebDocumentServiceImpl : WebDocumentService {
 
     private fun mappingBody(rbps: Collection<HttpApiDescriptor.ParameterDescriptor>) =
             rbps.flatMap { rbp ->
-                if ("java.lang.Object" == rbp.type && rbp.supplementary != null && rbp.supplementary.toString().isNotBlank()) {
+                if ("java.lang.Object" == rbp.type && rbp.supplementary != null) {
                     try {
-                        val tree = mapper.readTree(rbp.supplementary.toString())
-                        JsonDeProjector(tree).deProject()
+                        return if (rbp.supplementary is String) {
+                            val tree = mapper.readTree(rbp.supplementary.toString())
+                            JsonDeProjector(tree).deProject()
+                        } else {
+                            val tree = mapper.readTree(mapper.writeValueAsString(rbp.supplementary))
+                            JsonDeProjector(tree).deProject()
+                        }
                     } catch (e: Exception) {
                         e.printStackTrace(); listOf<BodyFieldDescriptor>()
                     }
@@ -63,9 +140,7 @@ open class RestWebDocumentServiceImpl : WebDocumentService {
 
     @DistributeLock(name = "syncHttpApiDoc", message = "syncHttpApiDoc", type = DistributeLockType.MONGODB)
     override fun syncHttpApiDoc(clientId: String, projectId: String, user: String): Map<Resource, Map<Resource, List<RestWebDocument>>> {
-        // Invoke remote client api info
-        // TODO  API check
-//        val emptyApiTemplates = scheduleServiceImpl.syncGetEmptyApiTemplates(clientId)
+
         val emptyApiTemplates = ArrayList<HttpApiDescriptor>()
 
         val ret = emptyApiTemplates

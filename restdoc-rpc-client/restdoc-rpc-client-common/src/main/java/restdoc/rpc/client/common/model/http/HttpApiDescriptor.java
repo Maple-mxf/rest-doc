@@ -1,5 +1,6 @@
 package restdoc.rpc.client.common.model.http;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import restdoc.rpc.client.common.model.ApiDescriptor;
 
 import java.util.*;
@@ -30,10 +31,13 @@ public class HttpApiDescriptor implements ApiDescriptor {
     /**
      * @see HeaderExpression
      */
+    @JsonIgnore
     private List<HeaderExpression> requestHeaderExpressions;
 
+    @JsonIgnore
     private List<HeaderExpression> responseHeaderExpressions;
 
+    @JsonIgnore
     private List<ParamExpression> paramExpressions;
 
     private Map<String, List<ParameterDescriptor>> requestHeaderParameters = new HashMap<>(4);

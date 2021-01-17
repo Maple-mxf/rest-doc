@@ -29,7 +29,11 @@ interface ApiManager {
 open class ApiManagerAdapterImpl : ApiManager {
 
     private val table: Table<String, ApplicationType, List<ApiDescriptor>> =
-            Tables.newCustomTable(ConcurrentHashMap()) { ConcurrentHashMap() }
+            Tables.newCustomTable(
+                    ConcurrentHashMap<String, ConcurrentHashMap<ApplicationType, List<ApiDescriptor>>>()
+                            as Map<String, MutableMap<ApplicationType, List<ApiDescriptor>>>?)
+            { ConcurrentHashMap<ApplicationType, List<ApiDescriptor>>() }
+
 
     override fun add(clientId: String, at: ApplicationType, apiDescriptors: List<ApiDescriptor>): Boolean {
         if (table.containsRow(clientId) && table.containsColumn(at) && table.containsValue(apiDescriptors))
@@ -49,6 +53,6 @@ open class ApiManagerAdapterImpl : ApiManager {
 
     override fun list(clientId: String, at: ApplicationType): List<ApiDescriptor> {
         if (!table.containsRow(clientId)) throw IllegalArgumentException("client no api :${clientId}")
-        return ArrayList(table.get(clientId,at))
+        return ArrayList(table.get(clientId, at))
     }
 }

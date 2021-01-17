@@ -1,13 +1,9 @@
 package restdoc.rpc.client.common.model;
 
-
 import restdoc.rpc.client.common.model.dubbo.DubboApiDescriptor;
 
 import java.util.List;
 
-/**
- * ReportClientExportInterfacesBody
- */
 public class DubboApiPayload extends AbstractApiPayload {
 
     private List<DubboApiDescriptor> apiList;

@@ -16,9 +16,8 @@
 </head>
 <body>
 <div class="layui-fluid">
-    <div class="layui-row">
-        <div id="test1"></div>
-
+    <div class="layui-row" id="apiTreeDiv">
+        <ul id="apiTree" class="dtree" data-id="0"></ul>
     </div>
 </div>
 
@@ -28,40 +27,44 @@
 <script th:src="@{/layui/layui.js}"></script>
 <script th:src="@{/admin/js/jquery.js}"></script>
 <script>
-    var treeData = null;
     var clientId = $("#clientId").val();
     var ap = $("#ap").val();
-    var requestURL = "/restdoc/document/serviceClient/" + clientId + "/apiList?ap=" + ap;
-
-    $.ajax({
-        type: 'GET',
-        contentType: 'application/json;charset=utf-8',
-        url: requestURL,
-        async: false,
-        success: function (data) {
-            if (data['code'] === "200") {
-                treeData = data['data'];
-            } else {
-                layer.msg(data['message']);
-            }
-        },
-        error: function () {
-            layer.msg("网络异常")
-        }
-    });
 
     var layuiTree = null;
 
-    layui.use(['tree','dtree'], function () {
+    layui.use(['tree', 'dtree'], function () {
         var tree = layui.tree;
         layuiTree = tree;
         var dtree = layui.dtree;
 
-        var inst1 = tree.render({
-            elem: '#test1',
-            id: "apiListTree",
-            data: treeData,
-            showCheckbox: true
+        var treeIns = dtree.render({
+            elem: "#apiTree",
+            url: "/restdoc/remoteApplication/" + clientId + '/api/list?at=' + ap,
+            dataFormat: "list",
+            width: '100%',
+            scroll: "#apiTreeDiv",
+            initLevel: 1,
+            ficon: ["1", "-1"],
+            skin: "zdy",
+            iconfontStyle: {
+                fnode: {
+                    node: {
+                        open: "dtree-icon-xiangxia1",
+                        close: "dtree-icon-xiangyou"
+                    }
+                }
+            },
+            checkbar: true,
+            checkbarLoad:'node',
+            checkbarType:' no-all',
+        });
+
+        dtree.on("node('apiTree')", function (obj) {
+            if (!obj.param.leaf) {
+                treeIns.clickSpread(obj.dom);
+            } else {
+
+            }
         });
     });
 

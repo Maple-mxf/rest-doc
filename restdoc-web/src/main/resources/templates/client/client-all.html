@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>服务实例列表</title>
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}"/>
+    <link rel="stylesheet" th:href="@{/admin/css/pearForm.css}"/>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+
+    <style type="text/css">
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+<div class="layui-row">
+    <table style="font-family: Roboto,serif;font-size: 15px"
+           id="serviceListTable" lay-filter="serviceListTable"></table>
+</div>
+<script type="text/html" id="openrationBar">
+    <a class="layui-btn layui-btn-normal layui-btn-sm" lay-event="apiList">API列表</a>
+</script>
+
+<script th:src="@{/layui/layui.js}"></script>
+<script th:src="@{/admin/js/jquery.js}"></script>
+<script th:src="@{/admin/js/util.js}"></script>
+<script type="text/html" id="stateTpl">
+    {{#  if(d.state === 'Started'){ }}
+    <span class="layui-badge layui-bg-green">Started</span>
+    {{#  } else if(d.state === 'Stopped') { }}
+    <span class="layui-badge">Stopped</span>
+    {{#  } else { }}
+    <span class="layui-badge layui-bg-orange">Idle</span>
+    {{#  } }}
+</script>
+<script type="text/javascript" th:inline="javascript">
+    var ap = [[${ap}]];
+    var pageURL = '/restdoc/remoteApplication/all';
+
+    layui.use(['table', 'laytpl'], function () {
+        var table = layui.table;
+
+        table.render({
+            elem: '#serviceListTable'
+            , url: pageURL
+            , cols: [
+                [
+                    {
+                        field: 'id', width: 270, title: 'id'
+                    },
+                    {
+                        field: 'applicationType', width: 120, title: '应用类型'
+                    },
+                    {
+                        field: 'service', width: 150, title: '服务名称'
+                    },
+                    {
+                        field: 'remoteAddress', width: 140, title: '远程地址'
+                    },
+                    {
+                        field: 'hostname', width: 180, title: '主机名称'
+                    },
+                    {
+                        field: 'os', width: 120, title: '操作系统'
+                    },
+                    {
+                        field: 'state', width: 90, title: '状态', templet: '#stateTpl'
+                    },
+                    {
+                        field: 'connectTime',
+                        width: 170,
+                        title: '连接时间',
+                        templet: "<div>{{layui.util.toDateString(d.connectTime, 'yyyy/MM/dd HH:mm:ss')}}</div>"
+                    },
+                    {fixed: 'right', title: '操作', toolbar: '#openrationBar'}
+                ]
+            ]
+        });
+
+        table.on('tool(serviceListTable)', function (obj) {
+            if (obj.event === 'apiList') {
+                layer.open({
+                    type: 2,
+                    title: 'API列表',
+                    content: '/restdoc/remoteApplication/view/' + obj.data.id + '/api/list?ap=' + obj.data.applicationType,
+                    area: ['1000px', '600px']/*,
+                    btn: ['同步API', '取消']*/
+                });
+            }
+        });
+    });
+</script>
+</body>
+</html>

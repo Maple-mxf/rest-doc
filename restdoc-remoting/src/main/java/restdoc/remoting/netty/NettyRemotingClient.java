@@ -33,6 +33,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * NettyRemotingClient
  */
 public class NettyRemotingClient extends NettyRemotingAbstract implements RemotingClient {
+
     private static final Logger log = LoggerFactory.getLogger(NettyRemotingClient.class);
 
     private static final long LOCK_TIMEOUT_MILLIS = 3000;
@@ -59,7 +60,7 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
     private final ChannelEventListener channelEventListener;
     private DefaultEventExecutorGroup defaultEventExecutorGroup;
     private Bootstrap handler;
-    
+
     /**
      * current channel. Each successful invocation of  will
      * replace this with new channel and close old channel.
@@ -251,24 +252,6 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
             }
         }
     }
-
-    /*public void reconnect() throws RemotingException {
-        try {
-            connectLock.lock();
-
-            // 1 Disconnect
-            disconnect();
-
-            // 2 Connect
-            connect();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RemotingException(e.getMessage());
-        } finally {
-            connectLock.unlock();
-        }
-    }*/
 
     @Override
     public void shutdown() {
@@ -764,7 +747,9 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
             log.warn("NETTY CLIENT PIPELINE: exceptionCaught exception.", cause);
             closeChannel(ctx.channel());
             if (NettyRemotingClient.this.channelEventListener != null) {
-                NettyRemotingClient.this.putNettyEvent(new NettyEvent(NettyEventType.EXCEPTION, remoteAddress, ctx.channel()));
+                NettyRemotingClient.this.putNettyEvent(
+                        new NettyExceptionEvent(NettyEventType.EXCEPTION, remoteAddress, ctx.channel(), cause)
+                );
             }
         }
     }
