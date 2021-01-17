@@ -57,4 +57,18 @@ public class OrderController {
         System.err.println(dto.getName());
         return Response.ok();
     }
+
+
+    /**
+     * buildRequestParamDto 错误示例
+     *
+     * @param dto
+     * @return
+     */
+    @GetMapping("/buildRequestParamDto1")
+    @Deprecated
+    public Response buildRequestParamDt1o(@RequestParam @RequestBody RequestParamDto dto) {
+        System.err.println(dto.getName());
+        return Response.ok();
+    }
 }

@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="stylesheet" th:href="@{/layui/css/layui.css}"/>
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" th:href="@{/admin/images/restdoc-logo-notag.png}">
     <link rel="stylesheet" th:href="@{/admin/css/fangge-style.css}"/>
     <link rel="stylesheet" th:href="@{/admin/css/doc-common.css}"/>
     <link rel="stylesheet" th:href="@{/admin/css/nav.css}"/>
@@ -19,6 +20,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/overlayscrollbars/1.13.1/js/jquery.overlayScrollbars.min.js"
             integrity="sha512-3Ofi0j25Ar6Hyqk2sdvfuoVCvvN6nE6Dh/eoMc8RQ/bnCvO8wpE+M5KyJz6T08T7pl/x82I/3Y5Amz9n3T9Esw=="
             crossorigin="anonymous"></script>
+
     <script type="application/ld+json">
 
         {
@@ -41,31 +43,51 @@
         }
 
     </script>
-    <link href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.css" rel="stylesheet"/>
     <script src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.js"></script>
 
 </head>
-<body class="layui-layout-body"  >
+<body class="layui-layout-body">
 <div class="layui-layout layui-layout-admin">
-    <div class="layui-header">
-        <ul class="layui-nav layui-bg-black" id="navigation" lay-filter="test">
-            <li class="layui-nav-item">
-                <a href="/restdoc/project/view"> <i class="layui-icon layui-icon-return"
-                                                    style="font-size: 17px;  color: white;"></i>&nbsp;</a>
-            </li>
-            <li class="layui-nav-item layui-this"><a id="home" th:href="@{'/'+${projectId}+'/document/nav/view'}">文档</a>
-            </li>
-            <li class="layui-nav-item"><a id="clientServiceList" href="javascript:;">服务实例
-                <span class="layui-badge-dot" th:if="${hasInstance}"></span>
-            </a>
-            </li>
-            <li class="layui-nav-item"><a id="projectSettings" href="javascript:;">设置
-            </a>
-            </li>
-        </ul>
-    </div>
+    <div class="layui-side layui-bg-black" style="top: 0">
+        <div class="layui-row" style="text-align: center">
+            <img th:src="@{/admin/images/restdoc-logo.png}" alt="" width="60%"/>
+        </div>
+        <div class="layui-row" style="margin-top: 5px">
+            <div class="layui-side-scroll">
+                <ul class="layui-nav layui-nav-tree" lay-filter="menu">
+                    <li class="layui-nav-item layui-this">
+                        <a href="javascript:void(0)" id="apiDocument">
+                            <i class="layui-icon layui-icon-template-1" style="font-size: 20px; color: #1E9FFF;"></i>
+                            <span style="font-size: 16px">&nbsp;&nbsp;文档</span>
+                        </a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="javascript:void(0)" id="devapp">
+                            <i class="layui-icon layui-icon-app"
+                               style="font-size: 20px; color: #1E9FFF;"></i>
+                            <span style="font-size: 16px">&nbsp;&nbsp;开发者应用</span>
+                        </a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="javascript:void(0)" id="devApplication">
+                            <i class="layui-icon layui-icon-component"
+                               style="font-size: 20px; color: #1E9FFF;"></i>
+                            <span style="font-size: 16px">&nbsp;&nbsp;功能</span>
+                        </a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="javascript:void(0)" id="projectSettings">
+                            <i class="layui-icon layui-icon-set-fill" style="font-size: 20px; color: #1E9FFF;"></i>
+                            <span style="font-size: 16px">&nbsp;&nbsp;设置</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
 
-    <div class="layui-body" style="left: 50px" id="apiDocDiv">
+    </div>
+    <div class="layui-body" style="top: 20px" id="apiDocDiv">
         <div class="layui-fluid">
             <iframe src="" id="docContentFrame" frameborder="0" height="1000px" style="width: 100%; "
                     onload="window.osiFrame = OverlayScrollbars(document.getElementById('docContentFrame').contentWindow.document.body, { autoUpdate : false, resize: 'both' })"
@@ -84,7 +106,7 @@
 <script th:src="@{/admin/js/util.js}"></script>
 <script th:src="@{/admin/js/api_navigation.js}"></script>
 <script>
-    NProgress.configure({ easing: 'ease', speed: 300 });
+    NProgress.configure({easing: 'ease', speed: 300});
 
     $("body").show();
     NProgress.start();
@@ -96,8 +118,7 @@
 </script>
 <script>
 
-
-    $('#apiDocDiv').overlayScrollbars({ /* your options */ });
+    $('#apiDocDiv').overlayScrollbars({ /* your options */});
     layui.config({
         base: '/restdoc/layui/lay/extends/'
     }).use([
@@ -112,15 +133,31 @@
         var projectId = $("#projectId").val();
 
         $("#docContentFrame").attr("src", "/restdoc/project/" + projectId + "/navigation/view");
-        element.on('nav(test)', function (elem) {
-            if ('clientServiceList' === elem[0].id) {
-                layer.closeAll();
-                $("#docContentFrame").attr("src", '/restdoc/microservice/view/list?ap=REST_WEB&projectId=' + projectId);
-                // setIframeHeight("docContentFrame");
+
+        element.on('nav(menu)', function (elem) {
+            if ('apiDocument' === elem[0].id) {
+                NProgress.start();
+                $('#docContentFrame').attr("src", "/restdoc/project/" + projectId + "/navigation/view");
+                setTimeout(function () {
+                    NProgress.done();
+                    $(".fade").removeClass("out");
+                }, 1000);
             } else if ('projectSettings' === elem[0].id) {
+                NProgress.start();
                 $("#docContentFrame").attr("src", '/restdoc/project/' + projectId + '/settings/view');
-                // setIframeHeight("docContentFrame");
+                setTimeout(function () {
+                    NProgress.done();
+                    $(".fade").removeClass("out");
+                }, 50);
+            } else if ('devapp' === elem[0].id) {
+                NProgress.start();
+                $("#docContentFrame").attr("src", '/restdoc/devapp/view/all');
+                setTimeout(function () {
+                    NProgress.done();
+                    $(".fade").removeClass("out");
+                }, 50);
             }
+
         });
     });
     $('#restweb-project-nav').addClass("layui-this");

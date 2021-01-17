@@ -18,9 +18,9 @@ import java.nio.charset.StandardCharsets
 
 
 @RestController
-@RequestMapping("/remoteApplication")
+@RequestMapping("/devapp")
 @Verify(role = [SYS_ADMIN])
-class RemoteApplicationApiController(private val apiManager: ApiManager) {
+class DevApplicationApiController(private val apiManager: ApiManager) {
 
     @RequestMapping(value = ["/{clientId}/api/list"], produces = [MediaType.APPLICATION_JSON_VALUE])
     fun list(@PathVariable clientId: String, @RequestParam at: ApplicationType): Any {

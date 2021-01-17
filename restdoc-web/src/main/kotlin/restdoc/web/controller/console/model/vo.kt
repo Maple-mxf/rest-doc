@@ -263,7 +263,7 @@ data class RestWebInvocationResultVO(val isSuccessful: Boolean,
                                      val queryParam: Map<String, Any?>? = null)
 
 
-data class RemoteApplicationVO(
+data class DevApplicationVO(
         val id: String,
         val remoteAddress: String,
         val hostname: String,

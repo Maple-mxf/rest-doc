@@ -31,15 +31,17 @@
     var ap = $("#ap").val();
 
     var layuiTree = null;
+    var DTree = null;
 
     layui.use(['tree', 'dtree'], function () {
         var tree = layui.tree;
+
         layuiTree = tree;
         var dtree = layui.dtree;
 
         var treeIns = dtree.render({
             elem: "#apiTree",
-            url: "/restdoc/remoteApplication/" + clientId + '/api/list?at=' + ap,
+            url: "/restdoc/devapp/" + clientId + '/api/list?at=' + ap,
             dataFormat: "list",
             width: '100%',
             scroll: "#apiTreeDiv",
@@ -62,11 +64,15 @@
         dtree.on("node('apiTree')", function (obj) {
             if (!obj.param.leaf) {
                 treeIns.clickSpread(obj.dom);
-            } else {
-
             }
         });
+        DTree = dtree;
     });
+
+    function getCheckedApi() {
+        var checkbarNodes = DTree.getCheckbarNodesParam("apiTree");
+        return checkbarNodes;
+    }
 
     function getCheckApi() {
         var apiList = layuiTree.getChecked('apiListTree');

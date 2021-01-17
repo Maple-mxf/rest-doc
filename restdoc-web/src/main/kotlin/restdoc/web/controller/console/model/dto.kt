@@ -217,4 +217,6 @@ data class CopyDocumentDocDto(val name: String, val documentId: String, val reso
 
 data class XmlTextDto(val text: String)
 
+data class ImportHttpApiDto(val id: String, val pid: String, val title: String, val clientId: String, val projectId: String)
+
 

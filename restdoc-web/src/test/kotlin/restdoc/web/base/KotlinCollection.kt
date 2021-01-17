@@ -1,8 +1,6 @@
 package restdoc.web.base
 
-import org.junit.Test
-
-class Version(val major: Int, val minor: Int): Comparable<Version> {
+class Version(val major: Int, val minor: Int) : Comparable<Version> {
     override fun compareTo(other: Version): Int {
         if (this.major != other.major) {
             return this.major - other.major
@@ -12,20 +10,27 @@ class Version(val major: Int, val minor: Int): Comparable<Version> {
     }
 }
 
-fun main() {
-    println(Version(1, 2) > Version(1, 3))
-    println(Version(2, 0) > Version(1, 5))
+
+
+typealias function = (string: String) -> Any
+
+// ||
+interface Function<String, Object> {
+    fun apply(t: String): Object
 }
 
-/**
- *
- */
-open class KotlinCollection {
+fun executeCallback(func: Function<String, Object>) {
+    val thatString = func.apply("a")
+    print(thatString)
+}
 
-    @Test
-    fun testCollectionTransform() {
-        val map = mutableListOf("HelloWorld")
-                .map { return@map it.toUpperCase() }
-        println(map)
-    }
+//
+fun executeCallback(func: function) {
+    // func()
+    val thatString = func.invoke("b")
+    print(thatString)
+}
+
+fun main() {
+    executeCallback { t -> t.toUpperCase() }
 }

@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestParam
 import restdoc.rpc.client.common.model.ApplicationType
 
 @Controller
-@RequestMapping("/remoteApplication/view")
-class RemoteApplicationApiViewController {
+@RequestMapping("/devapp/view")
+class DevApplicationApiViewController {
 
     @GetMapping("/{clientId}/api/list")
     fun list(model: Model,

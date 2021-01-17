@@ -1,6 +1,5 @@
 package restdoc.web.projector;
 
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.*;
 import org.springframework.util.Assert;

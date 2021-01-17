@@ -15,7 +15,7 @@
     </style>
 </head>
 <body>
-<div class="layui-row">
+<div class="layui-row" style="padding: 15px">
     <table style="font-family: Roboto,serif;font-size: 15px"
            id="serviceListTable" lay-filter="serviceListTable"></table>
 </div>
@@ -37,10 +37,11 @@
 </script>
 <script type="text/javascript" th:inline="javascript">
     var ap = [[${ap}]];
-    var pageURL = '/restdoc/remoteApplication/all';
+    var pageURL = '/restdoc/devapp/all';
 
-    layui.use(['table', 'laytpl'], function () {
+    layui.use(['table', 'layer'], function () {
         var table = layui.table;
+        var layer = layui.layer;
 
         table.render({
             elem: '#serviceListTable'
@@ -84,9 +85,17 @@
                 layer.open({
                     type: 2,
                     title: 'API列表',
-                    content: '/restdoc/remoteApplication/view/' + obj.data.id + '/api/list?ap=' + obj.data.applicationType,
-                    area: ['1000px', '600px']/*,
-                    btn: ['同步API', '取消']*/
+                    content: '/restdoc/devapp/view/' + obj.data.id + '/api/list?ap=' + obj.data.applicationType,
+                    area: ['1000px', '600px'],
+                    btn: ['同步API', '取消'],
+                    yes: function (index, dom) {
+                        var res = window["layui-layer-iframe" + index].getCheckedApi();
+                        if (res.length === 0) {
+                            layer.msg("请选择要导入的API!");
+                            return;
+                        }
+                        layer.close(index)
+                    }
                 });
             }
         });

@@ -7,6 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/admin/css/pearForm.css}"/>
     <link rel="stylesheet" th:href="@{/admin/css/nav.css}"/>
+    <link rel="shortcut icon" th:href="@{/admin/images/restdoc-logo-notag.png}">
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/overlayscrollbars/1.13.1/css/OverlayScrollbars.min.css"
           integrity="sha512-jN4O0AUkRmE6Jwc8la2I5iBmS+tCDcfUd1eq8nrZIBnDKTmCp5YxxNN1/aetnAH32qT+dDbk1aGhhoaw5cJNlw=="
@@ -42,35 +43,41 @@
         </div>
     </div>
     <div class="layui-side layui-bg-black">
-        <div class="layui-side-scroll">
-            <ul class="layui-nav layui-nav-tree" lay-filter="menu">
-                <li class="layui-nav-item">
-                    <a href="javascript:void(0)" id="apiProject">
-                        <i class="layui-icon layui-icon-template-1" style="font-size: 20px; color: #1E9FFF;"></i>
-                        <span style="font-size: 16px">&nbsp;&nbsp;API项目</span>
-                    </a>
-                </li>
-                <li class="layui-nav-item">
-                    <a href="javascript:void(0)"  id="devApplication">
-                        <i class="layui-icon layui-icon-app"
-                           style="font-size: 20px; color: #1E9FFF;"></i>
-                        <span style="font-size: 16px">&nbsp;&nbsp;开发者应用</span>
-                    </a>
-                </li>
-                <li class="layui-nav-item">
-                    <a href="javascript:void(0)">
-                        <i class="layui-icon layui-icon-group" style="font-size: 20px; color: #1E9FFF;"></i>
-                        <span style="font-size: 16px">&nbsp;开发团队</span>
-                    </a>
-                </li>
-                <li class="layui-nav-item">
-                    <a href="javascript:void(0)">
-                        <i class="layui-icon layui-icon-set-fill" style="font-size: 20px; color: #1E9FFF;"></i>
-                        <span style="font-size: 16px">&nbsp;&nbsp;设置</span>
-                    </a>
-                </li>
-            </ul>
+        <div class="layui-row" style="text-align: center">
+            <img th:src="@{/admin/images/restdoc-logo.png}" alt="" width="60%"/>
         </div>
+        <div class="layui-row" style="margin-top: 20px">
+            <div class="layui-side-scroll">
+                <ul class="layui-nav layui-nav-tree" lay-filter="menu">
+                    <li class="layui-nav-item layui-this">
+                        <a href="javascript:void(0)" id="apiProject">
+                            <i class="layui-icon layui-icon-template-1" style="font-size: 20px; color: #1E9FFF;"></i>
+                            <span style="font-size: 16px">&nbsp;&nbsp;API项目</span>
+                        </a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="javascript:void(0)"  id="devApplication">
+                            <i class="layui-icon layui-icon-app"
+                               style="font-size: 20px; color: #1E9FFF;"></i>
+                            <span style="font-size: 16px">&nbsp;&nbsp;开发者应用</span>
+                        </a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="javascript:void(0)">
+                            <i class="layui-icon layui-icon-group" style="font-size: 20px; color: #1E9FFF;"></i>
+                            <span style="font-size: 16px">&nbsp;开发团队</span>
+                        </a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="javascript:void(0)">
+                            <i class="layui-icon layui-icon-set-fill" style="font-size: 20px; color: #1E9FFF;"></i>
+                            <span style="font-size: 16px">&nbsp;&nbsp;设置</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
     </div>
     <div class="layui-body"  id="contentDiv">
         <iframe id="content" src="/restdoc/project/view" style="width: 100%;height: 900px" scrolling="no"
@@ -102,7 +109,7 @@
             if ('apiProject' === elem[0].id) {
                 $('#content').attr("src", '/restdoc/project/view');
             } else if ('devApplication' === elem[0].id) {
-                $("#content").attr("src", '/restdoc/remoteApplication/view/all');
+                $("#content").attr("src", '/restdoc/devapp/view/all');
             }
 
         });
