@@ -189,6 +189,7 @@ open class FakeCodeSampleGenerator : MapToCodeSample {
 
         doc.requestHeaderDescriptor.forEach {
             sb.append(it.field).append(": ").append(it.value).append("\n")
+            // TODO
             if (it.field == HttpHeaders.CONTENT_TYPE) mtp = MediaType.parseMediaType(it.value.joinToString(HEADER_VALUE_DELIMITER))
         }
         if (mtp == null) mtp = MediaType.APPLICATION_JSON

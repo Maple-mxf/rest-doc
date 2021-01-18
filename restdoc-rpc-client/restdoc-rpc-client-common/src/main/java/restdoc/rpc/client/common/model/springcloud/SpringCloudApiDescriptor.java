@@ -8,7 +8,7 @@ import restdoc.rpc.client.common.model.ApiDescriptor;
 public class SpringCloudApiDescriptor implements ApiDescriptor {
 
     @Override
-    public String uniqueKey() {
+    public String id() {
         return null;
     }
 }

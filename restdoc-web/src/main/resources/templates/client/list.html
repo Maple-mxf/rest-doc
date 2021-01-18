@@ -37,7 +37,8 @@
 </script>
 <script type="text/javascript" th:inline="javascript">
     var ap = [[${ap}]];
-    var pageURL = '/restdoc/devapp/all';
+    var projectId = [[${projectId}]];
+    var pageURL = '/restdoc/devapp/list?projectId=' + projectId;
 
     layui.use(['table', 'layer'], function () {
         var table = layui.table;
@@ -87,13 +88,59 @@
                     title: 'API列表',
                     content: '/restdoc/devapp/view/' + obj.data.id + '/api/list?ap=' + obj.data.applicationType,
                     area: ['1000px', '600px'],
-                    btn: ['同步API', '取消'],
+                    btn: ['导入API', '取消'],
                     yes: function (index, dom) {
                         var res = window["layui-layer-iframe" + index].getCheckedApi();
                         if (res.length === 0) {
                             layer.msg("请选择要导入的API!");
                             return;
                         }
+
+                        var selectApi = [];
+                        for (var i = 0; i < res.length; i++) {
+                            selectApi.push(res[i].nodeId)
+                        }
+
+                        var importRequestData = {
+                            clientId: obj.data.id,
+                            projectId: projectId,
+                            apiIds: selectApi
+                        };
+
+                        console.info(importRequestData)
+
+                        var loadIndex = layer.msg('正在导入中...', {
+                            icon: 16
+                            , shade: 0.01,
+                            time: 20000000 //2秒关闭（如果不配置，默认是3秒）
+                        });
+
+                        $.ajax({
+                            method:"POST",
+                            async:false,
+                            url:'/restdoc/devapp/api/import',
+                            data:JSON.stringify(importRequestData),
+                            contentType:'application/json',
+                            success:function (res) {
+
+                                if (res.code === '200')
+                                {
+
+                                    setTimeout(function () {
+                                        layer.close(loadIndex);
+                                        layer.msg("导入成功")
+                                    }, 2000);
+
+                                }else{layer.msg(res.message)}
+                            },
+                            error:function (msg) {
+                                layer.close(loadIndex);
+                                layer.msg(msg)
+                            }
+                        });
+
+
+
                         layer.close(index)
                     }
                 });

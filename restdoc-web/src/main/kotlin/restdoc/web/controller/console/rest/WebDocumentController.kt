@@ -28,7 +28,7 @@ import restdoc.web.model.doc.DocType
 import restdoc.web.model.doc.http.*
 import restdoc.web.repository.ProjectRepository
 import restdoc.web.repository.ResourceRepository
-import restdoc.web.repository.RestWebDocumentRepository
+import restdoc.web.repository.HttpDocumentRepository
 import restdoc.web.util.FieldType
 import restdoc.web.util.IDUtil.id
 import restdoc.web.util.IDUtil.now
@@ -54,7 +54,7 @@ class WebDocumentController {
     private lateinit var projectRepository: ProjectRepository
 
     @Autowired
-    private lateinit var restWebDocumentRepository: RestWebDocumentRepository
+    private lateinit var httpDocumentRepository: HttpDocumentRepository
 
     @Autowired
     private lateinit var redisTemplate: RedisTemplate<String, Any>
@@ -71,7 +71,7 @@ class WebDocumentController {
 
     @GetMapping("/{id}")
     fun get(@PathVariable id: String): Result {
-        val doc = restWebDocumentRepository.findById(id).orElseThrow { Status.INVALID_REQUEST.instanceError("id参数错误") }
+        val doc = httpDocumentRepository.findById(id).orElseThrow { Status.INVALID_REQUEST.instanceError("id参数错误") }
         return ok(transformRestDocumentToVO(doc))
     }
 
@@ -116,7 +116,7 @@ class WebDocumentController {
                 uriVarDescriptors = uriVarDescriptor,
                 docType = DocType.API)
 
-        restWebDocumentRepository.save(document)
+        httpDocumentRepository.save(document)
 
         GlobalScope.launch {
             optimizationAndAutocomplete(dto.projectId, document)
@@ -131,7 +131,7 @@ class WebDocumentController {
 
         if (dto.documentId == null) return failure(Status.INVALID_REQUEST, "缺少ID参数")
 
-        val oldDocument = restWebDocumentRepository.findById(dto.documentId!!)
+        val oldDocument = httpDocumentRepository.findById(dto.documentId!!)
                 .orElseThrow { Status.BAD_REQUEST.instanceError("文档不存在") }
 
         dto.url = dto.lookupPath()
@@ -198,7 +198,7 @@ class WebDocumentController {
                 description = dto.description,
                 lastUpdateTime = Date().time)
 
-        val updateResult = restWebDocumentRepository.update(document)
+        val updateResult = httpDocumentRepository.update(document)
 
         if (updateResult.matchedCount > 0) {
             GlobalScope.launch {
@@ -220,14 +220,14 @@ class WebDocumentController {
     @Verify(role = [SYS_ADMIN])
     @DeleteMapping("/{id}")
     fun delete(@PathVariable id: String): Result {
-        restWebDocumentRepository.deleteById(id)
+        httpDocumentRepository.deleteById(id)
         return ok()
     }
 
     @PatchMapping("/{id}")
     @Deprecated(message = "patch")
     fun patch(@PathVariable id: String, @RequestBody @Valid dto: UpdateNodeDto): Result {
-        val updateResult = restWebDocumentRepository.update(Query().addCriteria(Criteria("_id").`is`(id)),
+        val updateResult = httpDocumentRepository.update(Query().addCriteria(Criteria("_id").`is`(id)),
                 Update().set("name", dto.name))
         return ok()
     }
@@ -269,7 +269,7 @@ class WebDocumentController {
                     it.description = getRecommendDescription(projectId = projectId, field = it.path, type = FieldDescType.RESPONSE_PARAM)
                 }
 
-        restWebDocumentRepository.update(doc)
+        httpDocumentRepository.update(doc)
     }
 
     /**
@@ -378,7 +378,7 @@ class WebDocumentController {
     @GetMapping("/{id}/snippet")
     @Verify(role = [ANY_ROLE])
     fun getSnippet(@PathVariable id: String, @RequestParam type: String): LayuiTable {
-        val uriVars = restWebDocumentRepository.findById(id)
+        val uriVars = httpDocumentRepository.findById(id)
                 .map {
                     when (type) {
                         "uri" -> it.uriVarDescriptors
@@ -398,7 +398,7 @@ class WebDocumentController {
     fun patchURIVarsSnippet(@PathVariable id: String,
                             @Valid @RequestBody dto: UpdateURIVarSnippetDto): Result {
 
-        val doc = restWebDocumentRepository.findById(id).orElseThrow(Status.BAD_REQUEST::instanceError)
+        val doc = httpDocumentRepository.findById(id).orElseThrow(Status.BAD_REQUEST::instanceError)
 
         doc.uriVarDescriptors?.filter { it.field == dto.field }
                 ?.forEach {
@@ -406,7 +406,7 @@ class WebDocumentController {
                     it.description = dto.description
                 }
         doc.lastUpdateTime = Date().time
-        restWebDocumentRepository.update(doc)
+        httpDocumentRepository.update(doc)
 
         return ok(transformRestDocumentToVO(doc))
     }
@@ -416,7 +416,7 @@ class WebDocumentController {
     fun patchRequestHeaderSnippet(@PathVariable id: String,
                                   @Valid @RequestBody dto: UpdateRequestHeaderSnippetDto): Result {
 
-        val doc = restWebDocumentRepository.findById(id).orElseThrow(Status.BAD_REQUEST::instanceError)
+        val doc = httpDocumentRepository.findById(id).orElseThrow(Status.BAD_REQUEST::instanceError)
 
         doc.requestHeaderDescriptor?.filter { it.field == dto.field }
                 ?.forEach {
@@ -424,7 +424,7 @@ class WebDocumentController {
                     it.description = dto.description
                 }
         doc.lastUpdateTime = Date().time
-        restWebDocumentRepository.update(doc)
+        httpDocumentRepository.update(doc)
 
         return ok(transformRestDocumentToVO(doc))
     }
@@ -434,7 +434,7 @@ class WebDocumentController {
     fun patchRequestBodySnippet(@PathVariable id: String,
                                 @Valid @RequestBody dto: UpdateRequestBodySnippetDto): Result {
 
-        val doc = restWebDocumentRepository.findById(id).orElseThrow(Status.BAD_REQUEST::instanceError)
+        val doc = httpDocumentRepository.findById(id).orElseThrow(Status.BAD_REQUEST::instanceError)
 
         doc.requestBodyDescriptor?.filter { it.path == dto.path }
                 ?.forEach {
@@ -442,7 +442,7 @@ class WebDocumentController {
                     it.description = dto.description
                 }
         doc.lastUpdateTime = Date().time
-        restWebDocumentRepository.update(doc)
+        httpDocumentRepository.update(doc)
 
         return ok(transformRestDocumentToVO(doc))
     }
@@ -452,7 +452,7 @@ class WebDocumentController {
     fun patchResponseBodySnippet(@PathVariable id: String,
                                  @Valid @RequestBody dto: UpdateResponseBodySnippetDto): Result {
 
-        val doc = restWebDocumentRepository.findById(id).orElseThrow(Status.BAD_REQUEST::instanceError)
+        val doc = httpDocumentRepository.findById(id).orElseThrow(Status.BAD_REQUEST::instanceError)
 
         doc.responseBodyDescriptors?.filter { it.path == dto.path }
                 ?.forEach {
@@ -460,7 +460,7 @@ class WebDocumentController {
                     it.description = dto.description
                 }
         doc.lastUpdateTime = Date().time
-        restWebDocumentRepository.update(doc)
+        httpDocumentRepository.update(doc)
 
         return ok(transformRestDocumentToVO(doc))
     }
@@ -470,11 +470,11 @@ class WebDocumentController {
     fun patchDescription(@PathVariable id: String,
                          @Valid @RequestBody dto: UpdateDescriptionSnippetDto): Result {
 
-        val doc = restWebDocumentRepository.findById(id).orElseThrow(Status.BAD_REQUEST::instanceError)
+        val doc = httpDocumentRepository.findById(id).orElseThrow(Status.BAD_REQUEST::instanceError)
 
         doc.description = dto.description
         doc.lastUpdateTime = Date().time
-        restWebDocumentRepository.update(doc)
+        httpDocumentRepository.update(doc)
 
         return ok(transformRestDocumentToVO(doc))
     }
@@ -641,7 +641,7 @@ class WebDocumentController {
                 val id = MD5Util.MD5Encode(api.controller + api.pattern, "UTF-8")
 
                 if (dto.docIds.contains(id)) {
-                    val documentExist = restWebDocumentRepository.existsById(id)
+                    val documentExist = httpDocumentRepository.existsById(id)
                     if (!documentExist) {
                         savedQuantity++
                         val document = RestWebDocument(
@@ -690,7 +690,7 @@ class WebDocumentController {
     @PostMapping("/copy")
     fun copyDocument(@RequestBody dto: CopyDocumentDocDto): Result {
 
-        val originDocument = restWebDocumentRepository.findById(dto.documentId)
+        val originDocument = httpDocumentRepository.findById(dto.documentId)
                 .orElseThrow { Status.INVALID_REQUEST.instanceError() }
 
         val newDocument = RestWebDocument(
@@ -721,7 +721,7 @@ class WebDocumentController {
     @Verify(role = [SYS_ADMIN])
     @PatchMapping("/baseinfo")
     fun updateBaseInfo(@RequestBody @Valid dto: UpdateNodeDto): Result {
-        val updateResult = restWebDocumentRepository.update(Query().addCriteria(Criteria("_id").`is`(dto.id)),
+        val updateResult = httpDocumentRepository.update(Query().addCriteria(Criteria("_id").`is`(dto.id)),
                 Update().set("name", dto.name)
                         .set("order", dto.order)
                         .set("resource", dto.pid)
@@ -734,7 +734,7 @@ class WebDocumentController {
     @PatchMapping("/uridescriptor")
     fun updateURIVarDescriptor(@RequestBody dto: BatchUpdateURIVarSnippetDto): Result {
         val descriptor = dto.values.map { URIVarDescriptor(field = it.field, value = it.value, description = it.description) }
-        val updateResult = restWebDocumentRepository.update(Query().addCriteria(Criteria("_id").`is`(dto.documentId)), Update().set("uriVarDescriptors", descriptor))
+        val updateResult = httpDocumentRepository.update(Query().addCriteria(Criteria("_id").`is`(dto.documentId)), Update().set("uriVarDescriptors", descriptor))
         println(updateResult)
         return ok(descriptor)
     }
@@ -751,7 +751,7 @@ class WebDocumentController {
                             type = FieldType.valueOf(it.type!!),
                             optional = it.optional)
                 }
-        val updateResult = restWebDocumentRepository.update(Query().addCriteria(Criteria("_id").`is`(dto.documentId)), Update().set("requestBodyDescriptor", descriptor))
+        val updateResult = httpDocumentRepository.update(Query().addCriteria(Criteria("_id").`is`(dto.documentId)), Update().set("requestBodyDescriptor", descriptor))
         println(updateResult)
         return ok(descriptor)
     }
@@ -767,7 +767,7 @@ class WebDocumentController {
                             description = it.description,
                             optional = it.optional)
                 }
-        val updateResult = restWebDocumentRepository.update(Query().addCriteria(Criteria("_id").`is`(dto.documentId)), Update().set("requestHeaderDescriptor", descriptor))
+        val updateResult = httpDocumentRepository.update(Query().addCriteria(Criteria("_id").`is`(dto.documentId)), Update().set("requestHeaderDescriptor", descriptor))
         println(updateResult)
         return ok(descriptor)
     }
@@ -783,7 +783,7 @@ class WebDocumentController {
                             description = it.description,
                             type = FieldType.valueOf(it.type!!))
                 }
-        val updateResult = restWebDocumentRepository.update(Query().addCriteria(Criteria("_id").`is`(dto.documentId)), Update().set("responseBodyDescriptors", descriptor))
+        val updateResult = httpDocumentRepository.update(Query().addCriteria(Criteria("_id").`is`(dto.documentId)), Update().set("responseBodyDescriptors", descriptor))
         println(updateResult)
         return ok(descriptor)
     }
@@ -799,7 +799,7 @@ class WebDocumentController {
                             description = it.description
                     )
                 }
-        val updateResult = restWebDocumentRepository.update(Query().addCriteria(Criteria("_id").`is`(dto.documentId)),
+        val updateResult = httpDocumentRepository.update(Query().addCriteria(Criteria("_id").`is`(dto.documentId)),
                 Update().set("queryParamDescriptors", descriptor))
         println(updateResult)
         return ok(descriptor)

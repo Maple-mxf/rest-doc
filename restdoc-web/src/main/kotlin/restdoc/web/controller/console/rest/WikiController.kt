@@ -13,20 +13,20 @@ import restdoc.web.controller.console.model.UpdateWikiDto
 import restdoc.web.core.Result
 import restdoc.web.core.ok
 import restdoc.web.model.SYS_ADMIN
-import restdoc.web.repository.RestWebDocumentRepository
+import restdoc.web.repository.HttpDocumentRepository
 
 @RequestMapping("/wiki")
 @RestController
 class WikiController {
 
     @Autowired
-    private lateinit var restWebDocumentRepository: RestWebDocumentRepository
+    private lateinit var httpDocumentRepository: HttpDocumentRepository
 
     @PatchMapping("")
     @Verify(role = [SYS_ADMIN])
     fun updateWiki(@RequestBody dto: UpdateWikiDto): Result {
 
-        val updateResult = restWebDocumentRepository.update(
+        val updateResult = httpDocumentRepository.update(
                 Query(Criteria("_id").`is`(dto.id)),
                 Update().set("content", dto.content))
 

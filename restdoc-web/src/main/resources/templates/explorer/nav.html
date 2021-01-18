@@ -69,13 +69,13 @@
                             <span style="font-size: 16px">&nbsp;&nbsp;开发者应用</span>
                         </a>
                     </li>
-                    <li class="layui-nav-item">
+               <!--     <li class="layui-nav-item">
                         <a href="javascript:void(0)" id="devApplication">
                             <i class="layui-icon layui-icon-component"
                                style="font-size: 20px; color: #1E9FFF;"></i>
                             <span style="font-size: 16px">&nbsp;&nbsp;功能</span>
                         </a>
-                    </li>
+                    </li>-->
                     <li class="layui-nav-item">
                         <a href="javascript:void(0)" id="projectSettings">
                             <i class="layui-icon layui-icon-set-fill" style="font-size: 20px; color: #1E9FFF;"></i>
@@ -151,7 +151,7 @@
                 }, 50);
             } else if ('devapp' === elem[0].id) {
                 NProgress.start();
-                $("#docContentFrame").attr("src", '/restdoc/devapp/view/all');
+                $("#docContentFrame").attr("src", '/restdoc/devapp/view/list?projectId='+projectId);
                 setTimeout(function () {
                     NProgress.done();
                     $(".fade").removeClass("out");

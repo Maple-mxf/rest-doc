@@ -19,7 +19,7 @@ import restdoc.web.model.doc.DocType
 import restdoc.web.repository.DubboDocumentRepository
 import restdoc.web.repository.ProjectRepository
 import restdoc.web.repository.ResourceRepository
-import restdoc.web.repository.RestWebDocumentRepository
+import restdoc.web.repository.HttpDocumentRepository
 import restdoc.web.util.IDUtil
 import restdoc.web.util.IDUtil.now
 import javax.validation.Valid
@@ -35,7 +35,7 @@ class ResourceController {
     lateinit var resourceRepository: ResourceRepository
 
     @Autowired
-    lateinit var restWebDocumentRepository: RestWebDocumentRepository
+    lateinit var httpDocumentRepository: HttpDocumentRepository
 
     @Autowired
     lateinit var dubboDocumentRepository: DubboDocumentRepository
@@ -196,7 +196,7 @@ class ResourceController {
 
         val nodeIds = allNode.map { it.id }.toMutableList()
 
-        val docs = restWebDocumentRepository.list(Query(Criteria("resource").`in`(nodeIds).and("projectId").`is`(projectId)))
+        val docs = httpDocumentRepository.list(Query(Criteria("resource").`in`(nodeIds).and("projectId").`is`(projectId)))
 
         for (navNode in allNode) {
             val childrenDocNode: MutableList<NavNode> = docs
@@ -232,7 +232,7 @@ class ResourceController {
                 .orElseThrow { Status.BAD_REQUEST.instanceError("${projectId}项目不存在") }
 
         val quantity = if (project.type == ProjectType.REST_WEB) {
-            restWebDocumentRepository.count(Query(Criteria("resource").`is`(id)))
+            httpDocumentRepository.count(Query(Criteria("resource").`is`(id)))
         } else if (project.type == ProjectType.DUBBO) {
             dubboDocumentRepository.count(Query(Criteria("resource").`is`(id)))
         } else 0

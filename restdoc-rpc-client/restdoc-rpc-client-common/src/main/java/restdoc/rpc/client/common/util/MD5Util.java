@@ -1,4 +1,4 @@
-package restdoc.web.util;
+package restdoc.rpc.client.common.util;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;

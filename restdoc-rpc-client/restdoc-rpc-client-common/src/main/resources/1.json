@@ -1,7 +1,144 @@
-0: {nodeId: "root", parentId: "0", context: "一级目录(虚拟)", leaf: false, level: "1", …}
-1: {nodeId: "4989c9e5ebe726f7c049ed0bb2942de9", parentId: "root", context: "restdoc.client.web.controller", leaf: false, level: "2", …}
-2: {nodeId: "f920f623970d7102fd9ac6c8ac854250", parentId: "4989c9e5ebe726f7c049ed0bb2942de9", context: "OrderController", leaf: false, level: "3", …}
-3: {nodeId: "0a2cc641241f148bc333a1a1fc18eb70", parentId: "f920f623970d7102fd9ac6c8ac854250", context: "/NoDefaultConstructorVo", leaf: true, level: "4", …}
-4: {nodeId: "8e8a9a423c534990c8ff238d2da6752f", parentId: "f920f623970d7102fd9ac6c8ac854250", context: "/buildRequestParamDto", leaf: true, level: "4", …}
-5: {nodeId: "20da2256bac4d96aea4097444743f3d1", parentId: "f920f623970d7102fd9ac6c8ac854250", context: "/mch/order/upload", leaf: true, level: "4", …}
-6: {nodeId: "c38b6497a6a8d143f9d7e9e6acdcc5eb", parentId: "f920f623970d7102fd9ac6c8ac854250", context: "/mch/order/{oid}", leaf: true, level: "4", …}
+{
+  "status": {
+    "code": "200",
+    "message": "操作成功"
+  },
+  "data": [
+    {
+      "id": "0a2cc641241f148bc333a1a1fc18eb70",
+      "title": "/NoDefaultConstructorVo",
+      "parentId": "f920f623970d7102fd9ac6c8ac854250",
+      "children": [],
+      "type": "API",
+      "checkArr": [
+        {
+          "type": 0,
+          "checked": 0
+        }
+      ],
+      "iconClass": "dtree-icon-normal-file",
+      "spread": false
+    },
+    {
+      "id": "8e8a9a423c534990c8ff238d2da6752f",
+      "title": "/buildRequestParamDto",
+      "parentId": "f920f623970d7102fd9ac6c8ac854250",
+      "children": [],
+      "type": "API",
+      "checkArr": [
+        {
+          "type": 0,
+          "checked": 0
+        }
+      ],
+      "iconClass": "dtree-icon-normal-file",
+      "spread": false
+    },
+    {
+      "id": "7cc6bfd9ac966214240395a822120e7e",
+      "title": "/buildRequestParamDto1",
+      "parentId": "f920f623970d7102fd9ac6c8ac854250",
+      "children": [],
+      "type": "API",
+      "checkArr": [
+        {
+          "type": 0,
+          "checked": 0
+        }
+      ],
+      "iconClass": "dtree-icon-normal-file",
+      "spread": false
+    },
+    {
+      "id": "20da2256bac4d96aea4097444743f3d1",
+      "title": "/mch/order/upload",
+      "parentId": "f920f623970d7102fd9ac6c8ac854250",
+      "children": [],
+      "type": "API",
+      "checkArr": [
+        {
+          "type": 0,
+          "checked": 0
+        }
+      ],
+      "iconClass": "dtree-icon-normal-file",
+      "spread": false
+    },
+    {
+      "id": "c38b6497a6a8d143f9d7e9e6acdcc5eb",
+      "title": "/mch/order/{oid}",
+      "parentId": "f920f623970d7102fd9ac6c8ac854250",
+      "children": [],
+      "type": "API",
+      "checkArr": [
+        {
+          "type": 0,
+          "checked": 0
+        }
+      ],
+      "iconClass": "dtree-icon-normal-file",
+      "spread": false
+    },
+    {
+      "id": "restdoc.client.web.controller",
+      "title": "restdoc.client.web.controller",
+      "parentId": "root",
+      "children": [],
+      "type": "RESOURCE",
+      "checkArr": [
+        {
+          "type": 0,
+          "checked": 0
+        }
+      ],
+      "iconClass": "dtree-icon-weibiaoti5",
+      "spread": false
+    },
+    {
+      "id": "restdoc.client.web.controller.OrderController",
+      "title": "OrderController",
+      "parentId": "4989c9e5ebe726f7c049ed0bb2942de9",
+      "children": [],
+      "type": "RESOURCE",
+      "checkArr": [
+        {
+          "type": 0,
+          "checked": 0
+        }
+      ],
+      "iconClass": "dtree-icon-weibiaoti5",
+      "spread": false
+    },
+    {
+      "id": "root",
+      "title": "一级目录(虚拟)",
+      "parentId": "0",
+      "children": [
+        {
+          "id": "ID",
+          "title": "it",
+          "parentId": "root",
+          "children": [],
+          "type": "RESOURCE",
+          "checkArr": [
+            {
+              "type": 0,
+              "checked": 0
+            }
+          ],
+          "iconClass": "dtree-icon-weibiaoti5",
+          "spread": false
+        }
+      ],
+      "type": "RESOURCE",
+      "checkArr": [
+        {
+          "type": 0,
+          "checked": 0
+        }
+      ],
+      "iconClass": null,
+      "spread": true
+    }
+  ]
+}

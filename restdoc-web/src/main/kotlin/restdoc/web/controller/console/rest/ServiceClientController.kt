@@ -1,14 +1,13 @@
 package restdoc.web.controller.console.rest
 
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.RestController
 import restdoc.rpc.client.common.model.ApplicationType
 import restdoc.web.base.auth.Verify
-import restdoc.web.controller.console.model.SyncApiEmptyTemplateDto
 import restdoc.web.core.HolderKit
-import restdoc.web.core.ok
-import restdoc.web.model.SYS_ADMIN
-import restdoc.web.service.WebDocumentService
+import restdoc.web.service.HttpDocumentService
 
 @Deprecated(message = "")
 @RestController
@@ -18,7 +17,7 @@ class ServiceClientController {
     lateinit var holderKit: HolderKit
 
     @Autowired
-    lateinit var restWebDocumentService: WebDocumentService
+    lateinit var restHttpDocumentService: HttpDocumentService
 
     @Deprecated(message = "")
     @Verify
@@ -48,16 +47,16 @@ class ServiceClientController {
         return res
     }
 
-    @Verify(role = [SYS_ADMIN])
-    @PostMapping("/{projectId}/serviceClient/apiEmptyTemplate/sync")
-    @Deprecated(message = "syncClientApiEmptyTemplate")
-    fun syncClientApiEmptyTemplate(@RequestBody dto: SyncApiEmptyTemplateDto): Any {
-        val resourceKeyDocumentMap =
-                restWebDocumentService.syncHttpApiDoc(dto.remoteAddress, dto.projectId, holderKit.user.id)
-
-//        resourceRepository.saveAll(resourceKeyDocumentMap.keys)
-//        restWebDocumentRepository.saveAll(resourceKeyDocumentMap.values.flatten())
-
-        return ok(dto.projectId)
-    }
+//    @Verify(role = [SYS_ADMIN])
+//    @PostMapping("/{projectId}/serviceClient/apiEmptyTemplate/sync")
+//    @Deprecated(message = "syncClientApiEmptyTemplate")
+//    fun syncClientApiEmptyTemplate(@RequestBody dto: SyncApiEmptyTemplateDto): Any {
+//        val resourceKeyDocumentMap =
+//                restHttpDocumentService.transformToHttpApiDoc(dto.remoteAddress, dto.projectId, holderKit.user.id)
+//
+////        resourceRepository.saveAll(resourceKeyDocumentMap.keys)
+////        restWebDocumentRepository.saveAll(resourceKeyDocumentMap.values.flatten())
+//
+//        return ok(dto.projectId)
+//    }
 }

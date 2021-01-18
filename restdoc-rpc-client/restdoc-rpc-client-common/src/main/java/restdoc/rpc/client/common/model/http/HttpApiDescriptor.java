@@ -2,13 +2,18 @@ package restdoc.rpc.client.common.model.http;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import restdoc.rpc.client.common.model.ApiDescriptor;
+import restdoc.rpc.client.common.util.MD5Util;
 
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 
 /**
+ *
  */
 public class HttpApiDescriptor implements ApiDescriptor {
+
+    private String id;
 
     /*Http Api interface default name*/
     private String name;
@@ -105,6 +110,9 @@ public class HttpApiDescriptor implements ApiDescriptor {
 
         private Object defaultValue = null;
 
+        /**
+         * TODO
+         */
         private Object supplementary = null;
 
         /**
@@ -192,6 +200,7 @@ public class HttpApiDescriptor implements ApiDescriptor {
 
     public void setPattern(String pattern) {
         this.pattern = pattern;
+        this.id = MD5Util.MD5Encode(this.pattern, StandardCharsets.UTF_8.name());
     }
 
     public String getEndpoint() {
@@ -278,10 +287,6 @@ public class HttpApiDescriptor implements ApiDescriptor {
         this.responseHeaderParameters = responseHeaderParameters;
     }
 
-    @Override
-    public String uniqueKey() {
-        return controller + endpoint;
-    }
 
     public String getResponseType() {
         return responseType;
@@ -289,5 +294,10 @@ public class HttpApiDescriptor implements ApiDescriptor {
 
     public void setResponseType(String responseType) {
         this.responseType = responseType;
+    }
+
+    @Override
+    public String id() {
+        return this.id;
     }
 }

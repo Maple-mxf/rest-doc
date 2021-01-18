@@ -15,7 +15,7 @@ import restdoc.web.controller.console.model.*
 import restdoc.web.model.doc.DocType
 import restdoc.web.model.doc.http.RestWebDocument
 import restdoc.web.repository.ResourceRepository
-import restdoc.web.repository.RestWebDocumentRepository
+import restdoc.web.repository.HttpDocumentRepository
 import java.net.URLDecoder
 import java.nio.charset.StandardCharsets
 
@@ -24,7 +24,7 @@ import java.nio.charset.StandardCharsets
 class RestWebDocumentViewController {
 
     @Autowired
-    lateinit var restWebDocumentRepository: RestWebDocumentRepository
+    lateinit var httpDocumentRepository: HttpDocumentRepository
 
     @Autowired
     lateinit var resourceRepository: ResourceRepository
@@ -84,7 +84,7 @@ class RestWebDocumentViewController {
     fun getApi(@PathVariable projectId: String, @PathVariable documentId: String, model: Model): String {
         model.set("documentId", documentId)
 
-        val restWebDocument: RestWebDocument = restWebDocumentRepository.findById(documentId)
+        val restWebDocument: RestWebDocument = httpDocumentRepository.findById(documentId)
                 .orElse(null)
                 ?: return "docs/resourceDetail"
 
@@ -108,7 +108,7 @@ class RestWebDocumentViewController {
     @GetMapping("/{projectId}/document/view/{id}/test")
     fun testApi(@PathVariable projectId: String, @PathVariable id: String, model: Model): String {
 
-        val restWebDocument: RestWebDocument = restWebDocumentRepository.findById(id)
+        val restWebDocument: RestWebDocument = httpDocumentRepository.findById(id)
                 .orElse(null)
                 ?: return "view/error/500"
 
@@ -127,7 +127,7 @@ class RestWebDocumentViewController {
                         @RequestParam field: String,
                         model: Model): String {
 
-        val restWebDocument: RestWebDocument = restWebDocumentRepository.findById(id)
+        val restWebDocument: RestWebDocument = httpDocumentRepository.findById(id)
                 .orElse(null)
                 ?: return "view/error/500"
 
@@ -169,7 +169,7 @@ class RestWebDocumentViewController {
 
         val field = URLDecoder.decode(path, StandardCharsets.UTF_8.name())
 
-        val restWebDocument: RestWebDocument = restWebDocumentRepository.findById(id)
+        val restWebDocument: RestWebDocument = httpDocumentRepository.findById(id)
                 .orElse(null)
                 ?: return "view/error/500"
 

@@ -44,6 +44,7 @@ data class Project(
         val accessURL: String? = null
 )
 
+@Deprecated(message = "ProjectType")
 enum class ProjectType {
 
     /**
@@ -55,6 +56,7 @@ enum class ProjectType {
      *
      */
     DUBBO,
+
     SPRINGCLOUD
 }
 

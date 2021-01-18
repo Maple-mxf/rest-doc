@@ -40,10 +40,6 @@ public class DubboApiDescriptor implements ApiDescriptor {
         this.uniqueKey = uniqueKey;
     }
 
-    @Override
-    public String uniqueKey() {
-        return uniqueKey;
-    }
 
     public static class ExposedMethod {
         private String paramDesc;
@@ -135,5 +131,10 @@ public class DubboApiDescriptor implements ApiDescriptor {
         public void setParameterNames(String[] parameterNames) {
             this.parameterNames = parameterNames;
         }
+    }
+
+    @Override
+    public String id() {
+        return null;
     }
 }
