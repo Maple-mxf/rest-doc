@@ -10,7 +10,7 @@ import java.util.*
 /**
  */
 @Document(collection = HTTP_DOCUMENT_COLLECTION)
-data class RestWebDocument(
+data class HttpDocument(
 
         /**
          * id
@@ -48,22 +48,22 @@ data class RestWebDocument(
         /**
          * requestHeaderDescriptor
          */
-        var requestHeaderDescriptor: List<HeaderFieldDescriptor> = listOf(),
+        var requestHeaderDescriptor: MutableList<HeaderFieldDescriptor> = mutableListOf(),
 
         /**
          * requestBodyDescriptor
          */
-        var requestBodyDescriptor: List<BodyFieldDescriptor> = listOf(),
+        var requestBodyDescriptor: MutableList<BodyFieldDescriptor> = mutableListOf(),
 
         /**
          * responseBodyDescriptors
          */
-        var responseBodyDescriptors: List<BodyFieldDescriptor>? = null,
+        var responseBodyDescriptors: MutableList<BodyFieldDescriptor> =  mutableListOf(),
 
         /**
          * queryParamDescriptors
          */
-        var queryParamDescriptors: List<QueryParamDescriptor>? = null,
+        var queryParamDescriptors: MutableList<QueryParamDescriptor> =  mutableListOf(),
 
         /**
          * method
@@ -73,17 +73,17 @@ data class RestWebDocument(
         /**
          * uriVarDescriptors
          */
-        var uriVarDescriptors: List<URIVarDescriptor>?,
+        var uriVarDescriptors: MutableList<URIVarDescriptor> = mutableListOf(),
 
         /**
          * responseHeaderDescriptor
          */
-        var responseHeaderDescriptor: List<HeaderFieldDescriptor>? = null,
+        var responseHeaderDescriptor: MutableList<HeaderFieldDescriptor> =  mutableListOf(),
 
         /**
          * matrixVariableDescriptors
          */
-        var matrixVariableDescriptors: List<MatrixVariableDescriptor>? = null,
+        var matrixVariableDescriptors: MutableList<MatrixVariableDescriptor> =  mutableListOf(),
 
         /**
          *

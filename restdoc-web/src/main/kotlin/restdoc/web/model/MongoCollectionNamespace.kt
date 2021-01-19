@@ -3,7 +3,7 @@ package restdoc.web.model
 
 /**
  * @author Maple
- * @see restdoc.web.model.doc.http.RestWebDocument
+ * @see restdoc.web.model.doc.http.HttpDocument
  */
 const val HTTP_DOCUMENT_COLLECTION = "restdoc_restweb_document"
 

@@ -31,7 +31,7 @@ public class ExportApiHandler implements NettyRequestProcessor {
     @Override
     public RemotingCommand processRequest(ChannelHandlerContext ctx, RemotingCommand request) throws Exception {
         HttpApiPayload apiBody = new HttpApiPayload();
-        apiBody.setApiList(endpointsListener.getRestWebExposedAPIList());
+        apiBody.setApiList(endpointsListener.getHttpApiList());
         String service = environment.getProperty("server.servlet.context-path", configurationProperties.getService());
         if (service.isEmpty()) service = "未命名的服务";
         apiBody.setService(service);

@@ -1,5 +1,11 @@
 package restdoc.web.http
 
-const val HTTP1_1: String = "HTTP/1.1"
+/**
+ * HTTP1_1_VERSION
+ */
+const val HTTP1_1_VERSION: String = "HTTP/1.1"
 
-const val HTTP2: String = "HTTP/2"
+/**
+ * HTTP2_VERSION
+ */
+const val HTTP2_VERSION: String = "HTTP/2"

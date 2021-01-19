@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestParam
 import restdoc.web.base.auth.Verify
 import restdoc.web.controller.console.model.*
 import restdoc.web.model.doc.DocType
-import restdoc.web.model.doc.http.RestWebDocument
-import restdoc.web.repository.ResourceRepository
+import restdoc.web.model.doc.http.HttpDocument
 import restdoc.web.repository.HttpDocumentRepository
+import restdoc.web.repository.ResourceRepository
 import java.net.URLDecoder
 import java.nio.charset.StandardCharsets
 
@@ -84,21 +84,21 @@ class RestWebDocumentViewController {
     fun getApi(@PathVariable projectId: String, @PathVariable documentId: String, model: Model): String {
         model.set("documentId", documentId)
 
-        val restWebDocument: RestWebDocument = httpDocumentRepository.findById(documentId)
+        val httpDocument: HttpDocument = httpDocumentRepository.findById(documentId)
                 .orElse(null)
                 ?: return "docs/resourceDetail"
 
-        val resource = resourceRepository.findById(restWebDocument.resource)
+        val resource = resourceRepository.findById(httpDocument.resource)
 
         model.addAttribute("resource", resource)
         model.addAttribute("projectId", projectId)
         // model.addAttribute("sample", mapper.writeValueAsString(restWebDocument.executeResult))
 
-        return if (DocType.API == restWebDocument.docType) {
-            model.addAttribute("document", transformRestDocumentToVO(restWebDocument))
+        return if (DocType.API == httpDocument.docType) {
+            model.addAttribute("document", transformRestDocumentToVO(httpDocument))
             "docs/web/api_detail"
-        } else if (DocType.WIKI == restWebDocument.docType) {
-            model.addAttribute("document", restWebDocument)
+        } else if (DocType.WIKI == httpDocument.docType) {
+            model.addAttribute("document", httpDocument)
             "docs/wiki_detail"
         } else {
             "docs/resourceDetail"
@@ -108,14 +108,14 @@ class RestWebDocumentViewController {
     @GetMapping("/{projectId}/document/view/{id}/test")
     fun testApi(@PathVariable projectId: String, @PathVariable id: String, model: Model): String {
 
-        val restWebDocument: RestWebDocument = httpDocumentRepository.findById(id)
+        val httpDocument: HttpDocument = httpDocumentRepository.findById(id)
                 .orElse(null)
                 ?: return "view/error/500"
 
-        model.addAttribute("initDocument", restWebDocument)
-        model.addAttribute("documentId", restWebDocument.id)
+        model.addAttribute("initDocument", httpDocument)
+        model.addAttribute("documentId", httpDocument.id)
         model.addAttribute("projectId", projectId)
-        model.addAttribute("resource", restWebDocument.resource)
+        model.addAttribute("resource", httpDocument.resource)
 
         return "docs/web/api_test"
     }
@@ -127,25 +127,25 @@ class RestWebDocumentViewController {
                         @RequestParam field: String,
                         model: Model): String {
 
-        val restWebDocument: RestWebDocument = httpDocumentRepository.findById(id)
+        val httpDocument: HttpDocument = httpDocumentRepository.findById(id)
                 .orElse(null)
                 ?: return "view/error/500"
 
         val description: Any? = when (type) {
             "uri" -> {
-                val uriField = restWebDocument.uriVarDescriptors?.filter { it.field == field }?.first()
+                val uriField = httpDocument.uriVarDescriptors?.filter { it.field == field }?.first()
                 uriField?.description
             }
             "requestBody" -> {
-                val requestField = restWebDocument.requestBodyDescriptor?.filter { it.path == field }?.first()
+                val requestField = httpDocument.requestBodyDescriptor?.filter { it.path == field }?.first()
                 requestField?.description
             }
             "responseBody" -> {
-                val responseField = restWebDocument.responseBodyDescriptors?.filter { it.path == field }?.first()
+                val responseField = httpDocument.responseBodyDescriptors?.filter { it.path == field }?.first()
                 responseField?.description
             }
             "requestHeader" -> {
-                val requestHeader = restWebDocument.requestHeaderDescriptor?.filter { it.field == field }?.first()
+                val requestHeader = httpDocument.requestHeaderDescriptor?.filter { it.field == field }?.first()
                 requestHeader?.description
             }
             else -> {
@@ -169,33 +169,33 @@ class RestWebDocumentViewController {
 
         val field = URLDecoder.decode(path, StandardCharsets.UTF_8.name())
 
-        val restWebDocument: RestWebDocument = httpDocumentRepository.findById(id)
+        val httpDocument: HttpDocument = httpDocumentRepository.findById(id)
                 .orElse(null)
                 ?: return "view/error/500"
 
         val pv = when (type) {
             "uri" -> {
                 PageView("docs/edit_urivar", transformURIFieldToVO(
-                        (restWebDocument.uriVarDescriptors?.filter { it.field == field }) ?: mutableListOf())[0]
+                        (httpDocument.uriVarDescriptors?.filter { it.field == field }) ?: mutableListOf())[0]
                 )
             }
             "requestBody" -> {
                 PageView("docs/edit_requestparam", transformNormalParamToVO(
-                        (restWebDocument.requestBodyDescriptor?.filter { it.path == field } ?: mutableListOf()))[0])
+                        (httpDocument.requestBodyDescriptor?.filter { it.path == field } ?: mutableListOf()))[0])
             }
             "responseBody" -> {
                 PageView("docs/edit_responseparam",
-                        transformNormalParamToVO((restWebDocument.responseBodyDescriptors?.filter { it.path == field }
+                        transformNormalParamToVO((httpDocument.responseBodyDescriptors?.filter { it.path == field }
                                 ?: mutableListOf()))[0]
                 )
             }
             "requestHeader" -> {
                 PageView("docs/edit_requestheader",
-                        transformHeaderToVO(restWebDocument.requestHeaderDescriptor?.filter { it.field == field }
+                        transformHeaderToVO(httpDocument.requestHeaderDescriptor?.filter { it.field == field }
                                 ?: mutableListOf())[0])
             }
             "description" -> {
-                PageView("docs/edit_description", restWebDocument.description)
+                PageView("docs/edit_description", httpDocument.description)
             }
             else -> {
                 throw RuntimeException()

@@ -24,7 +24,7 @@ import javax.annotation.PostConstruct
 @RequestMapping("/httpstandard/helper")
 @RestController
 @Verify(role = [SYS_ADMIN])
-class HttpStandardProtocolHelperController {
+class HttpHelperController {
 
     private val headers: MutableList<String> = mutableListOf()
 

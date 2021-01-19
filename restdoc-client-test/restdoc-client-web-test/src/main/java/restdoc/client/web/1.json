@@ -1,49 +1,72 @@
 {
-  "name": "buildRequestParamDto",
-  "methods": null,
-  "method": "GET",
-  "pattern": "/buildRequestParamDto",
-  "function": "buildRequestParamDto",
-  "uriVarFields": [],
+  "name": "createOrder",
+  "method": "POST",
+  "pattern": "/mch/order/{oid}",
+  "endpoint": "createOrder",
   "packageName": "restdoc.client.web.controller",
   "responseType": null,
-  "requestHeaderExpressions": [],
-  "responseHeaderExpressions": [],
-  "paramExpressions": null,
-  "requestHeaderParameters": {},
+  "requestHeaderParameters": {
+    "Cookie": [
+      {
+        "name": "restdoc_console_access_token",
+        "require": true,
+        "defaultValue": "\n\t\t\n\t\t\n\n\t\t\t\t\n",
+        "supplementary": null,
+        "type": null
+      }
+    ],
+    "Content-Type": [
+      {
+        "name": "Content-Type",
+        "require": true,
+        "defaultValue": "\n\t\t\n\t\t\n\n\t\t\t\t\n",
+        "supplementary": null,
+        "type": "java.lang.String"
+      }
+    ]
+  },
   "queryParamParameters": [
     {
-      "name": "dto",
+      "name": "key",
       "require": true,
-      "requireEqualsValue": null,
-      "requireNotEqualsValue": null,
       "defaultValue": "\n\t\t\n\t\t\n\n\t\t\t\t\n",
-      "supplementary": {
-        "name": ""
-      },
-      "type": "restdoc.client.web.model.dto.RequestParamDto"
+      "supplementary": null,
+      "type": "java.lang.String"
     }
   ],
-  "matrixVariableParameters": [],
-  "pathVariableParameters": [],
+  "matrixVariableParameters": [
+    {
+      "name": "a",
+      "require": true,
+      "defaultValue": "\n\t\t\n\t\t\n\n\t\t\t\t\n",
+      "supplementary": "oid",
+      "type": "int"
+    }
+  ],
+  "pathVariableParameters": [
+    {
+      "name": "oid",
+      "require": true,
+      "defaultValue": null,
+      "supplementary": null,
+      "type": "java.lang.String"
+    }
+  ],
   "requestBodyParameters": [
     {
-      "name": "dto",
+      "name": null,
       "require": true,
-      "requireEqualsValue": null,
-      "requireNotEqualsValue": null,
-      "defaultValue": "\n\t\t\n\t\t\n\n\t\t\t\t\n",
+      "defaultValue": null,
       "supplementary": {
-        "name": ""
+        "type": "",
+        "money": 0.0
       },
-      "type": "restdoc.client.web.model.dto.RequestParamDto"
+      "type": "java.lang.Object"
     }
   ],
   "responseBodyDescriptor": {
     "name": null,
     "require": true,
-    "requireEqualsValue": null,
-    "requireNotEqualsValue": null,
     "defaultValue": null,
     "supplementary": {
       "code": "",
@@ -53,5 +76,5 @@
     "type": null
   },
   "responseHeaderParameters": {},
-  "controller": "class restdoc.client.web.controller.OrderController"
+  "controller": "restdoc.client.web.controller.OrderController"
 }

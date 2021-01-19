@@ -26,9 +26,9 @@ import restdoc.web.model.Resource
 import restdoc.web.model.SYS_ADMIN
 import restdoc.web.model.doc.DocType
 import restdoc.web.model.doc.http.*
+import restdoc.web.repository.HttpDocumentRepository
 import restdoc.web.repository.ProjectRepository
 import restdoc.web.repository.ResourceRepository
-import restdoc.web.repository.HttpDocumentRepository
 import restdoc.web.util.FieldType
 import restdoc.web.util.IDUtil.id
 import restdoc.web.util.IDUtil.now
@@ -100,20 +100,20 @@ class WebDocumentController {
         val responseHeaderDescriptor = dto.mapToResponseHeaderDescriptor()
         val queryParamDescriptor = dto.mapToQueryParamDescriptor()
 
-        val document = RestWebDocument(
+        val document = HttpDocument(
                 id = id(),
                 name = dto.name,
                 projectId = dto.projectId,
                 resource = dto.resource!!,
                 url = extractRawPath(dto.url),
-                requestHeaderDescriptor = requestHeaderDescriptor,
-                requestBodyDescriptor = requestBodyDescriptor,
-                responseBodyDescriptors = responseBodyDescriptor,
-                responseHeaderDescriptor = responseHeaderDescriptor,
-                queryParamDescriptors = queryParamDescriptor,
+                requestHeaderDescriptor = requestHeaderDescriptor.toMutableList(),
+                requestBodyDescriptor = requestBodyDescriptor.toMutableList(),
+                responseBodyDescriptors = responseBodyDescriptor.toMutableList(),
+                responseHeaderDescriptor = responseHeaderDescriptor.toMutableList(),
+                queryParamDescriptors = queryParamDescriptor.toMutableList(),
                 method = HttpMethod.valueOf(dto.method),
                 description = dto.description,
-                uriVarDescriptors = uriVarDescriptor,
+                uriVarDescriptors = uriVarDescriptor.toMutableList(),
                 docType = DocType.API)
 
         httpDocumentRepository.save(document)
@@ -182,19 +182,19 @@ class WebDocumentController {
         }
 
         // Save An Api Project Document
-        val document = RestWebDocument(
+        val document = HttpDocument(
                 id = dto.documentId,
                 name = dto.name,
                 projectId = dto.projectId,
                 resource = dto.resource!!,
                 url = extractRawPath(dto.url),
-                requestHeaderDescriptor = requestHeaderDescriptor,
-                requestBodyDescriptor = requestBodyDescriptor,
-                responseBodyDescriptors = responseBodyDescriptor,
-                queryParamDescriptors = queryParamDescriptor,
-                responseHeaderDescriptor = responseHeaderDescriptor,
+                requestHeaderDescriptor = requestHeaderDescriptor.toMutableList(),
+                requestBodyDescriptor = requestBodyDescriptor.toMutableList(),
+                responseBodyDescriptors = responseBodyDescriptor.toMutableList(),
+                queryParamDescriptors = queryParamDescriptor.toMutableList(),
+                responseHeaderDescriptor = responseHeaderDescriptor.toMutableList(),
                 method = HttpMethod.valueOf(dto.method),
-                uriVarDescriptors = uriVarDescriptor,
+                uriVarDescriptors = uriVarDescriptor.toMutableList(),
                 description = dto.description,
                 lastUpdateTime = Date().time)
 
@@ -232,7 +232,7 @@ class WebDocumentController {
         return ok()
     }
 
-    private fun optimizationAndAutocomplete(projectId: String, doc: RestWebDocument) {
+    private fun optimizationAndAutocomplete(projectId: String, doc: HttpDocument) {
         try {
             // 1 Optimization
             this.optimization(projectId, doc)
@@ -247,7 +247,7 @@ class WebDocumentController {
     /**
      * Autocomplete field description
      */
-    private fun autocomplete(projectId: String, doc: RestWebDocument) {
+    private fun autocomplete(projectId: String, doc: HttpDocument) {
         // 1 Autocomplete header descriptor
         doc.requestHeaderDescriptor
                 ?.filter { it.description == null || it.description!!.isEmpty() }
@@ -288,7 +288,7 @@ class WebDocumentController {
         return hfd?.description
     }
 
-    private fun optimization(projectId: String, doc: RestWebDocument) {
+    private fun optimization(projectId: String, doc: HttpDocument) {
 
         val fieldMap1 = doc.uriVarDescriptors
                 ?.filter { it.description != null && it.description!!.isNotEmpty() }
@@ -385,7 +385,7 @@ class WebDocumentController {
                         "requestHeader" -> it.requestHeaderDescriptor
                         "requestBody" -> it.requestBodyDescriptor
                         "responseBody" -> it.responseBodyDescriptors
-                        else -> listOf()
+                        else -> mutableListOf()
                     }
                 }
                 .orElse(mutableListOf())
@@ -535,17 +535,14 @@ class WebDocumentController {
             allNode.addAll(navNodes)
 
             val docs = restwebAPIList.map {
-                RestWebDocument(
+                HttpDocument(
                         id = MD5Util.MD5Encode(it.controller + it.pattern, "UTF-8"),
                         projectId = null,
                         name = it.endpoint.split("#").last(),
                         resource = it.controller,
                         url = it.pattern,
                         description = null,
-                        responseBodyDescriptors = null,
-                        method = HttpMethod.resolve(it.method),
-                        uriVarDescriptors = null,
-                        responseHeaderDescriptor = null)
+                        method = HttpMethod.resolve(it.method))
             }
 
             for (navNode in allNode) {
@@ -644,17 +641,14 @@ class WebDocumentController {
                     val documentExist = httpDocumentRepository.existsById(id)
                     if (!documentExist) {
                         savedQuantity++
-                        val document = RestWebDocument(
+                        val document = HttpDocument(
                                 id = id,
                                 projectId = dto.projectId,
                                 name = api.pattern,
                                 resource = resourceId,
                                 url = api.pattern,
                                 description = api.pattern,
-                                responseBodyDescriptors = null,
                                 method = HttpMethod.resolve(api.method),
-                                uriVarDescriptors = null,
-                                responseHeaderDescriptor = null,
                                 docType = DocType.API)
 
                         mongoTemplate.save(document)
@@ -668,16 +662,13 @@ class WebDocumentController {
     @Verify(role = [SYS_ADMIN])
     @PostMapping("/emptydoc")
     fun createEmptyApiDoc(@RequestBody dto: CreateEmptyDocDto): Result {
-        val document = RestWebDocument(
+        val document = HttpDocument(
                 id = id(),
                 projectId = dto.projectId,
                 name = dto.name,
                 resource = dto.resourceId,
                 url = "",
                 description = null,
-                responseBodyDescriptors = null,
-                uriVarDescriptors = null,
-                responseHeaderDescriptor = null,
                 docType = dto.docType)
 
         mongoTemplate.save(document)
@@ -693,7 +684,7 @@ class WebDocumentController {
         val originDocument = httpDocumentRepository.findById(dto.documentId)
                 .orElseThrow { Status.INVALID_REQUEST.instanceError() }
 
-        val newDocument = RestWebDocument(
+        val newDocument = HttpDocument(
                 id = id(),
                 projectId = originDocument.projectId,
                 name = dto.name,

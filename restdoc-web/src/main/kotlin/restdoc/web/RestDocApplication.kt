@@ -1,9 +1,7 @@
 package restdoc.web
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.runApplication
-import restdoc.web.schedule.ScheduleProperties
 
 /**
  *
@@ -12,7 +10,6 @@ import restdoc.web.schedule.ScheduleProperties
  * @since 1.0
  */
 @SpringBootApplication
-@EnableConfigurationProperties(value = [ScheduleProperties::class])
 open class RestDocApplication
 
 /**

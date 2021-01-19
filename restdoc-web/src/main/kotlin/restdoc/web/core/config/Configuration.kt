@@ -5,12 +5,14 @@ import org.hibernate.validator.HibernateValidator
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.AutoConfigureBefore
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration
+import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.cache.annotation.CachingConfigurerSupport
 import org.springframework.cache.annotation.EnableCaching
 import org.springframework.cache.interceptor.KeyGenerator
 import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.EnableAspectJAutoProxy
 import org.springframework.data.mongodb.core.mapping.MongoMappingContext
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories
 import org.springframework.data.redis.connection.RedisConnectionFactory
@@ -22,10 +24,11 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 import restdoc.web.base.auth.AuthContext
-import restdoc.web.base.auth.RestDocAuthImpl
 import restdoc.web.base.auth.AuthenticationInterceptor
+import restdoc.web.base.auth.RestDocAuthImpl
 import restdoc.web.base.mongo.BaseMongoRepositoryFactoryBean
 import restdoc.web.base.mongo.BaseRepositoryImpl
+import restdoc.web.schedule.ScheduleProperties
 import java.lang.reflect.Method
 import javax.validation.Validation
 import javax.validation.Validator
@@ -40,6 +43,8 @@ import javax.validation.ValidatorFactory
         basePackages = ["restdoc.web.repository"],
         repositoryBaseClass = BaseRepositoryImpl::class,
         repositoryFactoryBeanClass = BaseMongoRepositoryFactoryBean::class)
+@EnableAspectJAutoProxy
+@EnableConfigurationProperties(value = [ScheduleProperties::class])
 open class RepositoryConfiguration(private val applicationContext: ApplicationContext) {
 
     @Bean

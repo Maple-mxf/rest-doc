@@ -60,17 +60,19 @@
                                 class="layui-icon layui-icon-file-b" style="font-size: 25px; color: whitesmoke;"
                                 title="复制URL" id="copyURL"></i></span>
                     </div>
-                    <div class="layui-row">
-                        备注
-                        <blockquote class="layui-elem-quote" id="editDocDescriptionBtn">
-                            <div class="layui-text	" th:utext="${document.description}"
-                                 id="descriptionArea"></div>
-                        </blockquote>
-                    </div>
+
                     <div class="layui-row">
                         请求示例
                         <pre>
-                            <code class="language-http" th:utext="${document.fakeCodeSample}" style="font-family: Consolas,serif;font-size: 14px">
+                            <code class="language-http" th:utext="${document.requestFakeCodeSample}" style="font-family: Consolas,serif;font-size: 14px">
+
+                            </code>
+                        </pre>
+                    </div>
+                    <div class="layui-row">
+                        响应示例
+                        <pre>
+                            <code class="language-http" th:utext="${document.responseFakeCodeSample}" style="font-family: Consolas,serif;font-size: 14px">
 
                             </code>
                         </pre>
@@ -412,6 +414,13 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div class="layui-row">
+                        备注
+                        <blockquote class="layui-elem-quote" id="editDocDescriptionBtn">
+                            <div class="layui-text	" th:utext="${document.description}"
+                                 id="descriptionArea"></div>
+                        </blockquote>
                     </div>
                 </div>
                 <div class="layui-col-md3"></div>

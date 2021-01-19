@@ -51,7 +51,7 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
 
     private static Logger log = LoggerFactory.getLogger(EndpointsListener.class);
 
-    private List<HttpApiDescriptor> restWebExposedAPIList;
+    private List<HttpApiDescriptor> httpApiList;
 
     private final Environment environment;
 
@@ -75,7 +75,7 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
         // because of The one handler method has many request pattern
 
         // final report the emptyApiTemplates to remoting server
-        this.restWebExposedAPIList = handlerMethods.entrySet()
+        this.httpApiList = handlerMethods.entrySet()
                 .stream()
                 .flatMap(hm -> {
                     RequestMappingInfo requestMappingInfo = hm.getKey();
@@ -112,11 +112,11 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
                             });
                 }).collect(Collectors.toList());
 
-        log.info("RESTdoc collect api empty templates size {} ", restWebExposedAPIList.size());
+        log.info("RESTdoc collect api empty templates size {} ", httpApiList.size());
     }
 
-    public List<HttpApiDescriptor> getRestWebExposedAPIList() {
-        return restWebExposedAPIList;
+    public List<HttpApiDescriptor> getHttpApiList() {
+        return httpApiList;
     }
 
 
@@ -145,6 +145,7 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
                 handlerMethod.getMethod().getName() : requestMappingInfo.getName());
 
         MethodParameter[] parameters = handlerMethod.getMethodParameters();
+
 
         for (MethodParameter parameter : parameters) {
             if (parameter.getParameterAnnotations().length > 0) {
@@ -263,7 +264,7 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
                         parameterDescriptor.setDefaultValue(cookieValue.defaultValue());
 
                         List<HttpApiDescriptor.ParameterDescriptor> cookieValues = emptyDescriptor.getRequestHeaderParameters()
-                                .getOrDefault(HttpHeaders.COOKIE, new ArrayList<>());
+                                .getOrDefault(HttpHeaders.SET_COOKIE, new ArrayList<>());
 
                         String cookieName = cookieValue.name().isEmpty() ? cookieValue.value() : cookieValue.name();
                         if (cookieName.isEmpty()) cookieName = parameter.getParameter().getName();
@@ -281,6 +282,7 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
                         String requestHeaderName = requestHeader.name().isEmpty() ?
                                 requestHeader.value() :
                                 requestHeader.name();
+
                         if (requestHeaderName.isEmpty()) requestHeaderName = parameter.getParameter().getName();
 
                         parameterDescriptor.setName(requestHeaderName);
@@ -301,6 +303,8 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
             if (responseInstance != null) {
                 HttpApiDescriptor.ParameterDescriptor parameterDescriptor =
                         new HttpApiDescriptor.ParameterDescriptor();
+
+                parameterDescriptor.setType(Object.class.getName());
                 try {
                     emptyDescriptor.setResponseBodyDescriptor(parameterDescriptor);
                     parameterDescriptor.setSupplementary(responseInstance);
@@ -335,6 +339,7 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
                     .map(t -> new HeaderExpression(t.toString()))
                     .collect(Collectors.toList()));
         }
+        // TODO
         try {
             System.err.println(mapper.writeValueAsString(emptyDescriptor));
         } catch (Exception e) {

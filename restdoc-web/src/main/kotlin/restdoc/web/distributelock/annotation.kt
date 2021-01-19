@@ -29,7 +29,7 @@ enum class DistributeLockType {
 @MustBeDocumented
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.RUNTIME)
-annotation class DistributeLock(val name: String, val message: String = "", val type: DistributeLockType = DistributeLockType.REDIS)
+annotation class DistributeLock(val name: String, val msgIOffNonGet: String = "Please retry", val type: DistributeLockType = DistributeLockType.REDIS)
 
 /**
  * @author Maple

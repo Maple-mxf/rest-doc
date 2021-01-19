@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
-import restdoc.web.model.doc.http.RestWebDocument;
+import restdoc.web.model.doc.http.HttpDocument;
 import restdoc.web.model.doc.http.URIVarDescriptor;
 
 import java.io.IOException;
@@ -42,7 +42,7 @@ public class JavaCodeUnitTestCaseSampleTest {
     @Test
     public void gen() {
 
-        RestWebDocument document = mongoTemplate.findById("756136650580430848", RestWebDocument.class);
+        HttpDocument document = mongoTemplate.findById("756136650580430848", HttpDocument.class);
 
         Template configTemplate = VE.getTemplate("codesample/JavaCodeUnitTestCaseSample.java.vm");
         VelocityContext ctx = new VelocityContext();

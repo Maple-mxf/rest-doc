@@ -116,32 +116,29 @@
                         });
 
                         $.ajax({
-                            method:"POST",
-                            async:false,
-                            url:'/restdoc/devapp/api/import',
-                            data:JSON.stringify(importRequestData),
-                            contentType:'application/json',
-                            success:function (res) {
-
-                                if (res.code === '200')
-                                {
-
+                            method: "POST",
+                            async: false,
+                            url: '/restdoc/devapp/api/import',
+                            data: JSON.stringify(importRequestData),
+                            contentType: 'application/json',
+                            success: function (res) {
+                                
+                                if (res.code === '200') {
                                     setTimeout(function () {
                                         layer.close(loadIndex);
+                                        layer.close(index);
                                         layer.msg("导入成功")
                                     }, 2000);
 
-                                }else{layer.msg(res.message)}
+                                } else {
+                                    layer.msg(res.message)
+                                }
                             },
-                            error:function (msg) {
+                            error: function (msg) {
                                 layer.close(loadIndex);
                                 layer.msg(msg)
                             }
                         });
-
-
-
-                        layer.close(index)
                     }
                 });
             }

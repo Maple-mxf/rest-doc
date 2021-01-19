@@ -44,8 +44,7 @@ class DevApplicationApiController(val apiManager: ApiManager,
                 title = "一级目录(虚拟)",
                 parentId = "0",
                 type = NodeType.RESOURCE,
-                spread = true/*,
-                iconClass = "dtree-icon-weibiaoti5"*/)
+                spread = true)
 
         val tree = when (at) {
             ApplicationType.REST_WEB -> {
@@ -54,16 +53,16 @@ class DevApplicationApiController(val apiManager: ApiManager,
                 val methods = descriptors
                         .map { t ->
                             DTreeVO(
-                                    id = MD5Util.MD5Encode(t.pattern,StandardCharsets.UTF_8.name()),
+                                    id = MD5Util.MD5Encode(t.pattern, StandardCharsets.UTF_8.name()),
                                     title = t.pattern,
                                     iconClass = "dtree-icon-normal-file",
                                     type = NodeType.API,
-                                    parentId = MD5Util.MD5Encode(t.controller,StandardCharsets.UTF_8.name()))
+                                    parentId = MD5Util.MD5Encode(t.controller, StandardCharsets.UTF_8.name()))
                         }
 
                 val pks = descriptors.groupBy { it.packageName }.keys.map {
                     DTreeVO(
-                            id = MD5Util.MD5Encode(it,StandardCharsets.UTF_8.name()),
+                            id = MD5Util.MD5Encode(it, StandardCharsets.UTF_8.name()),
                             title = it,
                             iconClass = "dtree-icon-weibiaoti5",
                             parentId = "root")
@@ -72,10 +71,10 @@ class DevApplicationApiController(val apiManager: ApiManager,
                 val controllers = descriptors.groupBy { it.controller }.entries.map {
                     val arr = it.key.split(".")
                     DTreeVO(
-                            id = MD5Util.MD5Encode(it.key,StandardCharsets.UTF_8.name()),
+                            id = MD5Util.MD5Encode(it.key, StandardCharsets.UTF_8.name()),
                             title = arr.last(),
                             iconClass = "dtree-icon-weibiaoti5",
-                            parentId = MD5Util.MD5Encode(it.value.get(0).packageName,StandardCharsets.UTF_8.name()))
+                            parentId = MD5Util.MD5Encode(it.value.get(0).packageName, StandardCharsets.UTF_8.name()))
                 }
 
                 val res = mutableListOf<DTreeVO>()
@@ -98,7 +97,6 @@ class DevApplicationApiController(val apiManager: ApiManager,
         return DTreeResVO(data = tree)
     }
 
-    // TODO  Distribute Lock
     @PostMapping("/api/import")
     fun importApi(@RequestBody dto: ImportApiDto): Any {
 
@@ -106,58 +104,7 @@ class DevApplicationApiController(val apiManager: ApiManager,
                 .orElseThrow { Status.INVALID_REQUEST.instanceError("invalid projectId") }
 
         if (ProjectType.REST_WEB == project.type) {
-            val table = httpDocumentService.transformToHttpApiDoc(dto.clientId, dto.projectId, holderKit.user.id)
-
-            val savedPkResourceIds = mutableListOf<String>()
-            val savedClassResourceIds = mutableListOf<String>()
-
-            for (pkEntry in table) {
-                val pkResource = pkEntry.key
-
-                var haveDocs = false
-
-                for (classEntry in pkEntry.value) {
-                    val classResource = classEntry.key
-                    val docs = classEntry.value
-                    val matchedDocs = docs.filter { dto.apiIds.contains(it.id) }
-
-                    if (matchedDocs.isNotEmpty()) {
-                        haveDocs = true
-
-                        if(!resourceRepository.existsById(classResource.id)) {
-                            resourceRepository.save(classResource)
-                            savedClassResourceIds.add(classResource.id!!)
-                        }
-
-                        for (document in matchedDocs) {
-
-                            val docExist = httpDocumentRepository.existsById(document.id)
-
-                            if (docExist){
-                                val oldDocument = httpDocumentRepository.findById(document.id).orElse(null)
-
-                                if (oldDocument == null) {
-                                    httpDocumentRepository.save(document)
-                                } else {
-                                    // TODO
-                                }
-                            }
-                            else {
-                                httpDocumentRepository.save(document)
-                            }
-                        }
-                    }
-                }
-
-                if (haveDocs){
-                    if (!resourceRepository.existsById(pkResource.id))
-                    {
-                        resourceRepository.save(pkResource)
-                        savedPkResourceIds.add(pkResource.id!!)
-                    }
-                }
-
-            }
+            httpDocumentService.importApi(dto.clientId, dto.projectId, holderKit.user.id, dto.apiIds)
         }
 
         return ok()

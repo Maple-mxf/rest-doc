@@ -11,11 +11,12 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
+import org.springframework.web.bind.annotation.ValueConstants
 import org.springframework.web.client.RestTemplate
 import restdoc.web.base.getBean
 import restdoc.web.http.HEADER_VALUE_DELIMITER
-import restdoc.web.http.HTTP1_1
-import restdoc.web.model.doc.http.RestWebDocument
+import restdoc.web.http.HTTP1_1_VERSION
+import restdoc.web.model.doc.http.HttpDocument
 import restdoc.web.projector.JacksonXmlProjector
 import restdoc.web.projector.JsonProjector
 import restdoc.web.util.PathValue
@@ -26,7 +27,7 @@ import java.util.*
  * @author Maple
  * @since 1.0
  */
-typealias MapToCodeSample = (RestWebDocument) -> String
+typealias MapToCodeSample = (HttpDocument) -> String
 
 internal val VE =
         {
@@ -43,7 +44,7 @@ internal val VE =
 @Component
 open class CURLCodeSampleGenerator(private val restTemplate: RestTemplate) : MapToCodeSample {
 
-    override fun invoke(doc: RestWebDocument): String {
+    override fun invoke(doc: HttpDocument): String {
 
         // 1 Command
         val cmd = StringBuilder("curl   -X    ${doc.method.name}")
@@ -79,7 +80,7 @@ open class CURLCodeSampleGenerator(private val restTemplate: RestTemplate) : Map
 
 @Component
 open class JavaMockCodeSampleGenerator : MapToCodeSample {
-    override fun invoke(p1: RestWebDocument): String {
+    override fun invoke(p1: HttpDocument): String {
         return ""
     }
 }
@@ -87,7 +88,7 @@ open class JavaMockCodeSampleGenerator : MapToCodeSample {
 @Component
 open class PythonCodeSampleGenerator : MapToCodeSample {
 
-    override fun invoke(doc: RestWebDocument): String {
+    override fun invoke(doc: HttpDocument): String {
         val uriFormatStr = doc.uriVarDescriptors?.joinToString(separator = ",") { "'${it.field}' = '${it.value}'" }
 
         val codeTemplate: Template = VE.getTemplate("codesample/PythonCodeUnitTestCaseSample.py")
@@ -116,7 +117,7 @@ open class PythonCodeSampleGenerator : MapToCodeSample {
 @Component
 open class JavaCodeSampleGenerator : MapToCodeSample {
 
-    override fun invoke(doc: RestWebDocument): String {
+    override fun invoke(doc: HttpDocument): String {
 
         val codeTemplate: Template = VE.getTemplate("codesample/JavaCodeUnitTestCaseSample.java.vm")
         val ctx = VelocityContext()
@@ -141,7 +142,7 @@ open class JavaCodeSampleGenerator : MapToCodeSample {
 
 @Component
 open class KotlinCodeSampleGenerator : MapToCodeSample {
-    override fun invoke(p1: RestWebDocument): String {
+    override fun invoke(p1: HttpDocument): String {
         return ""
     }
 }
@@ -151,7 +152,7 @@ open class KotlinCodeSampleGenerator : MapToCodeSample {
  */
 @Component
 open class JsAjaxCodeSampleGenerator : MapToCodeSample {
-    override fun invoke(p1: RestWebDocument): String {
+    override fun invoke(p1: HttpDocument): String {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }
@@ -161,7 +162,7 @@ open class JsAjaxCodeSampleGenerator : MapToCodeSample {
  */
 @Component
 open class GoCodeSampleGenerator : MapToCodeSample {
-    override fun invoke(p1: RestWebDocument): String {
+    override fun invoke(p1: HttpDocument): String {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }
@@ -171,31 +172,55 @@ open class GoCodeSampleGenerator : MapToCodeSample {
  */
 @Component
 open class NodeJsCodeSampleGenerator : MapToCodeSample {
-    override fun invoke(p1: RestWebDocument): String {
+    override fun invoke(p1: HttpDocument): String {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }
 
 /**
  * FakeCodeSampleGenerator
+ *
+ * https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Resources_and_specifications
  */
 @Component
-open class FakeCodeSampleGenerator : MapToCodeSample {
-    override fun invoke(doc: RestWebDocument): String {
+open class RequestFakeCodeSampleGenerator : MapToCodeSample {
+    override fun invoke(doc: HttpDocument): String {
         val sb = StringBuilder()
-        sb.append(doc.method.name).append("  ").append(doc.url).append(" ").append(HTTP1_1).append("\n\n")
+        sb.append(doc.method.name).append("  ").append(doc.url)
+
+        if (doc.queryParamDescriptors.isNotEmpty()) {
+            val queryString = doc.queryParamDescriptors.map {
+                if (it.value == ValueConstants.DEFAULT_NONE) "${it.field}={${it.field}}"
+                else "${it.field}=${it.value.toString()}"
+            }.joinToString(separator = "&")
+            sb.append("?$queryString").append("  ")
+        }
+        sb.append(HTTP1_1_VERSION).append("\n")
 
         var mtp: MediaType? = null
 
         doc.requestHeaderDescriptor.forEach {
-            sb.append(it.field).append(": ").append(it.value).append("\n")
-            // TODO
-            if (it.field == HttpHeaders.CONTENT_TYPE) mtp = MediaType.parseMediaType(it.value.joinToString(HEADER_VALUE_DELIMITER))
+            if (it.field == HttpHeaders.CONTENT_TYPE) {
+                try {
+                    mtp = MediaType.parseMediaType(it.value.joinToString(HEADER_VALUE_DELIMITER))
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            } else {
+                sb.append(it.field).append(": ").append(it.value.joinToString(separator = HEADER_VALUE_DELIMITER)).append("\n")
+            }
         }
-        if (mtp == null) mtp = MediaType.APPLICATION_JSON
-        sb.append(HttpHeaders.CONTENT_TYPE).append(" ").append(MediaType.APPLICATION_JSON_VALUE).append("\n\n")
+        if (mtp == null) {
 
-        if (doc.method != HttpMethod.GET) {
+            mtp = if (doc.method == HttpMethod.GET)
+                MediaType.TEXT_HTML
+            else MediaType("*", "*");
+        }
+
+        sb.append("\n")
+        if (doc.method == HttpMethod.GET) {
+            // TODO
+        } else {
             doc.requestBodyDescriptor.apply {
 
                 if (MediaType.APPLICATION_JSON == mtp) {
@@ -210,11 +235,33 @@ open class FakeCodeSampleGenerator : MapToCodeSample {
                             .project()
 
                     sb.append(prettyString).append("\n")
+                } else {
+                    val prettyString = JsonProjector(this.map { PathValue(it.path, it.value) })
+                            .project()
+                            .toPrettyString()
+
+                    sb.append(prettyString).append("\n")
                 }
             }
         }
-        sb.append("\n")
+        return sb.toString()
+    }
+}
+
+@Component
+open class ResponseFakeCodeSampleGenerator : MapToCodeSample{
+    override fun invoke(doc: HttpDocument): String {
+        val sb = StringBuilder()
+
+        if (doc.responseBodyDescriptors.isNotEmpty()) {
+            val prettyString = JsonProjector(doc.responseBodyDescriptors.map { PathValue(it.path, it.value) })
+                    .project()
+                    .toPrettyString()
+
+            sb.append(prettyString).append("\n")
+        }
 
         return sb.toString()
     }
+
 }

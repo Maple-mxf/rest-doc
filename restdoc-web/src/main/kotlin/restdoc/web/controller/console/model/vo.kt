@@ -3,10 +3,7 @@ package restdoc.web.controller.console.model
 import org.springframework.http.HttpMethod
 import restdoc.client.api.model.Invocation
 import restdoc.web.base.getBean
-import restdoc.web.core.code.CURLCodeSampleGenerator
-import restdoc.web.core.code.FakeCodeSampleGenerator
-import restdoc.web.core.code.JavaCodeSampleGenerator
-import restdoc.web.core.code.PythonCodeSampleGenerator
+import restdoc.web.core.code.*
 import restdoc.web.model.doc.http.*
 import restdoc.web.schedule.ClientState
 import java.util.*
@@ -132,9 +129,14 @@ internal data class RestWebDocumentVO(
         val responseHeaderDescriptors: List<HeaderFieldDescriptorVO> = listOf(),
 
         /**
-         * fakeCodeSample
+         * requestFakeCodeSample
          */
-        val fakeCodeSample: String = "",
+        val requestFakeCodeSample: String = "",
+
+        /**
+         * responseFakeCodeSample
+         */
+        val responseFakeCodeSample: String = "",
 
         /**
          * CURL Code sample
@@ -181,7 +183,7 @@ fun transformURIFieldToVO(uriVars: List<URIVarDescriptor>) =
         }.toMutableList()
 
 
-internal fun transformRestDocumentToVO(doc: RestWebDocument): RestWebDocumentVO {
+internal fun transformRestDocumentToVO(doc: HttpDocument): RestWebDocumentVO {
     return RestWebDocumentVO(
             id = doc.id!!,
             method = doc.method.name,
@@ -199,7 +201,8 @@ internal fun transformRestDocumentToVO(doc: RestWebDocument): RestWebDocumentVO 
             curlCodeSample = getBean(CURLCodeSampleGenerator::class.java).invoke(doc),
             javaCodeSample = getBean(JavaCodeSampleGenerator::class.java).invoke(doc),
             pythonCodeSample = getBean(PythonCodeSampleGenerator::class.java).invoke(doc),
-            fakeCodeSample = getBean(FakeCodeSampleGenerator::class.java).invoke(doc),
+            requestFakeCodeSample = getBean(RequestFakeCodeSampleGenerator::class.java).invoke(doc),
+            responseFakeCodeSample = getBean(ResponseFakeCodeSampleGenerator::class.java).invoke(doc),
             lastUpdateTime = doc.lastUpdateTime
     )
 }

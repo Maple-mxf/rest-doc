@@ -44,20 +44,29 @@ data class Project(
         val accessURL: String? = null
 )
 
-@Deprecated(message = "ProjectType")
 enum class ProjectType {
 
     /**
      * Default
      */
+    @Deprecated(message = "REST_WEB")
     REST_WEB,
 
     /**
      *
      */
+    @Deprecated(message = "DUBBO")
     DUBBO,
 
-    SPRINGCLOUD
+    /**
+     *
+     */
+    @Deprecated(message = "SPRINGCLOUD")
+    SPRINGCLOUD,
+
+    HTTP,
+
+    RPC
 }
 
 
