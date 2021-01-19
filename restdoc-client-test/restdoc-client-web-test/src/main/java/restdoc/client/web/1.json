@@ -6,7 +6,7 @@
   "packageName": "restdoc.client.web.controller",
   "responseType": null,
   "requestHeaderParameters": {
-    "Cookie": [
+    "Set-Cookie": [
       {
         "name": "restdoc_console_access_token",
         "require": true,
@@ -17,11 +17,18 @@
     ],
     "Content-Type": [
       {
-        "name": "Content-Type",
+        "name": null,
         "require": true,
-        "defaultValue": "\n\t\t\n\t\t\n\n\t\t\t\t\n",
+        "defaultValue": "text/plain",
         "supplementary": null,
-        "type": "java.lang.String"
+        "type": null
+      },
+      {
+        "name": null,
+        "require": true,
+        "defaultValue": "application/*",
+        "supplementary": null,
+        "type": null
       }
     ]
   },
@@ -73,8 +80,25 @@
       "data": null,
       "message": ""
     },
-    "type": null
+    "type": "java.lang.Object"
   },
-  "responseHeaderParameters": {},
+  "responseHeaderParameters": {
+    "Content-Type": [
+      {
+        "name": null,
+        "require": true,
+        "defaultValue": "text/plain",
+        "supplementary": null,
+        "type": null
+      },
+      {
+        "name": null,
+        "require": true,
+        "defaultValue": "application/*",
+        "supplementary": null,
+        "type": null
+      }
+    ]
+  },
   "controller": "restdoc.client.web.controller.OrderController"
 }

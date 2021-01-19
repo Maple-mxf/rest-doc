@@ -264,7 +264,7 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
 
                         CookieValue cookieValue = (CookieValue) annotation;
                         parameterDescriptor.setRequire(cookieValue.required());
-                        parameterDescriptor.setName(HttpHeaders.COOKIE);
+                        parameterDescriptor.setName(HttpHeaders.SET_COOKIE);
                         parameterDescriptor.setDefaultValue(cookieValue.defaultValue());
 
                         List<HttpApiDescriptor.ParameterDescriptor> cookieValues = emptyDescriptor.getRequestHeaderParameters()
@@ -278,7 +278,7 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
                         cookieDescriptor.setDefaultValue(cookieValue.defaultValue());
                         cookieValues.add(cookieDescriptor);
 
-                        emptyDescriptor.getRequestHeaderParameters().put(HttpHeaders.COOKIE, cookieValues);
+                        emptyDescriptor.getRequestHeaderParameters().put(HttpHeaders.SET_COOKIE, cookieValues);
 
                     } else if (annotation.annotationType().equals(RequestHeader.class)) {
                         RequestHeader requestHeader = (RequestHeader) annotation;
@@ -293,8 +293,10 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
                         parameterDescriptor.setDefaultValue(requestHeader.defaultValue());
                         parameterDescriptor.setRequire(requestHeader.required());
 
+                        ArrayList<HttpApiDescriptor.ParameterDescriptor> descriptors = new ArrayList<>();
+                        descriptors.add(parameterDescriptor);
                         emptyDescriptor.getRequestHeaderParameters()
-                                .put(requestHeader.name(), Collections.singletonList(parameterDescriptor));
+                                .put(requestHeader.name(), descriptors);
                     }
                 }
             }

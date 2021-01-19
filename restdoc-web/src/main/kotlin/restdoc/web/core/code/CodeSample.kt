@@ -191,7 +191,7 @@ open class RequestFakeCodeSampleGenerator : MapToCodeSample {
         if (doc.queryParamDescriptors.isNotEmpty()) {
             val queryString = doc.queryParamDescriptors.map {
                 if (it.value == ValueConstants.DEFAULT_NONE) "${it.field}={${it.field}}"
-                else "${it.field}=${it.value.toString()}"
+                else "${it.field}=${it.value}"
             }.joinToString(separator = "&")
             sb.append("?$queryString").append("  ")
         }
@@ -210,6 +210,10 @@ open class RequestFakeCodeSampleGenerator : MapToCodeSample {
                 sb.append(it.field).append(": ").append(it.value.joinToString(separator = HEADER_VALUE_DELIMITER)).append("\n")
             }
         }
+
+
+
+
         if (mtp == null) {
 
             mtp = if (doc.method == HttpMethod.GET)

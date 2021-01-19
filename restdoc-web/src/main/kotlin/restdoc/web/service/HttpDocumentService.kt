@@ -66,19 +66,26 @@ open class HttpDocumentServiceImpl(val mongoTemplate: MongoTemplate,
                 } else listOf()
             }
 
+    // TODO
     private fun headerProject(rhps: Map<String, List<HttpApiDescriptor.ParameterDescriptor>>) =
             rhps.map { rhp ->
-                val values = rhp.value.map {
-                    if (ValueConstants.DEFAULT_NONE == it.defaultValue) {
-                        "${it.name}={${it.name}}"
-                    } else {
-                        "${it.name}=${it.defaultValue}"
-                    }
-                }
+                // ALS MediaType
+                //
+                val values = rhp.value
+                        .map {
+                            if (ValueConstants.DEFAULT_NONE == it.defaultValue) {
+                                "${it.name}={${it.name}}"
+                            } else {
+                                "${it.name}=${it.defaultValue}"
+                            }
+                        }
                 HeaderFieldDescriptor(field = rhp.key, value = values, description = rhp.key)
             }
 
-    override fun transformToHttpApiDoc(clientId: String, projectId: String, user: String): Map<Resource, Map<Resource, List<HttpDocument>>> {
+    override fun transformToHttpApiDoc(clientId: String,
+                                       projectId: String,
+                                       user: String): Map<Resource, Map<Resource, List<HttpDocument>>> {
+
         val project = projectRepository.findById(projectId)
                 .orElseThrow { Status.INVALID_REQUEST.instanceError("invalid projectId") }
 
