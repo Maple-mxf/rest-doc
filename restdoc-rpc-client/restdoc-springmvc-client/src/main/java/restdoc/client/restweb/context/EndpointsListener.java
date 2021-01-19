@@ -9,8 +9,11 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.MimeType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,9 +22,8 @@ import org.springframework.web.servlet.mvc.condition.ParamsRequestCondition;
 import org.springframework.web.servlet.mvc.condition.ProducesRequestCondition;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
-import restdoc.rpc.client.common.model.http.HeaderExpression;
-import restdoc.rpc.client.common.model.http.ParamExpression;
 import restdoc.rpc.client.common.model.http.HttpApiDescriptor;
+import restdoc.rpc.client.common.model.http.ParamExpression;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
@@ -30,6 +32,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * The EndpointsListener provided report client api list info to server
@@ -80,6 +83,7 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
                 .flatMap(hm -> {
                     RequestMappingInfo requestMappingInfo = hm.getKey();
                     HandlerMethod handlerMethod = hm.getValue();
+                    if (isViewHandler(handlerMethod)) return Stream.empty();
 
                     return requestMappingInfo.getPatternsCondition()
                             .getPatterns()
@@ -315,8 +319,7 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
         }
 
         ParamsRequestCondition paramsCondition = requestMappingInfo.getParamsCondition();
-        ConsumesRequestCondition consumesCondition = requestMappingInfo.getConsumesCondition();
-        ProducesRequestCondition producesCondition = requestMappingInfo.getProducesCondition();
+
 
         // Parse condition
         if (!CollectionUtils.isEmpty(paramsCondition.getExpressions())) {
@@ -326,25 +329,69 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
                     .collect(Collectors.toList()));
         }
 
-        if (CollectionUtils.isEmpty(consumesCondition.getExpressions())) {
-            emptyDescriptor.setRequestHeaderExpressions(consumesCondition.getExpressions()
-                    .stream()
-                    .map(t -> new HeaderExpression(t.toString()))
-                    .collect(Collectors.toList()));
-        }
+        // RequestContentType
+        ConsumesRequestCondition consumesCondition = requestMappingInfo.getConsumesCondition();
+        List<HttpApiDescriptor.ParameterDescriptor> requestMimeTypeDescriptor = emptyDescriptor.getRequestHeaderParameters()
+                .getOrDefault(HttpHeaders.CONTENT_TYPE, new ArrayList<>());
+        requestMimeTypeDescriptor.clear();
+        if (!consumesCondition.isEmpty()) {
+            // Acceptable media type
+            Set<MediaType> mts = consumesCondition.getConsumableMediaTypes();
+            Set<HttpApiDescriptor.ParameterDescriptor> pds = mts.stream()
+                    .map(t -> {
+                        HttpApiDescriptor.ParameterDescriptor pd =
+                                new HttpApiDescriptor.ParameterDescriptor();
+                        pd.setDefaultValue(t.toString());
 
-        if (CollectionUtils.isEmpty(producesCondition.getExpressions())) {
-            emptyDescriptor.setResponseHeaderExpressions(producesCondition.getExpressions()
-                    .stream()
-                    .map(t -> new HeaderExpression(t.toString()))
-                    .collect(Collectors.toList()));
+                        return pd;
+                    }).collect(Collectors.toSet());
+
+            requestMimeTypeDescriptor.addAll(pds);
+        } else {
+            // setup fixed
+            HttpApiDescriptor.ParameterDescriptor pd =
+                    new HttpApiDescriptor.ParameterDescriptor();
+
+            if (HttpMethod.GET.name().equals(emptyDescriptor.getMethod()))
+                pd.setDefaultValue(new MimeType("*", "*").toString());
+            else pd.setDefaultValue(MediaType.APPLICATION_JSON_VALUE);
+
+            requestMimeTypeDescriptor.add(pd);
         }
-        // TODO
+        emptyDescriptor.getRequestHeaderParameters().put(HttpHeaders.CONTENT_TYPE, requestMimeTypeDescriptor);
+
+        ProducesRequestCondition producesCondition = requestMappingInfo.getProducesCondition();
+        List<HttpApiDescriptor.ParameterDescriptor> responseMimeTypeDescriptor =
+                emptyDescriptor.getResponseHeaderParameters().getOrDefault(
+                        HttpHeaders.CONTENT_TYPE,
+                        new ArrayList<>());
+
+        if (!producesCondition.isEmpty()) {
+            Set<MediaType> mts = producesCondition.getProducibleMediaTypes();
+            Set<HttpApiDescriptor.ParameterDescriptor> pds = mts.stream().map(t -> {
+                HttpApiDescriptor.ParameterDescriptor pd =
+                        new HttpApiDescriptor.ParameterDescriptor();
+                pd.setDefaultValue(t.toString());
+                return pd;
+            }).collect(Collectors.toSet());
+
+            responseMimeTypeDescriptor.addAll(pds);
+        } else {
+            HttpApiDescriptor.ParameterDescriptor pd =
+                    new HttpApiDescriptor.ParameterDescriptor();
+            pd.setDefaultValue(MediaType.APPLICATION_JSON_VALUE);
+            responseMimeTypeDescriptor.add(pd);
+        }
+        emptyDescriptor.getResponseHeaderParameters().put(HttpHeaders.CONTENT_TYPE, responseMimeTypeDescriptor);
+
         try {
             System.err.println(mapper.writeValueAsString(emptyDescriptor));
         } catch (Exception e) {
         }
+
+
     }
+
 
     private static final Map<Class<?>, Object> PRIMITIVE_DEFAULT_VALUE = new HashMap<Class<?>, Object>() {
         {
@@ -438,6 +485,15 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
             ignored.printStackTrace();
             return null;
         }
+    }
+
+    private boolean isViewHandler(HandlerMethod handlerMethod) {
+        RestController restController =
+                handlerMethod.getBeanType().getDeclaredAnnotation(RestController.class);
+        if (restController != null) return false;
+        ResponseBody responseBody = handlerMethod.getMethodAnnotation(ResponseBody.class);
+
+        return responseBody == null;
     }
 
 }
