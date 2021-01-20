@@ -1,16 +1,11 @@
 package restdoc.rpc.client.common.model.http;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import restdoc.rpc.client.common.model.ApiDescriptor;
 import restdoc.rpc.client.common.util.MD5Util;
 
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-
-/**
- *
- */
 public class HttpApiDescriptor implements ApiDescriptor {
 
     private String id;
@@ -35,22 +30,8 @@ public class HttpApiDescriptor implements ApiDescriptor {
 
     /*Body is Require*/
     private boolean enableHasRequestBody;
-
+    /*File is Require*/
     private boolean enableHasFile;
-
-    /**
-     * @see HeaderExpression
-     */
-    @JsonIgnore
-    @Deprecated
-    private List<HeaderExpression> requestHeaderExpressions;
-
-    @JsonIgnore
-    @Deprecated
-    private List<HeaderExpression> responseHeaderExpressions;
-    @Deprecated
-    @JsonIgnore
-    private List<ParamExpression> paramExpressions;
 
     private Map<String, List<ParameterDescriptor>> requestHeaderParameters = new HashMap<>(4);
 
@@ -178,22 +159,6 @@ public class HttpApiDescriptor implements ApiDescriptor {
         public void setSupplementary(Object supplementary) {
             this.supplementary = supplementary;
         }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            ParameterDescriptor that = (ParameterDescriptor) o;
-            return Objects.equals(name, that.name) &&
-                    Objects.equals(require, that.require) &&
-                    Objects.equals(defaultValue, that.defaultValue) &&
-                    Objects.equals(type, that.type);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(name, require, defaultValue, type);
-        }
     }
 
     /**
@@ -238,36 +203,12 @@ public class HttpApiDescriptor implements ApiDescriptor {
         this.packageName = packageName;
     }
 
-    public List<HeaderExpression> getRequestHeaderExpressions() {
-        return requestHeaderExpressions;
-    }
-
     public String getMethod() {
         return method;
     }
 
     public void setMethod(String method) {
         this.method = method;
-    }
-
-    public void setRequestHeaderExpressions(List<HeaderExpression> requestHeaderExpressions) {
-        this.requestHeaderExpressions = requestHeaderExpressions;
-    }
-
-    public List<HeaderExpression> getResponseHeaderExpressions() {
-        return responseHeaderExpressions;
-    }
-
-    public void setResponseHeaderExpressions(List<HeaderExpression> responseHeaderExpressions) {
-        this.responseHeaderExpressions = responseHeaderExpressions;
-    }
-
-    public List<ParamExpression> getParamExpressions() {
-        return paramExpressions;
-    }
-
-    public void setParamExpressions(List<ParamExpression> paramExpressions) {
-        this.paramExpressions = paramExpressions;
     }
 
     public void setRequestHeaderParameters(Map<String, List<ParameterDescriptor>> requestHeaderParameters) {

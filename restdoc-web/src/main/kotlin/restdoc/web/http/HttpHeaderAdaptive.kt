@@ -97,7 +97,6 @@ open class CookieAdaptive : HttpHeaderAdaptive {
  */
 @Component
 open class AcceptAdaptive : HttpHeaderAdaptive {
-
     override fun invoke(method: HttpMethod, bodyRequired: Boolean, fileRequired: Boolean, values: List<String>): String {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }

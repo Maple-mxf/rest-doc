@@ -12,18 +12,15 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.MimeType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.condition.ConsumesRequestCondition;
-import org.springframework.web.servlet.mvc.condition.ParamsRequestCondition;
 import org.springframework.web.servlet.mvc.condition.ProducesRequestCondition;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 import restdoc.rpc.client.common.model.http.HttpApiDescriptor;
-import restdoc.rpc.client.common.model.http.ParamExpression;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
@@ -150,8 +147,8 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
 
         MethodParameter[] parameters = handlerMethod.getMethodParameters();
 
-
         for (MethodParameter parameter : parameters) {
+
             if (parameter.getParameterAnnotations().length > 0) {
                 String parameterName = parameter.getParameterName();
                 HttpApiDescriptor.ParameterDescriptor parameterDescriptor =
@@ -193,6 +190,8 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
                     // If has request part
                     else if (annotation.annotationType().equals(RequestPart.class)) {
                         RequestPart requestPart = (RequestPart) annotation;
+
+                        emptyDescriptor.setEnableHasRequestBody(true);
 
                         String requestPartName = requestPart.name().isEmpty() ?
                                 requestPart.value() :
@@ -242,6 +241,8 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
                     } else if (annotation.annotationType().equals(RequestBody.class)) {
 
                         RequestBody requestBody = (RequestBody) annotation;
+                        emptyDescriptor.setEnableHasRequestBody(true);
+
                         parameterDescriptor.setRequire(requestBody.required());
 
                         // Complex Type
@@ -300,6 +301,12 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
                     }
                 }
             }
+
+            if (parameter.getParameterType()  == MultipartFile.class ||
+              Stream.of(parameter.getParameterType().getInterfaces()).anyMatch(t->t==MultipartFile.class) ){
+                emptyDescriptor.setEnableHasFile(true);
+            }
+
         }
 
         Class<?> returnType = handlerMethod.getMethod().getReturnType();
@@ -318,17 +325,6 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
                     ignored.printStackTrace();
                 }
             }
-        }
-
-        ParamsRequestCondition paramsCondition = requestMappingInfo.getParamsCondition();
-
-
-        // Parse condition
-        if (!CollectionUtils.isEmpty(paramsCondition.getExpressions())) {
-            emptyDescriptor.setParamExpressions(paramsCondition.getExpressions()
-                    .stream()
-                    .map(t -> new ParamExpression(t.toString()))
-                    .collect(Collectors.toList()));
         }
 
         // RequestContentType
