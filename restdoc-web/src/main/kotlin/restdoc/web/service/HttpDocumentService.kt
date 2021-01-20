@@ -5,11 +5,11 @@ import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.http.HttpMethod
 import org.springframework.lang.NonNull
 import org.springframework.stereotype.Service
-import org.springframework.web.bind.annotation.ValueConstants
 import restdoc.rpc.client.common.model.ApplicationType
 import restdoc.rpc.client.common.model.http.HttpApiDescriptor
 import restdoc.web.core.Status
 import restdoc.web.distributelock.LockKey
+import restdoc.web.http.parseHeader
 import restdoc.web.model.Resource
 import restdoc.web.model.doc.http.*
 import restdoc.web.projector.JsonDeProjector
@@ -66,21 +66,32 @@ open class HttpDocumentServiceImpl(val mongoTemplate: MongoTemplate,
                 } else listOf()
             }
 
-    // TODO
-    private fun headerProject(rhps: Map<String, List<HttpApiDescriptor.ParameterDescriptor>>) =
-            rhps.map { rhp ->
-                // ALS MediaType
-                //
-                val values = rhp.value
-                        .map {
-                            if (ValueConstants.DEFAULT_NONE == it.defaultValue) {
-                                "${it.name}={${it.name}}"
-                            } else {
-                                "${it.name}=${it.defaultValue}"
-                            }
-                        }
-                HeaderFieldDescriptor(field = rhp.key, value = values, description = rhp.key)
-            }
+    private fun headerProject(descriptor: HttpApiDescriptor, isRequest: Boolean = false): List<HeaderFieldDescriptor> {
+
+        val headerDescriptors = if (isRequest) {
+            descriptor.requestHeaderParameters
+        } else {
+            descriptor.responseHeaderParameters
+        }
+
+        val headers = headerDescriptors
+                .map {
+                    it.key to it.value
+                            .map { v -> if (v.defaultValue != null) v.toString() else "" }
+                }.toMap()
+
+        val afterParseHeaders = parseHeader(HttpMethod.valueOf(descriptor.method),
+                descriptor.isEnableHasRequestBody,
+                descriptor.isEnableHasFile,
+                headers)
+
+        return afterParseHeaders.map {
+            HeaderFieldDescriptor(
+                    field = it.key,
+                    value = it.value
+            )
+        }
+    }
 
     override fun transformToHttpApiDoc(clientId: String,
                                        projectId: String,
@@ -121,8 +132,8 @@ open class HttpDocumentServiceImpl(val mongoTemplate: MongoTemplate,
 
                         val docs = t.value.map { d ->
 
-                            val requestHeaderDescriptors = headerProject(d.requestHeaderParameters)
-                            val responseHeaderDescriptors = headerProject(d.responseHeaderParameters)
+                            val requestHeaderDescriptors = headerProject(d)
+                            val responseHeaderDescriptors = headerProject(d)
                             val requestBodyDescriptors = bodyProject(d.requestBodyParameters)
                             val responseBodyDescriptors = bodyProject(listOf(d.responseBodyDescriptor))
                             val queryParamDescriptors = d.queryParamParameters.map { qpp -> QueryParamDescriptor(field = qpp.name, value = qpp.defaultValue) }

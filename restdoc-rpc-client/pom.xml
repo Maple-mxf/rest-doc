@@ -20,6 +20,8 @@
         <module>restdoc-springmvc-client</module>
         <module>restdoc-rpc-client-common</module>
         <module>restdoc-springfu-client</module>
+        <module>restdoc-webflux-client</module>
+        <module>restdoc-sparkjava-client</module>
     </modules>
 
 

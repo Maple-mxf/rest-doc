@@ -161,7 +161,7 @@ internal data class RestWebDocumentVO(
 
 internal fun transformHeaderToVO(headers: List<HeaderFieldDescriptor>) =
         headers.map {
-            HeaderFieldDescriptorVO(field = it.field, value = it.value.joinToString(separator = ","), description = it.description
+            HeaderFieldDescriptorVO(field = it.field, value = it.value, description = it.description
                     ?: "", optional = if (it.optional) "是" else "否")
         }.toMutableList()
 

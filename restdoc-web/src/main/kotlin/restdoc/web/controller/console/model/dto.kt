@@ -56,7 +56,7 @@ data class RequestDto(
                     .map {
                         HeaderFieldDescriptor(
                                 field = it.headerKey,
-                                value = it.headerValue.split(","),
+                                value = it.headerValue,
                                 description = it.headerDescription,
                                 optional = it.headerConstraint)
                     }
@@ -118,7 +118,7 @@ data class RequestDto(
                     .map {
                         HeaderFieldDescriptor(
                                 field = it.key,
-                                value = if (it.value == null) listOf() else it.value!!.toString().split(","),
+                                value = if (it.value == null) "" else it.value!!.toString() ,
                                 description = null
                         )
                     }

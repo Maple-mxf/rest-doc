@@ -50,13 +50,13 @@ open class CURLCodeSampleGenerator(private val restTemplate: RestTemplate) : Map
         val cmd = StringBuilder("curl   -X    ${doc.method.name}")
 
         // 2 Header
-        doc.requestHeaderDescriptor?.forEach {
-            cmd.append("   -H    '${it.field}:${it.value.joinToString(separator = ",")}'")
+        doc.requestHeaderDescriptor.forEach {
+            cmd.append("   -H    '${it.field}:${it.value}'")
         }
 
         // 3 RequestBody
         if (HttpMethod.GET != doc.method) {
-            doc.requestBodyDescriptor?.let { ds ->
+            doc.requestBodyDescriptor.let { ds ->
                 val pathValues = ds.map { PathValue(it.path, it.value) }
                 val json = ObjectMapper().writeValueAsString(JsonProjector(pathValues).projectToMap())
                 cmd.append("   -d   '$json'")
@@ -65,8 +65,8 @@ open class CURLCodeSampleGenerator(private val restTemplate: RestTemplate) : Map
 
         // 4 Expand URL
         val afterExpandURL: String =
-                if (doc.uriVarDescriptors != null) {
-                    val uriValues = doc.uriVarDescriptors!!.map { it.field to it.value }.toMap()
+                if (doc.uriVarDescriptors .isNotEmpty()) {
+                    val uriValues = doc.uriVarDescriptors.map { it.field to it.value }.toMap()
                     restTemplate.uriTemplateHandler.expand(doc.url, uriValues)
 
                             .toASCIIString()
@@ -153,7 +153,7 @@ open class KotlinCodeSampleGenerator : MapToCodeSample {
 @Component
 open class JsAjaxCodeSampleGenerator : MapToCodeSample {
     override fun invoke(p1: HttpDocument): String {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        TODO("not implemented")
     }
 }
 
@@ -189,10 +189,11 @@ open class RequestFakeCodeSampleGenerator : MapToCodeSample {
         sb.append(doc.method.name).append("  ").append(doc.url)
 
         if (doc.queryParamDescriptors.isNotEmpty()) {
-            val queryString = doc.queryParamDescriptors.map {
-                if (it.value == ValueConstants.DEFAULT_NONE) "${it.field}={${it.field}}"
-                else "${it.field}=${it.value}"
-            }.joinToString(separator = "&")
+            val queryString = doc.queryParamDescriptors
+                    .joinToString(separator = "&") {
+                        if (it.value == ValueConstants.DEFAULT_NONE) "${it.field}={${it.field}}"
+                        else "${it.field}=${it.value}"
+                    }
             sb.append("?$queryString").append("  ")
         }
         sb.append(HTTP1_1_VERSION).append("\n")
@@ -202,17 +203,14 @@ open class RequestFakeCodeSampleGenerator : MapToCodeSample {
         doc.requestHeaderDescriptor.forEach {
             if (it.field == HttpHeaders.CONTENT_TYPE) {
                 try {
-                    mtp = MediaType.parseMediaType(it.value.joinToString(HEADER_VALUE_DELIMITER))
+                    mtp = MediaType.parseMediaType(it.value )
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
             } else {
-                sb.append(it.field).append(": ").append(it.value.joinToString(separator = HEADER_VALUE_DELIMITER)).append("\n")
+                sb.append(it.field).append(": ").append(it.value ).append("\n")
             }
         }
-
-
-
 
         if (mtp == null) {
 
@@ -253,7 +251,7 @@ open class RequestFakeCodeSampleGenerator : MapToCodeSample {
 }
 
 @Component
-open class ResponseFakeCodeSampleGenerator : MapToCodeSample{
+open class ResponseFakeCodeSampleGenerator : MapToCodeSample {
     override fun invoke(doc: HttpDocument): String {
         val sb = StringBuilder()
 

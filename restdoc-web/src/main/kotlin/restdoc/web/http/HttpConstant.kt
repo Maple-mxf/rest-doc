@@ -15,3 +15,8 @@ const val HEADER_VALUE_DELIMITER = ";"
  * 3: Set-Cookie
  */
 const val COOKIE_DELIMITER = ";\u00A0"
+
+/**
+ * boundary
+ */
+const val FIXED_BOUNDARY = "--8721656041911415653955004498"

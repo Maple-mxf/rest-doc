@@ -418,9 +418,9 @@ class WebDocumentController {
 
         val doc = httpDocumentRepository.findById(id).orElseThrow(Status.BAD_REQUEST::instanceError)
 
-        doc.requestHeaderDescriptor?.filter { it.field == dto.field }
-                ?.forEach {
-                    it.value = dto.value.split(",")
+        doc.requestHeaderDescriptor.filter { it.field == dto.field }
+                .forEach {
+                    it.value = dto.value
                     it.description = dto.description
                 }
         doc.lastUpdateTime = Date().time
@@ -573,8 +573,8 @@ class WebDocumentController {
             return ok(rootNav.children)
 
         } else if (ApplicationType.DUBBO == ap) {
-        /*    val restwebAPIList = this.clientRegistryCenter.getExposedAPIFilterApplicationTypeByRemote(clientId, ApplicationType.DUBBO)
-                    as Collection<DubboApiDescriptor>*/
+            /*    val restwebAPIList = this.clientRegistryCenter.getExposedAPIFilterApplicationTypeByRemote(clientId, ApplicationType.DUBBO)
+                        as Collection<DubboApiDescriptor>*/
             throw RuntimeException("Not support application type $ap")
         } else {
             throw RuntimeException("Not support application type $ap")

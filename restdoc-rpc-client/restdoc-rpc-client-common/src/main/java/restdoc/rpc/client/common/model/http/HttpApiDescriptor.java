@@ -33,15 +33,22 @@ public class HttpApiDescriptor implements ApiDescriptor {
     /*Http Api interface response type*/
     private String responseType;
 
+    /*Body is Require*/
+    private boolean enableHasRequestBody;
+
+    private boolean enableHasFile;
+
     /**
      * @see HeaderExpression
      */
     @JsonIgnore
+    @Deprecated
     private List<HeaderExpression> requestHeaderExpressions;
 
     @JsonIgnore
+    @Deprecated
     private List<HeaderExpression> responseHeaderExpressions;
-
+    @Deprecated
     @JsonIgnore
     private List<ParamExpression> paramExpressions;
 
@@ -299,5 +306,21 @@ public class HttpApiDescriptor implements ApiDescriptor {
     @Override
     public String id() {
         return this.id;
+    }
+
+    public boolean isEnableHasRequestBody() {
+        return enableHasRequestBody;
+    }
+
+    public void setEnableHasRequestBody(boolean enableHasRequestBody) {
+        this.enableHasRequestBody = enableHasRequestBody;
+    }
+
+    public boolean isEnableHasFile() {
+        return enableHasFile;
+    }
+
+    public void setEnableHasFile(boolean enableHasFile) {
+        this.enableHasFile = enableHasFile;
     }
 }

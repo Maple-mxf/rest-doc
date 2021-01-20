@@ -15,6 +15,7 @@
         <module>restdoc-rpc-client</module>
         <module>restdoc-client-test</module>
         <module>restdoc-dependencies-bom</module>
+        <module>restdoc-django-client</module>
     </modules>
 
     <parent>

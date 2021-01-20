@@ -7,4 +7,4 @@ interface HttpApiTestLogService {
 }
 
 @Service
-open class HttpApiTestLogServiceImpl : HttpApiTestLogService {}
+open class HttpApiTestLogServiceImpl : HttpApiTestLogService
