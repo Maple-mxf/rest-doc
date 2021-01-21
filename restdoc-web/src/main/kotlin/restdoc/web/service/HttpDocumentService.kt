@@ -5,6 +5,7 @@ import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.http.HttpMethod
 import org.springframework.lang.NonNull
 import org.springframework.stereotype.Service
+import org.springframework.web.bind.annotation.ValueConstants
 import restdoc.rpc.client.common.model.ApplicationType
 import restdoc.rpc.client.common.model.http.HttpApiDescriptor
 import restdoc.web.core.Status
@@ -76,8 +77,21 @@ open class HttpDocumentServiceImpl(val mongoTemplate: MongoTemplate,
 
         val headers = headerDescriptors
                 .map {
-                    it.key to it.value
-                            .map { v -> if (v.defaultValue != null) v.toString() else "" }
+                    it.key to
+                            it.value.map { v ->
+                                if (v.name != null) {
+                                    if (v.defaultValue != null && ValueConstants.DEFAULT_NONE != v.defaultValue){
+                                        "${v.name}=${v.defaultValue}"
+                                    }else{
+                                        "${v.name}={${v.name}}"
+                                    }
+                                }else{
+                                    if (v.defaultValue != null && ValueConstants.DEFAULT_NONE != v.defaultValue){
+                                        v.defaultValue.toString()
+                                    }
+                                    else{""}
+                                }
+                            }
                 }.toMap()
 
         val afterParseHeaders = parseHeader(HttpMethod.valueOf(descriptor.method),
@@ -132,8 +146,8 @@ open class HttpDocumentServiceImpl(val mongoTemplate: MongoTemplate,
 
                         val docs = t.value.map { d ->
 
-                            val requestHeaderDescriptors = headerProject(d)
-                            val responseHeaderDescriptors = headerProject(d)
+                            val requestHeaderDescriptors = headerProject(d, true)
+                            val responseHeaderDescriptors = headerProject(d, false)
                             val requestBodyDescriptors = bodyProject(d.requestBodyParameters)
                             val responseBodyDescriptors = bodyProject(listOf(d.responseBodyDescriptor))
                             val queryParamDescriptors = d.queryParamParameters.map { qpp -> QueryParamDescriptor(field = qpp.name, value = qpp.defaultValue) }

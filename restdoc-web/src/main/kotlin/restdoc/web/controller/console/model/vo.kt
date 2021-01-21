@@ -184,6 +184,8 @@ fun transformURIFieldToVO(uriVars: List<URIVarDescriptor>) =
 
 
 internal fun transformRestDocumentToVO(doc: HttpDocument): RestWebDocumentVO {
+    val codeSample:CodeSample = CodeSampleImpl(doc)
+
     return RestWebDocumentVO(
             id = doc.id!!,
             method = doc.method.name,
@@ -198,11 +200,11 @@ internal fun transformRestDocumentToVO(doc: HttpDocument): RestWebDocumentVO {
             uriVarDescriptors = transformURIFieldToVO(doc.uriVarDescriptors ?: listOf()),
             responseHeaderDescriptors = transformHeaderToVO(doc.responseHeaderDescriptor ?: listOf()),
             queryParamDescriptors = if (doc.queryParamDescriptors != null) doc.queryParamDescriptors!! else listOf(),
-            curlCodeSample = getBean(CURLCodeSampleGenerator::class.java).invoke(doc),
-            javaCodeSample = getBean(JavaCodeSampleGenerator::class.java).invoke(doc),
-            pythonCodeSample = getBean(PythonCodeSampleGenerator::class.java).invoke(doc),
-            requestFakeCodeSample = getBean(RequestFakeCodeSampleGenerator::class.java).invoke(doc),
-            responseFakeCodeSample = getBean(ResponseFakeCodeSampleGenerator::class.java).invoke(doc),
+            curlCodeSample = codeSample.curlCode(),
+            javaCodeSample = codeSample.javaCode(),
+            pythonCodeSample = codeSample.pythonCode(),
+            requestFakeCodeSample =codeSample.fakeRequestCode(),
+            responseFakeCodeSample = codeSample.fakeResponseCode(),
             lastUpdateTime = doc.lastUpdateTime
     )
 }

@@ -754,7 +754,7 @@ class WebDocumentController {
                 .map {
                     HeaderFieldDescriptor(
                             field = it.field,
-                            value = it.value.split(","),
+                            value = it.value,
                             description = it.description,
                             optional = it.optional)
                 }

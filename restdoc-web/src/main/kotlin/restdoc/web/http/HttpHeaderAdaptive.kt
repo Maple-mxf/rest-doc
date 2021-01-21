@@ -62,7 +62,16 @@ open class ContentTypeAdaptive : HttpHeaderAdaptive {
 
         val concreteMt = mts.find { it.isConcrete }
 
-        if (concreteMt != null) return concreteMt.toString()
+        if (concreteMt != null) {
+
+            /**
+             * Body 大致可分为两类：
+             *
+             *  Single-resource bodies，由一个单文件组成。该类型 body 由两个 header 定义： Content-Type 和 Content-Length.
+             *  Multiple-resource bodies，由多部分 body 组成，每一部分包含不同的信息位。通常是和  HTML Forms 连系在一起。
+             */
+            return concreteMt.toString()
+        }
 
         return if (bodyRequired) {
             if (method != HttpMethod.GET) {

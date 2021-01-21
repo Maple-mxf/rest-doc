@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component
 import org.springframework.web.bind.annotation.ValueConstants
 import org.springframework.web.client.RestTemplate
 import restdoc.web.base.getBean
-import restdoc.web.http.HEADER_VALUE_DELIMITER
 import restdoc.web.http.HTTP1_1_VERSION
 import restdoc.web.model.doc.http.HttpDocument
 import restdoc.web.projector.JacksonXmlProjector
@@ -37,6 +36,52 @@ internal val VE =
             ve.init()
             ve
         }()
+
+interface CodeSample {
+    fun kotlinCode(): String
+    fun javaCode(): String
+    fun pythonCode(): String
+    fun curlCode(): String
+    fun fakeRequestCode(): String
+    fun fakeResponseCode(): String
+}
+
+/**
+ *
+ * CodeSampleImpl
+ */
+open class CodeSampleImpl(val doc: HttpDocument) : CodeSample {
+    private val curlCodeSampleGenerator: CURLCodeSampleGenerator = getBean(CURLCodeSampleGenerator::class.java)
+    private val javaCodeSampleGenerator: JavaCodeSampleGenerator = getBean(JavaCodeSampleGenerator::class.java)
+    private val pythonCodeSampleGenerator: PythonCodeSampleGenerator = getBean(PythonCodeSampleGenerator::class.java)
+    private val kotlinSampleGenerator: KotlinCodeSampleGenerator = getBean(KotlinCodeSampleGenerator::class.java)
+    private val requestFakeCodeSampleGenerator: RequestFakeCodeSampleGenerator = getBean(RequestFakeCodeSampleGenerator::class.java)
+    private val responseFakeCodeSampleGenerator: ResponseFakeCodeSampleGenerator = getBean(ResponseFakeCodeSampleGenerator::class.java)
+
+    val codeMap: MutableMap<String, String> = mutableMapOf()
+
+    init {
+        codeMap["java"] = javaCodeSampleGenerator.invoke(doc)
+        codeMap["python"] = pythonCodeSampleGenerator.invoke(doc)
+        codeMap["kotlin"] = kotlinSampleGenerator.invoke(doc)
+        codeMap["curl"] = curlCodeSampleGenerator.invoke(doc)
+        codeMap["requestFake"] = requestFakeCodeSampleGenerator.invoke(doc)
+        codeMap["responseFake"] = responseFakeCodeSampleGenerator.invoke(doc)
+    }
+
+    override fun kotlinCode(): String = codeMap["kotlin"]!!
+
+    override fun javaCode(): String = codeMap["java"]!!
+
+    override fun pythonCode(): String = codeMap["python"]!!
+
+    override fun curlCode(): String = codeMap["curl"]!!
+
+    override fun fakeRequestCode(): String = codeMap["requestFake"]!!
+
+    override fun fakeResponseCode(): String = codeMap["responseFake"]!!
+}
+
 
 /**
  * @author Maple
@@ -65,7 +110,7 @@ open class CURLCodeSampleGenerator(private val restTemplate: RestTemplate) : Map
 
         // 4 Expand URL
         val afterExpandURL: String =
-                if (doc.uriVarDescriptors .isNotEmpty()) {
+                if (doc.uriVarDescriptors.isNotEmpty()) {
                     val uriValues = doc.uriVarDescriptors.map { it.field to it.value }.toMap()
                     restTemplate.uriTemplateHandler.expand(doc.url, uriValues)
 
@@ -186,6 +231,12 @@ open class NodeJsCodeSampleGenerator : MapToCodeSample {
 open class RequestFakeCodeSampleGenerator : MapToCodeSample {
     override fun invoke(doc: HttpDocument): String {
         val sb = StringBuilder()
+
+        // Matrix Vars
+        if (doc.matrixVariableDescriptors.isNotEmpty()) {
+
+        }
+
         sb.append(doc.method.name).append("  ").append(doc.url)
 
         if (doc.queryParamDescriptors.isNotEmpty()) {
@@ -196,43 +247,36 @@ open class RequestFakeCodeSampleGenerator : MapToCodeSample {
                     }
             sb.append("?$queryString").append("  ")
         }
+
         sb.append(HTTP1_1_VERSION).append("\n")
 
-        var mtp: MediaType? = null
 
-        doc.requestHeaderDescriptor.forEach {
-            if (it.field == HttpHeaders.CONTENT_TYPE) {
-                try {
-                    mtp = MediaType.parseMediaType(it.value )
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            } else {
-                sb.append(it.field).append(": ").append(it.value ).append("\n")
-            }
-        }
+        val headers = doc.requestHeaderDescriptor.map { t -> t.field to t.value }.toMap().toMutableMap()
+        var mtp: String? = headers[HttpHeaders.CONTENT_TYPE]
 
         if (mtp == null) {
-
             mtp = if (doc.method == HttpMethod.GET)
-                MediaType.TEXT_HTML
-            else MediaType("*", "*");
+                MediaType.TEXT_HTML.toString()
+            else MediaType.ALL.toString()
         }
 
+        headers.forEach { t ->
+            sb.append(t.key).append(": ").append(t.value).append("\n")
+        }
         sb.append("\n")
         if (doc.method == HttpMethod.GET) {
             // TODO
         } else {
             doc.requestBodyDescriptor.apply {
 
-                if (MediaType.APPLICATION_JSON == mtp) {
+                if (MediaType.APPLICATION_JSON_VALUE == mtp) {
                     val prettyString = JsonProjector(this.map { PathValue(it.path, it.value) })
                             .project()
                             .toPrettyString()
 
                     sb.append(prettyString).append("\n")
 
-                } else if (MediaType.APPLICATION_XML == mtp) {
+                } else if (MediaType.APPLICATION_XML_VALUE == mtp) {
                     val prettyString = JacksonXmlProjector(this.map { PathValue(it.path, it.value) })
                             .project()
 

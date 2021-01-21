@@ -80,17 +80,19 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
                 .flatMap(hm -> {
                     RequestMappingInfo requestMappingInfo = hm.getKey();
                     HandlerMethod handlerMethod = hm.getValue();
+
+                    // Filter view handler method
                     if (isViewHandler(handlerMethod)) return Stream.empty();
 
                     return requestMappingInfo.getPatternsCondition()
                             .getPatterns()
                             .stream()
+                            // Filter
                             .filter(pattern -> !"/error".equals(pattern))
                             .map(pattern -> String.join("", contextPath, pattern))
                             .map(pattern -> {
 
                                 HttpApiDescriptor emptyTemplate = new HttpApiDescriptor();
-
                                 emptyTemplate.setName(requestMappingInfo.getName());
 
                                 Set<RequestMethod> methods = requestMappingInfo.getMethodsCondition().getMethods();
@@ -191,7 +193,10 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
                     else if (annotation.annotationType().equals(RequestPart.class)) {
                         RequestPart requestPart = (RequestPart) annotation;
 
-                        emptyDescriptor.setEnableHasRequestBody(true);
+                        if (requestPart.required()) {
+                            emptyDescriptor.setEnableHasRequestBody(true);
+                        }
+
 
                         String requestPartName = requestPart.name().isEmpty() ?
                                 requestPart.value() :
@@ -241,7 +246,10 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
                     } else if (annotation.annotationType().equals(RequestBody.class)) {
 
                         RequestBody requestBody = (RequestBody) annotation;
-                        emptyDescriptor.setEnableHasRequestBody(true);
+
+                        if (requestBody.required()) {
+                            emptyDescriptor.setEnableHasRequestBody(true);
+                        }
 
                         parameterDescriptor.setRequire(requestBody.required());
 
@@ -261,15 +269,17 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
                         }
 
                         emptyDescriptor.getRequestBodyParameters().add(parameterDescriptor);
-                    } else if (annotation.annotationType().equals(CookieValue.class)) {
+                    }
+                    // https://tools.ietf.org/html/rfc6265#section-5.4
+                    else if (annotation.annotationType().equals(CookieValue.class)) {
 
                         CookieValue cookieValue = (CookieValue) annotation;
                         parameterDescriptor.setRequire(cookieValue.required());
-                        parameterDescriptor.setName(HttpHeaders.SET_COOKIE);
+                        parameterDescriptor.setName(HttpHeaders.COOKIE);
                         parameterDescriptor.setDefaultValue(cookieValue.defaultValue());
 
                         List<HttpApiDescriptor.ParameterDescriptor> cookieValues = emptyDescriptor.getRequestHeaderParameters()
-                                .getOrDefault(HttpHeaders.SET_COOKIE, new ArrayList<>());
+                                .getOrDefault(HttpHeaders.COOKIE, new ArrayList<>());
 
                         String cookieName = cookieValue.name().isEmpty() ? cookieValue.value() : cookieValue.name();
                         if (cookieName.isEmpty()) cookieName = parameter.getParameter().getName();
@@ -279,7 +289,7 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
                         cookieDescriptor.setDefaultValue(cookieValue.defaultValue());
                         cookieValues.add(cookieDescriptor);
 
-                        emptyDescriptor.getRequestHeaderParameters().put(HttpHeaders.SET_COOKIE, cookieValues);
+                        emptyDescriptor.getRequestHeaderParameters().put(HttpHeaders.COOKIE, cookieValues);
 
                     } else if (annotation.annotationType().equals(RequestHeader.class)) {
                         RequestHeader requestHeader = (RequestHeader) annotation;
@@ -302,11 +312,11 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
                 }
             }
 
-            if (parameter.getParameterType()  == MultipartFile.class ||
-              Stream.of(parameter.getParameterType().getInterfaces()).anyMatch(t->t==MultipartFile.class) ){
+            if (parameter.getParameterType() == MultipartFile.class ||
+                    Stream.of(parameter.getParameterType().getInterfaces()).anyMatch(t -> t == MultipartFile.class)) {
                 emptyDescriptor.setEnableHasFile(true);
+                emptyDescriptor.setEnableHasRequestBody(true);
             }
-
         }
 
         Class<?> returnType = handlerMethod.getMethod().getReturnType();
@@ -486,12 +496,9 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
     }
 
     private boolean isViewHandler(HandlerMethod handlerMethod) {
-        RestController restController =
-                handlerMethod.getBeanType().getDeclaredAnnotation(RestController.class);
-        if (restController != null) return false;
-        ResponseBody responseBody = handlerMethod.getMethodAnnotation(ResponseBody.class);
-
-        return responseBody == null;
+        if (handlerMethod.getBeanType().getDeclaredAnnotation(RestController.class) != null)
+            return false;
+        return handlerMethod.getMethodAnnotation(ResponseBody.class) == null;
     }
 
 }

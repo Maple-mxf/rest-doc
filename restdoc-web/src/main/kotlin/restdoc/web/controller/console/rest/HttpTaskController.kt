@@ -94,20 +94,17 @@ class HttpTaskController {
         val invocation = HttpInvocation().apply {
             url = dto.lookupPath()
             method = dto.method
-            requestHeaders = requestHeaderDescriptor.map { bd -> bd.field to bd.value }.toMap().toMutableMap()
+            requestHeaders = requestHeaderDescriptor.map { bd -> bd.field to listOf<String>(bd.value) }.toMap().toMutableMap()
             queryParam = URLUtil.parseQueryParam(  dto.url)
             requestBody = bodyMap
             uriVariable = uriVarDescriptor.map { it.field to it.value }.toMap().toMutableMap()
         }
 
-        try {
-            /*val executeResult = scheduleServiceImpl
-                    .syncSubmitRemoteHttpTask(dto.remoteAddress!!.replaceFirst("tcp://", ""), invocation)*/
-            val executeResult = HttpInvocationResult()
-            return executeResult
+        return try {
+            HttpInvocationResult()
         } catch (e: Throwable) {
             e.printStackTrace()
-            return HttpInvocationResult(
+            HttpInvocationResult(
                     false,
                     e.message,
                     invocation,
@@ -130,7 +127,7 @@ class HttpTaskController {
                 .apply {
                     url = dto.lookupPath()
                     method = dto.method
-                    requestHeaders = requestHeaderDescriptor.map { bd -> bd.field to bd.value }.toMap().toMutableMap()
+                    requestHeaders = requestHeaderDescriptor.map { bd -> bd.field to listOf(bd.value) }.toMap().toMutableMap()
                     queryParam = URLUtil.parseQueryParam(dto.url)
                     requestBody = bodyMap
                     uriVariable = uriVarDescriptor.map { it.field to it.value }.toMap().toMutableMap()
