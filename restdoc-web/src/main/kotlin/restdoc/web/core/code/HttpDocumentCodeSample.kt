@@ -134,10 +134,10 @@ open class JavaMockCodeSampleGenerator : MapToCodeSample {
 open class PythonCodeSampleGenerator : MapToCodeSample {
 
     override fun invoke(doc: HttpDocument): String {
-        val uriFormatStr = doc.uriVarDescriptors?.joinToString(separator = ",") { "'${it.field}' = '${it.value}'" }
+        val uriFormatStr = doc.uriVarDescriptors.joinToString(separator = ",") { "'${it.field}' = '${it.value}'" }
 
         val codeTemplate: Template = VE.getTemplate("codesample/PythonCodeUnitTestCaseSample.py")
-        val pathValues = doc.requestBodyDescriptor?.map { PathValue(it.path, it.value) }
+        val pathValues = doc.requestBodyDescriptor.map { PathValue(it.path, it.value) }
         val json = getBean(ObjectMapper::class.java).writeValueAsString(JsonProjector(pathValues
                 ?: mutableListOf()).projectToMap())
 
@@ -317,6 +317,8 @@ open class ResponseFakeCodeSampleGenerator : MapToCodeSample {
                     .toPrettyString()
 
             sb.append(prettyString).append("\n")
+        }else{
+            sb.append("无响应示例")
         }
 
         return sb.toString()

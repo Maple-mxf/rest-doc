@@ -366,6 +366,7 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
 
             requestMimeTypeDescriptor.add(pd);
         }
+
         emptyDescriptor.getRequestHeaderParameters().put(HttpHeaders.CONTENT_TYPE, requestMimeTypeDescriptor);
 
         ProducesRequestCondition producesCondition = requestMappingInfo.getProducesCondition();
