@@ -167,7 +167,7 @@ open class JavaCodeSampleGenerator : MapToCodeSample {
         val codeTemplate: Template = VE.getTemplate("codesample/JavaCodeUnitTestCaseSample.java.vm")
         val ctx = VelocityContext()
 
-        val uriVars = doc.uriVarDescriptors?.map { it.field to it.value }?.toMap()
+        val uriVars = doc.uriVarDescriptors.map { it.field to it.value }.toMap()
 
         ctx.put("requestHeaders", doc.requestHeaderDescriptor)
         ctx.put("uriVars", uriVars)
@@ -232,12 +232,25 @@ open class RequestFakeCodeSampleGenerator : MapToCodeSample {
     override fun invoke(doc: HttpDocument): String {
         val sb = StringBuilder()
 
-        // Matrix Vars
-        if (doc.matrixVariableDescriptors.isNotEmpty()) {
+        var url = doc.url
 
+        // Matrix Vars
+        for (matrixVariableDescriptor in doc.matrixVariableDescriptors) {
+            val value = if (matrixVariableDescriptor.defaultValue == null || ValueConstants.DEFAULT_NONE == matrixVariableDescriptor.defaultValue) {
+                "{${matrixVariableDescriptor.field}}"
+            } else {
+                matrixVariableDescriptor.defaultValue
+            }
+
+            if (matrixVariableDescriptor.pathVar != null) {
+                url =   url.replace("{${matrixVariableDescriptor.pathVar}}", "" +
+                        "{${matrixVariableDescriptor.pathVar}};${matrixVariableDescriptor.field}=${value}")
+            } else {
+                url = "${url};${matrixVariableDescriptor.field}=${value}"
+            }
         }
 
-        sb.append(doc.method.name).append("  ").append(doc.url)
+        sb.append(doc.method.name).append("  ").append(url)
 
         if (doc.queryParamDescriptors.isNotEmpty()) {
             val queryString = doc.queryParamDescriptors
@@ -249,7 +262,6 @@ open class RequestFakeCodeSampleGenerator : MapToCodeSample {
         }
 
         sb.append(HTTP1_1_VERSION).append("\n")
-
 
         val headers = doc.requestHeaderDescriptor.map { t -> t.field to t.value }.toMap().toMutableMap()
         var mtp: String? = headers[HttpHeaders.CONTENT_TYPE]
