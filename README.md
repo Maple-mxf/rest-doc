@@ -72,13 +72,6 @@ restdoc.host=127.0.0.1  # RESTdoc-console的IP地址
 restdoc.port: 4321   # 固定端口
 ```
 
-3 启动你的应用
-
-## RESTdoc-console线上体验
-[RESTdoc线上体验地址](http://152.136.104.144:8432/restdoc/ "RESTdoc线上体验地址")<br>
-登录账户: <br>
-账户：Maple <br>
-密码：Maple
 
 
 
