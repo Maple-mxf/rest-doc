@@ -5,12 +5,11 @@ import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.http.HttpMethod
 import org.springframework.lang.NonNull
 import org.springframework.stereotype.Service
-import org.springframework.web.bind.annotation.ValueConstants
 import restdoc.rpc.client.common.model.ApplicationType
+import restdoc.rpc.client.common.model.FieldType
 import restdoc.rpc.client.common.model.http.HttpApiDescriptor
 import restdoc.web.core.Status
 import restdoc.web.distributelock.LockKey
-import restdoc.web.http.parseHeader
 import restdoc.web.model.Resource
 import restdoc.web.model.doc.http.*
 import restdoc.web.projector.JsonDeProjector
@@ -52,7 +51,7 @@ open class HttpDocumentServiceImpl(val mongoTemplate: MongoTemplate,
 
     private fun bodyProject(rbps: Collection<HttpApiDescriptor.ParameterDescriptor>) =
             rbps.flatMap { rbp ->
-                if ("java.lang.Object" == rbp.type && rbp.supplementary != null) {
+                if (FieldType.OBJECT == rbp.type && rbp.supplementary != null) {
                     try {
                         return if (rbp.supplementary is String) {
                             val tree = mapper.readTree(rbp.supplementary.toString())
@@ -70,40 +69,15 @@ open class HttpDocumentServiceImpl(val mongoTemplate: MongoTemplate,
     private fun headerProject(descriptor: HttpApiDescriptor, isRequest: Boolean = false): List<HeaderFieldDescriptor> {
 
         val headerDescriptors = if (isRequest) {
-            descriptor.requestHeaderParameters
+            descriptor.requestHeaders
         } else {
-            descriptor.responseHeaderParameters
+            descriptor.responseHeaders
         }
 
-        val headers = headerDescriptors
-                .map {
-                    it.key to
-                            it.value.map { v ->
-                                if (v.name != null) {
-                                    if (v.defaultValue != null && ValueConstants.DEFAULT_NONE != v.defaultValue) {
-                                        "${v.name}=${v.defaultValue}"
-                                    } else {
-                                        "${v.name}={${v.name}}"
-                                    }
-                                } else {
-                                    if (v.defaultValue != null && ValueConstants.DEFAULT_NONE != v.defaultValue) {
-                                        v.defaultValue.toString()
-                                    } else {
-                                        ""
-                                    }
-                                }
-                            }
-                }.toMap()
-
-        val afterParseHeaders = parseHeader(HttpMethod.valueOf(descriptor.method),
-                descriptor.isRequireBody,
-                descriptor.isRequireFile,
-                headers)
-
-        return afterParseHeaders.map {
+        return headerDescriptors.map {
             HeaderFieldDescriptor(
-                    field = it.key,
-                    value = it.value
+                    field = it.name,
+                    value = it.defaultValue.toString()
             )
         }
     }

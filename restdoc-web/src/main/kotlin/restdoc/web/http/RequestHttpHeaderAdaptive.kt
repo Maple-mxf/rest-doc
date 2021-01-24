@@ -6,6 +6,8 @@ import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
 import restdoc.web.base.getBean
 
+
+@Deprecated(message = "ContentTypeAdaptive")
 internal val contentTypeAdaptive: ContentTypeAdaptive = getBean(ContentTypeAdaptive::class.java)
 
 internal var cookieAdaptive: CookieAdaptive = getBean(CookieAdaptive::class.java)

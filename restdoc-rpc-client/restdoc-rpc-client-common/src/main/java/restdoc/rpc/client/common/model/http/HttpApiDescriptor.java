@@ -38,9 +38,6 @@ public class HttpApiDescriptor implements ApiDescriptor {
     /*File is Require*/
     private boolean requireFile;
 
-    @Deprecated
-    private Map<String, List<ParameterDescriptor>> requestHeaderParameters = new HashMap<>(4);
-
     private Set<KeyValuePair> requestHeaders = new HashSet<>();
 
     private Set<KeyValuePair> responseHeaders = new HashSet<>();
@@ -54,13 +51,6 @@ public class HttpApiDescriptor implements ApiDescriptor {
     private Set<ParameterDescriptor> requestBodyParameters = new HashSet<>(4);
 
     private ParameterDescriptor responseBodyDescriptor = null;
-
-    @Deprecated
-    private Map<String, List<ParameterDescriptor>> responseHeaderParameters = new HashMap<>(4);
-
-    public Map<String, List<ParameterDescriptor>> getRequestHeaderParameters() {
-        return requestHeaderParameters;
-    }
 
     public Set<ParameterDescriptor> getQueryParamParameters() {
         return queryParamParameters;
@@ -76,11 +66,6 @@ public class HttpApiDescriptor implements ApiDescriptor {
 
     public Set<ParameterDescriptor> getRequestBodyParameters() {
         return requestBodyParameters;
-    }
-
-    @Deprecated
-    public Map<String, List<ParameterDescriptor>> getResponseHeaderParameters() {
-        return responseHeaderParameters;
     }
 
     public String getName() {
@@ -253,10 +238,6 @@ public class HttpApiDescriptor implements ApiDescriptor {
         this.method = method;
     }
 
-    public void setRequestHeaderParameters(Map<String, List<ParameterDescriptor>> requestHeaderParameters) {
-        this.requestHeaderParameters = requestHeaderParameters;
-    }
-
     public void setQueryParamParameters(Set<ParameterDescriptor> queryParamParameters) {
         this.queryParamParameters = queryParamParameters;
     }
@@ -272,11 +253,6 @@ public class HttpApiDescriptor implements ApiDescriptor {
     public void setRequestBodyParameters(Set<ParameterDescriptor> requestBodyParameters) {
         this.requestBodyParameters = requestBodyParameters;
     }
-
-    public void setResponseHeaderParameters(Map<String, List<ParameterDescriptor>> responseHeaderParameters) {
-        this.responseHeaderParameters = responseHeaderParameters;
-    }
-
 
     public String getResponseType() {
         return responseType;
