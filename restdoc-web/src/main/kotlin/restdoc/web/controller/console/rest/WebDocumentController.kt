@@ -71,7 +71,8 @@ class WebDocumentController {
 
     @GetMapping("/{id}")
     fun get(@PathVariable id: String): Result {
-        val doc = httpDocumentRepository.findById(id).orElseThrow { Status.INVALID_REQUEST.instanceError("id参数错误") }
+        val doc = httpDocumentRepository.findById(id)
+                .orElseThrow { Status.INVALID_REQUEST.instanceError("id参数错误") }
         return ok(transformRestDocumentToVO(doc))
     }
 

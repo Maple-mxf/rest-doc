@@ -34,12 +34,6 @@ spring:
       host: ${MONGO-HOST}
       port: 27017
 
-#  data:
-#    mongodb:
-#      uri: mongodb://front_biz:qmbxfrontbizStorage@${MONGO-HOST}:27017/non_standard
-#      authenticationDatabase: non_standard
-#      database: non_standard
-
 restdoc:
   schedule:
     port: 4321

@@ -80,16 +80,17 @@ open class HttpDocumentServiceImpl(val mongoTemplate: MongoTemplate,
                     it.key to
                             it.value.map { v ->
                                 if (v.name != null) {
-                                    if (v.defaultValue != null && ValueConstants.DEFAULT_NONE != v.defaultValue){
+                                    if (v.defaultValue != null && ValueConstants.DEFAULT_NONE != v.defaultValue) {
                                         "${v.name}=${v.defaultValue}"
-                                    }else{
+                                    } else {
                                         "${v.name}={${v.name}}"
                                     }
-                                }else{
-                                    if (v.defaultValue != null && ValueConstants.DEFAULT_NONE != v.defaultValue){
+                                } else {
+                                    if (v.defaultValue != null && ValueConstants.DEFAULT_NONE != v.defaultValue) {
                                         v.defaultValue.toString()
+                                    } else {
+                                        ""
                                     }
-                                    else{""}
                                 }
                             }
                 }.toMap()
@@ -215,7 +216,7 @@ open class HttpDocumentServiceImpl(val mongoTemplate: MongoTemplate,
                     }
 
                     for (document in matchedDocs) {
-
+                        document.id = MD5Util.MD5Encode(projectId + document.id, StandardCharsets.UTF_8.name())
                         val docExist = httpDocumentRepository.existsById(document.id)
 
                         if (docExist) {
