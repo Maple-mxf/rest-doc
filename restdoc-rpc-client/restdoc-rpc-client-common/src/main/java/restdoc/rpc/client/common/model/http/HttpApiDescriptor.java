@@ -1,11 +1,15 @@
 package restdoc.rpc.client.common.model.http;
 
 import restdoc.rpc.client.common.model.ApiDescriptor;
+import restdoc.rpc.client.common.model.FieldType;
 import restdoc.rpc.client.common.util.MD5Util;
 
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
+/**
+ * HttpApiDescriptor
+ */
 public class HttpApiDescriptor implements ApiDescriptor {
 
     private String id;
@@ -29,11 +33,17 @@ public class HttpApiDescriptor implements ApiDescriptor {
     private String responseType;
 
     /*Body is Require*/
-    private boolean enableHasRequestBody;
-    /*File is Require*/
-    private boolean enableHasFile;
+    private boolean requireBody;
 
+    /*File is Require*/
+    private boolean requireFile;
+
+    @Deprecated
     private Map<String, List<ParameterDescriptor>> requestHeaderParameters = new HashMap<>(4);
+
+    private Set<KeyValuePair> requestHeaders = new HashSet<>();
+
+    private Set<KeyValuePair> responseHeaders = new HashSet<>();
 
     private Set<ParameterDescriptor> queryParamParameters = new HashSet<>(4);
 
@@ -45,6 +55,7 @@ public class HttpApiDescriptor implements ApiDescriptor {
 
     private ParameterDescriptor responseBodyDescriptor = null;
 
+    @Deprecated
     private Map<String, List<ParameterDescriptor>> responseHeaderParameters = new HashMap<>(4);
 
     public Map<String, List<ParameterDescriptor>> getRequestHeaderParameters() {
@@ -67,6 +78,7 @@ public class HttpApiDescriptor implements ApiDescriptor {
         return requestBodyParameters;
     }
 
+    @Deprecated
     public Map<String, List<ParameterDescriptor>> getResponseHeaderParameters() {
         return responseHeaderParameters;
     }
@@ -85,6 +97,36 @@ public class HttpApiDescriptor implements ApiDescriptor {
 
     public void setResponseBodyDescriptor(ParameterDescriptor responseBodyDescriptor) {
         this.responseBodyDescriptor = responseBodyDescriptor;
+    }
+
+    public static class KeyValuePair implements java.io.Serializable {
+        private String name;
+        private Boolean require = true;
+        private Object defaultValue = null;
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public Boolean getRequire() {
+            return require;
+        }
+
+        public void setRequire(Boolean require) {
+            this.require = require;
+        }
+
+        public Object getDefaultValue() {
+            return defaultValue;
+        }
+
+        public void setDefaultValue(Object defaultValue) {
+            this.defaultValue = defaultValue;
+        }
     }
 
     /**
@@ -106,7 +148,7 @@ public class HttpApiDescriptor implements ApiDescriptor {
         /**
          * @see Class#getName()
          */
-        private String type;
+        private FieldType type;
 
         public ParameterDescriptor() {
         }
@@ -144,11 +186,11 @@ public class HttpApiDescriptor implements ApiDescriptor {
             this.require = require;
         }
 
-        public String getType() {
+        public FieldType getType() {
             return type;
         }
 
-        public void setType(String type) {
+        public void setType(FieldType type) {
             this.type = type;
         }
 
@@ -249,19 +291,35 @@ public class HttpApiDescriptor implements ApiDescriptor {
         return this.id;
     }
 
-    public boolean isEnableHasRequestBody() {
-        return enableHasRequestBody;
+    public boolean isRequireBody() {
+        return requireBody;
     }
 
-    public void setEnableHasRequestBody(boolean enableHasRequestBody) {
-        this.enableHasRequestBody = enableHasRequestBody;
+    public void setRequireBody(boolean requireBody) {
+        this.requireBody = requireBody;
     }
 
-    public boolean isEnableHasFile() {
-        return enableHasFile;
+    public boolean isRequireFile() {
+        return requireFile;
     }
 
-    public void setEnableHasFile(boolean enableHasFile) {
-        this.enableHasFile = enableHasFile;
+    public void setRequireFile(boolean requireFile) {
+        this.requireFile = requireFile;
+    }
+
+    public void addRequestHeader(KeyValuePair pair) {
+        this.requestHeaders.add(pair);
+    }
+
+    public void addResponseHeader(KeyValuePair pair) {
+        this.responseHeaders.add(pair);
+    }
+
+    public Set<KeyValuePair> getRequestHeaders() {
+        return requestHeaders;
+    }
+
+    public Set<KeyValuePair> getResponseHeaders() {
+        return responseHeaders;
     }
 }

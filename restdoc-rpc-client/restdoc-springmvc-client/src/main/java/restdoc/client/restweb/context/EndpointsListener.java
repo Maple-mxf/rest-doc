@@ -3,7 +3,6 @@ package restdoc.client.restweb.context;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.MethodParameter;
@@ -20,13 +19,10 @@ import org.springframework.web.servlet.mvc.condition.ConsumesRequestCondition;
 import org.springframework.web.servlet.mvc.condition.ProducesRequestCondition;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
+import restdoc.rpc.client.common.model.FieldType;
 import restdoc.rpc.client.common.model.http.HttpApiDescriptor;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -55,8 +51,7 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
 
     private final Environment environment;
 
-    @Autowired
-    ObjectMapper mapper = new ObjectMapper();
+    private final ObjectMapper mapper = new ObjectMapper();
 
     public EndpointsListener(Environment environment) {
         this.environment = environment;
@@ -82,7 +77,7 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
                     HandlerMethod handlerMethod = hm.getValue();
 
                     // Filter view handler method
-                    if (isViewHandler(handlerMethod)) return Stream.empty();
+                    if (ResolverUtil.isViewHandler(handlerMethod)) return Stream.empty();
 
                     return requestMappingInfo.getPatternsCondition()
                             .getPatterns()
@@ -109,7 +104,7 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
                                 emptyTemplate.setPattern(pattern);
                                 emptyTemplate.setController(handlerMethod.getBeanType().getName());
 
-                                this.transparentApi(emptyTemplate, requestMappingInfo, handlerMethod);
+                                this.projectApi(emptyTemplate, requestMappingInfo, handlerMethod);
 
                                 return emptyTemplate;
                             });
@@ -126,7 +121,7 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
     /**
      * Transparent application api endpoint interface
      *
-     * @param emptyDescriptor    Empty descriptor
+     * @param emptyTemplate      Empty descriptor
      * @param handlerMethod      Endpoint api method
      * @param requestMappingInfo {@link RequestMappingInfo}
      * @see RequestMapping
@@ -140,196 +135,47 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
      * @see org.springframework.web.bind.annotation.RequestHeader
      * @see MultipartFile
      */
-    private void transparentApi(HttpApiDescriptor emptyDescriptor,
-                                RequestMappingInfo requestMappingInfo,
-                                HandlerMethod handlerMethod) {
+    private void projectApi(HttpApiDescriptor emptyTemplate,
+                            RequestMappingInfo requestMappingInfo,
+                            HandlerMethod handlerMethod) {
 
-        emptyDescriptor.setName(requestMappingInfo.getName() == null ?
+        emptyTemplate.setName(requestMappingInfo.getName() == null ?
                 handlerMethod.getMethod().getName() : requestMappingInfo.getName());
 
         MethodParameter[] parameters = handlerMethod.getMethodParameters();
 
+        boolean hasRequestPartAnnotation = Stream.of(parameters)
+                .flatMap(t -> Stream.of(t.getParameterAnnotations()))
+                .anyMatch(t -> t.annotationType() == RequestPart.class);
+
+        boolean hasFileParam = Stream.of(parameters)
+                .anyMatch(t -> ResolverUtil.isFileType(t.getParameterType()));
+
+        if (hasFileParam || hasRequestPartAnnotation) emptyTemplate.setRequireFile(true);
+
         for (MethodParameter parameter : parameters) {
 
-            if (parameter.getParameterAnnotations().length > 0) {
-                String parameterName = parameter.getParameterName();
-                HttpApiDescriptor.ParameterDescriptor parameterDescriptor =
-                        new HttpApiDescriptor.ParameterDescriptor(parameterName);
-                parameterDescriptor.setType(parameter.getParameterType().getName());
+            Annotation[] annotations = parameter.getParameterAnnotations();
 
-                Annotation[] annotations = parameter.getParameterAnnotations();
+            if (annotations.length > 0) {
                 for (Annotation annotation : annotations) {
-                    if (annotation.annotationType().equals(PathVariable.class)) {
-
-                        PathVariable pathVariable = (PathVariable) annotation;
-
-                        String pathVariableName = pathVariable.name().isEmpty() ?
-                                pathVariable.value() :
-                                pathVariable.name();
-                        if (pathVariableName.isEmpty()) pathVariableName = parameter.getParameter().getName();
-
-                        parameterDescriptor.setRequire(pathVariable.required());
-                        parameterDescriptor.setName(pathVariableName);
-
-                        emptyDescriptor.getPathVariableParameters()
-                                .add(parameterDescriptor);
-                    } else if (annotation.annotationType().equals(RequestParam.class)) {
-
-                        RequestParam requestParam = (RequestParam) annotation;
-
-                        String requestParamName = requestParam.name().isEmpty() ?
-                                requestParam.value() :
-                                requestParam.name();
-
-                        if (requestParamName.isEmpty()) requestParamName = parameter.getParameter().getName();
-
-                        parameterDescriptor.setName(requestParamName);
-                        parameterDescriptor.setRequire(requestParam.required());
-                        parameterDescriptor.setDefaultValue(requestParam.defaultValue());
-
-                        emptyDescriptor.getQueryParamParameters().add(parameterDescriptor);
-                    }
-                    // If has request part
-                    else if (annotation.annotationType().equals(RequestPart.class)) {
-                        RequestPart requestPart = (RequestPart) annotation;
-
-                        if (requestPart.required()) {
-                            emptyDescriptor.setEnableHasRequestBody(true);
-                        }
-
-
-                        String requestPartName = requestPart.name().isEmpty() ?
-                                requestPart.value() :
-                                requestPart.name();
-                        if (requestPartName.isEmpty()) requestPartName = parameter.getParameter().getName();
-
-                        parameterDescriptor.setName(requestPartName);
-                        parameterDescriptor.setRequire(requestPart.required());
-
-                        if (isPrimitive(parameter.getParameterType())) {
-                            parameterDescriptor.setType(parameter.getParameterType().getName());
-                        } else {
-                            // If is map TODO
-                            if (Arrays.stream(parameter.getParameterType().getGenericInterfaces())
-                                    .noneMatch(t -> t == Map.class)) {
-                                Object dtoInstance = instantiate(parameter.getParameterType());
-                                try {
-                                    parameterDescriptor.setType(parameter.getParameterType().getName());
-                                    parameterDescriptor.setSupplementary(dtoInstance);
-
-                                } catch (Exception ignored) {
-                                    // TODO
-                                    ignored.printStackTrace();
-                                }
-                            }
-                        }
-
-                        emptyDescriptor.getRequestBodyParameters().add(parameterDescriptor);
-                    } else if (annotation.annotationType().equals(MatrixVariable.class)) {
-
-                        MatrixVariable matrixVariable = (MatrixVariable) annotation;
-
-                        parameterDescriptor.setRequire(matrixVariable.required());
-                        String matrixVariableName = matrixVariable.name().isEmpty() ?
-                                matrixVariable.value() :
-                                matrixVariable.name();
-                        if (matrixVariableName.isEmpty()) matrixVariableName = parameter.getParameter().getName();
-
-                        parameterDescriptor.setName(matrixVariableName);
-                        parameterDescriptor.setDefaultValue(matrixVariable.defaultValue());
-
-                        if (!ValueConstants.DEFAULT_NONE.equals(matrixVariable.pathVar())) {
-                            parameterDescriptor.setSupplementary(matrixVariable.pathVar());
-                        }
-
-                        emptyDescriptor.getMatrixVariableParameters().add(parameterDescriptor);
-                    } else if (annotation.annotationType().equals(RequestBody.class)) {
-
-                        RequestBody requestBody = (RequestBody) annotation;
-
-                        if (requestBody.required()) {
-                            emptyDescriptor.setEnableHasRequestBody(true);
-                        }
-
-                        parameterDescriptor.setRequire(requestBody.required());
-
-                        // Complex Type
-                        if (!isPrimitive(parameter.getParameterType())) {
-                            if (Arrays.stream(parameter.getParameterType().getGenericInterfaces())
-                                    .noneMatch(t -> t == Map.class)) {
-
-                                Object dtoInstance = instantiate(parameter.getParameterType());
-                                try {
-                                    parameterDescriptor.setSupplementary(dtoInstance);
-                                    parameterDescriptor.setType(Object.class.getName());
-                                } catch (Exception ignored) {
-                                    ignored.printStackTrace();
-                                }
-                            }
-                        }
-
-                        emptyDescriptor.getRequestBodyParameters().add(parameterDescriptor);
-                    }
-                    // https://tools.ietf.org/html/rfc6265#section-5.4
-                    else if (annotation.annotationType().equals(CookieValue.class)) {
-
-                        CookieValue cookieValue = (CookieValue) annotation;
-                        parameterDescriptor.setRequire(cookieValue.required());
-                        parameterDescriptor.setName(HttpHeaders.COOKIE);
-                        parameterDescriptor.setDefaultValue(cookieValue.defaultValue());
-
-                        List<HttpApiDescriptor.ParameterDescriptor> cookieValues = emptyDescriptor.getRequestHeaderParameters()
-                                .getOrDefault(HttpHeaders.COOKIE, new ArrayList<>());
-
-                        String cookieName = cookieValue.name().isEmpty() ? cookieValue.value() : cookieValue.name();
-                        if (cookieName.isEmpty()) cookieName = parameter.getParameter().getName();
-
-                        HttpApiDescriptor.ParameterDescriptor cookieDescriptor
-                                = new HttpApiDescriptor.ParameterDescriptor(cookieName);
-                        cookieDescriptor.setDefaultValue(cookieValue.defaultValue());
-                        cookieValues.add(cookieDescriptor);
-
-                        emptyDescriptor.getRequestHeaderParameters().put(HttpHeaders.COOKIE, cookieValues);
-
-                    } else if (annotation.annotationType().equals(RequestHeader.class)) {
-                        RequestHeader requestHeader = (RequestHeader) annotation;
-
-                        String requestHeaderName = requestHeader.name().isEmpty() ?
-                                requestHeader.value() :
-                                requestHeader.name();
-
-                        if (requestHeaderName.isEmpty()) requestHeaderName = parameter.getParameter().getName();
-
-                        parameterDescriptor.setName(requestHeaderName);
-                        parameterDescriptor.setDefaultValue(requestHeader.defaultValue());
-                        parameterDescriptor.setRequire(requestHeader.required());
-
-                        ArrayList<HttpApiDescriptor.ParameterDescriptor> descriptors = new ArrayList<>();
-                        descriptors.add(parameterDescriptor);
-                        emptyDescriptor.getRequestHeaderParameters()
-                                .put(requestHeader.name(), descriptors);
-                    }
+                    ResolverProxy.resolve(emptyTemplate, handlerMethod, requestMappingInfo, parameter, annotation);
                 }
-            }
-
-            if (parameter.getParameterType() == MultipartFile.class ||
-                    Stream.of(parameter.getParameterType().getInterfaces()).anyMatch(t -> t == MultipartFile.class)) {
-                emptyDescriptor.setEnableHasFile(true);
-                emptyDescriptor.setEnableHasRequestBody(true);
             }
         }
 
         Class<?> returnType = handlerMethod.getMethod().getReturnType();
 
+        // Response Type
         if (returnType != ResponseEntity.class) {
-            Object responseInstance = instantiate(handlerMethod.getMethod().getReturnType());
+            Object responseInstance = ResolverUtil.instantiate(handlerMethod.getMethod().getReturnType());
             if (responseInstance != null) {
                 HttpApiDescriptor.ParameterDescriptor parameterDescriptor =
                         new HttpApiDescriptor.ParameterDescriptor();
 
-                parameterDescriptor.setType(Object.class.getName());
+                parameterDescriptor.setType(FieldType.OBJECT);
                 try {
-                    emptyDescriptor.setResponseBodyDescriptor(parameterDescriptor);
+                    emptyTemplate.setResponseBodyDescriptor(parameterDescriptor);
                     parameterDescriptor.setSupplementary(responseInstance);
                 } catch (Exception ignored) {
                     ignored.printStackTrace();
@@ -339,10 +185,10 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
 
         // RequestContentType
         ConsumesRequestCondition consumesCondition = requestMappingInfo.getConsumesCondition();
-        List<HttpApiDescriptor.ParameterDescriptor> requestMimeTypeDescriptor = emptyDescriptor.getRequestHeaderParameters()
+        List<HttpApiDescriptor.ParameterDescriptor> requestMimeTypeDescriptor = emptyTemplate.getRequestHeaderParameters()
                 .getOrDefault(HttpHeaders.CONTENT_TYPE, new ArrayList<>());
-        requestMimeTypeDescriptor.clear();
-        if (!consumesCondition.isEmpty()) {
+
+        if (!consumesCondition.isEmpty() && !requestMimeTypeDescriptor.isEmpty()) {
             // Acceptable media type
             Set<MediaType> mts = consumesCondition.getConsumableMediaTypes();
             Set<HttpApiDescriptor.ParameterDescriptor> pds = mts.stream()
@@ -360,18 +206,18 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
             HttpApiDescriptor.ParameterDescriptor pd =
                     new HttpApiDescriptor.ParameterDescriptor();
 
-            if (HttpMethod.GET.name().equals(emptyDescriptor.getMethod()))
+            if (HttpMethod.GET.name().equals(emptyTemplate.getMethod()))
                 pd.setDefaultValue(new MimeType("*", "*").toString());
             else pd.setDefaultValue(MediaType.APPLICATION_JSON_VALUE);
 
             requestMimeTypeDescriptor.add(pd);
         }
 
-        emptyDescriptor.getRequestHeaderParameters().put(HttpHeaders.CONTENT_TYPE, requestMimeTypeDescriptor);
+        emptyTemplate.getRequestHeaderParameters().put(HttpHeaders.CONTENT_TYPE, requestMimeTypeDescriptor);
 
         ProducesRequestCondition producesCondition = requestMappingInfo.getProducesCondition();
         List<HttpApiDescriptor.ParameterDescriptor> responseMimeTypeDescriptor =
-                emptyDescriptor.getResponseHeaderParameters().getOrDefault(
+                emptyTemplate.getResponseHeaderParameters().getOrDefault(
                         HttpHeaders.CONTENT_TYPE,
                         new ArrayList<>());
 
@@ -391,115 +237,12 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
             pd.setDefaultValue(MediaType.APPLICATION_JSON_VALUE);
             responseMimeTypeDescriptor.add(pd);
         }
-        emptyDescriptor.getResponseHeaderParameters().put(HttpHeaders.CONTENT_TYPE, responseMimeTypeDescriptor);
+        emptyTemplate.getResponseHeaderParameters().put(HttpHeaders.CONTENT_TYPE, responseMimeTypeDescriptor);
 
         try {
-            System.err.println(mapper.writeValueAsString(emptyDescriptor));
+            System.err.println(mapper.writeValueAsString(emptyTemplate));
         } catch (Exception e) {
         }
-
-
-    }
-
-
-    private static final Map<Class<?>, Object> PRIMITIVE_DEFAULT_VALUE = new HashMap<Class<?>, Object>() {
-        {
-            this.put(Void.class, null);
-            this.put(Boolean.class, false);
-            this.put(boolean.class, false);
-            this.put(Character.class, 'A');
-            this.put(char.class, 'A');
-            this.put(Byte.class, 0);
-            this.put(byte.class, 0);
-            this.put(Short.class, 0);
-            this.put(short.class, 0);
-            this.put(Integer.class, 0);
-            this.put(int.class, 0);
-            this.put(Long.class, 0L);
-            this.put(long.class, 0L);
-            this.put(Float.class, 0.0F);
-            this.put(float.class, 0.0F);
-            this.put(Double.class, 0.0D);
-            this.put(double.class, 0.0D);
-            this.put(String.class, "");
-            this.put(BigDecimal.class, BigDecimal.valueOf(0L));
-            this.put(BigInteger.class, BigInteger.valueOf(0L));
-            this.put(Date.class, new Date());
-            this.put(Object.class, null);
-            this.put(MultipartFile.class, null);
-        }
-    };
-
-    private static final Set<Class<?>> SIMPLE_TYPES = ofSet(
-            Void.class,
-            Boolean.class,
-            Character.class,
-            Byte.class,
-            Short.class,
-            Integer.class,
-            Long.class,
-            Float.class,
-            Double.class,
-            String.class,
-            BigDecimal.class,
-            BigInteger.class,
-            Date.class,
-            Object.class
-    );
-
-    @SafeVarargs
-    private static <T> Set<T> ofSet(T... eles) {
-        Set<T> set = new HashSet<>();
-        Collections.addAll(set, eles);
-        return set;
-    }
-
-    private static boolean isPrimitive(Class<?> type) {
-        if (type.isPrimitive()) return true;
-        return SIMPLE_TYPES.contains(type) || type.equals(MultipartFile.class);
-    }
-
-    private static Object instantiate(Class<?> beanType) {
-        try {
-            Constructor<?>[] constructors = beanType.getConstructors();
-            Object dtoInstance = Arrays.stream(constructors)
-                    .filter(ct -> ct.getParameterCount() == 0)
-                    .findAny()
-                    .map(ct -> {
-                        try {
-                            return ct.newInstance();
-                        } catch (Exception ignored) {
-                            ignored.printStackTrace();
-                            return null;
-                        }
-                    })
-                    .orElse(null);
-
-            if (dtoInstance == null) return null;
-
-            Field[] fields = beanType.getDeclaredFields();
-            for (Field field : fields) {
-                field.setAccessible(true);
-                Class<?> fieldType = field.getType();
-                if (isPrimitive(fieldType)) {
-                    Object defaultSampleValue = PRIMITIVE_DEFAULT_VALUE.get(fieldType);
-                    field.set(dtoInstance, defaultSampleValue);
-                } else {
-                    Object dtoFieldInstance = instantiate(fieldType);
-                    field.set(dtoInstance, dtoFieldInstance);
-                }
-            }
-            return dtoInstance;
-        } catch (Exception ignored) {
-            ignored.printStackTrace();
-            return null;
-        }
-    }
-
-    private boolean isViewHandler(HandlerMethod handlerMethod) {
-        if (handlerMethod.getBeanType().getDeclaredAnnotation(RestController.class) != null)
-            return false;
-        return handlerMethod.getMethodAnnotation(ResponseBody.class) == null;
     }
 
 }

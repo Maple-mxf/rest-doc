@@ -33,7 +33,7 @@ public class ExportApiHandler implements NettyRequestProcessor {
         HttpApiPayload apiBody = new HttpApiPayload();
         apiBody.setApiList(endpointsListener.getHttpApiList());
         String service = environment.getProperty("server.servlet.context-path", configurationProperties.getService());
-        if (service.isEmpty()) service = "未命名的服务";
+        if (service.isEmpty()) service = "Unnamed service";
         apiBody.setService(service);
         apiBody.setApplicationType(ApplicationType.REST_WEB);
 
