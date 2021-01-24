@@ -12,18 +12,22 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MimeType;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.condition.ConsumesRequestCondition;
-import org.springframework.web.servlet.mvc.condition.ProducesRequestCondition;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 import restdoc.rpc.client.common.model.FieldType;
 import restdoc.rpc.client.common.model.http.HttpApiDescriptor;
 
 import java.lang.annotation.Annotation;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -154,9 +158,7 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
         if (hasFileParam || hasRequestPartAnnotation) emptyTemplate.setRequireFile(true);
 
         for (MethodParameter parameter : parameters) {
-
             Annotation[] annotations = parameter.getParameterAnnotations();
-
             if (annotations.length > 0) {
                 for (Annotation annotation : annotations) {
                     ResolverProxy.resolve(emptyTemplate, handlerMethod, requestMappingInfo, parameter, annotation);
@@ -215,29 +217,11 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
 
         emptyTemplate.getRequestHeaderParameters().put(HttpHeaders.CONTENT_TYPE, requestMimeTypeDescriptor);
 
-        ProducesRequestCondition producesCondition = requestMappingInfo.getProducesCondition();
-        List<HttpApiDescriptor.ParameterDescriptor> responseMimeTypeDescriptor =
-                emptyTemplate.getResponseHeaderParameters().getOrDefault(
-                        HttpHeaders.CONTENT_TYPE,
-                        new ArrayList<>());
-
-        if (!producesCondition.isEmpty()) {
-            Set<MediaType> mts = producesCondition.getProducibleMediaTypes();
-            Set<HttpApiDescriptor.ParameterDescriptor> pds = mts.stream().map(t -> {
-                HttpApiDescriptor.ParameterDescriptor pd =
-                        new HttpApiDescriptor.ParameterDescriptor();
-                pd.setDefaultValue(t.toString());
-                return pd;
-            }).collect(Collectors.toSet());
-
-            responseMimeTypeDescriptor.addAll(pds);
-        } else {
-            HttpApiDescriptor.ParameterDescriptor pd =
-                    new HttpApiDescriptor.ParameterDescriptor();
-            pd.setDefaultValue(MediaType.APPLICATION_JSON_VALUE);
-            responseMimeTypeDescriptor.add(pd);
-        }
-        emptyTemplate.getResponseHeaderParameters().put(HttpHeaders.CONTENT_TYPE, responseMimeTypeDescriptor);
+        //
+        HttpApiDescriptor.KeyValuePair respContentMimeTypePair = new HttpApiDescriptor.KeyValuePair();
+        respContentMimeTypePair.setName(HttpHeaders.CONTENT_TYPE);
+        respContentMimeTypePair.setRequire(true);
+        respContentMimeTypePair.setDefaultValue(MediaType.APPLICATION_JSON_VALUE);
 
         try {
             System.err.println(mapper.writeValueAsString(emptyTemplate));

@@ -14,10 +14,14 @@ import org.springframework.stereotype.Component
 import org.springframework.web.bind.annotation.ValueConstants
 import org.springframework.web.client.RestTemplate
 import restdoc.web.base.getBean
+import restdoc.web.http.FIXED_BOUNDARY
+import restdoc.web.http.FIXED_FILE_PAIR
+import restdoc.web.http.HEADER_PARAM_DELIMITER
 import restdoc.web.http.HTTP1_1_VERSION
 import restdoc.web.model.doc.http.HttpDocument
 import restdoc.web.projector.JacksonXmlProjector
 import restdoc.web.projector.JsonProjector
+import restdoc.web.util.FieldType
 import restdoc.web.util.PathValue
 import java.io.StringWriter
 import java.util.*
@@ -242,11 +246,11 @@ open class RequestFakeCodeSampleGenerator : MapToCodeSample {
                 matrixVariableDescriptor.defaultValue
             }
 
-            if (matrixVariableDescriptor.pathVar != null) {
-                url =   url.replace("{${matrixVariableDescriptor.pathVar}}", "" +
-                        "{${matrixVariableDescriptor.pathVar}};${matrixVariableDescriptor.field}=${value}")
+            url = if (matrixVariableDescriptor.pathVar != null) {
+                url.replace("{${matrixVariableDescriptor.pathVar}}", "" +
+                        "{${matrixVariableDescriptor.pathVar}};${matrixVariableDescriptor.field}=$value")
             } else {
-                url = "${url};${matrixVariableDescriptor.field}=${value}"
+                "$url;${matrixVariableDescriptor.field}=$value"
             }
         }
 
@@ -281,24 +285,49 @@ open class RequestFakeCodeSampleGenerator : MapToCodeSample {
         } else {
             doc.requestBodyDescriptor.apply {
 
-                if (MediaType.APPLICATION_JSON_VALUE == mtp) {
-                    val prettyString = JsonProjector(this.map { PathValue(it.path, it.value) })
-                            .project()
-                            .toPrettyString()
+                when (mtp) {
+                    MediaType.APPLICATION_JSON_VALUE -> {
+                        val prettyString = JsonProjector(this.map { PathValue(it.path, it.value) })
+                                .project()
+                                .toPrettyString()
 
-                    sb.append(prettyString).append("\n")
+                        sb.append(prettyString).append("\n")
 
-                } else if (MediaType.APPLICATION_XML_VALUE == mtp) {
-                    val prettyString = JacksonXmlProjector(this.map { PathValue(it.path, it.value) })
-                            .project()
+                    }
+                    MediaType.APPLICATION_XML_VALUE -> {
+                        val prettyString = JacksonXmlProjector(this.map { PathValue(it.path, it.value) })
+                                .project()
 
-                    sb.append(prettyString).append("\n")
-                } else {
-                    val prettyString = JsonProjector(this.map { PathValue(it.path, it.value) })
-                            .project()
-                            .toPrettyString()
+                        sb.append(prettyString).append("\n")
+                    }
 
-                    sb.append(prettyString).append("\n")
+                    MediaType.MULTIPART_FORM_DATA_VALUE -> {
+                        for (item in this) {
+                            sb.append(FIXED_BOUNDARY).append("\n")
+                            sb.append("Content-Disposition: form-data").append(HEADER_PARAM_DELIMITER)
+                            sb.append("name=").append(item.path)
+                            when (item.type) {
+                                // Content-Disposition: form-data; name="myFile"; filename="foo.txt"
+                                FieldType.FILE -> {
+                                    sb.append(HEADER_PARAM_DELIMITER).append(FIXED_FILE_PAIR)
+                                    sb.append("file content....")
+                                }
+                                // Content-Disposition: form-data; name="description"
+                                else -> {
+                                    sb.append(item.value)
+                                }
+                            }
+                            sb.append(FIXED_BOUNDARY).append("\n")
+                        }
+                    }
+
+                    else -> {
+                        val prettyString = JsonProjector(this.map { PathValue(it.path, it.value) })
+                                .project()
+                                .toPrettyString()
+
+                        sb.append(prettyString).append("\n")
+                    }
                 }
             }
         }
@@ -317,7 +346,7 @@ open class ResponseFakeCodeSampleGenerator : MapToCodeSample {
                     .toPrettyString()
 
             sb.append(prettyString).append("\n")
-        }else{
+        } else {
             sb.append("无响应示例")
         }
 

@@ -1,22 +1,17 @@
 package restdoc.web.http
 
 /**
- * HEADER_VALUE_DELIMITER
- */
-@Deprecated(message = "HEADER_VALUE_DELIMITER")
-const val HEADER_VALUE_DELIMITER = ";"
-
-
-/**
- * https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies
  *
- * 1: Cookie
- * 2: Cookie2
- * 3: Set-Cookie
  */
-const val COOKIE_DELIMITER = ";\u00A0"
+const val HEADER_PARAM_DELIMITER = ";\u00A0"
 
 /**
- * boundary
+ * Boundary
  */
-const val FIXED_BOUNDARY = "--8721656041911415653955004498"
+const val FIXED_BOUNDARY = "----WebKitFormBoundarypJzB5uxwvZ6A6raJ"
+
+/**
+ * FIXED_FILE_PAIR
+ */
+const val FIXED_FILE_PAIR = "filename=*.*"
+

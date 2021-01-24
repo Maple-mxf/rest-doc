@@ -23,7 +23,7 @@ import java.nio.charset.StandardCharsets
 import java.util.*
 
 /**
- * WebDocumentService
+ * HttpDocumentService
  *
  * @author Maple
  */
@@ -96,8 +96,8 @@ open class HttpDocumentServiceImpl(val mongoTemplate: MongoTemplate,
                 }.toMap()
 
         val afterParseHeaders = parseHeader(HttpMethod.valueOf(descriptor.method),
-                descriptor.isEnableHasRequestBody,
-                descriptor.isEnableHasFile,
+                descriptor.isRequireBody,
+                descriptor.isRequireFile,
                 headers)
 
         return afterParseHeaders.map {
@@ -187,7 +187,6 @@ open class HttpDocumentServiceImpl(val mongoTemplate: MongoTemplate,
 
         return ret
     }
-
 
     // @DistributeLock(name = "importHttpApi", type = DistributeLockType.REDIS)
     override fun importApi(clientId: String, @NonNull @LockKey projectId: String, user: String, selectedApiIds: List<String>) {

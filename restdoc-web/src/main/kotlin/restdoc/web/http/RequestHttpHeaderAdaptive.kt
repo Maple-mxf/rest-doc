@@ -29,7 +29,7 @@ fun parseHeader(method: HttpMethod, bodyRequired: Boolean, fileRequired: Boolean
     return headerMap
 }
 
-typealias HttpHeaderAdaptive = (method: HttpMethod, bodyRequired: Boolean, fileRequired: Boolean, values: List<String>) -> String
+typealias HttpRequestHeaderAdaptive = (method: HttpMethod, bodyRequired: Boolean, fileRequired: Boolean, values: List<String>) -> String
 
 /**
  * https://tools.ietf.org/html/rfc7231#section-3.1.1.5
@@ -43,13 +43,16 @@ typealias HttpHeaderAdaptive = (method: HttpMethod, bodyRequired: Boolean, fileR
  * codings indicated by Content-Encoding are decoded.
  */
 @Component
-open class ContentTypeAdaptive : HttpHeaderAdaptive {
+open class ContentTypeAdaptive : HttpRequestHeaderAdaptive {
 
     // Multipurpose Internet Mail Extensions | Mime
 
     override fun invoke(method: HttpMethod, bodyRequired: Boolean, fileRequired: Boolean, values: List<String>): String {
-
         if (values.isEmpty()) return ""
+
+        // MultiPart
+        // Multiple-resource bodies，由多部分 body 组成，每一部分包含不同的信息位。通常是和  HTML Forms 连系在一起。
+        if (fileRequired) return "multipart/form-data; $FIXED_BOUNDARY"
 
         val mts = values
                 .mapNotNull {
@@ -63,13 +66,6 @@ open class ContentTypeAdaptive : HttpHeaderAdaptive {
         val concreteMt = mts.find { it.isConcrete }
 
         if (concreteMt != null) {
-
-            /**
-             * Body 大致可分为两类：
-             *
-             *  Single-resource bodies，由一个单文件组成。该类型 body 由两个 header 定义： Content-Type 和 Content-Length.
-             *  Multiple-resource bodies，由多部分 body 组成，每一部分包含不同的信息位。通常是和  HTML Forms 连系在一起。
-             */
             return concreteMt.toString()
         }
 
@@ -94,10 +90,10 @@ open class ContentTypeAdaptive : HttpHeaderAdaptive {
  * Cookie: <cookie-list>
  */
 @Component
-open class CookieAdaptive : HttpHeaderAdaptive {
+open class CookieAdaptive : HttpRequestHeaderAdaptive {
     override fun invoke(method: HttpMethod, bodyRequired: Boolean, fileRequired: Boolean, values: List<String>): String {
         if (values.isEmpty()) return ""
-        return values.joinToString(COOKIE_DELIMITER)
+        return values.joinToString(HEADER_PARAM_DELIMITER)
     }
 }
 
@@ -105,7 +101,7 @@ open class CookieAdaptive : HttpHeaderAdaptive {
  *
  */
 @Component
-open class AcceptAdaptive : HttpHeaderAdaptive {
+open class AcceptAdaptive : HttpRequestHeaderAdaptive {
     override fun invoke(method: HttpMethod, bodyRequired: Boolean, fileRequired: Boolean, values: List<String>): String {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
