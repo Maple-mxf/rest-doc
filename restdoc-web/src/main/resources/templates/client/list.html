@@ -86,7 +86,7 @@
                 layer.open({
                     type: 2,
                     title: 'API列表',
-                    content: '/restdoc/devapp/view/' + obj.data.id + '/api/list?ap=' + obj.data.applicationType,
+                    content: '/restdoc/devapp/view/' + obj.data.id + '/api/list?projectId=' + projectId + '&ap=' + obj.data.applicationType,
                     area: ['1000px', '600px'],
                     btn: ['导入API', '取消'],
                     yes: function (index, dom) {
@@ -122,7 +122,7 @@
                             data: JSON.stringify(importRequestData),
                             contentType: 'application/json',
                             success: function (res) {
-                                
+
                                 if (res.code === '200') {
                                     setTimeout(function () {
                                         layer.close(loadIndex);

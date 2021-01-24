@@ -23,12 +23,14 @@
 
 <input type="hidden" th:value="${clientId}" id="clientId">
 <input type="hidden" th:value="${ap}" id="ap">
+<input type="hidden" th:value="${projectId}" id="projectId">
 
 <script th:src="@{/layui/layui.js}"></script>
 <script th:src="@{/admin/js/jquery.js}"></script>
 <script>
     var clientId = $("#clientId").val();
     var ap = $("#ap").val();
+    var projectId = $("#projectId").val();
 
     var layuiTree = null;
     var DTree = null;
@@ -41,7 +43,7 @@
 
         var treeIns = dtree.render({
             elem: "#apiTree",
-            url: "/restdoc/devapp/" + clientId + '/api/list?at=' + ap,
+            url: "/restdoc/devapp/" + clientId + '/api/list?at=' + ap+'&projectId='+projectId,
             dataFormat: "list",
             width: '100%',
             scroll: "#apiTreeDiv",

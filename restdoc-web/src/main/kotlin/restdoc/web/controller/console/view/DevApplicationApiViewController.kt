@@ -15,10 +15,12 @@ class DevApplicationApiViewController {
     @GetMapping("/{clientId}/api/list")
     fun list(model: Model,
              @PathVariable clientId: String,
+             @RequestParam projectId: String,
              @RequestParam(required = false, defaultValue = "REST_WEB") ap: ApplicationType): String {
 
         model.addAttribute("clientId", clientId)
         model.addAttribute("ap", ap)
+        model.addAttribute("projectId", projectId)
 
         return "client/api-list"
     }

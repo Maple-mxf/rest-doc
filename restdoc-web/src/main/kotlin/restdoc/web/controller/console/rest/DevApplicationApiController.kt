@@ -3,7 +3,6 @@ package restdoc.web.controller.console.rest
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
 import restdoc.rpc.client.common.model.ApplicationType
-import restdoc.rpc.client.common.model.http.HttpApiDescriptor
 import restdoc.web.base.auth.Verify
 import restdoc.web.controller.console.model.DTreeResVO
 import restdoc.web.controller.console.model.DTreeVO
@@ -14,13 +13,9 @@ import restdoc.web.core.Status
 import restdoc.web.core.ok
 import restdoc.web.model.ProjectType
 import restdoc.web.model.SYS_ADMIN
-import restdoc.web.repository.HttpDocumentRepository
 import restdoc.web.repository.ProjectRepository
-import restdoc.web.repository.ResourceRepository
 import restdoc.web.schedule.ApiManager
 import restdoc.web.service.HttpDocumentService
-import restdoc.web.util.MD5Util
-import java.nio.charset.StandardCharsets
 
 
 @RestController
@@ -29,15 +24,13 @@ import java.nio.charset.StandardCharsets
 class DevApplicationApiController(val apiManager: ApiManager,
                                   val projectRepository: ProjectRepository,
                                   val httpDocumentService: HttpDocumentService,
-                                  val holderKit: HolderKit,
-                                  val httpDocumentRepository: HttpDocumentRepository,
-                                  val resourceRepository: ResourceRepository
+                                  val holderKit: HolderKit
 ) {
 
     @RequestMapping(value = ["/{clientId}/api/list"], produces = [MediaType.APPLICATION_JSON_VALUE])
-    fun list(@PathVariable clientId: String, @RequestParam at: ApplicationType): Any {
-
-        val apiList = apiManager.list(clientId, at)
+    fun list(@PathVariable clientId: String,
+             @RequestParam at: ApplicationType,
+             @RequestParam projectId: String): Any {
 
         val rootNode = DTreeVO(
                 id = "root",
@@ -48,44 +41,50 @@ class DevApplicationApiController(val apiManager: ApiManager,
 
         val tree = when (at) {
             ApplicationType.REST_WEB -> {
-                val descriptors = apiList as List<HttpApiDescriptor>
+                val res = mutableListOf<DTreeVO>()
 
-                val methods = descriptors
-                        .map { t ->
+                val docTableContent =
+                        httpDocumentService.transformToHttpApiDoc(clientId, projectId, holderKit.user.id)
+
+                for (entry in docTableContent) {
+                    val pk = entry.key
+
+                    entry.value.forEach {
+                        val controller = it.key
+
+                        val endpointDTreeVos = it.value.map {
                             DTreeVO(
-                                    id = MD5Util.MD5Encode(t.pattern, StandardCharsets.UTF_8.name()),
-                                    title = t.pattern,
+                                    id = it.id!!,
+                                    title = it.url,
                                     iconClass = "dtree-icon-normal-file",
                                     type = NodeType.API,
-                                    parentId = MD5Util.MD5Encode(t.controller, StandardCharsets.UTF_8.name()))
+                                    parentId = controller.id!!)
                         }
 
-                val pks = descriptors.groupBy { it.packageName }.keys.map {
-                    DTreeVO(
-                            id = MD5Util.MD5Encode(it, StandardCharsets.UTF_8.name()),
-                            title = it,
+                        res.addAll(endpointDTreeVos)
+
+                        val classDTreeVo = DTreeVO(
+                                id = controller.id!!,
+                                title = controller.name!! ,
+                                iconClass = "dtree-icon-weibiaoti5",
+                                parentId = pk.id!!)
+
+                        res.add(classDTreeVo)
+                    }
+
+                    val pkDTreeVo = DTreeVO(
+                            id = pk.id!!,
+                            title = pk.name!!,
                             iconClass = "dtree-icon-weibiaoti5",
                             parentId = "root")
+
+                    res.add(pkDTreeVo)
                 }
-
-                val controllers = descriptors.groupBy { it.controller }.entries.map {
-                    val arr = it.key.split(".")
-                    DTreeVO(
-                            id = MD5Util.MD5Encode(it.key, StandardCharsets.UTF_8.name()),
-                            title = arr.last(),
-                            iconClass = "dtree-icon-weibiaoti5",
-                            parentId = MD5Util.MD5Encode(it.value.get(0).packageName, StandardCharsets.UTF_8.name()))
-                }
-
-                val res = mutableListOf<DTreeVO>()
-                res.addAll(methods)
-                res.addAll(pks)
-                res.addAll(controllers)
-
                 res
             }
             else -> throw NotImplementedError()
         }
+
         rootNode.children.add(
                 DTreeVO(
                         id = "ID",

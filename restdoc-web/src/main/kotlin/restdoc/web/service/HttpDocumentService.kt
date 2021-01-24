@@ -124,7 +124,7 @@ open class HttpDocumentServiceImpl(val mongoTemplate: MongoTemplate,
 
                     // Package Resource
                     val packageSource = Resource(
-                            id = MD5Util.MD5Encode(it.first, StandardCharsets.UTF_8.name()),
+                            id = MD5Util.MD5Encode("$projectId-${it.first}", StandardCharsets.UTF_8.name()),
                             tag = it.first,
                             name = it.first,
                             pid = "root",
@@ -136,9 +136,9 @@ open class HttpDocumentServiceImpl(val mongoTemplate: MongoTemplate,
                     // Class Resource
                     val classResourceMap = it.second.entries.map { t ->
                         val classResource = Resource(
-                                id = MD5Util.MD5Encode(t.key, StandardCharsets.UTF_8.name()),
+                                id = MD5Util.MD5Encode("$projectId-${t.key}", StandardCharsets.UTF_8.name()),
                                 tag = t.key,
-                                name = t.key,
+                                name = t.key.split(".").last(),
                                 pid = packageSource.id,
                                 projectId = projectId,
                                 createTime = Date().time,
@@ -163,7 +163,7 @@ open class HttpDocumentServiceImpl(val mongoTemplate: MongoTemplate,
                             }
 
                             HttpDocument(
-                                    id = d.id(),
+                                    id = MD5Util.MD5Encode("$projectId-${d.id()}", StandardCharsets.UTF_8.name()),
                                     projectId = projectId,
                                     name = d.name,
                                     resource = classResource.id!!,
@@ -216,7 +216,7 @@ open class HttpDocumentServiceImpl(val mongoTemplate: MongoTemplate,
                     }
 
                     for (document in matchedDocs) {
-                        document.id = MD5Util.MD5Encode(projectId + document.id, StandardCharsets.UTF_8.name())
+
                         val docExist = httpDocumentRepository.existsById(document.id)
 
                         if (docExist) {
