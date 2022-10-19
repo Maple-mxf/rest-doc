@@ -15,7 +15,7 @@
     <packaging>jar</packaging>
 
     <properties>
-        <jackson.version>2.11.0</jackson.version>
+        <jackson.version>2.13.4.1</jackson.version>
         <restdoc.version>2.0.RELEASE</restdoc.version>
     </properties>
 
